@@ -9,6 +9,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -216,4 +218,37 @@ public class ResourceLoader {
             0xFFFFFF55,
             0xFFFFFFFF
     };
+
+    public Level readLevel(int number) {
+        try (RandomAccessFile in = new RandomAccessFile(path.resolve(String.format("WORLDAL%x.DN1", number)).toFile(), "r")) {
+            int[] tiles = new int[Level.WIDTH * Level.HEIGHT];
+
+            for (int i = 0; i < tiles.length; i++) {
+                tiles[i] = Short.reverseBytes(in.readShort());
+            }
+
+            return new Level(tiles);
+        } catch (IOException e) {
+            throw new RuntimeException("Could not read level " + number, e);
+        }
+    }
+
+    public BufferedImage toImage(Level level) {
+        List<BufferedImage> tileSet = Stream.of("BACK0.DN1", "BACK1.DN1", "BACK2.DN1", "BACK3.DN1",
+            "SOLID0.DN1", "SOLID1.DN1", "SOLID2.DN1", "SOLID3.DN1").flatMap(name -> readTiles(name).stream().limit(48)).collect(Collectors.toList());
+
+        BufferedImage map = new BufferedImage(Level.WIDTH * 16, Level.HEIGHT * 16, BufferedImage.TYPE_INT_ARGB);
+
+        for (int row = 0; row < Level.HEIGHT; row ++) {
+            for (int col = 0; col < Level.WIDTH; col ++) {
+                int tileId = level.getTile(row, col);
+
+                if (tileId < 0x3000) {
+                    map.getGraphics().drawImage(tileSet.get(tileId / 32), col * 16, row * 16, null);
+                }
+            }
+        }
+
+        return map;
+    }
 }
