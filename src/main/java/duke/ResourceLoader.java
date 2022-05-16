@@ -47,9 +47,9 @@ public class ResourceLoader {
                                 nested.closeEntry();
                             }
                         }
-                    }
 
-                    zip.closeEntry();
+                        zip.closeEntry();
+                    }
                 }
             }
         } catch (IOException e) {
@@ -99,6 +99,80 @@ public class ResourceLoader {
             return image;
         } catch (IOException e) {
             throw new RuntimeException("Could not read: " + name, e);
+        }
+    }
+
+    public List<BufferedImage> readTiles(String name) {
+        try (RandomAccessFile in = new RandomAccessFile(path.resolve(name).toFile(), "r")) {
+            int count = in.readByte();
+            int widthInBytes = in.readByte();
+            int heightInPixels = in.readByte();
+
+            List<BufferedImage> tiles = new ArrayList<>(count);
+
+            for (int i = 0; i < count; i++) {
+                tiles.add(readTile(widthInBytes, heightInPixels, in));
+            }
+
+            return tiles;
+        } catch (IOException e) {
+            throw new RuntimeException("Could not read: " + name, e);
+        }
+    }
+
+    public BufferedImage readBackdrop(String name) {
+        try (RandomAccessFile in = new RandomAccessFile(path.resolve(name).toFile(), "r")) {
+            in.seek(3);
+
+            BufferedImage backdrop = new BufferedImage(208, 160, BufferedImage.TYPE_INT_ARGB);
+
+            for (int row = 0; row < 10; row++) {
+                for (int col = 0; col < 13; col++) {
+                    backdrop.getGraphics().drawImage(readTile(2, 16, in), col * 16, row * 16, null);
+                }
+            }
+
+            return backdrop;
+        } catch (IOException e) {
+            throw new RuntimeException("Could not read: " + name, e);
+        }
+    }
+
+    private BufferedImage readTile(int widthInBytes, int heightInPixels, RandomAccessFile in) throws IOException {
+        byte[] data = new byte[widthInBytes * heightInPixels * 5];
+
+        if (in.read(data) != -1) {
+            BufferedImage tile = new BufferedImage(widthInBytes * 8, heightInPixels, BufferedImage.TYPE_INT_ARGB);
+
+            int y = 0;
+            int x = 0;
+
+            for (int i = 0; i < data.length; ) {
+                BigInteger opacity = BigInteger.valueOf(data[i++]);
+                BigInteger intensity = BigInteger.valueOf(data[i++]);
+                BigInteger red = BigInteger.valueOf(data[i++]);
+                BigInteger green = BigInteger.valueOf(data[i++]);
+                BigInteger blue = BigInteger.valueOf(data[i++]);
+
+                for (int bit = 7; bit >= 0; bit--) {
+                    if (opacity.testBit(bit)) {
+                        int index = toIndex(intensity.testBit(bit), red.testBit(bit), green.testBit(bit), blue.testBit(bit));
+
+                        tile.setRGB(x, y, EGA_PALETTE[index]);
+                    }
+
+                    x++;
+
+                    if (x >= tile.getWidth()) {
+                        x = 0;
+                        y++;
+                    }
+                }
+            }
+
+            return tile;
+        } else {
+            throw new IOException("Unexpected end of file");
         }
     }
 
