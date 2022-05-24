@@ -63,6 +63,16 @@ public class Gfx extends Canvas {
             screenY += TILE_SIZE;
         }
 
+        Duke duke = gameState.getDuke();
+
+        if (gameState.getLevel().collides(duke.getX(), duke.getY(), 31, 31)) {
+            graphics.setColor(Color.red);
+        } else {
+            graphics.setColor(Color.magenta);
+        }
+
+        graphics.drawRect(duke.getX() - gameState.getCameraX(), duke.getY() - gameState.getCameraY(), 31, 31);
+
         flip();
     }
 

@@ -1,16 +1,13 @@
 package duke;
 
 public class GameState {
+    private Duke duke;
     private Level level;
 
-    private int cameraX;
-    private int cameraY;
-
     public void switchLevel(Level level) {
-        this.level = level;
+        duke = new Duke();
 
-        cameraX = 0;
-        cameraY = 0;
+        this.level = level;
     }
 
     public Level getLevel() {
@@ -18,15 +15,18 @@ public class GameState {
     }
 
     public int getCameraX() {
-        return cameraX;
+        return duke.getX() - 88;
     }
 
     public int getCameraY() {
-        return cameraY;
+        return duke.getY() - 64;
     }
 
-    public void moveCamera(int deltaX, int deltaY) {
-        cameraX += deltaX;
-        cameraY += deltaY;
+    public Duke getDuke() {
+        return duke;
+    }
+
+    public void update() {
+        duke.update(this);
     }
 }

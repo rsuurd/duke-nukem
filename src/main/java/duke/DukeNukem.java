@@ -54,7 +54,9 @@ public class DukeNukem {
             long now = System.nanoTime();
 
             while ((now - lastUpdateTime) >= TIME_STEP) {
-                update();
+                handleInput();
+
+                gameState.update();
                 gfx.render(gameState);
 
                 lastUpdateTime += TIME_STEP;
@@ -67,10 +69,10 @@ public class DukeNukem {
         }
     }
 
-    private void update() {
+    private void handleInput() {
         int deltaX = keyHandler.isLeft() ? -CAMERA_SPEED : keyHandler.isRight() ? CAMERA_SPEED : 0;
         int deltaY = keyHandler.isUp() ? -CAMERA_SPEED : keyHandler.isDown() ? CAMERA_SPEED : 0;
 
-        gameState.moveCamera(deltaX, deltaY);
+        gameState.getDuke().accelerate(deltaX, deltaY);
     }
 }

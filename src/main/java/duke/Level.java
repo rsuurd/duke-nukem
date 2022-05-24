@@ -2,6 +2,8 @@ package duke;
 
 import java.awt.image.BufferedImage;
 
+import static duke.Gfx.TILE_SIZE;
+
 public class Level {
     public static final int WIDTH = 128;
     public static final int HEIGHT = 90;
@@ -21,5 +23,19 @@ public class Level {
 
     public BufferedImage getBackdrop() {
         return backdrop;
+    }
+
+    public boolean collides(int x, int y, int width, int height) {
+        boolean collides = false;
+
+        for (int row = y / TILE_SIZE; row <= (y + height) / TILE_SIZE; row ++) {
+            for (int col = x / TILE_SIZE; col <= (x + width) / TILE_SIZE; col ++) {
+                int tileId = getTile(row, col);
+
+                collides |= (tileId >= 0x1800) && (tileId <= 0x2FFF);
+            }
+        }
+
+        return collides;
     }
 }
