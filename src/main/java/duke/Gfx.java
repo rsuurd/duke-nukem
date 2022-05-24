@@ -4,14 +4,14 @@ import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Gfx extends Canvas {
     private static final int WIDTH = 320;
     private static final int HEIGHT = 200;
 
     private static final int SCALE = 3;
+
+    public static final int TILE_SIZE = 16;
 
     private ResourceLoader loader;
 
@@ -28,8 +28,7 @@ public class Gfx extends Canvas {
     }
 
     public void init() {
-        tileSet = Stream.of("BACK0.DN1", "BACK1.DN1", "BACK2.DN1", "BACK3.DN1",
-                "SOLID0.DN1", "SOLID1.DN1", "SOLID2.DN1", "SOLID3.DN1").flatMap(name -> loader.readTiles(name).stream().limit(48)).collect(Collectors.toList());
+        tileSet = loader.readTiles();
     }
 
     public void render(GameState gameState) {
@@ -37,15 +36,31 @@ public class Gfx extends Canvas {
         graphics.setColor(Color.black);
         graphics.fillRect(0, 0, WIDTH, HEIGHT);
 
-        for (int row = 0; row < 10; row++) {
-            for (int col = 0; col < 13; col++) {
-                int tileId = gameState.getLevel().getTile(row + (gameState.getCameraY() / 16), col + (gameState.getCameraX() / 16));
+        if (gameState.getLevel().getBackdrop() != null) {
+            graphics.drawImage(gameState.getLevel().getBackdrop(), 0, 0, null);
+        }
 
-                if (tileId < 0x3000) {
+        int gridX = gameState.getCameraX() / TILE_SIZE;
+        int gridY = gameState.getCameraY() / TILE_SIZE;
 
-                    graphics.drawImage(tileSet.get(tileId / 32), col * 16, row * 16, null);
+        int scrollX = gameState.getCameraX() % TILE_SIZE;
+        int scrollY = gameState.getCameraY() % TILE_SIZE;
+
+        int screenY = -scrollY;
+        for (int row = gridY; row < (gridY + 12); row++) {
+            int screenX = -scrollX;
+
+            for (int col = gridX; col < (gridX + 15); col++) {
+                int tileId = gameState.getLevel().getTile(row, col);
+
+                if (tileId > 0 && tileId < 0x3000) {
+                    graphics.drawImage(tileSet.get(tileId / 32), screenX, screenY, null);
                 }
+
+                screenX += TILE_SIZE;
             }
+
+            screenY += TILE_SIZE;
         }
 
         flip();

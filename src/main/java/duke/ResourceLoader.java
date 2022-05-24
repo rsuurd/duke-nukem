@@ -104,7 +104,12 @@ public class ResourceLoader {
         }
     }
 
-    public List<BufferedImage> readTiles(String name) {
+    public List<BufferedImage> readTiles() {
+        return Stream.of("BACK0.DN1", "BACK1.DN1", "BACK2.DN1", "BACK3.DN1",
+                "SOLID0.DN1", "SOLID1.DN1", "SOLID2.DN1", "SOLID3.DN1").flatMap(name -> readTiles(name, true).stream().limit(48)).collect(Collectors.toList());
+    }
+
+    public List<BufferedImage> readTiles(String name, boolean opaque) {
         try (RandomAccessFile in = new RandomAccessFile(path.resolve(name).toFile(), "r")) {
             int count = in.readByte();
             int widthInBytes = in.readByte();
@@ -113,7 +118,7 @@ public class ResourceLoader {
             List<BufferedImage> tiles = new ArrayList<>(count);
 
             for (int i = 0; i < count; i++) {
-                tiles.add(readTile(widthInBytes, heightInPixels, in));
+                tiles.add(readTile(widthInBytes, heightInPixels, in, opaque));
             }
 
             return tiles;
@@ -130,7 +135,7 @@ public class ResourceLoader {
 
             for (int row = 0; row < 10; row++) {
                 for (int col = 0; col < 13; col++) {
-                    backdrop.getGraphics().drawImage(readTile(2, 16, in), col * 16, row * 16, null);
+                    backdrop.getGraphics().drawImage(readTile(2, 16, in, true), col * 16, row * 16, null);
                 }
             }
 
@@ -140,7 +145,7 @@ public class ResourceLoader {
         }
     }
 
-    private BufferedImage readTile(int widthInBytes, int heightInPixels, RandomAccessFile in) throws IOException {
+    private BufferedImage readTile(int widthInBytes, int heightInPixels, RandomAccessFile in, boolean opaque) throws IOException {
         byte[] data = new byte[widthInBytes * heightInPixels * 5];
 
         if (in.read(data) != -1) {
@@ -157,7 +162,7 @@ public class ResourceLoader {
                 BigInteger blue = BigInteger.valueOf(data[i++]);
 
                 for (int bit = 7; bit >= 0; bit--) {
-                    if (opacity.testBit(bit)) {
+                    if (opaque || opacity.testBit(bit)) {
                         int index = toIndex(intensity.testBit(bit), red.testBit(bit), green.testBit(bit), blue.testBit(bit));
 
                         tile.setRGB(x, y, EGA_PALETTE[index]);
@@ -221,21 +226,22 @@ public class ResourceLoader {
 
     public Level readLevel(int number) {
         try (RandomAccessFile in = new RandomAccessFile(path.resolve(String.format("WORLDAL%x.DN1", number)).toFile(), "r")) {
+            BufferedImage backdrop = readBackdrop("DROP0.DN1");
+
             int[] tiles = new int[Level.WIDTH * Level.HEIGHT];
 
             for (int i = 0; i < tiles.length; i++) {
                 tiles[i] = Short.reverseBytes(in.readShort());
             }
 
-            return new Level(tiles);
+            return new Level(tiles, backdrop);
         } catch (IOException e) {
             throw new RuntimeException("Could not read level " + number, e);
         }
     }
 
     public BufferedImage toImage(Level level) {
-        List<BufferedImage> tileSet = Stream.of("BACK0.DN1", "BACK1.DN1", "BACK2.DN1", "BACK3.DN1",
-            "SOLID0.DN1", "SOLID1.DN1", "SOLID2.DN1", "SOLID3.DN1").flatMap(name -> readTiles(name).stream().limit(48)).collect(Collectors.toList());
+        List<BufferedImage> tileSet = readTiles();
 
         BufferedImage map = new BufferedImage(Level.WIDTH * 16, Level.HEIGHT * 16, BufferedImage.TYPE_INT_ARGB);
 
