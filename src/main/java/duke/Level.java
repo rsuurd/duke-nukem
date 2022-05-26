@@ -9,11 +9,12 @@ public class Level {
     public static final int HEIGHT = 90;
 
     private int[] tiles;
+    private int startLocation;
     private BufferedImage backdrop;
 
-    public Level(int[] tiles, BufferedImage backdrop) {
+    public Level(int[] tiles, int startLocation, BufferedImage backdrop) {
         this.tiles = tiles;
-
+        this.startLocation = startLocation;
         this.backdrop = backdrop;
     }
 
@@ -37,5 +38,13 @@ public class Level {
         }
 
         return collides;
+    }
+
+    public int getPlayerStartX() {
+        return (startLocation % WIDTH) * TILE_SIZE;
+    }
+
+    public int getPlayerStartY() {
+        return (startLocation / WIDTH) * TILE_SIZE;
     }
 }

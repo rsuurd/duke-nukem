@@ -8,6 +8,8 @@ public class GameState {
         duke = new Duke();
 
         this.level = level;
+
+        duke.moveTo(level.getPlayerStartX(), level.getPlayerStartY());
     }
 
     public Level getLevel() {

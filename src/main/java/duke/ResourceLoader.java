@@ -229,12 +229,21 @@ public class ResourceLoader {
             BufferedImage backdrop = readBackdrop("DROP0.DN1");
 
             int[] tiles = new int[Level.WIDTH * Level.HEIGHT];
+            int startLocation = 0;
 
             for (int i = 0; i < tiles.length; i++) {
-                tiles[i] = Short.reverseBytes(in.readShort());
+                int tileId = Short.reverseBytes(in.readShort());
+
+                if (tileId == 0x3032) { // start location
+                    tileId = tiles[i - 1];
+
+                    startLocation = i;
+                }
+
+                tiles[i] = tileId;
             }
 
-            return new Level(tiles, backdrop);
+            return new Level(tiles, startLocation, backdrop);
         } catch (IOException e) {
             throw new RuntimeException("Could not read level " + number, e);
         }

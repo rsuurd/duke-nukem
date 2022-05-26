@@ -9,6 +9,8 @@ public class KeyHandler extends KeyAdapter {
     private boolean left;
     private boolean right;
 
+    private boolean jump;
+
     @Override
     public void keyPressed(KeyEvent e) {
         handleKey(e.getKeyCode(), true);
@@ -25,6 +27,7 @@ public class KeyHandler extends KeyAdapter {
             case KeyEvent.VK_DOWN -> down = pressed;
             case KeyEvent.VK_LEFT -> left = pressed;
             case KeyEvent.VK_RIGHT -> right = pressed;
+            case KeyEvent.VK_CONTROL -> jump = pressed;
         }
     }
 
@@ -42,5 +45,9 @@ public class KeyHandler extends KeyAdapter {
 
     public boolean isRight() {
         return right;
+    }
+
+    public boolean isJump() {
+        return jump;
     }
 }
