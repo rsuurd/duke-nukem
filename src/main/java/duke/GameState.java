@@ -17,14 +17,6 @@ public class GameState {
         return level;
     }
 
-    public int getCameraX() {
-        return duke.getX() - 88;
-    }
-
-    public int getCameraY() {
-        return duke.getY() - 64;
-    }
-
     public Duke getDuke() {
         return duke;
     }

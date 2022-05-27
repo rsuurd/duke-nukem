@@ -113,6 +113,10 @@ public class ResourceLoader {
         return Stream.of("MAN0.DN1", "MAN1.DN1", "MAN2.DN1", "MAN3.DN1").flatMap(name -> readTiles(name, false).stream()).collect(Collectors.toList());
     }
 
+    public List<BufferedImage> readBorder() {
+        return readTiles("BORDER.DN1", true);
+    }
+
     public List<BufferedImage> readTiles(String name, boolean opaque) {
         try (RandomAccessFile in = new RandomAccessFile(path.resolve(name).toFile(), "r")) {
             int count = in.readByte();
