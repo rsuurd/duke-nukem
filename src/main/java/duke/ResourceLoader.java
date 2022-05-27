@@ -109,6 +109,10 @@ public class ResourceLoader {
                 "SOLID0.DN1", "SOLID1.DN1", "SOLID2.DN1", "SOLID3.DN1").flatMap(name -> readTiles(name, true).stream().limit(48)).collect(Collectors.toList());
     }
 
+    public List<BufferedImage> readMan() {
+        return Stream.of("MAN0.DN1", "MAN1.DN1", "MAN2.DN1", "MAN3.DN1").flatMap(name -> readTiles(name, false).stream()).collect(Collectors.toList());
+    }
+
     public List<BufferedImage> readTiles(String name, boolean opaque) {
         try (RandomAccessFile in = new RandomAccessFile(path.resolve(name).toFile(), "r")) {
             int count = in.readByte();

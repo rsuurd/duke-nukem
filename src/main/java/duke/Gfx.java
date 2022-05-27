@@ -18,6 +18,7 @@ public class Gfx extends Canvas {
     private BufferedImage buffer;
 
     private List<BufferedImage> tileSet;
+    private List<BufferedImage> man;
 
     public Gfx(ResourceLoader loader) {
         this.loader = loader;
@@ -29,13 +30,26 @@ public class Gfx extends Canvas {
 
     public void init() {
         tileSet = loader.readTiles();
+        man = loader.readMan();
     }
 
     public void render(GameState gameState) {
         Graphics graphics = buffer.getGraphics();
+
+        clearScreen(graphics);
+        drawLevel(gameState, graphics);
+        drawDuke(gameState, graphics);
+        drawBoundingBox(gameState, graphics);
+
+        flip();
+    }
+
+    private void clearScreen(Graphics graphics) {
         graphics.setColor(Color.black);
         graphics.fillRect(0, 0, WIDTH, HEIGHT);
+    }
 
+    private void drawLevel(GameState gameState, Graphics graphics) {
         if (gameState.getLevel().getBackdrop() != null) {
             graphics.drawImage(gameState.getLevel().getBackdrop(), 0, 0, null);
         }
@@ -62,7 +76,38 @@ public class Gfx extends Canvas {
 
             screenY += TILE_SIZE;
         }
+    }
 
+    private void drawDuke(GameState gameState, Graphics graphics) {
+        Duke duke = gameState.getDuke();
+
+        // walking left: 0
+        // walking right: 16
+        // jump left: 32
+        // jump right: 36
+        // fall left: 40
+        // fall right: 44
+        // stand left: 50
+        // stand right: 54
+
+        int tileIndex = switch (duke.getState()) {
+            case STAND -> 50;
+            case WALK -> 0;
+            case JUMP -> 32;
+            case FALL -> 40;
+        };
+
+        tileIndex += (duke.getFacing() == Facing.LEFT) ? 0 : (duke.getState() == Duke.State.WALK) ? 16 : 4;
+
+        tileIndex += ((duke.getFrame() / 2) * 4);
+
+        graphics.drawImage(man.get(tileIndex), duke.getX() - gameState.getCameraX(), duke.getY() - gameState.getCameraY(), null);
+        graphics.drawImage(man.get(tileIndex + 1), duke.getX() - gameState.getCameraX() + TILE_SIZE, duke.getY() - gameState.getCameraY(), null);
+        graphics.drawImage(man.get(tileIndex + 2), duke.getX() - gameState.getCameraX(), duke.getY() - gameState.getCameraY() + TILE_SIZE, null);
+        graphics.drawImage(man.get(tileIndex + 3), duke.getX() - gameState.getCameraX() + TILE_SIZE, duke.getY() - gameState.getCameraY() + TILE_SIZE, null);
+    }
+
+    private void drawBoundingBox(GameState gameState, Graphics graphics) {
         Duke duke = gameState.getDuke();
 
         if (gameState.getLevel().collides(duke.getX(), duke.getY(), 31, 31)) {
@@ -72,8 +117,6 @@ public class Gfx extends Canvas {
         }
 
         graphics.drawRect(duke.getX() - gameState.getCameraX(), duke.getY() - gameState.getCameraY(), 31, 31);
-
-        flip();
     }
 
     private void flip() {
