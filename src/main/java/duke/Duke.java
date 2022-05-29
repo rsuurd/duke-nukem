@@ -1,5 +1,7 @@
 package duke;
 
+import static duke.Gfx.TILE_SIZE;
+
 public class Duke {
     private int x;
     private int y;
@@ -39,6 +41,24 @@ public class Duke {
         if (this.state == State.WALK) {
             frame = (frame + 1) % 8;
         }
+    }
+
+    public void render(Renderer renderer, Assets assets) {
+        int tileIndex = switch (state) {
+            case STAND -> 50;
+            case WALK -> 0;
+            case JUMP -> 32;
+            case FALL -> 40;
+        };
+
+        tileIndex += (facing == Facing.LEFT) ? 0 : (state == Duke.State.WALK) ? 16 : 4;
+
+        tileIndex += ((frame / 2) * 4);
+
+        renderer.drawTile(assets.getMan(tileIndex), x, y);
+        renderer.drawTile(assets.getMan(tileIndex + 1), x + TILE_SIZE, y);
+        renderer.drawTile(assets.getMan(tileIndex + 2), x, y + TILE_SIZE);
+        renderer.drawTile(assets.getMan(tileIndex = 3), x + TILE_SIZE, y + TILE_SIZE);
     }
 
     private void moveHorizontally(Level level) {

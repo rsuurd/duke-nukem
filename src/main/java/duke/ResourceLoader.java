@@ -1,5 +1,9 @@
 package duke;
 
+import duke.active.Acme;
+import duke.active.Active;
+import duke.active.Camera;
+
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -268,6 +272,13 @@ public class ResourceLoader {
                     int y = (i / Level.WIDTH) * TILE_SIZE;
 
                     actives.add(new Acme(x, y));
+                } else if (tileId == 0x3024) { // camera
+                    tileId = tiles[i - 1];
+
+                    int x = (i % Level.WIDTH) * TILE_SIZE;
+                    int y = (i / Level.WIDTH) * TILE_SIZE;
+
+                    actives.add(new Camera(x, y));
                 }
 
                 tiles[i] = tileId;

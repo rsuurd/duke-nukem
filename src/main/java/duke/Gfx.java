@@ -3,9 +3,8 @@ package duke;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
-import java.util.List;
 
-public class Gfx extends Canvas {
+public class Gfx extends Canvas implements Renderer {
     private static final int WIDTH = 320;
     private static final int HEIGHT = 200;
     private static final int SCALE = 3;
@@ -18,13 +17,9 @@ public class Gfx extends Canvas {
     public static final int VERTICAL_CENTER = 96;
 
     private ResourceLoader loader;
+    private Assets assets;
 
     private BufferedImage buffer;
-
-    private List<BufferedImage> tileSet;
-    private List<BufferedImage> man;
-    private List<BufferedImage> anim;
-    private List<BufferedImage> object;
 
     private Hud hud;
     private Font font;
@@ -36,6 +31,7 @@ public class Gfx extends Canvas {
 
     public Gfx(ResourceLoader loader) {
         this.loader = loader;
+        assets = new Assets(loader);
 
         setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
 
@@ -43,12 +39,10 @@ public class Gfx extends Canvas {
     }
 
     public void init() {
-        tileSet = loader.readTiles();
-        man = loader.readMan();
-        anim = loader.readAnim();
-        object = loader.readObject();
-        font = new Font(loader.readFont());
-        hud = new Hud(font, loader.readBorder());
+        assets.init();
+
+        font = new Font(assets.getFont());
+        hud = new Hud(font, assets.getBorder());
     }
 
     public void render(GameState gameState) {
@@ -58,7 +52,12 @@ public class Gfx extends Canvas {
 
         clearScreen(graphics);
         drawLevel(gameState, graphics);
-        drawDuke(gameState, graphics);
+
+        Duke duke = gameState.getDuke();
+        duke.render(this, assets);
+        graphics.setColor(Color.magenta);
+        graphics.drawRect(duke.getX() - cameraX, duke.getY() - cameraY, 31, 31);
+
         hud.draw(gameState, graphics);
 
         flip();
@@ -121,10 +120,7 @@ public class Gfx extends Canvas {
             screenY += TILE_SIZE;
         }
 
-        level.getActives().forEach(active -> {
-            drawTile(graphics, object.get(83), active.getX(), active.getY());
-            drawTile(graphics, object.get(84), active.getX() + TILE_SIZE, active.getY());
-        });
+        level.getActives().forEach(active -> active.render(this, assets));
 
         flasher = (flasher + 1) % 4;
     }
@@ -133,26 +129,31 @@ public class Gfx extends Canvas {
         BufferedImage image = null;
 
         if (tileId > 0x0 && tileId < 0x0600) {
-            image = tileSet.get((tileId / 32) + flasher);
+            image = assets.getTileSet((tileId / 32) + flasher);
         } else if ((tileId >= 0x600) && (tileId < 0x3000)) {
-            image = tileSet.get(tileId / 32);
+            image = assets.getTileSet(tileId / 32);
         } else if (tileId == 0x3025) { // Brown spikes
-            image = anim.get(211);
+            image = assets.getAnim(211);
         } else if (tileId == 0x3026) { // Rock (left)
-            image = anim.get(212);
+            image = assets.getAnim(212);
         } else if (tileId == 0x3027) { // Rock (right)
-            image = anim.get(213);
+            image = assets.getAnim(213);
         } else if (tileId == 0x3028) { // Little window
-            image = anim.get(214);
+            image = assets.getAnim(214);
         } else if (tileId == 0x303D) { // Mesh
-            image = anim.get(262);
+            image = assets.getAnim(262);
         } else if (tileId == 0x303E) { // Window (left)
-            image = anim.get(263);
+            image = assets.getAnim(263);
         } else if (tileId == 0x303F) { // Window (right)
-            image = anim.get(264);
+            image = assets.getAnim(264);
         }
 
         return image;
+    }
+
+    @Override
+    public void drawTile(BufferedImage image, int x, int y) {
+        drawTile(buffer.getGraphics(), image, x, y);
     }
 
     private void drawTile(Graphics graphics, BufferedImage image, int x, int y) {
@@ -162,29 +163,6 @@ public class Gfx extends Canvas {
         if ((screenX >= 0) && (screenX < 224) && (screenY >= 0) && (screenY < 176)) {
             graphics.drawImage(image, screenX, screenY, null);
         }
-    }
-
-    private void drawDuke(GameState gameState, Graphics graphics) {
-        Duke duke = gameState.getDuke();
-
-        int tileIndex = switch (duke.getState()) {
-            case STAND -> 50;
-            case WALK -> 0;
-            case JUMP -> 32;
-            case FALL -> 40;
-        };
-
-        tileIndex += (duke.getFacing() == Facing.LEFT) ? 0 : (duke.getState() == Duke.State.WALK) ? 16 : 4;
-
-        tileIndex += ((duke.getFrame() / 2) * 4);
-
-        graphics.drawImage(man.get(tileIndex), duke.getX() - cameraX, duke.getY() - cameraY, null);
-        graphics.drawImage(man.get(tileIndex + 1), duke.getX() - cameraX + TILE_SIZE, duke.getY() - cameraY, null);
-        graphics.drawImage(man.get(tileIndex + 2), duke.getX() - cameraX, duke.getY() - cameraY + TILE_SIZE, null);
-        graphics.drawImage(man.get(tileIndex + 3), duke.getX() - cameraX + TILE_SIZE, duke.getY() - cameraY + TILE_SIZE, null);
-
-        graphics.setColor(Color.magenta);
-        graphics.drawRect(duke.getX() - cameraX, duke.getY() - cameraY, 31, 31);
     }
 
     private void flip() {

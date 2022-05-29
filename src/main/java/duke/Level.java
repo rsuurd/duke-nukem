@@ -1,5 +1,7 @@
 package duke;
 
+import duke.active.Active;
+
 import java.awt.image.BufferedImage;
 import java.util.List;
 

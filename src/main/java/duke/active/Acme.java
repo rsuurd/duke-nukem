@@ -1,4 +1,11 @@
-package duke;
+package duke.active;
+
+import duke.Assets;
+import duke.Duke;
+import duke.GameState;
+import duke.Renderer;
+
+import static duke.Gfx.TILE_SIZE;
 
 public class Acme extends Active {
     private static final int FALL_SPEED = 14;
@@ -30,6 +37,12 @@ public class Acme extends Active {
         } else if (y < duke.getY() && (x < duke.getX()) && ((x + 31) > duke.getX())) {
             dropping = true;
         }
+    }
+
+    @Override
+    public void render(Renderer renderer, Assets assets) {
+        renderer.drawTile(assets.getObject(83), x, y);
+        renderer.drawTile(assets.getObject(84), x + TILE_SIZE, y);
     }
 
     private void crash() {
