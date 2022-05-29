@@ -1,8 +1,6 @@
 package duke;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.math.BigInteger;
@@ -15,6 +13,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+
+import static duke.Gfx.TILE_SIZE;
 
 public class ResourceLoader {
     private Path path;
@@ -121,6 +121,10 @@ public class ResourceLoader {
 
     public List<BufferedImage> readAnim() {
         return Stream.of("ANIM0.DN1", "ANIM1.DN1", "ANIM2.DN1", "ANIM3.DN1", "ANIM4.DN1", "ANIM5.DN1").flatMap(name -> readTiles(name, false).stream()).collect(Collectors.toList());
+    }
+
+    public List<BufferedImage> readObject() {
+        return Stream.of("OBJECT0.DN1", "OBJECT1.DN1", "OBJECT2.DN1").flatMap(name -> readTiles(name, false).stream()).collect(Collectors.toList());
     }
 
     public List<BufferedImage> readBorder() {
@@ -248,6 +252,7 @@ public class ResourceLoader {
 
             int[] tiles = new int[Level.WIDTH * Level.HEIGHT];
             int startLocation = 0;
+            List<Active> actives = new ArrayList<>();
 
             for (int i = 0; i < tiles.length; i++) {
                 int tileId = Short.reverseBytes(in.readShort());
@@ -256,12 +261,19 @@ public class ResourceLoader {
                     tileId = tiles[i - 1];
 
                     startLocation = i;
+                } else if (tileId == 0x302A) { // ACME sign
+                    tileId = tiles[i - 1];
+
+                    int x = (i % Level.WIDTH) * TILE_SIZE;
+                    int y = (i / Level.WIDTH) * TILE_SIZE;
+
+                    actives.add(new Acme(x, y));
                 }
 
                 tiles[i] = tileId;
             }
 
-            return new Level(tiles, startLocation, backdrop);
+            return new Level(tiles, startLocation, backdrop, actives);
         } catch (IOException e) {
             throw new RuntimeException("Could not read level " + number, e);
         }
@@ -297,12 +309,5 @@ public class ResourceLoader {
             image.getGraphics().drawImage(tiles.get(i), i * width, 0, null);
         }
         return image;
-    }
-
-    public static void main(String[] args) throws IOException {
-        ResourceLoader l = new ResourceLoader(Path.of(".dn1"));
-        List<BufferedImage> sheet  = l.readTiles("OBJECT1.DN1", false);
-
-        ImageIO.write(l.toSheet(sheet), "PNG", new File("OBJECT.PNG"));
     }
 }

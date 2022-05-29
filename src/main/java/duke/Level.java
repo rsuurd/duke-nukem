@@ -1,6 +1,7 @@
 package duke;
 
 import java.awt.image.BufferedImage;
+import java.util.List;
 
 import static duke.Gfx.TILE_SIZE;
 
@@ -11,11 +12,13 @@ public class Level {
     private int[] tiles;
     private int startLocation;
     private BufferedImage backdrop;
+    private List<Active> actives;
 
-    public Level(int[] tiles, int startLocation, BufferedImage backdrop) {
+    public Level(int[] tiles, int startLocation, BufferedImage backdrop, List<Active> actives) {
         this.tiles = tiles;
         this.startLocation = startLocation;
         this.backdrop = backdrop;
+        this.actives = actives;
     }
 
     public int getTile(int row, int col) {
@@ -24,6 +27,10 @@ public class Level {
 
     public BufferedImage getBackdrop() {
         return backdrop;
+    }
+
+    public List<Active> getActives() {
+        return actives;
     }
 
     public boolean collides(int x, int y, int width, int height) {
@@ -46,5 +53,9 @@ public class Level {
 
     public int getPlayerStartY() {
         return (startLocation / WIDTH) * TILE_SIZE;
+    }
+
+    public void update(GameState state) {
+        getActives().stream().filter(Active::isActive).forEach(active -> active.update(state));
     }
 }

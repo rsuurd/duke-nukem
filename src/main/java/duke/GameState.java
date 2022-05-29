@@ -32,6 +32,7 @@ public class GameState {
     }
 
     public void update() {
+        level.update(this);
         duke.update(this);
     }
 }

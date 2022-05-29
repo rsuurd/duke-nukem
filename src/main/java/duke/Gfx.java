@@ -24,6 +24,7 @@ public class Gfx extends Canvas {
     private List<BufferedImage> tileSet;
     private List<BufferedImage> man;
     private List<BufferedImage> anim;
+    private List<BufferedImage> object;
 
     private Hud hud;
     private Font font;
@@ -45,6 +46,7 @@ public class Gfx extends Canvas {
         tileSet = loader.readTiles();
         man = loader.readMan();
         anim = loader.readAnim();
+        object = loader.readObject();
         font = new Font(loader.readFont());
         hud = new Hud(font, loader.readBorder());
     }
@@ -92,8 +94,10 @@ public class Gfx extends Canvas {
     }
 
     private void drawLevel(GameState gameState, Graphics graphics) {
-        if (gameState.getLevel().getBackdrop() != null) {
-            graphics.drawImage(gameState.getLevel().getBackdrop(), TILE_SIZE, TILE_SIZE, null);
+        Level level = gameState.getLevel();
+
+        if (level.getBackdrop() != null) {
+            graphics.drawImage(level.getBackdrop(), TILE_SIZE, TILE_SIZE, null);
         }
 
         int gridX = cameraX / TILE_SIZE;
@@ -107,7 +111,7 @@ public class Gfx extends Canvas {
             int screenX = -scrollX;
 
             for (int col = gridX; col < (gridX + 15); col++) {
-                int tileId = gameState.getLevel().getTile(row, col);
+                int tileId = level.getTile(row, col);
 
                 graphics.drawImage(resolveTile(tileId), screenX, screenY, null);
 
@@ -116,6 +120,11 @@ public class Gfx extends Canvas {
 
             screenY += TILE_SIZE;
         }
+
+        level.getActives().forEach(active -> {
+            drawTile(graphics, object.get(83), active.getX(), active.getY());
+            drawTile(graphics, object.get(84), active.getX() + TILE_SIZE, active.getY());
+        });
 
         flasher = (flasher + 1) % 4;
     }
@@ -144,6 +153,15 @@ public class Gfx extends Canvas {
         }
 
         return image;
+    }
+
+    private void drawTile(Graphics graphics, BufferedImage image, int x, int y) {
+        int screenX = x - cameraX;
+        int screenY = y - cameraY;
+
+        if ((screenX >= 0) && (screenX < 224) && (screenY >= 0) && (screenY < 176)) {
+            graphics.drawImage(image, screenX, screenY, null);
+        }
     }
 
     private void drawDuke(GameState gameState, Graphics graphics) {
