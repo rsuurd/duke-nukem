@@ -7,16 +7,12 @@ import java.util.List;
 import static duke.Gfx.TILE_SIZE;
 
 public class Hud {
-    private ResourceLoader loader;
-
+    private Font font;
     private List<BufferedImage> borders;
 
-    public Hud(ResourceLoader loader) {
-        this.loader = loader;
-    }
-
-    public void init() {
-        borders = loader.readBorder();
+    public Hud(Font font, List<BufferedImage> borders) {
+        this.font = font;
+        this.borders = borders;
     }
 
     public void draw(GameState gameState, Graphics graphics) {
@@ -46,6 +42,8 @@ public class Hud {
         graphics.drawImage(borders.get(38), 256, 0, null);
         graphics.drawImage(borders.get(39), 272, 0, null);
         graphics.drawImage(borders.get(8), 288, 0, null);
+
+        font.drawText(String.format("%08d", gameState.getScore()), graphics, 240, 24);
 
         // health
         graphics.drawImage(borders.get(14), 224, 40, null);

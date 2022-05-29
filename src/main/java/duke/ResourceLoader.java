@@ -1,6 +1,8 @@
 package duke;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.math.BigInteger;
@@ -111,6 +113,14 @@ public class ResourceLoader {
 
     public List<BufferedImage> readMan() {
         return Stream.of("MAN0.DN1", "MAN1.DN1", "MAN2.DN1", "MAN3.DN1").flatMap(name -> readTiles(name, false).stream()).collect(Collectors.toList());
+    }
+
+    public List<BufferedImage> readFont() {
+        return Stream.of("FONT1.DN1", "FONT2.DN1").flatMap(name -> readTiles(name, false).stream()).collect(Collectors.toList());
+    }
+
+    public List<BufferedImage> readAnim() {
+        return Stream.of("ANIM0.DN1", "ANIM1.DN1", "ANIM2.DN1", "ANIM3.DN1", "ANIM4.DN1", "ANIM5.DN1").flatMap(name -> readTiles(name, false).stream()).collect(Collectors.toList());
     }
 
     public List<BufferedImage> readBorder() {
@@ -262,8 +272,8 @@ public class ResourceLoader {
 
         BufferedImage map = new BufferedImage(Level.WIDTH * 16, Level.HEIGHT * 16, BufferedImage.TYPE_INT_ARGB);
 
-        for (int row = 0; row < Level.HEIGHT; row ++) {
-            for (int col = 0; col < Level.WIDTH; col ++) {
+        for (int row = 0; row < Level.HEIGHT; row++) {
+            for (int col = 0; col < Level.WIDTH; col++) {
                 int tileId = level.getTile(row, col);
 
                 if (tileId < 0x3000) {
@@ -273,5 +283,26 @@ public class ResourceLoader {
         }
 
         return map;
+    }
+
+    private BufferedImage toSheet(List<BufferedImage> tiles) {
+        BufferedImage first = tiles.get(0);
+
+        int width = first.getWidth();
+        int height = first.getHeight();
+
+        BufferedImage image = new BufferedImage(tiles.size() * width, height, BufferedImage.TYPE_INT_ARGB);
+
+        for (int i = 0; i < tiles.size(); i++) {
+            image.getGraphics().drawImage(tiles.get(i), i * width, 0, null);
+        }
+        return image;
+    }
+
+    public static void main(String[] args) throws IOException {
+        ResourceLoader l = new ResourceLoader(Path.of(".dn1"));
+        List<BufferedImage> sheet  = l.readTiles("OBJECT1.DN1", false);
+
+        ImageIO.write(l.toSheet(sheet), "PNG", new File("OBJECT.PNG"));
     }
 }

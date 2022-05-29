@@ -23,10 +23,13 @@ public class Gfx extends Canvas {
 
     private List<BufferedImage> tileSet;
     private List<BufferedImage> man;
+    private List<BufferedImage> anim;
+
     private Hud hud;
+    private Font font;
 
     private int flasher;
-    
+
     private int cameraX;
     private int cameraY;
 
@@ -36,13 +39,14 @@ public class Gfx extends Canvas {
         setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
 
         buffer = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
-        hud = new Hud(loader);
     }
 
     public void init() {
         tileSet = loader.readTiles();
         man = loader.readMan();
-        hud.init();
+        anim = loader.readAnim();
+        font = new Font(loader.readFont());
+        hud = new Hud(font, loader.readBorder());
     }
 
     public void render(GameState gameState) {
@@ -105,11 +109,7 @@ public class Gfx extends Canvas {
             for (int col = gridX; col < (gridX + 15); col++) {
                 int tileId = gameState.getLevel().getTile(row, col);
 
-                if (tileId > 0 && tileId < 0x3000) {
-                    int index = (tileId / 32) + ((tileId < 0x0600) ? flasher : 0);
-
-                    graphics.drawImage(tileSet.get(index), screenX, screenY, null);
-                }
+                graphics.drawImage(resolveTile(tileId), screenX, screenY, null);
 
                 screenX += TILE_SIZE;
             }
@@ -118,6 +118,32 @@ public class Gfx extends Canvas {
         }
 
         flasher = (flasher + 1) % 4;
+    }
+
+    private BufferedImage resolveTile(int tileId) {
+        BufferedImage image = null;
+
+        if (tileId > 0x0 && tileId < 0x0600) {
+            image = tileSet.get((tileId / 32) + flasher);
+        } else if ((tileId >= 0x600) && (tileId < 0x3000)) {
+            image = tileSet.get(tileId / 32);
+        } else if (tileId == 0x3025) { // Brown spikes
+            image = anim.get(211);
+        } else if (tileId == 0x3026) { // Rock (left)
+            image = anim.get(212);
+        } else if (tileId == 0x3027) { // Rock (right)
+            image = anim.get(213);
+        } else if (tileId == 0x3028) { // Little window
+            image = anim.get(214);
+        } else if (tileId == 0x303D) { // Mesh
+            image = anim.get(262);
+        } else if (tileId == 0x303E) { // Window (left)
+            image = anim.get(263);
+        } else if (tileId == 0x303F) { // Window (right)
+            image = anim.get(264);
+        }
+
+        return image;
     }
 
     private void drawDuke(GameState gameState, Graphics graphics) {

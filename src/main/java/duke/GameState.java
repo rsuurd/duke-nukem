@@ -4,6 +4,12 @@ public class GameState {
     private Duke duke;
     private Level level;
 
+    private int score;
+
+    public GameState() {
+        score = 0;
+    }
+
     public void switchLevel(Level level) {
         duke = new Duke();
 
@@ -19,6 +25,10 @@ public class GameState {
 
     public Duke getDuke() {
         return duke;
+    }
+
+    public int getScore() {
+        return score;
     }
 
     public void update() {
