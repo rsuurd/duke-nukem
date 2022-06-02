@@ -42,11 +42,11 @@ public class Assets {
         return object.get(index);
     }
 
-    public List<BufferedImage> getFont() {
-        return font;
+    public BufferedImage getFont(int index) {
+        return font.get(index);
     }
 
-    public List<BufferedImage> getBorder() {
-        return border;
+    public BufferedImage getBorder(int index) {
+        return border.get(index);
     }
 }

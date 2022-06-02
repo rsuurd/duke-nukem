@@ -70,10 +70,7 @@ public class DukeNukem {
     }
 
     private void handleInput() {
-        int deltaY = keyHandler.isUp() ? -CAMERA_SPEED : keyHandler.isDown() ? CAMERA_SPEED : 0;
-
         Duke duke = gameState.getDuke();
-        duke.accelerate(0, deltaY);
 
         if (keyHandler.isLeft()) {
             duke.move(Facing.LEFT);

@@ -1,8 +1,7 @@
 package duke;
 
-import duke.active.Acme;
 import duke.active.Active;
-import duke.active.Camera;
+import duke.active.ActiveFactory;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -265,20 +264,17 @@ public class ResourceLoader {
                     tileId = tiles[i - 1];
 
                     startLocation = i;
-                } else if (tileId == 0x302A) { // ACME sign
-                    tileId = tiles[i - 1];
-
+                } else if (tileId >= 0x3000) { // actives
                     int x = (i % Level.WIDTH) * TILE_SIZE;
                     int y = (i / Level.WIDTH) * TILE_SIZE;
 
-                    actives.add(new Acme(x, y));
-                } else if (tileId == 0x3024) { // camera
-                    tileId = tiles[i - 1];
+                    try {
+                        actives.add(ActiveFactory.create(tileId, x, y));
 
-                    int x = (i % Level.WIDTH) * TILE_SIZE;
-                    int y = (i / Level.WIDTH) * TILE_SIZE;
-
-                    actives.add(new Camera(x, y));
+                        tileId = tiles[i - 1];
+                    } catch (IllegalArgumentException e) {
+                        System.err.printf("Unmapped TileID: 0x%x\n", tileId);
+                    }
                 }
 
                 tiles[i] = tileId;

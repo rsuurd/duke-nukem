@@ -15,8 +15,7 @@ public class GameState {
 
         this.level = level;
 
-        duke.reset();
-        duke.moveTo(level.getPlayerStartX(), level.getPlayerStartY());
+        duke.reset(level);
     }
 
     public Level getLevel() {

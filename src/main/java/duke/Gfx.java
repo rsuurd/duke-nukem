@@ -32,6 +32,8 @@ public class Gfx extends Canvas implements Renderer {
     public Gfx(ResourceLoader loader) {
         this.loader = loader;
         assets = new Assets(loader);
+        font = new Font(assets);
+        hud = new Hud(font, assets);
 
         setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
 
@@ -40,9 +42,6 @@ public class Gfx extends Canvas implements Renderer {
 
     public void init() {
         assets.init();
-
-        font = new Font(assets.getFont());
-        hud = new Hud(font, assets.getBorder());
     }
 
     public void render(GameState gameState) {
@@ -57,6 +56,8 @@ public class Gfx extends Canvas implements Renderer {
         duke.render(this, assets);
         graphics.setColor(Color.magenta);
         graphics.drawRect(duke.getX() - cameraX, duke.getY() - cameraY, 31, 31);
+
+        gameState.getLevel().getActives().forEach(active -> active.render(this, assets));
 
         hud.draw(gameState, graphics);
 
@@ -102,25 +103,13 @@ public class Gfx extends Canvas implements Renderer {
         int gridX = cameraX / TILE_SIZE;
         int gridY = cameraY / TILE_SIZE;
 
-        int scrollX = cameraX % TILE_SIZE;
-        int scrollY = cameraY % TILE_SIZE;
-
-        int screenY = -scrollY;
         for (int row = gridY; row < (gridY + 12); row++) {
-            int screenX = -scrollX;
-
             for (int col = gridX; col < (gridX + 15); col++) {
                 int tileId = level.getTile(row, col);
 
-                graphics.drawImage(resolveTile(tileId), screenX, screenY, null);
-
-                screenX += TILE_SIZE;
+                drawTile(resolveTile(tileId), (col * TILE_SIZE), (row * TILE_SIZE));
             }
-
-            screenY += TILE_SIZE;
         }
-
-        level.getActives().forEach(active -> active.render(this, assets));
 
         flasher = (flasher + 1) % 4;
     }
@@ -153,15 +142,11 @@ public class Gfx extends Canvas implements Renderer {
 
     @Override
     public void drawTile(BufferedImage image, int x, int y) {
-        drawTile(buffer.getGraphics(), image, x, y);
-    }
-
-    private void drawTile(Graphics graphics, BufferedImage image, int x, int y) {
         int screenX = x - cameraX;
         int screenY = y - cameraY;
 
         if ((screenX >= 0) && (screenX < 224) && (screenY >= 0) && (screenY < 176)) {
-            graphics.drawImage(image, screenX, screenY, null);
+            buffer.getGraphics().drawImage(image, screenX, screenY, null);
         }
     }
 

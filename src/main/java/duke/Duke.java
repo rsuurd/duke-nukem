@@ -15,14 +15,10 @@ public class Duke {
     private int jumpFramesLeft;
     private int frame;
 
-    public void reset() {
+    public void reset(Level level) {
         facing = Facing.LEFT;
         setState(State.STAND);
-    }
-
-    public void accelerate(int deltaX, int deltaY) {
-        velocityX += deltaX;
-        velocityY += deltaY;
+        moveTo(level.getPlayerStartX(), level.getPlayerStartY());
     }
 
     public void moveTo(int x, int y) {
@@ -58,14 +54,14 @@ public class Duke {
         renderer.drawTile(assets.getMan(tileIndex), x, y);
         renderer.drawTile(assets.getMan(tileIndex + 1), x + TILE_SIZE, y);
         renderer.drawTile(assets.getMan(tileIndex + 2), x, y + TILE_SIZE);
-        renderer.drawTile(assets.getMan(tileIndex = 3), x + TILE_SIZE, y + TILE_SIZE);
+        renderer.drawTile(assets.getMan(tileIndex + 3), x + TILE_SIZE, y + TILE_SIZE);
     }
 
     private void moveHorizontally(Level level) {
         int newPositionX = x + velocityX;
 
         if (!level.collides(newPositionX, y, 31, 31)) {
-            x = newPositionX;
+            moveTo(newPositionX, y);
         }
 
         velocityX = 0;
@@ -92,7 +88,7 @@ public class Duke {
 
                 velocityY = 0;
             } else {
-                y = newPositionY;
+                moveTo(x, newPositionY);
             }
 
             i++;
@@ -125,10 +121,6 @@ public class Duke {
         return y;
     }
 
-    public Facing getFacing() {
-        return facing;
-    }
-
     public void setState(State state) {
         if (this.state != state) {
             this.state = state;
@@ -138,10 +130,6 @@ public class Duke {
 
     public State getState() {
         return state;
-    }
-
-    public int getFrame() {
-        return frame;
     }
 
     public void move(Facing facing) {
@@ -187,7 +175,6 @@ public class Duke {
     private boolean canJump() {
         return (state == State.STAND) || (state == State.WALK);
     }
-
 
     enum State {
         STAND, WALK, JUMP, FALL
