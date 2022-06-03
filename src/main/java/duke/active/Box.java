@@ -22,6 +22,12 @@ public class Box extends Active {
         if (!state.getLevel().collides(x, y + 8, 15, 15)) {
             y += 8;
         }
+
+        state.getBolts().stream().filter(bolt -> bolt.hits(this)).findFirst().ifPresent(bolt -> {
+            bolt.hit();
+
+            active = false;
+        });
     }
 
     @Override

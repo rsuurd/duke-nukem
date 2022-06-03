@@ -61,6 +61,11 @@ public class Hud {
         graphics.drawImage(assets.getBorder(34), 264, 80, null);
         graphics.drawImage(assets.getBorder(35), 280, 80, null);
         graphics.drawImage(assets.getBorder(15), 304, 80, null);
+        graphics.drawImage(assets.getObject(43), 264, 94, null); // gun
+
+        for (int i = 0; i < gameState.getDuke().getFirePower(); i ++) {
+            graphics.drawImage(assets.getObject(6 + i), 240 + (i * 16), 106, null);
+        }
 
         // inventory
         graphics.drawImage(assets.getBorder(14), 224, 128, null);

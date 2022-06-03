@@ -2,7 +2,6 @@ package duke.active;
 
 import duke.Assets;
 import duke.GameState;
-import duke.Gfx;
 import duke.Renderer;
 
 public abstract class Active {
@@ -30,7 +29,9 @@ public abstract class Active {
         return active;
     }
 
-    public void update(GameState state) {}
+    public void update(GameState state) {
+    }
 
-    public void render(Renderer renderer, Assets assets) {}
+    public void render(Renderer renderer, Assets assets) {
+    }
 }

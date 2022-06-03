@@ -3,6 +3,7 @@ package duke;
 import duke.active.Active;
 
 import java.awt.image.BufferedImage;
+import java.util.Iterator;
 import java.util.List;
 
 import static duke.Gfx.TILE_SIZE;
@@ -58,6 +59,16 @@ public class Level {
     }
 
     public void update(GameState state) {
-        getActives().stream().filter(Active::isActive).forEach(active -> active.update(state));
+        Iterator<Active> iterator = getActives().iterator();
+
+        while (iterator.hasNext()) {
+            Active active = iterator.next();
+
+            active.update(state);
+
+            if (!active.isActive()) {
+                iterator.remove();
+            }
+        }
     }
 }

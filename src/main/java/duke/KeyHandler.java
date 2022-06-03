@@ -10,6 +10,7 @@ public class KeyHandler extends KeyAdapter {
     private boolean right;
 
     private boolean jump;
+    private boolean fire;
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -27,7 +28,8 @@ public class KeyHandler extends KeyAdapter {
             case KeyEvent.VK_DOWN -> down = pressed;
             case KeyEvent.VK_LEFT -> left = pressed;
             case KeyEvent.VK_RIGHT -> right = pressed;
-            case KeyEvent.VK_CONTROL -> jump = pressed;
+            case KeyEvent.VK_ALT -> jump = pressed;
+            case KeyEvent.VK_CONTROL -> fire = pressed;
         }
     }
 
@@ -49,5 +51,9 @@ public class KeyHandler extends KeyAdapter {
 
     public boolean isJump() {
         return jump;
+    }
+
+    public boolean isFire() {
+        return fire;
     }
 }

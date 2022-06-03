@@ -3,7 +3,10 @@ package duke;
 import duke.active.Active;
 import duke.active.ActiveFactory;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.math.BigInteger;
@@ -316,5 +319,10 @@ public class ResourceLoader {
             image.getGraphics().drawImage(tiles.get(i), i * width, 0, null);
         }
         return image;
+    }
+
+    public static void main(String[] args) throws IOException {
+        ResourceLoader l = new ResourceLoader(Path.of(".dn1"));
+        ImageIO.write(l.toSheet(l.readObject()), "png", new File("object.png"));
     }
 }

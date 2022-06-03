@@ -15,6 +15,8 @@ public class Duke {
     private int jumpFramesLeft;
     private int frame;
 
+    private int firePower = 1;
+
     public void reset(Level level) {
         facing = Facing.LEFT;
         setState(State.STAND);
@@ -174,6 +176,18 @@ public class Duke {
 
     private boolean canJump() {
         return (state == State.STAND) || (state == State.WALK);
+    }
+
+    public int getFirePower() {
+        return firePower;
+    }
+
+    public void fire(GameState state) {
+        if (state.getBolts().size() < firePower) {
+            int x = this.x + ((facing == Facing.RIGHT) ? TILE_SIZE + 8 : -8);
+
+            state.getBolts().add(new Bolt(x, y + 4, facing));
+        }
     }
 
     enum State {
