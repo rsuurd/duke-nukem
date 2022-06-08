@@ -18,12 +18,17 @@ public class Duke {
     private int jumpFramesLeft;
     private int frame;
 
+    private int health;
     private int firePower = 1;
+
+    private int invincibility;
 
     public void reset(Level level) {
         facing = Facing.LEFT;
         setState(State.STAND);
         moveTo(level.getPlayerStartX(), level.getPlayerStartY());
+
+        health = 8;
     }
 
     public void moveTo(int x, int y) {
@@ -33,6 +38,10 @@ public class Duke {
 
     public void update(GameState state) {
         Level level = state.getLevel();
+
+        if (invincibility > 0) {
+            invincibility--;
+        }
 
         moveHorizontally(level);
         moveVertically(level);
@@ -53,15 +62,21 @@ public class Duke {
         };
 
         tileIndex += (facing == Facing.LEFT) ? 0 : (state == Duke.State.WALK) ? 16 : 4;
-
         tileIndex += ((frame / 2) * 4);
 
-        int screenX = x - 8;
+        // override with xray 182
+        if (invincibility > 28) {
+            tileIndex = 182 + ((facing == Facing.LEFT) ? 0 : 4);
+        }
 
-        renderer.drawTile(assets.getMan(tileIndex), screenX, y);
-        renderer.drawTile(assets.getMan(tileIndex + 1), screenX + TILE_SIZE, y);
-        renderer.drawTile(assets.getMan(tileIndex + 2), screenX, y + TILE_SIZE);
-        renderer.drawTile(assets.getMan(tileIndex + 3), screenX + TILE_SIZE, y + TILE_SIZE);
+        if (((invincibility % 2) == 0)) {
+            int screenX = x - 8;
+
+            renderer.drawTile(assets.getMan(tileIndex), screenX, y);
+            renderer.drawTile(assets.getMan(tileIndex + 1), screenX + TILE_SIZE, y);
+            renderer.drawTile(assets.getMan(tileIndex + 2), screenX, y + TILE_SIZE);
+            renderer.drawTile(assets.getMan(tileIndex + 3), screenX + TILE_SIZE, y + TILE_SIZE);
+        }
     }
 
     private void moveHorizontally(Level level) {
@@ -183,6 +198,10 @@ public class Duke {
         return (state == State.STAND) || (state == State.WALK);
     }
 
+    public int getHealth() {
+        return health;
+    }
+
     public int getFirePower() {
         return firePower;
     }
@@ -198,6 +217,18 @@ public class Duke {
     public boolean collidesWith(int x, int y, int width, int height) {
         return ((this.x < (x + width)) && ((this.x + WIDTH) > x) &&
                 (this.y < (y + height)) && ((this.y + HEIGHT) > y));
+    }
+
+    public void hurt() {
+        if (!isInvincible()) {
+            invincibility = 32;
+
+            health--;
+        }
+    }
+
+    public boolean isInvincible() {
+        return invincibility > 0;
     }
 
     enum State {

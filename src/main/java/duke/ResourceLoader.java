@@ -323,6 +323,6 @@ public class ResourceLoader {
 
     public static void main(String[] args) throws IOException {
         ResourceLoader l = new ResourceLoader(Path.of(".dn1"));
-        ImageIO.write(l.toSheet(l.readObject()), "png", new File("object.png"));
+        ImageIO.write(l.toSheet(l.readMan()), "png", new File("man.png"));
     }
 }

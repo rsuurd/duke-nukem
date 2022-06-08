@@ -1,8 +1,11 @@
 package duke.active;
 
+import duke.active.enemies.Techbot;
+
 public class ActiveFactory {
     public static Active create(int tileId, int x, int y) {
         return switch (tileId) {
+            case 0x3010 -> new Techbot(x, y);
             case 0x3024 -> new Camera(x, y);
             case 0x302A -> new Acme(x, y);
             case 0x3000, 0x3006, 0x3008, 0x300F, 0x3012, 0x3020, 0x3029, 0x3033, 0x3037, 0x3038, 0x3039, 0x303A -> new Box(Box.GREY, x, y);

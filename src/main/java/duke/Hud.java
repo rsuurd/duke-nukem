@@ -53,6 +53,10 @@ public class Hud {
         graphics.drawImage(assets.getBorder(8), 288, 40, null);
         graphics.drawImage(assets.getBorder(15), 304, 40, null);
 
+        for (int i = 0; i < gameState.getDuke().getHealth(); i ++) {
+            graphics.drawImage(assets.getObject(61), 240 + (i * 8), 60, null);
+        }
+
         // fire power
         graphics.drawImage(assets.getBorder(14), 224, 80, null);
         graphics.drawImage(assets.getBorder(8), 240, 80, null);
