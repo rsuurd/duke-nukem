@@ -11,10 +11,17 @@ public class Box extends Active {
 
     private int tileIndex;
 
-    protected Box(int tileIndex, int x, int y) {
+    private Active contents;
+
+    public Box(int tileIndex, int x, int y) {
+        this(tileIndex, x, y, null);
+    }
+
+    public Box(int tileIndex, int x, int y, Active contents) {
         super(x, y);
 
         this.tileIndex = tileIndex;
+        this.contents = contents;
     }
 
     @Override
@@ -25,6 +32,12 @@ public class Box extends Active {
 
         state.getBolts().stream().filter(bolt -> bolt.hits(this)).findFirst().ifPresent(bolt -> {
             bolt.hit();
+
+            if (contents != null) {
+                contents.moveTo(x, y);
+
+                state.spawn(contents); // FIXME
+            }
 
             active = false;
         });

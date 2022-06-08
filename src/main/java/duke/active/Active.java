@@ -17,6 +17,11 @@ public abstract class Active {
         active = true;
     }
 
+    public void moveTo(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
     public int getX() {
         return x;
     }

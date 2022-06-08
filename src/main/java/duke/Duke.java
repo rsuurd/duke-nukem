@@ -3,6 +3,9 @@ package duke;
 import static duke.Gfx.TILE_SIZE;
 
 public class Duke {
+    public static final int WIDTH = 15;
+    public static final int HEIGHT = 31;
+
     private int x;
     private int y;
 
@@ -53,16 +56,18 @@ public class Duke {
 
         tileIndex += ((frame / 2) * 4);
 
-        renderer.drawTile(assets.getMan(tileIndex), x, y);
-        renderer.drawTile(assets.getMan(tileIndex + 1), x + TILE_SIZE, y);
-        renderer.drawTile(assets.getMan(tileIndex + 2), x, y + TILE_SIZE);
-        renderer.drawTile(assets.getMan(tileIndex + 3), x + TILE_SIZE, y + TILE_SIZE);
+        int screenX = x - 8;
+
+        renderer.drawTile(assets.getMan(tileIndex), screenX, y);
+        renderer.drawTile(assets.getMan(tileIndex + 1), screenX + TILE_SIZE, y);
+        renderer.drawTile(assets.getMan(tileIndex + 2), screenX, y + TILE_SIZE);
+        renderer.drawTile(assets.getMan(tileIndex + 3), screenX + TILE_SIZE, y + TILE_SIZE);
     }
 
     private void moveHorizontally(Level level) {
         int newPositionX = x + velocityX;
 
-        if (!level.collides(newPositionX, y, 31, 31)) {
+        if (!level.collides(newPositionX, y, WIDTH, HEIGHT)) {
             moveTo(newPositionX, y);
         }
 
@@ -77,7 +82,7 @@ public class Duke {
         while (!collision && (i < Math.abs(velocityY))) {
             int newPositionY = y + sign;
 
-            collision = level.collides(x, newPositionY, 31, 31);
+            collision = level.collides(x, newPositionY, WIDTH, HEIGHT);
 
             if (collision) {
                 jumpFramesLeft = 0;
@@ -188,6 +193,11 @@ public class Duke {
 
             state.getBolts().add(new Bolt(x, y + 4, facing));
         }
+    }
+
+    public boolean collidesWith(int x, int y, int width, int height) {
+        return ((this.x < (x + width)) && ((this.x + WIDTH) > x) &&
+                (this.y < (y + height)) && ((this.y + HEIGHT) > y));
     }
 
     enum State {

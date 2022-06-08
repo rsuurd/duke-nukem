@@ -1,5 +1,7 @@
 package duke;
 
+import duke.active.Active;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -11,11 +13,13 @@ public class GameState {
     private int score;
 
     private List<Bolt> bolts;
+    private List<Active> spawns;
 
     public GameState() {
         score = 0;
 
         bolts = new ArrayList<>();
+        spawns = new ArrayList<>();
     }
 
     public void switchLevel(Level level) {
@@ -42,6 +46,10 @@ public class GameState {
         return score;
     }
 
+    public void increaseScore(int points) {
+        score += points;
+    }
+
     public void update() {
         level.update(this);
 
@@ -59,6 +67,13 @@ public class GameState {
             }
         }
 
+        level.getActives().addAll(spawns);
+        spawns.clear();
+
         duke.update(this);
+    }
+
+    public void spawn(Active active) {
+        spawns.add(active);
     }
 }
