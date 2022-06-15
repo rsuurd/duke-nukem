@@ -1,6 +1,7 @@
 package duke;
 
 import duke.active.Active;
+import duke.effects.Effect;
 
 import static duke.Gfx.TILE_SIZE;
 
@@ -44,7 +45,7 @@ public class Duke extends Active {
         }
 
         moveHorizontally(level);
-        moveVertically(level);
+        moveVertically(state);
 
         if (velocityY > 0) {
             setState(State.FALL);
@@ -158,9 +159,11 @@ public class Duke extends Active {
     }
 
     @Override
-    protected void land() {
-        if (state == State.FALL || state == State.JUMP) {
+    protected void land(GameState state) {
+        if (this.state == State.FALL || this.state == State.JUMP) {
             setState(State.STAND);
+
+            state.addEffect(new Effect.Dustcloud(x, y + TILE_SIZE));
         }
     }
 

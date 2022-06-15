@@ -61,7 +61,7 @@ public abstract class Active {
 
     protected void hitWall() {}
 
-    protected void moveVertically(Level level) {
+    protected void moveVertically(GameState state) {
         boolean collision = false;
         int sign = Integer.signum(velocityY);
         int i = 0;
@@ -73,14 +73,14 @@ public abstract class Active {
             int col = x / TILE_SIZE;
 
             while (!collision && (col <= (x + width) / TILE_SIZE)) {
-                collision = level.isSolid(row, col++);
+                collision = state.getLevel().isSolid(row, col++);
             }
 
             if (collision) {
                 if (velocityY < 0) {
                     bump();
                 } else {
-                    land();
+                    land(state);
                 }
 
                 velocityY = 0;
@@ -93,11 +93,11 @@ public abstract class Active {
     }
 
     protected void bump() {}
-    protected void land() {}
+    protected void land(GameState state) {}
 
     public void update(GameState state) {
         moveHorizontally(state.getLevel());
-        moveVertically(state.getLevel());
+        moveVertically(state);
 
         applyGravity();
     }

@@ -4,7 +4,6 @@ import duke.active.Active;
 import duke.active.ActiveFactory;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -135,6 +134,10 @@ public class ResourceLoader {
 
     public List<BufferedImage> readBorder() {
         return readTiles("BORDER.DN1", true);
+    }
+
+    public List<BufferedImage> readNumbers() {
+        return readTiles("NUMBERS.DN1", false);
     }
 
     public List<BufferedImage> readTiles(String name, boolean opaque) {
@@ -323,6 +326,6 @@ public class ResourceLoader {
 
     public static void main(String[] args) throws IOException {
         ResourceLoader l = new ResourceLoader(Path.of(".dn1"));
-        ImageIO.write(l.toSheet(l.readMan()), "png", new File("man.png"));
+        ImageIO.write(l.toSheet(l.readNumbers()), "png", new File("numbers.png"));
     }
 }

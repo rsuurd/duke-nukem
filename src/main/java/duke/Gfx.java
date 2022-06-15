@@ -56,9 +56,9 @@ public class Gfx extends Canvas implements Renderer {
         duke.render(this, assets);
         graphics.setColor(Color.magenta);
         graphics.drawRect(duke.getX() - cameraX, duke.getY() - cameraY, duke.getWidth(), duke.getHeight());
-        gameState.getBolts().forEach(bolt -> bolt.render(this, assets));
-
         gameState.getLevel().getActives().forEach(active -> active.render(this, assets));
+        gameState.getBolts().forEach(bolt -> bolt.render(this, assets));
+        gameState.getEffects().forEach(effect -> effect.render(this, assets));
 
         hud.draw(gameState, graphics);
 

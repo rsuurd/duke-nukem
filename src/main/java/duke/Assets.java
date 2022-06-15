@@ -12,6 +12,7 @@ public class Assets {
     private List<BufferedImage> object;
     private List<BufferedImage> font;
     private List<BufferedImage> border;
+    private List<BufferedImage> numbers;
 
     public Assets(ResourceLoader loader) {
         this.loader = loader;
@@ -24,6 +25,7 @@ public class Assets {
         object = loader.readObject();
         font = loader.readFont();
         border = loader.readBorder();
+        numbers = loader.readNumbers();
     }
 
     public BufferedImage getTileSet(int index) {
@@ -48,5 +50,9 @@ public class Assets {
 
     public BufferedImage getBorder(int index) {
         return border.get(index);
+    }
+
+    public BufferedImage getNumber(int index) {
+        return numbers.get(index);
     }
 }

@@ -3,6 +3,7 @@ package duke.active;
 import duke.Assets;
 import duke.GameState;
 import duke.Renderer;
+import duke.effects.Effect;
 
 abstract class Item extends Active {
     protected int frame;
@@ -37,6 +38,7 @@ abstract class Item extends Active {
 
     protected void pickedUp(GameState state) {
         state.increaseScore(100);
+        state.addEffect(new Effect.Score(x, y, 100));
     }
 
     @Override

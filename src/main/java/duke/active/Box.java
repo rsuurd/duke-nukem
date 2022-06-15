@@ -3,6 +3,7 @@ package duke.active;
 import duke.Assets;
 import duke.GameState;
 import duke.Renderer;
+import duke.effects.Effect;
 
 public class Box extends Active {
     static final int GREY = 0;
@@ -38,6 +39,8 @@ public class Box extends Active {
 
             state.spawn(contents);
         }
+
+        Effect.Particle.createParticles(state, x, y);
 
         active = false;
     }

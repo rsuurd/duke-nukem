@@ -1,6 +1,7 @@
 package duke;
 
 import duke.active.Active;
+import duke.effects.Effect;
 
 import java.awt.image.BufferedImage;
 
@@ -35,6 +36,8 @@ public class Bolt extends Active {
 
         if (state.getLevel().isSolid(row, col)) {
             hit();
+
+            state.addEffect(new Effect.Sparks(x, y));
         } else {
             active = Math.abs(x - state.getDuke().getX()) < (10 * TILE_SIZE);
         }

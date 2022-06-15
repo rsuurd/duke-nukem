@@ -1,6 +1,7 @@
 package duke;
 
 import duke.active.Active;
+import duke.effects.Effect;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -14,12 +15,14 @@ public class GameState {
 
     private List<Bolt> bolts;
     private List<Active> spawns;
+    private List<Effect> effects;
 
     public GameState() {
         score = 0;
 
         bolts = new ArrayList<>();
         spawns = new ArrayList<>();
+        effects = new ArrayList<>();
     }
 
     public void switchLevel(Level level) {
@@ -40,6 +43,10 @@ public class GameState {
 
     public List<Bolt> getBolts() {
         return bolts;
+    }
+
+    public List<Effect> getEffects() {
+        return effects;
     }
 
     public int getScore() {
@@ -67,6 +74,8 @@ public class GameState {
             }
         }
 
+        getEffects().removeIf(Effect::isDone);
+
         level.getActives().addAll(spawns);
         spawns.clear();
 
@@ -75,5 +84,9 @@ public class GameState {
 
     public void spawn(Active active) {
         spawns.add(active);
+    }
+
+    public void addEffect(Effect effect) {
+        this.effects.add(effect);
     }
 }

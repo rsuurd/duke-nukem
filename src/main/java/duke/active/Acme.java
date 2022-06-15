@@ -61,7 +61,7 @@ public class Acme extends Active {
     }
 
     @Override
-    protected void land() {
+    protected void land(GameState state) {
         active = false;
     }
 
