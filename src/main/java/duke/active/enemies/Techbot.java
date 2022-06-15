@@ -25,24 +25,18 @@ public class Techbot extends Active {
 
     @Override
     public void update(GameState state) {
-        if (!state.getLevel().collides(x, y + 8, 15, 15)) {
-            y += 8;
-        }
+        super.update(state);
 
         if (isAlive()) {
             if ((frame % 2) == 0) {
                 tryMove(state.getLevel());
             }
 
-            if (state.getDuke().collidesWith(x, y, SIZE, SIZE)) {
+            if (state.getDuke().collidesWith(this)) {
                 state.getDuke().hurt();
             }
 
-            state.getBolts().stream().filter(bolt -> bolt.hits(this)).findFirst().ifPresent(bolt -> {
-                bolt.hit();
-
-                hit();
-            });
+            checkHit(state);
         } else {
             if (exploding == DEATH_TIMER) {
                 state.increaseScore(100);
@@ -63,7 +57,7 @@ public class Techbot extends Active {
         boolean solidGround = level.collides(destinationX, y + 8, SIZE, SIZE);
 
         if (free && solidGround) {
-            moveTo(destinationX, y);
+            velocityX = destinationX - x;
         } else {
             facing = (facing == Facing.LEFT) ? Facing.RIGHT : Facing.LEFT;
         }
@@ -82,7 +76,7 @@ public class Techbot extends Active {
         }
     }
 
-    private void hit() {
+    protected void hit(GameState state) {
         exploding = 0;
     }
 }

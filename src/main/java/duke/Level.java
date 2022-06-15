@@ -41,13 +41,17 @@ public class Level {
 
         for (int row = y / TILE_SIZE; row <= (y + height) / TILE_SIZE; row ++) {
             for (int col = x / TILE_SIZE; col <= (x + width) / TILE_SIZE; col ++) {
-                int tileId = getTile(row, col);
-
-                collides |= (tileId >= 0x1800) && (tileId <= 0x2FFF);
+                collides |= isSolid(row, col);
             }
         }
 
         return collides;
+    }
+
+    public boolean isSolid(int row, int col) {
+        int tileId = getTile(row, col);
+
+        return (tileId >= 0x1800) && (tileId <= 0x2FFF);
     }
 
     public int getPlayerStartX() {

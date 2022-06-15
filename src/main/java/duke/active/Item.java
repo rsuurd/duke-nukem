@@ -4,11 +4,7 @@ import duke.Assets;
 import duke.GameState;
 import duke.Renderer;
 
-import static duke.Gfx.TILE_SIZE;
-
 abstract class Item extends Active {
-    private static final int SIZE = TILE_SIZE - 1;
-
     protected int frame;
     private boolean animated;
     private int tileIndex;
@@ -26,15 +22,13 @@ abstract class Item extends Active {
 
     @Override
     public void update(GameState state) {
-        if (!state.getLevel().collides(x, y + 8, SIZE, SIZE)) {
-            y += 8;
-        }
+        super.update(state);
 
         if (animated) {
             frame = (frame + 1) % 3;
         }
 
-        if (state.getDuke().collidesWith(x, y, SIZE, SIZE)) {
+        if (state.getDuke().collidesWith(this)) {
             pickedUp(state);
 
             active = false;

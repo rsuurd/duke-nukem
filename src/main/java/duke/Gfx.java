@@ -52,12 +52,11 @@ public class Gfx extends Canvas implements Renderer {
         clearScreen(graphics);
         drawLevel(gameState, graphics);
 
-        gameState.getBolts().forEach(bolt -> bolt.render(this, assets));
-
         Duke duke = gameState.getDuke();
         duke.render(this, assets);
         graphics.setColor(Color.magenta);
-        graphics.drawRect(duke.getX() - cameraX, duke.getY() - cameraY, Duke.WIDTH, Duke.HEIGHT);
+        graphics.drawRect(duke.getX() - cameraX, duke.getY() - cameraY, duke.getWidth(), duke.getHeight());
+        gameState.getBolts().forEach(bolt -> bolt.render(this, assets));
 
         gameState.getLevel().getActives().forEach(active -> active.render(this, assets));
 

@@ -1,6 +1,9 @@
 package duke.active;
 
-import duke.*;
+import duke.Assets;
+import duke.Duke;
+import duke.GameState;
+import duke.Renderer;
 
 import static duke.Gfx.TILE_SIZE;
 
@@ -23,8 +26,10 @@ public class Acme extends Active {
         switch (this.state) {
             case IDLE -> checkDrop(duke);
             case SHAKING -> shake();
-            case FALLING -> fall(state.getLevel());
+            case FALLING -> super.update(state);
         }
+
+        checkHit(state);
     }
 
     private void checkDrop(Duke duke) {
@@ -43,15 +48,20 @@ public class Acme extends Active {
         }
     }
 
-    private void fall(Level level) {
-        y += FALL_SPEED;
-
-        if (level.collides(x, y + TILE_SIZE - 1, 31, 0)) {
-            crash();
+    @Override
+    protected void applyGravity() {
+        if (this.state == State.FALLING) {
+            velocityY = FALL_SPEED;
         }
     }
 
-    private void crash() {
+    @Override
+    protected void hit(GameState state) {
+        state.increaseScore(500);
+    }
+
+    @Override
+    protected void land() {
         active = false;
     }
 

@@ -84,8 +84,6 @@ public class DukeNukem {
             duke.jump();
         }
 
-        if (keyHandler.isFire()) {
-            duke.fire(gameState);
-        }
+        duke.fire(keyHandler.isFire());
     }
 }

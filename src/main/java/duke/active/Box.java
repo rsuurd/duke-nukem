@@ -26,21 +26,20 @@ public class Box extends Active {
 
     @Override
     public void update(GameState state) {
-        if (!state.getLevel().collides(x, y + 8, 15, 15)) {
-            y += 8;
+        super.update(state);
+
+        checkHit(state);
+    }
+
+    @Override
+    protected void hit(GameState state) {
+        if (contents != null) {
+            contents.moveTo(x, y);
+
+            state.spawn(contents);
         }
 
-        state.getBolts().stream().filter(bolt -> bolt.hits(this)).findFirst().ifPresent(bolt -> {
-            bolt.hit();
-
-            if (contents != null) {
-                contents.moveTo(x, y);
-
-                state.spawn(contents); // FIXME
-            }
-
-            active = false;
-        });
+        active = false;
     }
 
     @Override

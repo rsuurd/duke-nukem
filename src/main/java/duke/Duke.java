@@ -1,17 +1,10 @@
 package duke;
 
+import duke.active.Active;
+
 import static duke.Gfx.TILE_SIZE;
 
-public class Duke {
-    public static final int WIDTH = 15;
-    public static final int HEIGHT = 31;
-
-    private int x;
-    private int y;
-
-    private int velocityX;
-    private int velocityY;
-
+public class Duke extends Active {
     private Facing facing;
     private State state;
 
@@ -22,6 +15,13 @@ public class Duke {
     private int firePower = 1;
 
     private int invincibility;
+    private boolean triggerPulled;
+
+    public Duke() {
+        super(0, 0);
+
+        height = 31;
+    }
 
     public void reset(Level level) {
         facing = Facing.LEFT;
@@ -46,10 +46,20 @@ public class Duke {
         moveHorizontally(level);
         moveVertically(level);
 
+        if (velocityY > 0) {
+            setState(State.FALL);
+        }
+
         applyGravity();
 
         if (this.state == State.WALK) {
             frame = (frame + 1) % 8;
+        }
+
+        if (triggerPulled && (state.getBolts().size() < firePower)) {
+            int x = this.x + ((facing == Facing.RIGHT) ? TILE_SIZE : -TILE_SIZE);
+
+            state.getBolts().add(new Bolt(x, y + 12, facing));
         }
     }
 
@@ -63,6 +73,11 @@ public class Duke {
 
         tileIndex += (facing == Facing.LEFT) ? 0 : (state == Duke.State.WALK) ? 16 : 4;
         tileIndex += ((frame / 2) * 4);
+
+        // override with shoot tile
+        if (triggerPulled && (state == State.STAND)) {
+            tileIndex = (facing == Facing.LEFT) ? 12 : 28;
+        }
 
         // override with xray 182
         if (invincibility > 28) {
@@ -79,49 +94,8 @@ public class Duke {
         }
     }
 
-    private void moveHorizontally(Level level) {
-        int newPositionX = x + velocityX;
-
-        if (!level.collides(newPositionX, y, WIDTH, HEIGHT)) {
-            moveTo(newPositionX, y);
-        }
-
-        velocityX = 0;
-    }
-
-    private void moveVertically(Level level) {
-        boolean collision = false;
-        int sign = Integer.signum(velocityY);
-        int i = 0;
-
-        while (!collision && (i < Math.abs(velocityY))) {
-            int newPositionY = y + sign;
-
-            collision = level.collides(x, newPositionY, WIDTH, HEIGHT);
-
-            if (collision) {
-                jumpFramesLeft = 0;
-
-                if (velocityY < 0) {
-                    bump();
-                } else {
-                    land();
-                }
-
-                velocityY = 0;
-            } else {
-                moveTo(x, newPositionY);
-            }
-
-            i++;
-        }
-
-        if (velocityY > 0) {
-            setState(State.FALL);
-        }
-    }
-
-    private void applyGravity() {
+    @Override
+    protected void applyGravity() {
         if (jumpFramesLeft > 0) {
             if (jumpFramesLeft > 3) {
                 velocityY += 2;
@@ -133,14 +107,6 @@ public class Duke {
         } else {
             velocityY = 8;
         }
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
     }
 
     public void setState(State state) {
@@ -184,11 +150,15 @@ public class Duke {
         }
     }
 
-    private void bump() {
+    @Override
+    protected void bump() {
+        jumpFramesLeft = 0;
+
         setState(State.FALL);
     }
 
-    private void land() {
+    @Override
+    protected void land() {
         if (state == State.FALL || state == State.JUMP) {
             setState(State.STAND);
         }
@@ -206,17 +176,8 @@ public class Duke {
         return firePower;
     }
 
-    public void fire(GameState state) {
-        if (state.getBolts().size() < firePower) {
-            int x = this.x + ((facing == Facing.RIGHT) ? TILE_SIZE + 8 : -8);
-
-            state.getBolts().add(new Bolt(x, y + 4, facing));
-        }
-    }
-
-    public boolean collidesWith(int x, int y, int width, int height) {
-        return ((this.x < (x + width)) && ((this.x + WIDTH) > x) &&
-                (this.y < (y + height)) && ((this.y + HEIGHT) > y));
+    public void fire(boolean triggerPulled) {
+        this.triggerPulled = triggerPulled;
     }
 
     public void hurt() {

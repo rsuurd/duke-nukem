@@ -18,6 +18,15 @@ public class Camera extends Active {
         int col = (state.getDuke().getX() + 8) / TILE_SIZE;
 
         facing = Integer.signum(col - getX() / TILE_SIZE);
+
+        checkHit(state);
+    }
+
+    @Override
+    protected void hit(GameState state) {
+        state.increaseScore(100);
+
+        active = false;
     }
 
     @Override

@@ -2,7 +2,7 @@ package duke;
 
 import duke.active.Active;
 
-import java.awt.*;
+import java.awt.image.BufferedImage;
 
 import static duke.Gfx.TILE_SIZE;
 
@@ -11,14 +11,12 @@ public class Bolt extends Active {
 
     private int frame;
 
-    private Rectangle hitBox;
-
     public Bolt(int x, int y, Facing facing) {
         super(x, y);
 
         this.facing = facing;
 
-        hitBox = new Rectangle(x, y + 8, 15, 7);
+        frame = -1;
     }
 
     @Override
@@ -28,8 +26,6 @@ public class Bolt extends Active {
             case RIGHT -> TILE_SIZE;
         };
 
-        hitBox.x = x;
-
         int row = y / TILE_SIZE;
         int col = x / TILE_SIZE;
 
@@ -37,28 +33,26 @@ public class Bolt extends Active {
             col += 1;
         }
 
-        int tileId = state.getLevel().getTile(row, col);
-        boolean solid = (tileId >= 0x1800) && (tileId <= 0x2FFF);
-
-        if (solid) {
+        if (state.getLevel().isSolid(row, col)) {
             hit();
         } else {
             active = Math.abs(x - state.getDuke().getX()) < (10 * TILE_SIZE);
         }
-
     }
 
     @Override
     public void render(Renderer renderer, Assets assets) {
-        renderer.drawTile(assets.getObject(6 + frame), x, y);
+        BufferedImage sprite;
+
+        if (frame == -1) {
+            sprite = assets.getObject((facing == Facing.LEFT) ? 46 : 47);
+        } else {
+            sprite = assets.getObject(6 + frame);
+        }
+
+        renderer.drawTile(sprite, x, y - 8);
 
         frame = (frame + 1) % 4;
-    }
-
-    public boolean hits(Active active) {
-        Rectangle hitBox = new Rectangle(active.getX(), active.getY(), 15, 15); // TODO active.getHitBox();
-
-        return this.hitBox.intersects(hitBox);
     }
 
     public void hit() {
