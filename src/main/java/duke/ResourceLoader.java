@@ -264,10 +264,14 @@ public class ResourceLoader {
             List<Active> actives = new ArrayList<>();
 
             for (int i = 0; i < tiles.length; i++) {
-                int tileId = Short.reverseBytes(in.readShort());
+                tiles[i] = Short.reverseBytes(in.readShort());
+            }
+
+            for (int i = 0; i < tiles.length; i++) {
+                int tileId = tiles[i];
 
                 if (tileId == 0x3032) { // start location
-                    tileId = tiles[i - 1];
+                    tiles[i] = tiles[i - 1];
 
                     startLocation = i;
                 } else if (tileId >= 0x3000) { // actives
@@ -276,14 +280,15 @@ public class ResourceLoader {
 
                     try {
                         actives.add(ActiveFactory.create(tileId, x, y));
-
-                        tileId = tiles[i - 1];
                     } catch (IllegalArgumentException e) {
                         System.err.printf("Unmapped TileID: 0x%x\n", tileId);
                     }
-                }
 
-                tiles[i] = tileId;
+                    tiles[i] = tiles[i + switch (tileId) {
+                        case 0x3016 -> 1;
+                        default -> -1;
+                    }];
+                }
             }
 
             return new Level(tiles, startLocation, backdrop, actives);

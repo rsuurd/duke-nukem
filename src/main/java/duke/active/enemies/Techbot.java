@@ -1,7 +1,11 @@
 package duke.active.enemies;
 
-import duke.*;
+import duke.Assets;
+import duke.Facing;
+import duke.GameState;
+import duke.Renderer;
 import duke.active.Active;
+import duke.effects.Effect;
 
 import static duke.Gfx.TILE_SIZE;
 
@@ -25,12 +29,16 @@ public class Techbot extends Active {
 
     @Override
     public void update(GameState state) {
-        super.update(state);
-
         if (isAlive()) {
-            if ((frame % 2) == 0) {
-                tryMove(state.getLevel());
+            if (frame == 0) {
+                if (isEdgeReached(state)) {
+                    reverse();
+                }
+
+                velocityX = (facing == Facing.LEFT) ? -SPEED : SPEED;
             }
+
+            super.update(state);
 
             if (state.getDuke().collidesWith(this)) {
                 state.getDuke().hurt();
@@ -40,27 +48,34 @@ public class Techbot extends Active {
         } else {
             if (exploding == DEATH_TIMER) {
                 state.increaseScore(100);
+                state.addEffect(new Effect.Sparks(x, y));
 
                 active = false;
             }
         }
     }
 
-    private boolean isAlive() {
-        return exploding < 0;
+    @Override
+    protected void hitWall() {
+        reverse();
     }
 
-    private void tryMove(Level level) {
-        int destinationX = x + ((facing == Facing.LEFT) ? -SPEED : SPEED);
+    private void reverse() {
+        facing = (facing == Facing.LEFT) ? Facing.RIGHT : Facing.LEFT;
+    }
 
-        boolean free = !level.collides(destinationX, y, SIZE, SIZE);
-        boolean solidGround = level.collides(destinationX, y + 8, SIZE, SIZE);
+    private boolean isEdgeReached(GameState state) {
+        int row = y / TILE_SIZE;
+        int nextCol = (x + ((facing == Facing.LEFT) ? -SPEED : SPEED + width)) / TILE_SIZE;
 
-        if (free && solidGround) {
-            velocityX = destinationX - x;
-        } else {
-            facing = (facing == Facing.LEFT) ? Facing.RIGHT : Facing.LEFT;
-        }
+        boolean blocked = state.getLevel().isSolid(row, nextCol);
+        boolean pit = !state.getLevel().isSolid(row + 1, nextCol);
+
+        return blocked || pit;
+    }
+
+    private boolean isAlive() {
+        return exploding < 0;
     }
 
     @Override
