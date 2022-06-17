@@ -271,7 +271,7 @@ public class ResourceLoader {
                 int tileId = tiles[i];
 
                 if (tileId == 0x3032) { // start location
-                    tiles[i] = tiles[i - 1];
+                    tileId = tiles[i - 1];
 
                     startLocation = i;
                 } else if (tileId >= 0x3000) { // actives
@@ -284,11 +284,13 @@ public class ResourceLoader {
                         System.err.printf("Unmapped TileID: 0x%x\n", tileId);
                     }
 
-                    tiles[i] = tiles[i + switch (tileId) {
-                        case 0x3016 -> 1;
-                        default -> -1;
-                    }];
+                    tileId = switch (tileId) {
+                        case 0x3016 -> tiles[i + 1];
+                        default -> tiles[i - 1];
+                    };
                 }
+
+                tiles[i] = tileId;
             }
 
             return new Level(tiles, startLocation, backdrop, actives);

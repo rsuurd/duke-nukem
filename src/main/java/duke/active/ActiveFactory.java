@@ -1,12 +1,14 @@
 package duke.active;
 
 import duke.Facing;
+import duke.active.enemies.TankBot;
 import duke.active.enemies.Techbot;
 import duke.active.enemies.WallCrawler;
 
 public class ActiveFactory {
     public static Active create(int tileId, int x, int y) {
         return switch (tileId) {
+            case 0x300D -> new TankBot(x, y);
             case 0x3010 -> new Techbot(x, y);
             case 0x3024 -> new Camera(x, y);
             case 0x302A -> new Acme(x, y);

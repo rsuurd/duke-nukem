@@ -103,8 +103,12 @@ public abstract class Active {
     }
 
     public boolean collidesWith(Active active) {
-        return ((this.x < (active.getX() + active.getWidth())) && ((this.x + this.width) > active.getX()) &&
-                (this.y < (active.getY() + active.getHeight())) && ((this.y + this.height) > active.getY()));
+        return collidesWith(active.getX(), active.getY(), active.getWidth(), active.getHeight());
+    }
+
+    public boolean collidesWith(int x, int y, int w, int h) {
+        return ((this.x < (x + w)) && ((this.x + this.width) > x) &&
+                (this.y < (y + h)) && ((this.y + this.height) > y));
     }
 
     protected void checkHit(GameState state) {
