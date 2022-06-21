@@ -57,7 +57,7 @@ public class Techbot extends PatrolBot {
         }
     }
 
-    protected void hit(GameState state) {
+    public void hit(GameState state) {
         exploding = 0;
     }
 }

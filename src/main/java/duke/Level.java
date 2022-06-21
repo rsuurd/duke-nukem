@@ -49,8 +49,10 @@ public class Level {
     }
 
     public boolean isSolid(int row, int col) {
-        int tileId = getTile(row, col);
+        return isSolid(getTile(row, col));
+    }
 
+    public static boolean isSolid(int tileId) {
         return (tileId >= 0x1800) && (tileId <= 0x2FFF);
     }
 
@@ -74,5 +76,9 @@ public class Level {
                 iterator.remove();
             }
         }
+    }
+
+    public void setTile(int row, int col, int tileId) {
+        tiles[row * Level.WIDTH + col] = tileId;
     }
 }

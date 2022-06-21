@@ -2,6 +2,8 @@ package duke;
 
 import duke.active.Active;
 import duke.active.ActiveFactory;
+import duke.active.Bricks;
+import duke.active.Bridge;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -270,8 +272,15 @@ public class ResourceLoader {
             for (int i = 0; i < tiles.length; i++) {
                 int tileId = tiles[i];
 
-                if (tileId == 0x3032) { // start location
-                    tileId = tiles[i - 1];
+                if (tileId == 0x1800) { // bricks
+                    int x = (i % Level.WIDTH) * TILE_SIZE;
+                    int y = (i / Level.WIDTH) * TILE_SIZE;
+
+                    actives.add(new Bricks(x, y));
+                } else if (tileId == 0x3019) { // bridge
+                    actives.add(Bridge.create(i, tiles));
+                } else if (tileId == 0x3032) { // start location
+                    tiles[i] = tiles[i - 1];
 
                     startLocation = i;
                 } else if (tileId >= 0x3000) { // actives
@@ -288,9 +297,9 @@ public class ResourceLoader {
                         case 0x3016 -> tiles[i + 1];
                         default -> tiles[i - 1];
                     };
-                }
 
-                tiles[i] = tileId;
+                    tiles[i] = tileId;
+                }
             }
 
             return new Level(tiles, startLocation, backdrop, actives);
@@ -333,6 +342,6 @@ public class ResourceLoader {
 
     public static void main(String[] args) throws IOException {
         ResourceLoader l = new ResourceLoader(Path.of(".dn1"));
-        ImageIO.write(l.toSheet(l.readNumbers()), "png", new File("numbers.png"));
+        ImageIO.write(l.toSheet(l.readTiles()), "png", new File("tiles.png"));
     }
 }

@@ -58,8 +58,6 @@ public class Duke extends Active {
         }
 
         if (triggerPulled && (state.getBolts().size() < firePower)) {
-            int x = this.x + ((facing == Facing.RIGHT) ? TILE_SIZE : -TILE_SIZE);
-
             state.getBolts().add(new Bolt(x, y + 12, facing));
         }
     }

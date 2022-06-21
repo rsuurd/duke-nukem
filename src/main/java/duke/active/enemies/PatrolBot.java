@@ -26,8 +26,6 @@ class PatrolBot extends Active {
         if (state.getDuke().collidesWith(this)) {
             state.getDuke().hurt();
         }
-
-        checkHit(state);
     }
 
     protected void patrol(GameState state) {
@@ -50,5 +48,10 @@ class PatrolBot extends Active {
 
     private void reverse() {
         facing = (facing == Facing.LEFT) ? Facing.RIGHT : Facing.LEFT;
+    }
+
+    @Override
+    public boolean canBeShot() {
+        return true;
     }
 }

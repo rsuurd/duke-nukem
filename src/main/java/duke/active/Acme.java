@@ -28,8 +28,6 @@ public class Acme extends Active {
             case SHAKING -> shake();
             case FALLING -> super.update(state);
         }
-
-        checkHit(state);
     }
 
     private void checkDrop(Duke duke) {
@@ -56,7 +54,12 @@ public class Acme extends Active {
     }
 
     @Override
-    protected void hit(GameState state) {
+    public boolean canBeShot() {
+        return true;
+    }
+
+    @Override
+    public void hit(GameState state) {
         state.increaseScore(500);
     }
 

@@ -1,6 +1,9 @@
 package duke.active;
 
-import duke.*;
+import duke.Assets;
+import duke.GameState;
+import duke.Level;
+import duke.Renderer;
 
 import static duke.Gfx.TILE_SIZE;
 
@@ -111,17 +114,11 @@ public abstract class Active {
                 (this.y < (y + h)) && ((this.y + this.height) > y));
     }
 
-    protected void checkHit(GameState state) {
-        for (Bolt bolt: state.getBolts()) {
-            if (bolt.collidesWith(this)) {
-                bolt.hit();
-
-                hit(state);
-            }
-        }
+    public boolean canBeShot() {
+        return false;
     }
 
-    protected void hit(GameState state) {}
+    public void hit(GameState state) {}
 
     public void render(Renderer renderer, Assets assets) {
     }

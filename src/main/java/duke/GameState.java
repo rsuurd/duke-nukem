@@ -58,7 +58,7 @@ public class GameState {
     }
 
     public void update() {
-        level.update(this);
+        duke.update(this);
 
         Iterator<Bolt> boltIterator = getBolts().iterator();
 
@@ -74,12 +74,11 @@ public class GameState {
             }
         }
 
-        getEffects().removeIf(Effect::isDone);
+        level.update(this);
 
+        getEffects().removeIf(Effect::isDone);
         level.getActives().addAll(spawns);
         spawns.clear();
-
-        duke.update(this);
     }
 
     public void spawn(Active active) {

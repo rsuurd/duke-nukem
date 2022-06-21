@@ -12,6 +12,8 @@ public class Bolt extends Active {
 
     private int frame;
 
+    private boolean hitSomething;
+
     public Bolt(int x, int y, Facing facing) {
         super(x, y);
 
@@ -22,24 +24,37 @@ public class Bolt extends Active {
 
     @Override
     public void update(GameState state) {
-        x += switch (facing) {
-            case LEFT -> -TILE_SIZE;
-            case RIGHT -> TILE_SIZE;
-        };
-
-        int row = y / TILE_SIZE;
-        int col = x / TILE_SIZE;
-
-        if ((x % TILE_SIZE > 0) && (facing == Facing.LEFT)) {
-            col += 1;
-        }
-
-        if (state.getLevel().isSolid(row, col)) {
-            hit();
-
-            state.addEffect(new Effect.Sparks(x, y));
+        if (hitSomething) {
+            active = false;
         } else {
-            active = Math.abs(x - state.getDuke().getX()) < (10 * TILE_SIZE);
+            Level level = state.getLevel();
+
+            moveTo(x + ((facing == Facing.LEFT) ? -TILE_SIZE : TILE_SIZE), y);
+
+            int i = 0;
+
+            while (!hitSomething && (i < level.getActives().size())) {
+                Active active = level.getActives().get(i++);
+
+                hitSomething = active.canBeShot() && active.collidesWith(this);
+
+                if (hitSomething) {
+                    active.hit(state);
+                }
+            }
+
+            int row = y / TILE_SIZE;
+            int col = (x + ((facing == Facing.LEFT) ? x % TILE_SIZE : 0)) / TILE_SIZE;
+
+            if (level.isSolid(row, col)) {
+                int sparkX = x + ((facing == Facing.LEFT) ? 8 : -8);
+
+                state.addEffect(new Effect.Sparks(sparkX, y - 4));
+
+                hitWall();
+            } else {
+                active = Math.abs(x - state.getDuke().getX()) < (10 * TILE_SIZE);
+            }
         }
     }
 
@@ -58,7 +73,8 @@ public class Bolt extends Active {
         frame = (frame + 1) % 4;
     }
 
-    public void hit() {
+    @Override
+    protected void hitWall() {
         active = false;
     }
 }

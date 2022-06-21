@@ -26,14 +26,12 @@ public class Box extends Active {
     }
 
     @Override
-    public void update(GameState state) {
-        super.update(state);
-
-        checkHit(state);
+    public boolean canBeShot() {
+        return true;
     }
 
     @Override
-    protected void hit(GameState state) {
+    public void hit(GameState state) {
         if (contents != null) {
             contents.moveTo(x, y);
 

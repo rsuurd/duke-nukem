@@ -65,7 +65,7 @@ public class TankBot extends PatrolBot {
     }
 
     @Override
-    protected void hit(GameState state) {
+    public void hit(GameState state) {
         health --;
 
         if (health == 0) {

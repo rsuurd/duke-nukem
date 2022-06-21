@@ -39,8 +39,6 @@ public class WallCrawler extends Active {
 
         super.update(state);
 
-        checkHit(state);
-
         if (state.getDuke().collidesWith(this)) {
             state.getDuke().hurt();
         }
@@ -71,7 +69,12 @@ public class WallCrawler extends Active {
     }
 
     @Override
-    protected void hit(GameState state) {
+    public boolean canBeShot() {
+        return true;
+    }
+
+    @Override
+    public void hit(GameState state) {
         state.increaseScore(100);
         state.addEffect(new Effect.Smoke(x, y));
 
