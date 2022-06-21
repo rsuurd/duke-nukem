@@ -1,9 +1,6 @@
 package duke;
 
-import duke.active.Active;
-import duke.active.ActiveFactory;
-import duke.active.Bricks;
-import duke.active.Bridge;
+import duke.active.*;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -294,6 +291,7 @@ public class ResourceLoader {
                     }
 
                     tileId = switch (tileId) {
+                        case Elevator.TILE_ID -> Elevator.TILE_ID;
                         case 0x3016 -> tiles[i + 1];
                         default -> tiles[i - 1];
                     };
@@ -342,6 +340,6 @@ public class ResourceLoader {
 
     public static void main(String[] args) throws IOException {
         ResourceLoader l = new ResourceLoader(Path.of(".dn1"));
-        ImageIO.write(l.toSheet(l.readTiles()), "png", new File("tiles.png"));
+        ImageIO.write(l.toSheet(l.readObject()), "png", new File("object.png"));
     }
 }

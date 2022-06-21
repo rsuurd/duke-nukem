@@ -8,6 +8,7 @@ import duke.active.enemies.WallCrawler;
 public class ActiveFactory {
     public static Active create(int tileId, int x, int y) {
         return switch (tileId) {
+            case Elevator.TILE_ID -> new Elevator(x, y);
             case 0x300D -> new TankBot(x, y);
             case 0x3010 -> new Techbot(x, y);
             case 0x3024 -> new Camera(x, y);

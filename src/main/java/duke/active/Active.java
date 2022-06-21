@@ -1,9 +1,6 @@
 package duke.active;
 
-import duke.Assets;
-import duke.GameState;
-import duke.Level;
-import duke.Renderer;
+import duke.*;
 
 import static duke.Gfx.TILE_SIZE;
 
@@ -112,6 +109,10 @@ public abstract class Active {
     public boolean collidesWith(int x, int y, int w, int h) {
         return ((this.x < (x + w)) && ((this.x + this.width) > x) &&
                 (this.y < (y + h)) && ((this.y + this.height) > y));
+    }
+
+    public boolean isOnTop(Active active) {
+        return (x >= active.getX()) && ((x + width) <= (active.getX() + active.getWidth())) && ((y + height + 1) == active.getY());
     }
 
     public boolean canBeShot() {

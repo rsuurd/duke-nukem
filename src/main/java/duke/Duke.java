@@ -17,6 +17,7 @@ public class Duke extends Active {
 
     private int invincibility;
     private boolean triggerPulled;
+    private boolean using;
 
     public Duke() {
         super(0, 0);
@@ -179,6 +180,14 @@ public class Duke extends Active {
 
     public void fire(boolean triggerPulled) {
         this.triggerPulled = triggerPulled;
+    }
+
+    public void setUsing(boolean using) {
+        this.using = using;
+    }
+
+    public boolean isUsing() {
+        return using;
     }
 
     public void hurt() {

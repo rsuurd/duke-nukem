@@ -85,5 +85,6 @@ public class DukeNukem {
         }
 
         duke.fire(keyHandler.isFire());
+        duke.setUsing(keyHandler.isUsing());
     }
 }

@@ -1,6 +1,7 @@
 package duke;
 
 import duke.active.Active;
+import duke.active.Elevator;
 
 import java.awt.image.BufferedImage;
 import java.util.Iterator;
@@ -53,7 +54,7 @@ public class Level {
     }
 
     public static boolean isSolid(int tileId) {
-        return (tileId >= 0x1800) && (tileId <= 0x2FFF);
+        return (tileId >= 0x1800) && (tileId <= 0x2FFF) || (tileId == Elevator.TILE_ID);
     }
 
     public int getPlayerStartX() {

@@ -24,17 +24,13 @@ public class Bridge extends Active {
     public void update(GameState state) {
         Duke duke = state.getDuke();
 
-        if (onTop(duke)) {
+        if (duke.isOnTop(this)) {
             if (!onTop) {
                 hit(state);
             }
         }
 
-        onTop = onTop(duke);
-    }
-
-    private boolean onTop(Duke duke) {
-        return (duke.getX() >= x) && ((duke.getX() + duke.getWidth()) <= (x + width)) && (duke.getY() + duke.getHeight() + 1) == y;
+        onTop = duke.isOnTop(this);
     }
 
     @Override
