@@ -26,6 +26,18 @@ public class Box extends Active {
     }
 
     @Override
+    public void moveTo(int x, int y) {
+        if (contents != null) {
+            int offsetX = contents.getX() - this.x;
+            int offsetY = contents.getY() - this.y;
+
+            contents.moveTo(x + offsetX, y + offsetY);
+        }
+
+        super.moveTo(x, y);
+    }
+
+    @Override
     public boolean canBeShot() {
         return true;
     }
@@ -33,8 +45,6 @@ public class Box extends Active {
     @Override
     public void hit(GameState state) {
         if (contents != null) {
-            contents.moveTo(x, y);
-
             state.spawn(contents);
         }
 

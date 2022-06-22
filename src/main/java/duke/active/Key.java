@@ -1,7 +1,6 @@
 package duke.active;
 
 import duke.GameState;
-import duke.effects.Effect;
 
 public class Key extends Item {
     public static final int RED_KEY_TILE_ID = 0x3044;
@@ -12,7 +11,7 @@ public class Key extends Item {
     private Type type;
 
     public Key(int x, int y, Type type) {
-        super(x, y, 124 + type.ordinal());
+        super(x, y, 124 + type.ordinal(), 1000);
 
         this.type = type;
     }
@@ -22,8 +21,7 @@ public class Key extends Item {
 
     @Override
     protected void pickedUp(GameState state) {
-        state.increaseScore(1000);
-        state.addEffect(new Effect.Score(x, y, 1000));
+        super.pickedUp(state);
 
         state.getInventory().addKey(type);
     }

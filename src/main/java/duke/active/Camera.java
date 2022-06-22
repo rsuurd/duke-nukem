@@ -3,6 +3,7 @@ package duke.active;
 import duke.Assets;
 import duke.GameState;
 import duke.Renderer;
+import duke.effects.Effect;
 
 import static duke.Gfx.TILE_SIZE;
 
@@ -28,6 +29,8 @@ public class Camera extends Active {
     @Override
     public void hit(GameState state) {
         state.increaseScore(100);
+        state.addEffect(new Effect.Score(x, y, 100));
+        state.addEffect(new Effect.Sparks(x, y));
 
         active = false;
     }

@@ -57,6 +57,11 @@ public class Techbot extends PatrolBot {
         }
     }
 
+    @Override
+    public boolean canBeShot() {
+        return isAlive();
+    }
+
     public void hit(GameState state) {
         exploding = 0;
     }

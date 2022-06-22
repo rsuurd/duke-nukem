@@ -5,6 +5,8 @@ import duke.active.enemies.TankBot;
 import duke.active.enemies.Techbot;
 import duke.active.enemies.WallCrawler;
 
+import static duke.Gfx.TILE_SIZE;
+
 public class ActiveFactory {
     public static Active create(int tileId, int x, int y) {
         return switch (tileId) {
@@ -13,7 +15,8 @@ public class ActiveFactory {
             case 0x3010 -> new Techbot(x, y);
             case 0x3024 -> new Camera(x, y);
             case 0x302A -> new Acme(x, y);
-            case 0x3000, 0x3006, 0x3008, 0x300F, 0x3012, 0x3020, 0x3029, 0x3033, 0x3037, 0x3038, 0x3039, 0x303A -> new Box(Box.GREY, x, y);
+            case 0x3000, 0x3006, 0x3008, 0x300F, 0x3020, 0x3029, 0x3033 -> new Box(Box.GREY, x, y);
+            case 0x3012 -> new Box(Box.GREY, x, y, new Dynamite(x, y));
             case 0x3015 -> new Box(Box.RED, x, y, new Item.Soda(x, y));
             case 0x3016 -> new WallCrawler(x, y, Facing.RIGHT);
             case 0x3017 -> new WallCrawler(x, y, Facing.LEFT);
@@ -21,9 +24,13 @@ public class ActiveFactory {
             case 0x301D -> new Box(Box.BLUE, x, y, new Item.Football(x, y));
             case 0x301E -> new Box(Box.BLUE, x, y, new Item.Joystick(x, y));
             case 0x301F -> new Box(Box.BLUE, x, y, new Item.Floppy(x, y));
-            case 0x3023 -> new Box(Box.BLUE, x, y, null); // Balloon
+            case 0x3023 -> new Box(Box.BLUE, x, y, new Balloon(x, y - TILE_SIZE));
             case 0x302D -> new Box(Box.BLUE, x, y, new Item.Flag(x, y));
             case 0x302E -> new Box(Box.BLUE, x, y, new Item.Radio(x, y));
+            case 0x3037 -> new Box(Box.GREY, x, y, new Letter(x, y, 'D'));
+            case 0x3038 -> new Box(Box.GREY, x, y, new Letter(x, y, 'U'));
+            case 0x3039 -> new Box(Box.GREY, x, y, new Letter(x, y, 'K'));
+            case 0x303A -> new Box(Box.GREY, x, y, new Letter(x, y, 'E'));
             case Key.RED_KEY_TILE_ID -> new Key(x, y, Key.Type.RED);
             case Key.GREEN_KEY_TILE_ID -> new Key(x, y, Key.Type.GREEN);
             case Key.BLUE_KEY_TILE_ID -> new Key(x, y, Key.Type.BLUE);

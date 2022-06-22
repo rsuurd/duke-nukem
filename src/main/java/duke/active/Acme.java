@@ -4,6 +4,7 @@ import duke.Assets;
 import duke.Duke;
 import duke.GameState;
 import duke.Renderer;
+import duke.effects.Effect;
 
 import static duke.Gfx.TILE_SIZE;
 
@@ -17,6 +18,7 @@ public class Acme extends Active {
         super(x, y);
 
         state = State.IDLE;
+        width = (2 * TILE_SIZE) - 1;
     }
 
     @Override
@@ -27,6 +29,10 @@ public class Acme extends Active {
             case IDLE -> checkDrop(duke);
             case SHAKING -> shake();
             case FALLING -> super.update(state);
+        }
+
+        if (duke.collidesWith(this)) {
+            duke.hurt();
         }
     }
 
@@ -61,10 +67,16 @@ public class Acme extends Active {
     @Override
     public void hit(GameState state) {
         state.increaseScore(500);
+        state.addEffect(new Effect.Score(x + 8, y, 500));
+
+        land(state);
     }
 
     @Override
     protected void land(GameState state) {
+        state.addEffect(new Effect.Sparks(x + 8, y));
+        Effect.Particle.createParticles(state, x + 8, y);
+
         active = false;
     }
 
