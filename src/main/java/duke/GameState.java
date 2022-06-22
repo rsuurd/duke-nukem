@@ -9,6 +9,8 @@ import java.util.List;
 
 public class GameState {
     private Duke duke;
+    private Inventory inventory;
+
     private Level level;
 
     private int score;
@@ -18,6 +20,8 @@ public class GameState {
     private List<Effect> effects;
 
     public GameState() {
+        inventory = new Inventory();
+
         score = 0;
 
         bolts = new ArrayList<>();
@@ -39,6 +43,10 @@ public class GameState {
 
     public Duke getDuke() {
         return duke;
+    }
+
+    public Inventory getInventory() {
+        return inventory;
     }
 
     public List<Bolt> getBolts() {

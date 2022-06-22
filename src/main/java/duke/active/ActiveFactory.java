@@ -24,6 +24,18 @@ public class ActiveFactory {
             case 0x3023 -> new Box(Box.BLUE, x, y, null); // Balloon
             case 0x302D -> new Box(Box.BLUE, x, y, new Item.Flag(x, y));
             case 0x302E -> new Box(Box.BLUE, x, y, new Item.Radio(x, y));
+            case Key.RED_KEY_TILE_ID -> new Key(x, y, Key.Type.RED);
+            case Key.GREEN_KEY_TILE_ID -> new Key(x, y, Key.Type.GREEN);
+            case Key.BLUE_KEY_TILE_ID -> new Key(x, y, Key.Type.BLUE);
+            case Key.MAGENTA_KEY_TILE_ID-> new Key(x, y, Key.Type.MAGENTA);
+            case Door.RED_DOOR_TILE_ID -> new Door(x, y, Key.Type.RED );
+            case Door.GREEN_DOOR_TILE_ID -> new Door(x, y, Key.Type.GREEN);
+            case Door.BLUE_DOOR_TILE_ID -> new Door(x, y, Key.Type.BLUE);
+            case Door.MAGENTA_DOOR_TILE_ID -> new Door(x, y, Key.Type.MAGENTA);
+            case Lock.RED_LOCK_TILE_ID -> new Lock(x, y, Key.Type.RED);
+            case Lock.GREEN_LOCK_TILE_ID -> new Lock(x, y, Key.Type.GREEN);
+            case Lock.BLUE_LOCK_TILE_ID -> new Lock(x, y, Key.Type.BLUE);
+            case Lock.MAGENTA_LOCK_TILE_ID -> new Lock(x, y, Key.Type.MAGENTA);
             case 0x3050 -> new Item.Football(x, y);
             case 0x3051 -> new Item.Drumstick(x, y);
             case 0x3052 -> new Item.Soda(x, y);

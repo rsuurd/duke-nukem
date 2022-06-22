@@ -1,5 +1,7 @@
 package duke;
 
+import duke.active.Lock;
+
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
@@ -139,6 +141,16 @@ public class Gfx extends Canvas implements Renderer {
             image = assets.getAnim(263);
         } else if (tileId == 0x303F) { // Window (right)
             image = assets.getAnim(264);
+        } else if (tileId == Lock.OFF_LOCK_TILE_ID) {
+            image = assets.getObject(136);
+        } else if (tileId == Lock.RED_LOCK_TILE_ID) {
+            image = assets.getObject(137);
+        } else if (tileId == Lock.GREEN_LOCK_TILE_ID) {
+            image = assets.getObject(138);
+        } else if (tileId == Lock.BLUE_LOCK_TILE_ID) {
+            image = assets.getObject(139);
+        } else if (tileId == Lock.MAGENTA_LOCK_TILE_ID) {
+            image = assets.getObject(140);
         }
 
         return image;

@@ -1,8 +1,8 @@
 package duke;
 
+import duke.active.Key;
+
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.util.List;
 
 import static duke.Gfx.TILE_SIZE;
 
@@ -83,6 +83,12 @@ public class Hud {
         graphics.drawImage(assets.getBorder(8), 256, 176, null);
         graphics.drawImage(assets.getBorder(8), 272, 176, null);
         graphics.drawImage(assets.getBorder(8), 288, 176, null);
+
+        for (Key.Type key : Key.Type.values()) {
+            if (gameState.getInventory().hasKey(key)) {
+                graphics.drawImage(assets.getObject(124 + key.ordinal()), 240 + (key.ordinal() * TILE_SIZE), 144, null);
+            }
+        }
 
         // press f1 for help
         graphics.drawImage(assets.getBorder(26), 88, 176, null);
