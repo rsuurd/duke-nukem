@@ -86,7 +86,7 @@ public class Gfx extends Canvas implements Renderer {
 
         if ((duke.getState() == Duke.State.STAND) || (duke.getState() == Duke.State.WALK)) {
             int distance = screenY - VERTICAL_CENTER;
-            int multiplier = (Math.abs(distance) < TILE_SIZE) ? 8 : 16;
+            int multiplier = Math.min(Math.abs(distance), TILE_SIZE);
 
             cameraY += (multiplier * Integer.signum(distance));
         }
