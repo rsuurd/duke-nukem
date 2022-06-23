@@ -7,6 +7,8 @@ import java.awt.*;
 import static duke.Gfx.TILE_SIZE;
 
 public class Hud {
+    private int frame;
+
     private Font font;
     private Assets assets;
 
@@ -48,8 +50,11 @@ public class Hud {
         // health
         graphics.drawImage(assets.getBorder(14), 224, 40, null);
         graphics.drawImage(assets.getBorder(8), 240, 40, null);
-        graphics.drawImage(assets.getBorder(36), 256, 40, null); // TODO blink red
-        graphics.drawImage(assets.getBorder(37), 272, 40, null); // TODO blink red
+
+        int healthLabelIndex = ((gameState.getDuke().getHealth() == 0) && (frame == 0)) ? 42 : 36;
+        graphics.drawImage(assets.getBorder(healthLabelIndex), 256, 40, null);
+        graphics.drawImage(assets.getBorder(healthLabelIndex + 1), 272, 40, null);
+
         graphics.drawImage(assets.getBorder(8), 288, 40, null);
         graphics.drawImage(assets.getBorder(15), 304, 40, null);
 
@@ -95,5 +100,7 @@ public class Hud {
         graphics.drawImage(assets.getBorder(27), 104, 176, null);
         graphics.drawImage(assets.getBorder(28), 120, 176, null);
         graphics.drawImage(assets.getBorder(29), 137, 176, null);
+
+        frame = (frame + 1) % 2;
     }
 }

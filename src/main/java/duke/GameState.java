@@ -8,6 +8,8 @@ import java.util.Iterator;
 import java.util.List;
 
 public class GameState {
+    private ResourceLoader loader;
+
     private Duke duke;
     private Inventory inventory;
 
@@ -19,7 +21,10 @@ public class GameState {
     private List<Active> spawns;
     private List<Effect> effects;
 
-    public GameState() {
+    public GameState(ResourceLoader loader) {
+        this.loader = loader;
+
+        duke = new Duke();
         inventory = new Inventory();
 
         score = 0;
@@ -29,9 +34,12 @@ public class GameState {
         effects = new ArrayList<>();
     }
 
-    public void switchLevel(Level level) {
-        duke = new Duke();
+    public void resetLevel() {
+        score = 0;
+        switchLevel(loader.readLevel(level.getNumber()));
+    }
 
+    public void switchLevel(Level level) {
         this.level = level;
 
         duke.reset(level);
@@ -87,6 +95,10 @@ public class GameState {
         getEffects().removeIf(Effect::isDone);
         level.getActives().addAll(spawns);
         spawns.clear();
+
+        if (duke.getHealth() < 0) {
+            resetLevel();
+        }
     }
 
     public void spawn(Active active) {

@@ -55,7 +55,7 @@ public class WallCrawler extends Active {
     }
 
     @Override
-    protected void bump() {
+    protected void bump(GameState state) {
         reverse();
     }
 

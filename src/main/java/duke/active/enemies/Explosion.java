@@ -14,15 +14,13 @@ public class Explosion extends Active {
 
     @Override
     public void update(GameState state) {
-        frame++;
-
         super.update(state);
 
         if (state.getDuke().collidesWith(this)) {
             state.getDuke().hurt();
         }
 
-        if (frame > 6) {
+        if (frame >= 6) {
             active = false;
         }
     }
@@ -30,5 +28,7 @@ public class Explosion extends Active {
     @Override
     public void render(Renderer renderer, Assets assets) {
         renderer.drawTile(assets.getAnim(92 + frame), x, y);
+
+        frame++;
     }
 }

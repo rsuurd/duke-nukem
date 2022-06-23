@@ -7,20 +7,15 @@ import duke.effects.Effect;
 
 abstract class Item extends Active {
     protected int frame;
-    private boolean animated;
-    private int tileIndex;
+
+    protected int tileIndex;
 
     protected int points;
 
     public Item(int x, int y, int tileIndex, int points) {
-        this(x, y, tileIndex, false, points);
-    }
-
-    public Item(int x, int y, int tileIndex, boolean animated, int points) {
         super(x, y);
 
         this.tileIndex = tileIndex;
-        this.animated = animated;
 
         this.points = points;
     }
@@ -28,10 +23,6 @@ abstract class Item extends Active {
     @Override
     public void update(GameState state) {
         super.update(state);
-
-        if (animated) {
-            frame = (frame + 1) % 3;
-        }
 
         if (state.getDuke().collidesWith(this)) {
             pickedUp(state);
@@ -56,24 +47,6 @@ abstract class Item extends Active {
         }
     }
 
-    public static class Drumstick extends Item {
-        public Drumstick(int x, int y) {
-            super(x, y, 44, 100);
-        }
-    }
-
-    public static class Soda extends Item {
-        public Soda(int x, int y) {
-            super(x, y, 132, true, 200);
-        }
-
-        @Override
-        public void render(Renderer renderer, Assets assets) {
-            // TODO fix animation
-            renderer.drawTile(assets.getAnim(132 + frame), x, y); // 135
-        }
-    }
-
     public static class Floppy extends Item {
         public Floppy(int x, int y) {
             super(x, y, 60, 5000);
@@ -88,7 +61,7 @@ abstract class Item extends Active {
 
     public static class Flag extends Item {
         public Flag(int x, int y) {
-            super(x, y, 97, true, 100);
+            super(x, y, 97, 100);
         }
 
         @Override
@@ -100,12 +73,19 @@ abstract class Item extends Active {
             };
 
             super.pickedUp(state);
+        }
+
+        @Override
+        public void render(Renderer renderer, Assets assets) {
+            super.render(renderer, assets);
+
+            frame = (frame + 1) % 3;
         }
     }
 
     public static class Radio extends Item {
         public Radio(int x, int y) {
-            super(x, y, 102, true, 100);
+            super(x, y, 102, 100);
         }
 
         @Override
@@ -117,6 +97,13 @@ abstract class Item extends Active {
             };
 
             super.pickedUp(state);
+        }
+
+        @Override
+        public void render(Renderer renderer, Assets assets) {
+            super.render(renderer, assets);
+
+            frame = (frame + 1) % 3;
         }
     }
 }

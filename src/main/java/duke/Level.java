@@ -14,16 +14,23 @@ public class Level {
     public static final int WIDTH = 128;
     public static final int HEIGHT = 90;
 
+    private int number;
+
     private int[] tiles;
     private int startLocation;
     private BufferedImage backdrop;
     private List<Active> actives;
 
-    public Level(int[] tiles, int startLocation, BufferedImage backdrop, List<Active> actives) {
+    public Level(int number, int[] tiles, int startLocation, BufferedImage backdrop, List<Active> actives) {
+        this.number = number;
         this.tiles = tiles;
         this.startLocation = startLocation;
         this.backdrop = backdrop;
         this.actives = actives;
+    }
+
+    public int getNumber() {
+        return number;
     }
 
     public int getTile(int row, int col) {

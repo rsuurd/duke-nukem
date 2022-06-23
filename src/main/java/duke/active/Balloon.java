@@ -8,6 +8,8 @@ import duke.effects.Effect;
 import static duke.Gfx.TILE_SIZE;
 
 public class Balloon extends Item {
+    private int frame;
+
     private boolean popped;
 
     public Balloon(int x, int y) {
@@ -26,12 +28,10 @@ public class Balloon extends Item {
 
             super.update(state);
         }
-
-        frame = (frame + 1) % 12;
     }
 
     @Override
-    protected void bump() {
+    protected void bump(GameState state) {
         popped = true;
     }
 
@@ -49,5 +49,7 @@ public class Balloon extends Item {
     public void render(Renderer renderer, Assets assets) {
         renderer.drawTile(assets.getObject(popped ? 73 : 69 ), x, y);
         renderer.drawTile(assets.getObject(70 + (frame / 4)), x, y + TILE_SIZE);
+
+        frame = (frame + 1) % 12;
     }
 }

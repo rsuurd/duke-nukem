@@ -6,6 +6,8 @@ import duke.effects.Effect;
 import static duke.Gfx.TILE_SIZE;
 
 public class Duke extends Active {
+    public static final int MAX_HEALTH = 8;
+
     private Facing facing;
     private State state;
 
@@ -30,7 +32,7 @@ public class Duke extends Active {
         setState(State.STAND);
         moveTo(level.getPlayerStartX(), level.getPlayerStartY());
 
-        health = 8;
+        health = MAX_HEALTH;
     }
 
     public void moveTo(int x, int y) {
@@ -151,7 +153,7 @@ public class Duke extends Active {
     }
 
     @Override
-    protected void bump() {
+    protected void bump(GameState state) {
         jumpFramesLeft = 0;
 
         setState(State.FALL);
@@ -196,6 +198,10 @@ public class Duke extends Active {
 
             health--;
         }
+    }
+
+    public void increaseHealth(int amount) {
+        health = Math.min(MAX_HEALTH, health + amount);
     }
 
     public boolean isInvincible() {

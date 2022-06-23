@@ -78,7 +78,7 @@ public abstract class Active {
 
             if (collision) {
                 if (velocityY < 0) {
-                    bump();
+                    bump(state);
                 } else {
                     land(state);
                 }
@@ -92,7 +92,7 @@ public abstract class Active {
         }
     }
 
-    protected void bump() {}
+    protected void bump(GameState state) {}
     protected void land(GameState state) {}
 
     public void update(GameState state) {

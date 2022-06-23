@@ -36,7 +36,7 @@ public class DukeNukem {
         loader = new ResourceLoader(Paths.get(".dn1"));
         gfx = new Gfx(loader);
         keyHandler = new KeyHandler();
-        gameState = new GameState();
+        gameState = new GameState(loader);
     }
 
     public void init() {

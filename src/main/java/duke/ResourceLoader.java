@@ -319,7 +319,7 @@ public class ResourceLoader {
                 }
             });
 
-            return new Level(tiles, startLocation, backdrop, actives);
+            return new Level(number, tiles, startLocation, backdrop, actives);
         } catch (IOException e) {
             throw new RuntimeException("Could not read level " + number, e);
         }
@@ -359,6 +359,6 @@ public class ResourceLoader {
 
     public static void main(String[] args) throws IOException {
         ResourceLoader l = new ResourceLoader(Path.of(".dn1"));
-        ImageIO.write(l.toSheet(l.readAnim()), "png", new File("anim.png"));
+        ImageIO.write(l.toSheet(l.readBorder()), "png", new File("border.png"));
     }
 }
