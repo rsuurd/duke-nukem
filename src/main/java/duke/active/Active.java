@@ -1,6 +1,9 @@
 package duke.active;
 
-import duke.*;
+import duke.Assets;
+import duke.GameState;
+import duke.Level;
+import duke.Renderer;
 
 import static duke.Gfx.TILE_SIZE;
 

@@ -47,7 +47,7 @@ public abstract class Effect {
 
     public static class Dustcloud extends Effect {
         public Dustcloud(int x, int y) {
-            super(x, y, 19, 4);
+            super(x, y, 19, 5);
         }
     }
 

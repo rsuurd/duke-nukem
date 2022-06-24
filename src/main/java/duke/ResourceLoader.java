@@ -292,7 +292,7 @@ public class ResourceLoader {
 
                     tileId = switch (tileId) {
                         case Elevator.TILE_ID -> Elevator.TILE_ID;
-                        case 0x3016 -> tiles[i + 1];
+                        case 0x3009, 0x3016 -> tiles[i + 1];
                         case Door.RED_DOOR_TILE_ID ->  Door.RED_DOOR_TILE_ID;
                         case Door.GREEN_DOOR_TILE_ID ->  Door.GREEN_DOOR_TILE_ID;
                         case Door.BLUE_DOOR_TILE_ID ->  Door.BLUE_DOOR_TILE_ID;
@@ -301,7 +301,8 @@ public class ResourceLoader {
                         case Lock.GREEN_LOCK_TILE_ID -> Lock.GREEN_LOCK_TILE_ID;
                         case Lock.BLUE_LOCK_TILE_ID -> Lock.BLUE_LOCK_TILE_ID;
                         case Lock.MAGENTA_LOCK_TILE_ID -> Lock.MAGENTA_LOCK_TILE_ID;
-
+                        case 0x3058 -> tiles[i - Level.WIDTH];
+                        case 0x3059 -> tiles[i + Level.WIDTH];
                         default -> tiles[i - 1];
                     };
 
