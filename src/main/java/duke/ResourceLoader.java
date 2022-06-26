@@ -360,6 +360,6 @@ public class ResourceLoader {
 
     public static void main(String[] args) throws IOException {
         ResourceLoader l = new ResourceLoader(Path.of(".dn1"));
-        ImageIO.write(l.toSheet(l.readBorder()), "png", new File("border.png"));
+        ImageIO.write(l.toSheet(l.readAnim()), "png", new File("anim.png"));
     }
 }

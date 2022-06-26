@@ -14,6 +14,7 @@ public class ActiveFactory {
             case 0x3024 -> new Camera(x, y);
             case 0x302A -> new Acme(x, y);
             case 0x3000, 0x3006, 0x3008, 0x300F, 0x3020, 0x3033 -> new Box(Box.GREY, x, y);
+            case 0x300c -> new Ed209(x, y);
             case 0x3009 -> new Flamethrower(x, y, Facing.RIGHT);
             case 0x300A -> new Flamethrower(x, y, Facing.LEFT);
             case 0x3012 -> new Box(Box.GREY, x, y, new Dynamite(x, y));

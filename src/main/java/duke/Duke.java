@@ -196,7 +196,7 @@ public class Duke extends Active {
         if (!isInvincible()) {
             invincibility = 32;
 
-            health--;
+//            health--;
         }
     }
 
