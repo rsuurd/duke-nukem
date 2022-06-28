@@ -12,7 +12,6 @@ public class ActiveFactory {
             case 0x300D -> new TankBot(x, y);
             case 0x3010 -> new Techbot(x, y);
             case 0x3024 -> new Camera(x, y);
-            case 0x302A -> new Acme(x, y);
             case 0x3000, 0x3006, 0x3008, 0x300F, 0x3020, 0x3033 -> new Box(Box.GREY, x, y);
             case 0x300c -> new Ed209(x, y);
             case 0x3009 -> new Flamethrower(x, y, Facing.RIGHT);
@@ -27,6 +26,8 @@ public class ActiveFactory {
             case 0x301F -> new Box(Box.BLUE, x, y, new Item.Floppy(x, y));
             case 0x3023 -> new Box(Box.BLUE, x, y, new Balloon(x, y - TILE_SIZE));
             case 0x3029 -> new Box(Box.GREY, x, y, new NuclearMolecule(x, y));
+            case 0x302A -> new Acme(x, y);
+            case 0x302B -> new Reactor(x, y);
             case 0x302D -> new Box(Box.BLUE, x, y, new Item.Flag(x, y));
             case 0x302E -> new Box(Box.BLUE, x, y, new Item.Radio(x, y));
             case 0x3031 -> new BouncingMine(x, y);

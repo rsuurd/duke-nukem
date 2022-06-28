@@ -16,6 +16,9 @@ public class Bricks extends Active {
     }
 
     @Override
+    public void update(GameState state) {}
+
+    @Override
     public void hit(GameState state) {
         state.increaseScore(10);
         state.addEffect(new Effect.Sparks(x, y));

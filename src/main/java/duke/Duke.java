@@ -200,6 +200,11 @@ public class Duke extends Active {
         }
     }
 
+    public void kill() {
+        health = -1;
+    }
+
+
     public void increaseHealth(int amount) {
         health = Math.min(MAX_HEALTH, health + amount);
     }

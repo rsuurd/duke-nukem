@@ -4,6 +4,8 @@ import duke.Assets;
 import duke.GameState;
 import duke.Renderer;
 
+import static duke.Gfx.TILE_SIZE;
+
 public abstract class Effect {
     protected int x;
     protected int y;
@@ -109,6 +111,29 @@ public abstract class Effect {
             frame ++;
 
             y -= 2;
+        }
+    }
+
+    public static class Flash extends Effect {
+        public Flash(int x, int y) {
+            super(x, y, 215, 3);
+        }
+
+        @Override
+        public void render(Renderer renderer, Assets assets) {
+            if (frame == 0) {
+                renderer.drawTile(assets.getAnim(tileIndex), x, y);
+            } else if (frame == 2) {
+                int x = this.x - 8;
+                int y = this.y - 8;
+
+                renderer.drawTile(assets.getAnim(tileIndex + 1), x, y);
+                renderer.drawTile(assets.getAnim(tileIndex + 2), x + TILE_SIZE, y);
+                renderer.drawTile(assets.getAnim(tileIndex + 3), x, y + TILE_SIZE);
+                renderer.drawTile(assets.getAnim(tileIndex + 4), x + TILE_SIZE, y + TILE_SIZE);
+            }
+
+            frame ++;
         }
     }
 }
