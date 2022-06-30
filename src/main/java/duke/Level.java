@@ -1,12 +1,14 @@
 package duke;
 
-import duke.active.Active;
-import duke.active.Door;
-import duke.active.Elevator;
+import duke.active.*;
+import duke.active.Item.*;
+import duke.active.enemies.*;
 
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static duke.Gfx.TILE_SIZE;
 
@@ -21,12 +23,96 @@ public class Level {
     private BufferedImage backdrop;
     private List<Active> actives;
 
-    public Level(int number, int[] tiles, int startLocation, BufferedImage backdrop, List<Active> actives) {
+    public Level(int number, int[] tiles, BufferedImage backdrop) {
         this.number = number;
         this.tiles = tiles;
-        this.startLocation = startLocation;
         this.backdrop = backdrop;
-        this.actives = actives;
+
+        init();
+    }
+
+    private void init() {
+        actives = new ArrayList<>();
+
+        for (int i = 0; i < tiles.length; i ++) {
+            int tileId = tiles[i];
+            int x = (i % Level.WIDTH) * TILE_SIZE;
+            int y = (i / Level.WIDTH) * TILE_SIZE;
+
+            switch (tileId) {
+                case 0x1800 -> addActive(i, new Bricks(x, y), COPY_NO_TILE);
+                case 0x3000, 0x3006, 0x3008, 0x300F, 0x3020, 0x3033 -> addActive(i, new Box(Box.GREY, x, y), COPY_LEFT_TILE);
+                case Elevator.TILE_ID -> addActive(i, new Elevator(x, y), COPY_NO_TILE);
+                case 0x3009 -> addActive(i, new Flamethrower(x, y, Facing.RIGHT), COPY_RIGHT_TILE);
+                case 0x300A -> addActive(i, new Flamethrower(x, y, Facing.LEFT), COPY_LEFT_TILE);
+                case 0x300C -> addActive(i, new Ed209(x, y), COPY_LEFT_TILE);
+                case 0x300D -> addActive(i, new TankBot(x, y), COPY_LEFT_TILE);
+                case 0x3010 -> addActive(i, new Techbot(x, y), COPY_LEFT_TILE);
+                case 0x3012 -> addActive(i, new Box(Box.GREY, x, y, new Dynamite(x, y)), COPY_LEFT_TILE);
+                case 0x3015 -> addActive(i, new Box(Box.RED, x, y, new Soda(x, y)), COPY_LEFT_TILE);
+                case 0x3016 -> addActive(i, new WallCrawler(x, y, Facing.RIGHT), COPY_RIGHT_TILE);
+                case 0x3017 -> addActive(i, new WallCrawler(x, y, Facing.LEFT), COPY_LEFT_TILE);
+                case 0x3018 -> addActive(i, new Box(Box.RED, x, y, new Chicken(x, y)), COPY_LEFT_TILE);
+                case 0x3019 -> addActive(i, Bridge.create(i, tiles), COPY_NO_TILE);
+                case 0x301D -> addActive(i, new Box(Box.BLUE, x, y, new Football(x, y)), COPY_LEFT_TILE);
+                case 0x301E -> addActive(i, new Box(Box.BLUE, x, y, new Joystick(x, y)), COPY_LEFT_TILE);
+                case 0x301F -> addActive(i, new Box(Box.BLUE, x, y, new Floppy(x, y)), COPY_LEFT_TILE);
+                case 0x3023 -> addActive(i, new Box(Box.BLUE, x, y, new Balloon(x, y - TILE_SIZE)), COPY_LEFT_TILE);
+                case 0x3024 -> addActive(i, new Camera(x, y), COPY_BOTTOM_TILE);
+                case 0x3029 -> addActive(i, new Box(Box.GREY, x, y, new NuclearMolecule(x, y)), COPY_LEFT_TILE);
+                case 0x302A -> addActive(i, new Acme(x, y), COPY_LEFT_TILE);
+                case 0x302B -> addActive(i, new Reactor(x, y), COPY_LEFT_TILE);
+                case 0x302D -> addActive(i, new Box(Box.BLUE, x, y, new Flag(x, y)), COPY_LEFT_TILE);
+                case 0x302E -> addActive(i, new Box(Box.BLUE, x, y, new Radio(x, y)), COPY_LEFT_TILE);
+                case 0x3031 -> addActive(i, new BouncingMine(x, y), COPY_LEFT_TILE);
+                case 0x3032 -> {
+                    startLocation = i;
+                    COPY_LEFT_TILE.accept(i);
+                }
+                case 0x3037 -> addActive(i, new Box(Box.GREY, x, y, new Letter(x, y, 'D')), COPY_LEFT_TILE);
+                case 0x3038 -> addActive(i, new Box(Box.GREY, x, y, new Letter(x, y, 'U')), COPY_LEFT_TILE);
+                case 0x3039 -> addActive(i, new Box(Box.GREY, x, y, new Letter(x, y, 'K')), COPY_LEFT_TILE);
+                case 0x303A -> addActive(i, new Box(Box.GREY, x, y, new Letter(x, y, 'E')), COPY_LEFT_TILE);
+                case 0x3044 -> addActive(i, new Key(x, y, Key.Type.RED), COPY_LEFT_TILE);
+                case 0x3045 -> addActive(i, new Key(x, y, Key.Type.GREEN), COPY_LEFT_TILE);
+                case 0x3046 -> addActive(i, new Key(x, y, Key.Type.BLUE), COPY_LEFT_TILE);
+                case 0x3047 -> addActive(i, new Key(x, y, Key.Type.MAGENTA), COPY_LEFT_TILE);
+                case Door.RED_DOOR_TILE_ID -> addActive(i, new Door(x, y, Key.Type.RED), l -> tiles[l] = Door.RED_DOOR_TILE_ID);
+                case Door.GREEN_DOOR_TILE_ID -> addActive(i, new Door(x, y, Key.Type.GREEN), l -> tiles[l] = Door.GREEN_DOOR_TILE_ID);
+                case Door.BLUE_DOOR_TILE_ID -> addActive(i, new Door(x, y, Key.Type.BLUE), l -> tiles[l] = Door.BLUE_DOOR_TILE_ID);
+                case Door.MAGENTA_DOOR_TILE_ID -> addActive(i, new Door(x, y, Key.Type.MAGENTA), l -> tiles[l] = Door.MAGENTA_DOOR_TILE_ID);
+                case Lock.RED_LOCK_TILE_ID -> addActive(i, new Lock(x, y, Key.Type.RED), l -> tiles[l] = Lock.RED_LOCK_TILE_ID);
+                case Lock.GREEN_LOCK_TILE_ID -> addActive(i, new Lock(x, y, Key.Type.GREEN), l -> tiles[l] = Lock.GREEN_LOCK_TILE_ID);
+                case Lock.BLUE_LOCK_TILE_ID -> addActive(i, new Lock(x, y, Key.Type.BLUE), l -> tiles[l] = Lock.BLUE_LOCK_TILE_ID);
+                case Lock.MAGENTA_LOCK_TILE_ID -> addActive(i, new Lock(x, y, Key.Type.MAGENTA), l -> tiles[l] = Lock.MAGENTA_LOCK_TILE_ID);
+                case 0x3050 -> addActive(i, new Football(x, y), COPY_LEFT_TILE);
+                case 0x3051 -> addActive(i, new Chicken(x, y), COPY_LEFT_TILE);
+                case 0x3052 -> addActive(i, new Soda(x, y), COPY_LEFT_TILE);
+                case 0x3053 -> addActive(i, new Floppy(x, y), COPY_LEFT_TILE);
+                case 0x3054 -> addActive(i, new Joystick(x, y), COPY_LEFT_TILE);
+                case 0x3055 -> addActive(i, new Flag(x, y), COPY_LEFT_TILE);
+                case 0x3056 -> addActive(i, new Radio(x, y), COPY_LEFT_TILE);
+                case 0x3057 -> addActive(i, new Mine(x, y), COPY_LEFT_TILE);
+                case 0x3058 -> addActive(i, new Spikes(x, y, true), COPY_TOP_TILE);
+                case 0x3059 -> addActive(i, new Spikes(x, y, false), COPY_BOTTOM_TILE);
+            }
+        }
+
+        actives.sort((o1, o2) -> { // make sure locks are processed before any doors.
+            if (o1 instanceof Lock) {
+                return -1;
+            } else if (o2 instanceof Lock) {
+                return 1;
+            } else {
+                return 0;
+            }
+        });
+    }
+
+    private void addActive(int location, Active active, Consumer<Integer> backgroundTile) {
+        actives.add(active); // if active instanceof Lock, prepend
+
+        backgroundTile.accept(location);
     }
 
     public int getNumber() {
@@ -90,4 +176,10 @@ public class Level {
     public void setTile(int row, int col, int tileId) {
         tiles[row * Level.WIDTH + col] = tileId;
     }
+
+    private Consumer<Integer> COPY_NO_TILE = location -> {};
+    private Consumer<Integer> COPY_LEFT_TILE = location -> tiles[location] = tiles[location - 1];
+    private Consumer<Integer> COPY_TOP_TILE = location -> tiles[location] = tiles[location - WIDTH];
+    private Consumer<Integer> COPY_RIGHT_TILE = location -> tiles[location] = tiles[location + 1];
+    private Consumer<Integer> COPY_BOTTOM_TILE = location -> tiles[location] = tiles[location + WIDTH];
 }

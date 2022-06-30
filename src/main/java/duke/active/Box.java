@@ -6,9 +6,9 @@ import duke.Renderer;
 import duke.effects.Effect;
 
 public class Box extends Active {
-    static final int GREY = 0;
-    static final int BLUE = 100;
-    static final int RED = 101;
+    public static final int GREY = 0;
+    public static final int BLUE = 100;
+    public static final int RED = 101;
 
     private int tileIndex;
 

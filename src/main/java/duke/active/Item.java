@@ -5,7 +5,7 @@ import duke.GameState;
 import duke.Renderer;
 import duke.effects.Effect;
 
-abstract class Item extends Active {
+public abstract class Item extends Active {
     protected int frame;
 
     protected int tileIndex;

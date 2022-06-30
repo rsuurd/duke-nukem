@@ -3,10 +3,6 @@ package duke.active;
 import duke.GameState;
 
 public class Key extends Item {
-    public static final int RED_KEY_TILE_ID = 0x3044;
-    public static final int GREEN_KEY_TILE_ID = 0x3045;
-    public static final int BLUE_KEY_TILE_ID = 0x3046;
-    public static final int MAGENTA_KEY_TILE_ID = 0x3047;
 
     private Type type;
 

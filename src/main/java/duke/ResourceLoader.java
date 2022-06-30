@@ -1,7 +1,5 @@
 package duke;
 
-import duke.active.*;
-
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -17,8 +15,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-
-import static duke.Gfx.TILE_SIZE;
 
 public class ResourceLoader {
     private Path path;
@@ -259,68 +255,12 @@ public class ResourceLoader {
             BufferedImage backdrop = readBackdrop("DROP0.DN1");
 
             int[] tiles = new int[Level.WIDTH * Level.HEIGHT];
-            int startLocation = 0;
-            List<Active> actives = new ArrayList<>();
 
             for (int i = 0; i < tiles.length; i++) {
                 tiles[i] = Short.reverseBytes(in.readShort());
             }
 
-            for (int i = 0; i < tiles.length; i++) {
-                int tileId = tiles[i];
-
-                if (tileId == 0x1800) { // bricks
-                    int x = (i % Level.WIDTH) * TILE_SIZE;
-                    int y = (i / Level.WIDTH) * TILE_SIZE;
-
-                    actives.add(new Bricks(x, y));
-                } else if (tileId == 0x3019) { // bridge
-                    actives.add(Bridge.create(i, tiles));
-                } else if (tileId == 0x3032) { // start location
-                    tiles[i] = tiles[i - 1];
-
-                    startLocation = i;
-                } else if (tileId >= 0x3000) { // actives
-                    int x = (i % Level.WIDTH) * TILE_SIZE;
-                    int y = (i / Level.WIDTH) * TILE_SIZE;
-
-                    try {
-                        actives.add(ActiveFactory.create(tileId, x, y));
-                    } catch (IllegalArgumentException e) {
-                        System.err.printf("Unmapped TileID: 0x%x\n", tileId);
-                    }
-
-                    tileId = switch (tileId) {
-                        case Elevator.TILE_ID -> Elevator.TILE_ID;
-                        case 0x3009, 0x3016 -> tiles[i + 1];
-                        case Door.RED_DOOR_TILE_ID ->  Door.RED_DOOR_TILE_ID;
-                        case Door.GREEN_DOOR_TILE_ID ->  Door.GREEN_DOOR_TILE_ID;
-                        case Door.BLUE_DOOR_TILE_ID ->  Door.BLUE_DOOR_TILE_ID;
-                        case Door.MAGENTA_DOOR_TILE_ID -> Door.MAGENTA_DOOR_TILE_ID;
-                        case Lock.RED_LOCK_TILE_ID -> Lock.RED_LOCK_TILE_ID;
-                        case Lock.GREEN_LOCK_TILE_ID -> Lock.GREEN_LOCK_TILE_ID;
-                        case Lock.BLUE_LOCK_TILE_ID -> Lock.BLUE_LOCK_TILE_ID;
-                        case Lock.MAGENTA_LOCK_TILE_ID -> Lock.MAGENTA_LOCK_TILE_ID;
-                        case 0x3058 -> tiles[i - Level.WIDTH];
-                        case 0x3059 -> tiles[i + Level.WIDTH];
-                        default -> tiles[i - 1];
-                    };
-
-                    tiles[i] = tileId;
-                }
-            }
-
-            actives.sort((o1, o2) -> { // make sure locks are processed before any doors.
-                if (o1 instanceof Lock) {
-                    return -1;
-                } else if (o2 instanceof Lock) {
-                    return 1;
-                } else {
-                    return 0;
-                }
-            });
-
-            return new Level(number, tiles, startLocation, backdrop, actives);
+            return new Level(number, tiles, backdrop);
         } catch (IOException e) {
             throw new RuntimeException("Could not read level " + number, e);
         }
