@@ -1,6 +1,7 @@
 package duke.effects;
 
 import duke.Assets;
+import duke.Bonus;
 import duke.GameState;
 import duke.Renderer;
 
@@ -107,6 +108,26 @@ public abstract class Effect {
         @Override
         public void render(Renderer renderer, Assets assets) {
             renderer.drawTile(assets.getNumber(tileIndex + (frame  % 2)), x, y);
+
+            frame ++;
+
+            y -= 2;
+        }
+    }
+
+    public static class Bonus extends Effect {
+        public Bonus(int x, int y, duke.Bonus.Type type) {
+            super(x, y, 14, 320);
+
+            tileIndex = 14 + (type.ordinal() * 4);
+        }
+
+        @Override
+        public void render(Renderer renderer, Assets assets) {
+            int tileIndex = this.tileIndex + (frame % 2);
+
+            renderer.drawTile(assets.getNumber(tileIndex ), x, y);
+            renderer.drawTile(assets.getNumber(tileIndex + 2), x + TILE_SIZE, y);
 
             frame ++;
 

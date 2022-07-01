@@ -1,5 +1,6 @@
 package duke;
 
+import duke.active.Exit;
 import duke.active.Lock;
 
 import java.awt.*;
@@ -151,6 +152,8 @@ public class Gfx extends Canvas implements Renderer {
             image = assets.getObject(139);
         } else if (tileId == Lock.MAGENTA_LOCK_TILE_ID) {
             image = assets.getObject(140);
+        } else if ((tileId >= Exit.EXIT_DOOR_TILE_ID) && (tileId <= Exit.EXIT_DOOR_TILE_ID + 16)) {
+            image = assets.getAnim(100 + tileId - Exit.EXIT_DOOR_TILE_ID);
         }
 
         return image;

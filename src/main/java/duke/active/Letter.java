@@ -1,8 +1,11 @@
 package duke.active;
 
+import duke.Bonus;
 import duke.GameState;
 
 public class Letter extends Item {
+    private char c;
+
     public Letter(int x, int y, char c) {
         super(x, y, switch (c) {
             case 'D' -> 118;
@@ -11,11 +14,17 @@ public class Letter extends Item {
             case 'E' -> 121;
             default -> -1;
         }, 500);
+
+        this.c = c;
     }
 
     @Override
     protected void pickedUp(GameState state) {
-        // TODO check if all letters are picked up in order
+        state.getBonus().addLetter(c);
+
+        if (state.getBonus().isEarned(Bonus.Type.DUKE)) {
+            points = 10000;
+        }
 
         super.pickedUp(state);
     }

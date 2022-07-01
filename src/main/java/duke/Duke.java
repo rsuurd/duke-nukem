@@ -43,8 +43,13 @@ public class Duke extends Active {
     public void update(GameState state) {
         Level level = state.getLevel();
 
+        if (health < MAX_HEALTH) {
+            state.getBonus().lostHealth();
+        }
+
         if (invincibility > 0) {
             invincibility--;
+
         }
 
         moveHorizontally(level);
@@ -197,6 +202,8 @@ public class Duke extends Active {
             invincibility = 32;
 
 //            health--;
+
+
         }
     }
 

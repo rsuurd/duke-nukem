@@ -74,10 +74,12 @@ public class Acme extends Active {
 
     @Override
     protected void land(GameState state) {
+        active = false;
+
         state.addEffect(new Effect.Sparks(x + 8, y));
         Effect.Particle.createParticles(state, x + 8, y);
 
-        active = false;
+        state.getBonus().acmeDestroyed();
     }
 
     @Override

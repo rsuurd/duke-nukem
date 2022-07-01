@@ -28,11 +28,13 @@ public class Camera extends Active {
 
     @Override
     public void hit(GameState state) {
+        active = false;
+
         state.increaseScore(100);
         state.addEffect(new Effect.Score(x, y, 100));
         state.addEffect(new Effect.Sparks(x, y));
 
-        active = false;
+        state.getBonus().cameraDestroyed();
     }
 
     @Override

@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import static duke.Gfx.TILE_SIZE;
+
 public class GameState {
     private ResourceLoader loader;
 
@@ -21,6 +23,8 @@ public class GameState {
     private List<Active> spawns;
     private List<Effect> effects;
 
+    private Bonus bonus;
+
     public GameState(ResourceLoader loader) {
         this.loader = loader;
 
@@ -29,20 +33,43 @@ public class GameState {
 
         score = 0;
 
-        bolts = new ArrayList<>();
-        spawns = new ArrayList<>();
-        effects = new ArrayList<>();
+        bonus = new Bonus(this);
     }
 
     public void resetLevel() {
         score = 0;
-        switchLevel(loader.readLevel(level.getNumber()));
+        switchLevel(loader.readLevel(level.getNumber(), level.getNext()));
+        bonus.reset();
     }
 
     public void switchLevel(Level level) {
         this.level = level;
 
         duke.reset(level);
+
+        bolts = new ArrayList<>();
+        spawns = new ArrayList<>();
+        effects = new ArrayList<>();
+    }
+
+    public void goToNextLevel() {
+        if (level.getNumber() == 2) { // intermission hallway
+            switchLevel(loader.readLevel(level.getNext(), level.getNext() + 1));
+        } else {
+            switchLevel(loader.readLevel(2, level.getNext()));
+            int y = duke.getY() + 100;
+
+            for (Bonus.Type type : Bonus.Type.values()) {
+                if (bonus.isEarned(type)) {
+                    increaseScore(10000);
+                    addEffect(new Effect.Bonus(duke.getX(), y, type));
+
+                    y += 2 * TILE_SIZE;
+                }
+            }
+        }
+
+        bonus.reset();
     }
 
     public Level getLevel() {
@@ -107,5 +134,9 @@ public class GameState {
 
     public void addEffect(Effect effect) {
         this.effects.add(effect);
+    }
+
+    public Bonus getBonus() {
+        return bonus;
     }
 }

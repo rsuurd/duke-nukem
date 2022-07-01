@@ -250,7 +250,7 @@ public class ResourceLoader {
             0xFFFFFFFF
     };
 
-    public Level readLevel(int number) {
+    public Level readLevel(int number, int next) {
         try (RandomAccessFile in = new RandomAccessFile(path.resolve(String.format("WORLDAL%x.DN1", number)).toFile(), "r")) {
             BufferedImage backdrop = readBackdrop("DROP0.DN1");
 
@@ -260,7 +260,7 @@ public class ResourceLoader {
                 tiles[i] = Short.reverseBytes(in.readShort());
             }
 
-            return new Level(number, tiles, backdrop);
+            return new Level(number, next, tiles, backdrop);
         } catch (IOException e) {
             throw new RuntimeException("Could not read level " + number, e);
         }
@@ -300,6 +300,6 @@ public class ResourceLoader {
 
     public static void main(String[] args) throws IOException {
         ResourceLoader l = new ResourceLoader(Path.of(".dn1"));
-        ImageIO.write(l.toSheet(l.readAnim()), "png", new File("anim.png"));
+        ImageIO.write(l.toSheet(l.readNumbers()), "png", new File("numbers.png"));
     }
 }

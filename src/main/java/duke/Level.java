@@ -17,14 +17,17 @@ public class Level {
     public static final int HEIGHT = 90;
 
     private int number;
+    private int next;
 
     private int[] tiles;
     private int startLocation;
     private BufferedImage backdrop;
     private List<Active> actives;
 
-    public Level(int number, int[] tiles, BufferedImage backdrop) {
+    public Level(int number, int next, int[] tiles, BufferedImage backdrop) {
         this.number = number;
+        this.next = next;
+
         this.tiles = tiles;
         this.backdrop = backdrop;
 
@@ -48,6 +51,11 @@ public class Level {
                 case 0x300C -> addActive(i, new Ed209(x, y), COPY_LEFT_TILE);
                 case 0x300D -> addActive(i, new TankBot(x, y), COPY_LEFT_TILE);
                 case 0x3010 -> addActive(i, new Techbot(x, y), COPY_LEFT_TILE);
+                case 0x3011 -> {
+                    addActive(i, Exit.create(x, y, this), COPY_NO_TILE);
+
+                    startLocation = i - Level.WIDTH;
+                }
                 case 0x3012 -> addActive(i, new Box(Box.GREY, x, y, new Dynamite(x, y)), COPY_LEFT_TILE);
                 case 0x3015 -> addActive(i, new Box(Box.RED, x, y, new Soda(x, y)), COPY_LEFT_TILE);
                 case 0x3016 -> addActive(i, new WallCrawler(x, y, Facing.RIGHT), COPY_RIGHT_TILE);
@@ -66,7 +74,7 @@ public class Level {
                 case 0x302E -> addActive(i, new Box(Box.BLUE, x, y, new Radio(x, y)), COPY_LEFT_TILE);
                 case 0x3031 -> addActive(i, new BouncingMine(x, y), COPY_LEFT_TILE);
                 case 0x3032 -> {
-                    startLocation = i;
+//                    startLocation = i;
                     COPY_LEFT_TILE.accept(i);
                 }
                 case 0x3037 -> addActive(i, new Box(Box.GREY, x, y, new Letter(x, y, 'D')), COPY_LEFT_TILE);
@@ -117,6 +125,10 @@ public class Level {
 
     public int getNumber() {
         return number;
+    }
+
+    public int getNext() {
+        return next;
     }
 
     public int getTile(int row, int col) {
