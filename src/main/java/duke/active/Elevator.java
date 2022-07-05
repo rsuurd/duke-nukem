@@ -18,6 +18,8 @@ public class Elevator extends Active {
     @Override
     public void update(GameState state) {
         if (state.getDuke().isOnTop(this)) {
+            state.getHints().showHint(this);
+
             if (state.getDuke().isUsing()) {
                 goUp(state);
             }

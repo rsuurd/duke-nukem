@@ -30,13 +30,21 @@ public class Lock extends Active {
 
     @Override
     public void update(GameState state) {
-        Duke duke = state.getDuke();
-
-        if (duke.collidesWith(this) && duke.isUsing() && state.getInventory().hasKey(type)) {
-            unlock(state);
-        }
-
         if (!unlocked) {
+            Duke duke = state.getDuke();
+
+            if (duke.collidesWith(this)) {
+                state.getHints().showHint(this);
+
+                if (duke.isUsing()) {
+                    if (state.getInventory().hasKey(type)) {
+                        unlock(state);
+                    } else {
+                        state.getHints().showHint(Key.class);
+                    }
+                }
+            }
+
             frame = (frame + 1) % 8;
 
             updateBackgroundTile(state.getLevel());

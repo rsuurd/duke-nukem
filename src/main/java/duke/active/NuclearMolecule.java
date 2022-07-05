@@ -13,6 +13,8 @@ public class NuclearMolecule extends Item {
 
     @Override
     protected void pickedUp(GameState state) {
+        state.getHints().showHint(this);
+
         super.pickedUp(state);
 
         state.getDuke().increaseHealth(MAX_HEALTH);

@@ -51,16 +51,12 @@ public class Level {
                 case 0x300C -> addActive(i, new Ed209(x, y), COPY_LEFT_TILE);
                 case 0x300D -> addActive(i, new TankBot(x, y), COPY_LEFT_TILE);
                 case 0x3010 -> addActive(i, new Techbot(x, y), COPY_LEFT_TILE);
-                case 0x3011 -> {
-                    addActive(i, Exit.create(x, y, this), COPY_NO_TILE);
-
-                    startLocation = i - Level.WIDTH;
-                }
+                case 0x3011 -> addActive(i, Exit.create(x, y, this), COPY_NO_TILE);
                 case 0x3012 -> addActive(i, new Box(Box.GREY, x, y, new Dynamite(x, y)), COPY_LEFT_TILE);
                 case 0x3015 -> addActive(i, new Box(Box.RED, x, y, new Soda(x, y)), COPY_LEFT_TILE);
                 case 0x3016 -> addActive(i, new WallCrawler(x, y, Facing.RIGHT), COPY_RIGHT_TILE);
                 case 0x3017 -> addActive(i, new WallCrawler(x, y, Facing.LEFT), COPY_LEFT_TILE);
-                case 0x3018 -> addActive(i, new Box(Box.RED, x, y, new Chicken(x, y)), COPY_LEFT_TILE);
+                case 0x3018 -> addActive(i, new Box(Box.RED, x, y, new Turkey(x, y)), COPY_LEFT_TILE);
                 case 0x3019 -> addActive(i, Bridge.create(i, tiles), COPY_NO_TILE);
                 case 0x301D -> addActive(i, new Box(Box.BLUE, x, y, new Football(x, y)), COPY_LEFT_TILE);
                 case 0x301E -> addActive(i, new Box(Box.BLUE, x, y, new Joystick(x, y)), COPY_LEFT_TILE);
@@ -74,7 +70,7 @@ public class Level {
                 case 0x302E -> addActive(i, new Box(Box.BLUE, x, y, new Radio(x, y)), COPY_LEFT_TILE);
                 case 0x3031 -> addActive(i, new BouncingMine(x, y), COPY_LEFT_TILE);
                 case 0x3032 -> {
-//                    startLocation = i;
+                    startLocation = i;
                     COPY_LEFT_TILE.accept(i);
                 }
                 case 0x3037 -> addActive(i, new Box(Box.GREY, x, y, new Letter(x, y, 'D')), COPY_LEFT_TILE);
@@ -94,7 +90,7 @@ public class Level {
                 case Lock.BLUE_LOCK_TILE_ID -> addActive(i, new Lock(x, y, Key.Type.BLUE), l -> tiles[l] = Lock.BLUE_LOCK_TILE_ID);
                 case Lock.MAGENTA_LOCK_TILE_ID -> addActive(i, new Lock(x, y, Key.Type.MAGENTA), l -> tiles[l] = Lock.MAGENTA_LOCK_TILE_ID);
                 case 0x3050 -> addActive(i, new Football(x, y), COPY_LEFT_TILE);
-                case 0x3051 -> addActive(i, new Chicken(x, y), COPY_LEFT_TILE);
+                case 0x3051 -> addActive(i, new Turkey(x, y), COPY_LEFT_TILE);
                 case 0x3052 -> addActive(i, new Soda(x, y), COPY_LEFT_TILE);
                 case 0x3053 -> addActive(i, new Floppy(x, y), COPY_LEFT_TILE);
                 case 0x3054 -> addActive(i, new Joystick(x, y), COPY_LEFT_TILE);

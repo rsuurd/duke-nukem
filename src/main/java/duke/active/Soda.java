@@ -34,13 +34,15 @@ public class Soda extends Item {
 
     @Override
     protected void pickedUp(GameState state) {
-        points = fizzing ? 1000 : 200;
+        if (fizzing) {
+            points = 1000;
+        } else {
+            state.getHints().showHint(this);
 
-        super.pickedUp(state);
-
-        if (!fizzing) {
             state.getDuke().increaseHealth(1);
         }
+
+        super.pickedUp(state);
     }
 
     @Override

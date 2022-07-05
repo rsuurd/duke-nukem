@@ -4,13 +4,11 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class KeyHandler extends KeyAdapter {
-    private boolean down;
-    private boolean left;
-    private boolean right;
+    private boolean[] pressedKeys;
 
-    private boolean jump;
-    private boolean fire;
-    private boolean using;
+    public KeyHandler() {
+        pressedKeys = new boolean[0xFFFF];
+    }
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -23,37 +21,33 @@ public class KeyHandler extends KeyAdapter {
     }
 
     private void handleKey(int keyCode, boolean pressed) {
-        switch (keyCode) {
-            case KeyEvent.VK_UP -> using = pressed;
-            case KeyEvent.VK_DOWN -> down = pressed;
-            case KeyEvent.VK_LEFT -> left = pressed;
-            case KeyEvent.VK_RIGHT -> right = pressed;
-            case KeyEvent.VK_ALT -> jump = pressed;
-            case KeyEvent.VK_CONTROL -> fire = pressed;
-        }
-    }
-
-    public boolean isDown() {
-        return down;
+        pressedKeys[keyCode] = pressed;
     }
 
     public boolean isLeft() {
-        return left;
+        return isPressed(KeyEvent.VK_LEFT);
     }
 
     public boolean isRight() {
-        return right;
+        return isPressed(KeyEvent.VK_RIGHT);
+
     }
 
     public boolean isJump() {
-        return jump;
+        return isPressed(KeyEvent.VK_ALT);
+
     }
 
     public boolean isFire() {
-        return fire;
+        return isPressed(KeyEvent.VK_CONTROL);
+
     }
 
     public boolean isUsing() {
-        return using;
+        return isPressed(KeyEvent.VK_UP);
+    }
+
+    public boolean isPressed(int keyCode) {
+        return pressedKeys[keyCode];
     }
 }

@@ -25,6 +25,8 @@ public class GameState {
 
     private Bonus bonus;
 
+    private Hints hints;
+
     public GameState(ResourceLoader loader) {
         this.loader = loader;
 
@@ -34,6 +36,7 @@ public class GameState {
         score = 0;
 
         bonus = new Bonus(this);
+        hints = new Hints();
     }
 
     public void resetLevel() {
@@ -138,5 +141,9 @@ public class GameState {
 
     public Bonus getBonus() {
         return bonus;
+    }
+
+    public Hints getHints() {
+        return hints;
     }
 }

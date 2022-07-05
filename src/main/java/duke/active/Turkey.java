@@ -4,10 +4,10 @@ import duke.Assets;
 import duke.GameState;
 import duke.Renderer;
 
-public class Chicken extends Item {
+public class Turkey extends Item {
     private boolean whole;
 
-    public Chicken(int x, int y) {
+    public Turkey(int x, int y) {
         super(x, y, 44, 100);
 
         whole = false;
@@ -27,6 +27,8 @@ public class Chicken extends Item {
 
     @Override
     protected void pickedUp(GameState state) {
+        state.getHints().showHint(this);
+
         points = whole ? 200 : 100;
 
         super.pickedUp(state);

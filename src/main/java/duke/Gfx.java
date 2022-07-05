@@ -68,6 +68,12 @@ public class Gfx extends Canvas implements Renderer {
         flip();
     }
 
+    public void render(String message, boolean prompt) {
+        font.drawTextbox(message, buffer.getGraphics(), TILE_SIZE, 48, prompt);
+
+        flip();
+    }
+
     private void moveCamera(GameState gameState) {
         Duke duke = gameState.getDuke();
 

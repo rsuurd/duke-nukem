@@ -36,12 +36,13 @@ public class Exit extends Active {
     private void check(GameState state) {
         Duke duke = state.getDuke();
 
-        if (duke.isUsing() &&
-                (x <= duke.getX()) && ((x + width) >= (duke.getX() + duke.getWidth())) &&
+        if ((x <= duke.getX()) && ((x + width) >= (duke.getX() + duke.getWidth())) &&
                 (y <= duke.getY()) && ((y + height) >= (duke.getY() + duke.getHeight()))) {
-            // flag state we are exiting
+            state.getHints().showHint(this);
 
-            this.state = OPENING;
+            if (duke.isUsing()) {
+                this.state = OPENING;
+            }
         }
     }
 

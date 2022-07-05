@@ -5,6 +5,7 @@ import java.nio.file.Paths;
 import java.time.Duration;
 
 import static duke.Gfx.TILE_SIZE;
+import static java.awt.event.KeyEvent.VK_ENTER;
 
 public class DukeNukem {
     private static final long FPS = 16;
@@ -53,13 +54,23 @@ public class DukeNukem {
         while (true) {
             long now = System.nanoTime();
 
-            while ((now - lastUpdateTime) >= TIME_STEP) {
-                handleInput();
+            if (gameState.getHints().getCurrent() == null) {
+                while ((now - lastUpdateTime) >= TIME_STEP) {
+                    handleInput();
 
-                gameState.update();
-                gfx.render(gameState);
+                    gameState.update();
+                    gfx.render(gameState);
 
-                lastUpdateTime += TIME_STEP;
+                    lastUpdateTime += TIME_STEP;
+                }
+            } else {
+                gfx.render(gameState.getHints().getCurrent(), true);
+
+                if (keyHandler.isPressed(VK_ENTER)) {
+                    gameState.getHints().clear();
+
+                    lastUpdateTime = now;
+                }
             }
 
             try {
