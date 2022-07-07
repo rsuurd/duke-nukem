@@ -2,10 +2,13 @@ package duke;
 
 import duke.active.Exit;
 import duke.active.Lock;
+import duke.modals.Modal;
 
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.util.Deque;
+import java.util.Iterator;
 
 public class Gfx extends Canvas implements Renderer {
     private static final int WIDTH = 320;
@@ -68,8 +71,14 @@ public class Gfx extends Canvas implements Renderer {
         flip();
     }
 
-    public void render(String message, boolean prompt) {
-        font.drawTextbox(message, buffer.getGraphics(), TILE_SIZE, 48, prompt);
+    public void render(Deque<Modal> modals) {
+        Iterator<Modal> iterator = modals.descendingIterator();
+
+        while (iterator.hasNext()) {
+            Modal modal = iterator.next();
+
+            font.drawTextbox(modal.getText(), buffer.getGraphics(), modal.getX(), modal.getY(), modal.isPrompt() && !iterator.hasNext());
+        }
 
         flip();
     }

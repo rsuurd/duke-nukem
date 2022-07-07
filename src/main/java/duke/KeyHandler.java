@@ -2,6 +2,7 @@ package duke;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.Arrays;
 
 public class KeyHandler extends KeyAdapter {
     private boolean[] pressedKeys;
@@ -49,5 +50,22 @@ public class KeyHandler extends KeyAdapter {
 
     public boolean isPressed(int keyCode) {
         return pressedKeys[keyCode];
+    }
+
+    public void clear() {
+        Arrays.fill(pressedKeys, false);
+    }
+
+    public boolean isAnyKeyPressed() {
+        boolean pressed = false;
+        int i = 1; // skip VK_UNDEFINED, that isn't a relevant key to check
+
+        while (!pressed && (i < pressedKeys.length)) {
+            pressed = pressedKeys[i];
+
+            i ++;
+        }
+
+        return pressed;
     }
 }

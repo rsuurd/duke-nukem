@@ -2,10 +2,9 @@ package duke;
 
 import duke.active.Active;
 import duke.effects.Effect;
+import duke.modals.Modal;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import static duke.Gfx.TILE_SIZE;
 
@@ -27,6 +26,8 @@ public class GameState {
 
     private Hints hints;
 
+    private Deque<Modal> modals;
+
     public GameState(ResourceLoader loader) {
         this.loader = loader;
 
@@ -36,13 +37,16 @@ public class GameState {
         score = 0;
 
         bonus = new Bonus(this);
-        hints = new Hints();
+        hints = new Hints(this);
+
+        modals = new ArrayDeque<>();
     }
 
     public void resetLevel() {
         score = 0;
         switchLevel(loader.readLevel(level.getNumber(), level.getNext()));
         bonus.reset();
+        closeModals();
     }
 
     public void switchLevel(Level level) {
@@ -145,5 +149,17 @@ public class GameState {
 
     public Hints getHints() {
         return hints;
+    }
+
+    public void showModal(Modal modal) {
+        modals.push(modal);
+    }
+
+    public void closeModals() {
+        modals.clear();
+    }
+
+    public Deque<Modal> getModals() {
+        return modals;
     }
 }

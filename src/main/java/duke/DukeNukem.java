@@ -1,11 +1,13 @@
 package duke;
 
+import duke.modals.GameMenu;
+
 import javax.swing.*;
 import java.nio.file.Paths;
 import java.time.Duration;
 
 import static duke.Gfx.TILE_SIZE;
-import static java.awt.event.KeyEvent.VK_ENTER;
+import static java.awt.event.KeyEvent.VK_F1;
 
 public class DukeNukem {
     private static final long FPS = 16;
@@ -54,7 +56,7 @@ public class DukeNukem {
         while (true) {
             long now = System.nanoTime();
 
-            if (gameState.getHints().getCurrent() == null) {
+            if (gameState.getModals().isEmpty()) {
                 while ((now - lastUpdateTime) >= TIME_STEP) {
                     handleInput();
 
@@ -64,13 +66,12 @@ public class DukeNukem {
                     lastUpdateTime += TIME_STEP;
                 }
             } else {
-                gfx.render(gameState.getHints().getCurrent(), true);
+                gfx.render(gameState.getModals());
 
-                if (keyHandler.isPressed(VK_ENTER)) {
-                    gameState.getHints().clear();
+                gameState.getModals().element().handleInput(gameState, keyHandler);
+                keyHandler.clear();
 
-                    lastUpdateTime = now;
-                }
+                lastUpdateTime = now;
             }
 
             try {
@@ -97,5 +98,9 @@ public class DukeNukem {
 
         duke.fire(keyHandler.isFire());
         duke.setUsing(keyHandler.isUsing());
+
+        if (keyHandler.isPressed(VK_F1)) {
+            gameState.showModal(new GameMenu());
+        }
     }
 }

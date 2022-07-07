@@ -1,16 +1,20 @@
 package duke;
 
 import duke.active.*;
+import duke.modals.Hint;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class Hints {
+    private GameState state;
     private Map<Class<? extends Active>, String> hints;
 
     private String current;
 
-    public Hints() {
+    public Hints(GameState state) {
+        this.state = state;
+
         hints = new HashMap<>();
 
         hints.put(Elevator.class, "Secret tip: Press the UP\nARROW to activate the\nELEVATORS.\n      Press ENTER:");
@@ -28,18 +32,10 @@ public class Hints {
 
     public void showHint(Class<? extends Active> source) {
         if (hints.containsKey(source)) {
-            current = hints.remove(source);
+            state.showModal(new Hint(hints.remove(source)));
 
             // TODO fix me
             hints.put(Key.class, "Secret tip: You need the\ncorrect key before\nyou can use this lock.\n      Press ENTER:");
         }
-    }
-
-    public String getCurrent() {
-        return current;
-    }
-
-    public void clear() {
-        current = null;
     }
 }
