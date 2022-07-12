@@ -1,6 +1,8 @@
 package duke;
 
 import duke.modals.GameMenu;
+import duke.modals.Message;
+import duke.sounds.Sfx;
 
 import javax.swing.*;
 import java.nio.file.Paths;
@@ -8,15 +10,15 @@ import java.time.Duration;
 
 import static duke.Gfx.TILE_SIZE;
 import static java.awt.event.KeyEvent.VK_F1;
+import static java.awt.event.KeyEvent.VK_S;
 
 public class DukeNukem {
     private static final long FPS = 16;
     private static final long TIME_STEP = Duration.ofSeconds(1).toNanos() / FPS;
 
-    private static final int CAMERA_SPEED = TILE_SIZE / 2;
-
     private ResourceLoader loader;
     private Gfx gfx;
+    private Sfx sfx;
     private KeyHandler keyHandler;
 
     private GameState gameState;
@@ -38,8 +40,9 @@ public class DukeNukem {
     public DukeNukem() {
         loader = new ResourceLoader(Paths.get(".dn1"));
         gfx = new Gfx(loader);
+        sfx = new Sfx(loader.readSounds());
         keyHandler = new KeyHandler();
-        gameState = new GameState(loader);
+        gameState = new GameState(loader, sfx);
     }
 
     public void init() {
@@ -47,6 +50,7 @@ public class DukeNukem {
         gfx.init();
         gfx.addKeyListener(keyHandler);
         gfx.requestFocus();
+        sfx.init();
         gameState.switchLevel(loader.readLevel(1, 3));
     }
 
@@ -101,6 +105,11 @@ public class DukeNukem {
 
         if (keyHandler.isPressed(VK_F1)) {
             gameState.showModal(new GameMenu());
+        }
+
+        if (keyHandler.isPressed(VK_S)) {
+            sfx.toggle();
+            gameState.showModal(new Message(TILE_SIZE, 48, "      Sound toggle\n\n    The sound is " + (sfx.isEnabled() ? "ON" : "OFF"), true));
         }
     }
 }

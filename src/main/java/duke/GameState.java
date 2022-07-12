@@ -3,6 +3,7 @@ package duke;
 import duke.active.Active;
 import duke.effects.Effect;
 import duke.modals.Modal;
+import duke.sounds.Sfx;
 
 import java.util.*;
 
@@ -28,7 +29,9 @@ public class GameState {
 
     private Deque<Modal> modals;
 
-    public GameState(ResourceLoader loader) {
+    private Sfx sfx;
+
+    public GameState(ResourceLoader loader, Sfx sfx) {
         this.loader = loader;
 
         duke = new Duke();
@@ -40,6 +43,8 @@ public class GameState {
         hints = new Hints(this);
 
         modals = new ArrayDeque<>();
+
+        this.sfx = sfx;
     }
 
     public void resetLevel() {
@@ -161,5 +166,9 @@ public class GameState {
 
     public Deque<Modal> getModals() {
         return modals;
+    }
+
+    public void playSound(int index) {
+        sfx.play(index);
     }
 }

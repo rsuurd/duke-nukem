@@ -1,8 +1,9 @@
 package duke;
 
-import javax.imageio.ImageIO;
+import duke.sounds.Sound;
+
 import java.awt.image.BufferedImage;
-import java.io.File;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.math.BigInteger;
@@ -10,11 +11,15 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+
+import static duke.sounds.Sfx.SAMPLE_RATE;
+import static java.lang.Math.PI;
 
 public class ResourceLoader {
     private Path path;
@@ -266,6 +271,66 @@ public class ResourceLoader {
         }
     }
 
+    public List<Sound> readSounds() {
+        List<Sound> sounds = new ArrayList<>();
+
+        Stream.of("DUKE1.DN1", "DUKE1-B.DN1").forEach(file -> {
+            try (RandomAccessFile in = new RandomAccessFile(path.resolve(file).toFile(), "r")) {
+                in.skipBytes(16);
+
+                for (int i = 0; i < 23; i ++) {
+                    int offset = Short.toUnsignedInt(Short.reverseBytes(in.readShort()));
+                    int priority = in.readUnsignedByte();
+                    in.skipBytes(1);
+
+                    byte[] bytes = new byte[12];
+                    in.read(bytes);
+
+                    String name = new String(bytes).trim();
+
+                    if ("__UnNamed__".equals(name)) {
+                        continue;
+                    }
+
+                    long current = in.getFilePointer();
+                    in.seek(offset);
+
+                    int value;
+
+                    ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+                    while ((value = Short.toUnsignedInt(Short.reverseBytes(in.readShort()))) != 0xFFFF) {
+                        int frequency = (value == 0) ? 0 : 1193181 / value;
+
+                        byte[] data = new byte[(int) ((1000f / 144) * SAMPLE_RATE) / 1000];
+
+                        if (frequency == 0) {
+                            Arrays.fill(data, (byte) 0);
+                        } else {
+                            double period = (double) SAMPLE_RATE / frequency;
+
+                            for (int j = 0; j < data.length; j++) {
+                                double angle = 2.0 * PI * j / period;
+
+                                data[j] = (byte) (Math.signum(Math.sin(angle)) * 127f);
+                            }
+                        }
+
+                        out.write(data);
+                    }
+
+                    sounds.add(new Sound(priority, out.toByteArray()));
+
+                    in.seek(current);
+                }
+            } catch (IOException e) {
+                throw new RuntimeException("Could not read sounds", e);
+            }
+        });
+
+        return sounds;
+    }
+
     public BufferedImage toImage(Level level) {
         List<BufferedImage> tileSet = readTiles();
 
@@ -300,6 +365,8 @@ public class ResourceLoader {
 
     public static void main(String[] args) throws IOException {
         ResourceLoader l = new ResourceLoader(Path.of(".dn1"));
-        ImageIO.write(l.toSheet(l.readNumbers()), "png", new File("numbers.png"));
+
+        l.readSounds();
     }
 }
+

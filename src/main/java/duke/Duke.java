@@ -8,6 +8,8 @@ import static duke.Gfx.TILE_SIZE;
 public class Duke extends Active {
     public static final int MAX_HEALTH = 8;
 
+    private GameState gameState; // TODO
+
     private Facing facing;
     private State state;
 
@@ -41,6 +43,8 @@ public class Duke extends Active {
     }
 
     public void update(GameState state) {
+        gameState = state;
+
         Level level = state.getLevel();
 
         if (health < MAX_HEALTH) {
@@ -67,6 +71,8 @@ public class Duke extends Active {
 
         if (triggerPulled && (state.getBolts().size() < firePower)) {
             state.getBolts().add(new Bolt(x, y + 12, facing));
+
+            state.playSound(6);
         }
     }
 
@@ -154,6 +160,8 @@ public class Duke extends Active {
             jumpFramesLeft = 8;
             velocityY = -13;
             setState(State.JUMP);
+
+            gameState.playSound(13);
         }
     }
 

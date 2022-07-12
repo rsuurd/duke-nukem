@@ -31,17 +31,14 @@ public class KeyHandler extends KeyAdapter {
 
     public boolean isRight() {
         return isPressed(KeyEvent.VK_RIGHT);
-
     }
 
     public boolean isJump() {
         return isPressed(KeyEvent.VK_ALT);
-
     }
 
     public boolean isFire() {
         return isPressed(KeyEvent.VK_CONTROL);
-
     }
 
     public boolean isUsing() {
