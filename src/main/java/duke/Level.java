@@ -17,16 +17,14 @@ public class Level {
     public static final int HEIGHT = 90;
 
     private int number;
-    private int next;
 
     private int[] tiles;
     private int startLocation;
     private BufferedImage backdrop;
     private List<Active> actives;
 
-    public Level(int number, int next, int[] tiles, BufferedImage backdrop) {
+    public Level(int number, int[] tiles, BufferedImage backdrop) {
         this.number = number;
-        this.next = next;
 
         this.tiles = tiles;
         this.backdrop = backdrop;
@@ -77,6 +75,7 @@ public class Level {
                 case 0x3038 -> addActive(i, new Box(Box.GREY, x, y, new Letter(x, y, 'U')), COPY_LEFT_TILE);
                 case 0x3039 -> addActive(i, new Box(Box.GREY, x, y, new Letter(x, y, 'K')), COPY_LEFT_TILE);
                 case 0x303A -> addActive(i, new Box(Box.GREY, x, y, new Letter(x, y, 'E')), COPY_LEFT_TILE);
+                case 0x3040 -> addActive(i, new Message(x, y), COPY_NO_TILE);
                 case 0x3044 -> addActive(i, new Key(x, y, Key.Type.RED), COPY_LEFT_TILE);
                 case 0x3045 -> addActive(i, new Key(x, y, Key.Type.GREEN), COPY_LEFT_TILE);
                 case 0x3046 -> addActive(i, new Key(x, y, Key.Type.BLUE), COPY_LEFT_TILE);
@@ -123,10 +122,6 @@ public class Level {
         return number;
     }
 
-    public int getNext() {
-        return next;
-    }
-
     public int getTile(int row, int col) {
         return ((row >= 0) && (row < HEIGHT) && (col >= 0) && (col < WIDTH)) ? tiles[row * WIDTH + col] : 0;
     }
@@ -137,18 +132,6 @@ public class Level {
 
     public List<Active> getActives() {
         return actives;
-    }
-
-    public boolean collides(int x, int y, int width, int height) {
-        boolean collides = false;
-
-        for (int row = y / TILE_SIZE; row <= (y + height) / TILE_SIZE; row ++) {
-            for (int col = x / TILE_SIZE; col <= (x + width) / TILE_SIZE; col ++) {
-                collides |= isSolid(row, col);
-            }
-        }
-
-        return collides;
     }
 
     public boolean isSolid(int row, int col) {
@@ -190,4 +173,8 @@ public class Level {
     private Consumer<Integer> COPY_TOP_TILE = location -> tiles[location] = tiles[location - WIDTH];
     private Consumer<Integer> COPY_RIGHT_TILE = location -> tiles[location] = tiles[location + 1];
     private Consumer<Integer> COPY_BOTTOM_TILE = location -> tiles[location] = tiles[location + WIDTH];
+
+    public boolean isIntermission() {
+        return (number % 2) == 1;
+    }
 }

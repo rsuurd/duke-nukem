@@ -54,15 +54,21 @@ public class KeyHandler extends KeyAdapter {
     }
 
     public boolean isAnyKeyPressed() {
-        boolean pressed = false;
+        return getPressedKey() > 0;
+    }
+
+    public int getPressedKey() {
+        int pressedKey = 0;
         int i = 1; // skip VK_UNDEFINED, that isn't a relevant key to check
 
-        while (!pressed && (i < pressedKeys.length)) {
-            pressed = pressedKeys[i];
+        while ((pressedKey == 0) && (i < pressedKeys.length)) {
+            if (pressedKeys[i]) {
+                pressedKey = i;
+            }
 
             i ++;
         }
 
-        return pressed;
+        return pressedKey;
     }
 }

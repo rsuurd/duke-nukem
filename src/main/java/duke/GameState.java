@@ -37,7 +37,7 @@ public class GameState {
         duke = new Duke();
         inventory = new Inventory();
 
-        score = 0;
+        score = 123;
 
         bonus = new Bonus(this);
         hints = new Hints(this);
@@ -49,7 +49,7 @@ public class GameState {
 
     public void resetLevel() {
         score = 0;
-        switchLevel(loader.readLevel(level.getNumber(), level.getNext()));
+        switchLevel(loader.readLevel(level.getNumber()));
         bonus.reset();
         closeModals();
     }
@@ -65,10 +65,7 @@ public class GameState {
     }
 
     public void goToNextLevel() {
-        if (level.getNumber() == 2) { // intermission hallway
-            switchLevel(loader.readLevel(level.getNext(), level.getNext() + 1));
-        } else {
-            switchLevel(loader.readLevel(2, level.getNext()));
+        if (!level.isIntermission()) {
             int y = duke.getY() + 100;
 
             for (Bonus.Type type : Bonus.Type.values()) {
@@ -81,6 +78,7 @@ public class GameState {
             }
         }
 
+        switchLevel(loader.readLevel(level.getNumber() + 1));
         bonus.reset();
     }
 
@@ -170,5 +168,9 @@ public class GameState {
 
     public void playSound(int index) {
         sfx.play(index);
+    }
+
+    public void save(char slot) {
+        loader.save(slot, this);
     }
 }

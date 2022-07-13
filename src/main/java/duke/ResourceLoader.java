@@ -255,8 +255,18 @@ public class ResourceLoader {
             0xFFFFFFFF
     };
 
-    public Level readLevel(int number, int next) {
-        try (RandomAccessFile in = new RandomAccessFile(path.resolve(String.format("WORLDAL%x.DN1", number)).toFile(), "r")) {
+    public Level readLevel(int number) {
+        int suffix;
+
+        if (number == 0) {
+            suffix = 1;
+        } else if ((number % 2) == 1) {
+            suffix = 2;
+        } else {
+            suffix = (number / 2) + 2;
+        }
+
+        try (RandomAccessFile in = new RandomAccessFile(path.resolve(String.format("WORLDAL%x.DN1", suffix)).toFile(), "r")) {
             BufferedImage backdrop = readBackdrop("DROP0.DN1");
 
             int[] tiles = new int[Level.WIDTH * Level.HEIGHT];
@@ -265,7 +275,7 @@ public class ResourceLoader {
                 tiles[i] = Short.reverseBytes(in.readShort());
             }
 
-            return new Level(number, next, tiles, backdrop);
+            return new Level(number, tiles, backdrop);
         } catch (IOException e) {
             throw new RuntimeException("Could not read level " + number, e);
         }
@@ -329,6 +339,35 @@ public class ResourceLoader {
         });
 
         return sounds;
+    }
+
+    public void save(char slot, GameState state) {
+        try (RandomAccessFile out = new RandomAccessFile(path.resolve(String.format("SAVED%s.DN1", slot)).toFile(), "rw")) {
+
+            out.writeShort(Short.reverseBytes((short) 0)); // these are ignored anyway
+            out.writeShort(Short.reverseBytes((short) 0));
+
+            out.writeShort(Short.reverseBytes((short) (state.getDuke().getX() / 8)));
+            out.writeShort(Short.reverseBytes((short) (state.getDuke().getY() / 8)));
+            out.writeShort(Short.reverseBytes((short) state.getLevel().getNumber()));
+            out.writeShort(Short.reverseBytes((short) state.getDuke().getFirePower()));
+            out.writeShort(Short.reverseBytes((short) 0)); // boots
+            out.writeShort(Short.reverseBytes((short) 0)); // hook
+            out.writeShort(Short.reverseBytes((short) (state.getDuke().getHealth() + 1)));
+            out.writeShort(Short.reverseBytes((short) 0)); // robohand
+
+            for (int i = 0; i < 12; i ++) {
+                out.writeShort(Short.reverseBytes((short) 0)); // tips
+            }
+
+            for (char c: Integer.toString(state.getScore()).toCharArray()) {
+                out.writeByte((byte) c);
+            }
+
+            out.write('\n');
+        } catch (IOException e) {
+            throw new RuntimeException("Could not save game", e);
+        }
     }
 
     public BufferedImage toImage(Level level) {

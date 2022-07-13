@@ -17,6 +17,7 @@ public class Hints {
 
         hints = new HashMap<>();
 
+        hints.put(Message.class, "Secret tip: Press the UP\nARROW to read the notes.\n\n      Press ENTER:");
         hints.put(Elevator.class, "Secret tip: Press the UP\nARROW to activate the\nELEVATORS.\n      Press ENTER:");
         hints.put(Exit.class, "Secret tip: Press the UP\nARROW to open the DOOR.\n\n      Press ENTER:");
         hints.put(Lock.class, "Secret tip: Find the key\nthat goes here and press\nthe UP ARROW.\n      Press ENTER:");

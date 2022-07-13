@@ -1,7 +1,7 @@
 package duke;
 
 import duke.modals.GameMenu;
-import duke.modals.Message;
+import duke.modals.Modal;
 import duke.sounds.Sfx;
 
 import javax.swing.*;
@@ -9,8 +9,7 @@ import java.nio.file.Paths;
 import java.time.Duration;
 
 import static duke.Gfx.TILE_SIZE;
-import static java.awt.event.KeyEvent.VK_F1;
-import static java.awt.event.KeyEvent.VK_S;
+import static java.awt.event.KeyEvent.*;
 
 public class DukeNukem {
     private static final long FPS = 16;
@@ -51,7 +50,7 @@ public class DukeNukem {
         gfx.addKeyListener(keyHandler);
         gfx.requestFocus();
         sfx.init();
-        gameState.switchLevel(loader.readLevel(1, 3));
+        gameState.switchLevel(loader.readLevel(12));
     }
 
     private void loop() {
@@ -109,7 +108,13 @@ public class DukeNukem {
 
         if (keyHandler.isPressed(VK_S)) {
             sfx.toggle();
-            gameState.showModal(new Message(TILE_SIZE, 48, "      Sound toggle\n\n    The sound is " + (sfx.isEnabled() ? "ON" : "OFF"), true));
+            gameState.showModal(new Modal(TILE_SIZE, 48, "      Sound toggle\n\n    The sound is " + (sfx.isEnabled() ? "ON" : "OFF"), Modal.EXIT_ON_ANY_KEY));
+        }
+
+        if (keyHandler.isPressed(VK_T)) {
+            loader.save('9', gameState);
+
+            System.err.println("Game saved");
         }
     }
 }

@@ -157,6 +157,8 @@ public class Gfx extends Canvas implements Renderer {
             image = assets.getAnim(263);
         } else if (tileId == 0x303F) { // Window (right)
             image = assets.getAnim(264);
+        } else if (tileId == 0x3040) { // Message
+            image = assets.getObject(123);
         } else if (tileId == Lock.OFF_LOCK_TILE_ID) {
             image = assets.getObject(136);
         } else if (tileId == Lock.RED_LOCK_TILE_ID) {

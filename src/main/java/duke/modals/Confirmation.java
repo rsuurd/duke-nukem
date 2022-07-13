@@ -9,7 +9,7 @@ public class Confirmation extends Modal {
     private Runnable confirmed;
 
     public Confirmation(int x, int y, String text, Runnable confirmed) {
-        super(x, y, text, true);
+        super(x, y, text, EXIT_ON_ANY_KEY);
 
         this.confirmed = confirmed;
     }
@@ -18,8 +18,8 @@ public class Confirmation extends Modal {
     public void handleInput(GameState state, KeyHandler handler) {
         if (handler.isPressed(VK_Y)) {
             confirmed.run();
-        } else if (handler.isAnyKeyPressed()) {
-            state.closeModals();
+        } else {
+            super.handleInput(state, handler);
         }
     }
 }
