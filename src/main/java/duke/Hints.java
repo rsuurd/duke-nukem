@@ -10,8 +10,6 @@ public class Hints {
     private GameState state;
     private Map<Class<? extends Active>, String> hints;
 
-    private String current;
-
     public Hints(GameState state) {
         this.state = state;
 

@@ -50,7 +50,7 @@ public class DukeNukem {
         gfx.addKeyListener(keyHandler);
         gfx.requestFocus();
         sfx.init();
-        gameState.switchLevel(loader.readLevel(12));
+        gameState.switchLevel(loader.readLevel(2));
     }
 
     private void loop() {

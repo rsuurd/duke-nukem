@@ -2,6 +2,7 @@ package duke;
 
 import duke.active.Exit;
 import duke.active.Lock;
+import duke.active.Tv;
 import duke.modals.Modal;
 
 import java.awt.*;
@@ -16,13 +17,7 @@ public class Gfx extends Canvas implements Renderer {
     private static final int SCALE = 3;
 
     public static final int TILE_SIZE = 16;
-    public static final int LEFT_BOUND = 88;
-    public static final int RIGHT_BOUND = 120;
-    public static final int UPPER_BOUND = 48;
-    public static final int LOWER_BOUND = 112;
-    public static final int VERTICAL_CENTER = 96;
 
-    private ResourceLoader loader;
     private Assets assets;
 
     private BufferedImage buffer;
@@ -32,11 +27,9 @@ public class Gfx extends Canvas implements Renderer {
 
     private int flasher;
 
-    private int cameraX;
-    private int cameraY;
+    private Viewport viewport;
 
     public Gfx(ResourceLoader loader) {
-        this.loader = loader;
         assets = new Assets(loader);
         font = new Font(assets);
         hud = new Hud(font, assets);
@@ -51,8 +44,7 @@ public class Gfx extends Canvas implements Renderer {
     }
 
     public void render(GameState gameState) {
-        moveCamera(gameState);
-
+        this.viewport = gameState.getViewport();
         Graphics graphics = buffer.getGraphics();
 
         clearScreen(graphics);
@@ -61,7 +53,7 @@ public class Gfx extends Canvas implements Renderer {
         Duke duke = gameState.getDuke();
         duke.render(this, assets);
         graphics.setColor(Color.magenta);
-        graphics.drawRect(duke.getX() - cameraX, duke.getY() - cameraY, duke.getWidth(), duke.getHeight());
+        graphics.drawRect(duke.getX() - viewport.getX(), duke.getY() - viewport.getY(), duke.getWidth(), duke.getHeight());
         gameState.getLevel().getActives().forEach(active -> active.render(this, assets));
         gameState.getBolts().forEach(bolt -> bolt.render(this, assets));
         gameState.getEffects().forEach(effect -> effect.render(this, assets));
@@ -83,33 +75,6 @@ public class Gfx extends Canvas implements Renderer {
         flip();
     }
 
-    private void moveCamera(GameState gameState) {
-        Duke duke = gameState.getDuke();
-
-        int screenX = duke.getX() - cameraX;
-
-        if (screenX < LEFT_BOUND) {
-            cameraX = duke.getX() - LEFT_BOUND;
-        } else if (screenX > RIGHT_BOUND) {
-            cameraX = duke.getX() - RIGHT_BOUND;
-        }
-
-        int screenY = duke.getY() - cameraY;
-
-        if (screenY < UPPER_BOUND) {
-            cameraY = duke.getY() - UPPER_BOUND;
-        } else if (screenY > LOWER_BOUND) {
-            cameraY = duke.getY() - LOWER_BOUND;
-        }
-
-        if ((duke.getState() == Duke.State.STAND) || (duke.getState() == Duke.State.WALK)) {
-            int distance = screenY - VERTICAL_CENTER;
-            int multiplier = Math.min(Math.abs(distance), TILE_SIZE);
-
-            cameraY += (multiplier * Integer.signum(distance));
-        }
-    }
-
     private void clearScreen(Graphics graphics) {
         graphics.setColor(Color.black);
         graphics.fillRect(0, 0, WIDTH, HEIGHT);
@@ -122,8 +87,8 @@ public class Gfx extends Canvas implements Renderer {
             graphics.drawImage(level.getBackdrop(), TILE_SIZE, TILE_SIZE, null);
         }
 
-        int gridX = cameraX / TILE_SIZE;
-        int gridY = cameraY / TILE_SIZE;
+        int gridX = viewport.getX() / TILE_SIZE;
+        int gridY = viewport.getY() / TILE_SIZE;
 
         for (int row = gridY; row < (gridY + 12); row++) {
             for (int col = gridX; col < (gridX + 15); col++) {
@@ -171,6 +136,8 @@ public class Gfx extends Canvas implements Renderer {
             image = assets.getObject(140);
         } else if ((tileId >= Exit.EXIT_DOOR_TILE_ID) && (tileId <= Exit.EXIT_DOOR_TILE_ID + 16)) {
             image = assets.getAnim(100 + tileId - Exit.EXIT_DOOR_TILE_ID);
+        } else if ((tileId >= Tv.TV_TILE_ID) && (tileId <= Tv.TV_TILE_ID + 14)) {
+            image = assets.getAnim(266 + tileId - Tv.TV_TILE_ID);
         }
 
         return image;
@@ -178,8 +145,8 @@ public class Gfx extends Canvas implements Renderer {
 
     @Override
     public void drawTile(BufferedImage image, int x, int y) {
-        int screenX = x - cameraX;
-        int screenY = y - cameraY;
+        int screenX = x - viewport.getX();
+        int screenY = y - viewport.getY();
 
         if ((screenX >= 0) && (screenX < 224) && (screenY >= 0) && (screenY < 176)) {
             buffer.getGraphics().drawImage(image, screenX, screenY, null);

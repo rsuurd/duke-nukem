@@ -42,12 +42,15 @@ public class Level {
 
             switch (tileId) {
                 case 0x1800 -> addActive(i, new Bricks(x, y), COPY_NO_TILE);
-                case 0x3000, 0x3006, 0x3008, 0x300F, 0x3020, 0x3033 -> addActive(i, new Box(Box.GREY, x, y), COPY_LEFT_TILE);
+                case 0x3000 -> addActive(i, new Box(Box.GREY, x, y), COPY_LEFT_TILE);
+                case 0x3002, 0x3003, 0x3004, 0x3005, 0x3006, 0x3007, 0x3008, 0x300B, 0x300F, 0x3013, 0x3014, 0x301A, 0x301B, 0x301C, 0x3020, 0x3021, 0x3022, 0x302F, 0x3030, 0x3033, 0x3034, 0x3035, 0x3036, 0x303B, 0x303C, 0x3042, 0x3043 ->
+                        System.err.format("Missing tile code: 0x%x\n", tileId);
                 case Elevator.TILE_ID -> addActive(i, new Elevator(x, y), COPY_NO_TILE);
                 case 0x3009 -> addActive(i, new Flamethrower(x, y, Facing.RIGHT), COPY_RIGHT_TILE);
                 case 0x300A -> addActive(i, new Flamethrower(x, y, Facing.LEFT), COPY_LEFT_TILE);
                 case 0x300C -> addActive(i, new Ed209(x, y), COPY_LEFT_TILE);
                 case 0x300D -> addActive(i, new TankBot(x, y), COPY_LEFT_TILE);
+                case 0x300E -> addActive(i, new FlameWheelBot(x, y), COPY_LEFT_TILE);
                 case 0x3010 -> addActive(i, new Techbot(x, y), COPY_LEFT_TILE);
                 case 0x3011 -> addActive(i, Exit.create(x, y, this), COPY_NO_TILE);
                 case 0x3012 -> addActive(i, new Box(Box.GREY, x, y, new Dynamite(x, y)), COPY_LEFT_TILE);
@@ -64,6 +67,7 @@ public class Level {
                 case 0x3029 -> addActive(i, new Box(Box.GREY, x, y, new NuclearMolecule(x, y)), COPY_LEFT_TILE);
                 case 0x302A -> addActive(i, new Acme(x, y), COPY_LEFT_TILE);
                 case 0x302B -> addActive(i, new Reactor(x, y), COPY_LEFT_TILE);
+                case 0x302C -> addActive(i, new Needle(x, y), COPY_TOP_TILE);
                 case 0x302D -> addActive(i, new Box(Box.BLUE, x, y, new Flag(x, y)), COPY_LEFT_TILE);
                 case 0x302E -> addActive(i, new Box(Box.BLUE, x, y, new Radio(x, y)), COPY_LEFT_TILE);
                 case 0x3031 -> addActive(i, new BouncingMine(x, y), COPY_LEFT_TILE);
@@ -76,6 +80,7 @@ public class Level {
                 case 0x3039 -> addActive(i, new Box(Box.GREY, x, y, new Letter(x, y, 'K')), COPY_LEFT_TILE);
                 case 0x303A -> addActive(i, new Box(Box.GREY, x, y, new Letter(x, y, 'E')), COPY_LEFT_TILE);
                 case 0x3040 -> addActive(i, new Message(x, y), COPY_NO_TILE);
+                case 0x3041 -> addActive(i, Tv.create(x, y, this), COPY_NO_TILE);
                 case 0x3044 -> addActive(i, new Key(x, y, Key.Type.RED), COPY_LEFT_TILE);
                 case 0x3045 -> addActive(i, new Key(x, y, Key.Type.GREEN), COPY_LEFT_TILE);
                 case 0x3046 -> addActive(i, new Key(x, y, Key.Type.BLUE), COPY_LEFT_TILE);

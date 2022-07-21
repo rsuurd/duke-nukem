@@ -13,6 +13,7 @@ public class GameState {
     private ResourceLoader loader;
 
     private Duke duke;
+    private Viewport viewport;
     private Inventory inventory;
 
     private Level level;
@@ -35,6 +36,7 @@ public class GameState {
         this.loader = loader;
 
         duke = new Duke();
+        viewport = new Viewport();
         inventory = new Inventory();
 
         score = 123;
@@ -90,6 +92,10 @@ public class GameState {
         return duke;
     }
 
+    public Viewport getViewport() {
+        return viewport;
+    }
+
     public Inventory getInventory() {
         return inventory;
     }
@@ -112,6 +118,7 @@ public class GameState {
 
     public void update() {
         duke.update(this);
+        viewport.update(this);
 
         Iterator<Bolt> boltIterator = getBolts().iterator();
 
