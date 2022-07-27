@@ -16,7 +16,7 @@ public class Shot extends Active {
 
         this.facing = facing;
 
-        frame = 0;
+        frame = -1;
     }
 
     @Override
@@ -36,13 +36,19 @@ public class Shot extends Active {
     }
 
     @Override
-    protected void hitWall() {
+    protected void hitWall(GameState state) {
         active = false;
     }
 
     @Override
     public void render(Renderer renderer, Assets assets) {
-        int tileId = ((facing == Facing.LEFT) ? 39 : 41) + frame;
+        int tileId;
+
+        if (frame == -1) {
+            tileId = ((facing == Facing.LEFT)) ? 48 : 49;
+        } else {
+            tileId = ((facing == Facing.LEFT) ? 39 : 41) + frame;
+        }
 
         renderer.drawTile(assets.getObject(tileId), x, y);
 

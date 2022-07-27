@@ -56,7 +56,7 @@ public class Duke extends Active {
 
         }
 
-        moveHorizontally(level);
+        moveHorizontally(state);
         moveVertically(state);
 
         if (velocityY > 0) {

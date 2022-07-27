@@ -2,7 +2,6 @@ package duke.active;
 
 import duke.Assets;
 import duke.GameState;
-import duke.Level;
 import duke.Renderer;
 
 import static duke.Gfx.TILE_SIZE;
@@ -41,7 +40,7 @@ public abstract class Active {
         velocityY = 8;
     }
 
-    protected void moveHorizontally(Level level) {
+    protected void moveHorizontally(GameState state) {
         boolean collision = false;
 
         int newPositionX = x + velocityX;
@@ -50,11 +49,11 @@ public abstract class Active {
         int col = (newPositionX + ((velocityX > 0) ? width : 0)) / TILE_SIZE;
 
         while (!collision && (row <= (y + height) / TILE_SIZE)) {
-            collision = level.isSolid(row++, col);
+            collision = state.getLevel().isSolid(row++, col);
         }
 
         if (collision) {
-            hitWall();
+            hitWall(state);
         } else {
             moveTo(newPositionX, y);
         }
@@ -62,7 +61,7 @@ public abstract class Active {
         velocityX = 0;
     }
 
-    protected void hitWall() {}
+    protected void hitWall(GameState state) {}
 
     protected void moveVertically(GameState state) {
         boolean collision = false;
@@ -99,7 +98,7 @@ public abstract class Active {
     protected void land(GameState state) {}
 
     public void update(GameState state) {
-        moveHorizontally(state.getLevel());
+        moveHorizontally(state);
         moveVertically(state);
 
         applyGravity();

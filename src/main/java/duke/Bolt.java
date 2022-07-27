@@ -51,7 +51,7 @@ public class Bolt extends Active {
 
                 state.addEffect(new Effect.Sparks(sparkX, y - 4));
 
-                hitWall();
+                hitWall(state);
             } else {
                 active = Math.abs(x - state.getDuke().getX()) < (10 * TILE_SIZE);
             }
@@ -74,7 +74,7 @@ public class Bolt extends Active {
     }
 
     @Override
-    protected void hitWall() {
+    protected void hitWall(GameState state) {
         active = false;
     }
 }
