@@ -1,5 +1,7 @@
 package duke.resources;
 
+import duke.DukeNukemException;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -12,6 +14,8 @@ import java.util.zip.ZipInputStream;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class SharewareDownloader {
+    private final static long OFFSET = 0x3bf5;
+
     private Path path;
     private Supplier<InputStream> streamSupplier;
 
@@ -32,13 +36,13 @@ public class SharewareDownloader {
 
     public void download() {
         try (ZipInputStream zip = new ZipInputStream(streamSupplier.get())) {
-            ensureFolderExists();
+            Files.createDirectories(path);
 
             ZipEntry entry;
 
             while ((entry = zip.getNextEntry()) != null) {
                 if (entry.getName().equalsIgnoreCase("DUKE.1")) {
-                    zip.skip(0x3bf5);
+                    zip.skip(OFFSET);
 
                     extract(zip, path);
                 }
@@ -47,12 +51,6 @@ public class SharewareDownloader {
             }
         } catch (Exception e) {
             throw new DukeNukemException("Could not download shareware episode", e);
-        }
-    }
-
-    private void ensureFolderExists() throws IOException {
-        if (!Files.exists(path)) {
-            Files.createDirectories(path);
         }
     }
 

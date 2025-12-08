@@ -1,4 +1,4 @@
-package duke.resources;
+package duke;
 
 public class DukeNukemException extends RuntimeException {
     public DukeNukemException(String message) {
