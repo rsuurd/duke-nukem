@@ -37,4 +37,8 @@ public class ResourceLoader {
             throw new DukeNukemException(String.format("Could not check base directory: %s", path), e);
         }
     }
+
+    public Path resolve(String name) {
+        return path.resolve(name);
+    }
 }
