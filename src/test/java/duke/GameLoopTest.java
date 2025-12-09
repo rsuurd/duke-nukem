@@ -6,8 +6,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.Duration;
-
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -19,22 +17,10 @@ class GameLoopTest {
     private GameLoop gameLoop;
 
     @Test
-    void shouldStartRenderAndStop() {
-        run(Duration.ofMillis(100));
+    void shouldRender() {
+        gameLoop.tick();
 
         verify(renderer).clear();
         verify(renderer).flip();
-    }
-
-    private void run(Duration duration) {
-        new Thread(() -> {
-            try {
-                gameLoop.start();
-                Thread.sleep(duration.toMillis());
-                gameLoop.stop();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }).start();
     }
 }

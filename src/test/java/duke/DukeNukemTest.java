@@ -7,6 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -25,10 +26,12 @@ class DukeNukemTest {
     }
 
     @Test
-    void shouldStart() {
+    void shouldRunGame() throws InterruptedException {
         dukeNukem.start();
+        Thread.sleep(20L);
+        dukeNukem.stop();
 
         verify(resourceLoader).ensureResourcesExist();
-        verify(gameLoop).start();
+        verify(gameLoop, atLeastOnce()).tick();
     }
 }

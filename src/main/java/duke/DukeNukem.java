@@ -3,12 +3,20 @@ package duke;
 import duke.resources.ResourceLoader;
 import duke.ui.DukeNukemFrame;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 public class DukeNukem {
     private ResourceLoader resourceLoader;
     private GameLoop gameLoop;
+
+    private ScheduledExecutorService executor;
 
     public DukeNukem(ResourceLoader resourceLoader, Renderer renderer) {
         this(resourceLoader, new GameLoop(renderer));
@@ -17,11 +25,17 @@ public class DukeNukem {
     protected DukeNukem(ResourceLoader resourceLoader, GameLoop gameLoop) {
         this.resourceLoader = resourceLoader;
         this.gameLoop = gameLoop;
+        this.executor = Executors.newSingleThreadScheduledExecutor(Thread.ofVirtual().factory());
     }
 
     public void start() {
         resourceLoader.ensureResourcesExist();
-        gameLoop.start();
+
+        executor.scheduleAtFixedRate(() -> gameLoop.tick(), 0L, 1L, MILLISECONDS);
+    }
+
+    public void stop() {
+        executor.shutdownNow();
     }
 
     public static void main(String... parameters) {
@@ -32,5 +46,12 @@ public class DukeNukem {
 
         DukeNukem dukeNukem = new DukeNukem(resourceLoader, frame.getRenderer());
         dukeNukem.start();
+
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                dukeNukem.stop();
+            }
+        });
     }
 }

@@ -5,43 +5,32 @@ import java.time.Duration;
 public class GameLoop {
     private static final int UPDATES_PER_SECOND = 16;
     private static final long TIME_STEP = Duration.ofSeconds(1).toNanos() / UPDATES_PER_SECOND;
-    private static final long MILLI = Duration.ofMillis(1).toNanos();
-
-    private boolean running;
 
     private Renderer renderer;
 
+    private long nextUpdate;
+
     public GameLoop(Renderer renderer) {
         this.renderer = renderer;
+
+        nextUpdate = now();
     }
 
-    public void start() {
-        running = true;
+    public void tick() {
+        long now = now();
 
-        loop();
-    }
+        handleInput();
 
-    public void stop() {
-        running = false;
-    }
+        if (now >= nextUpdate) {
+            update();
+            render();
 
-    private void loop() {
-        long nextUpdate = System.nanoTime();
-
-        while (running) {
-            long now = System.nanoTime();
-
-            handleInput();
-
-            if (now >= nextUpdate) {
-                update();
-                render();
-
-                nextUpdate = calculateNext(now, nextUpdate);
-            }
-
-            sleep(nextUpdate);
+            nextUpdate = calculateNext(now, nextUpdate);
         }
+    }
+
+    private long now() {
+        return System.nanoTime();
     }
 
     private void handleInput() {
@@ -65,16 +54,5 @@ public class GameLoop {
         }
 
         return nextUpdate;
-    }
-
-    private void sleep(long nextUpdate) {
-        long waitTime = nextUpdate - System.nanoTime();
-        if (waitTime > MILLI * 2) {
-            try {
-                Thread.sleep(waitTime / MILLI, (int) (waitTime % MILLI));
-            } catch (InterruptedException e) {}
-        } else {
-            Thread.onSpinWait();
-        }
     }
 }
