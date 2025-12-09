@@ -16,7 +16,7 @@ import static org.mockito.Mockito.verifyNoInteractions;
 class ResourceLoaderTest {
     @Mock
     private SharewareDownloader downloader;
-    
+
     private ResourceLoader createResourceLoader(Path path) {
         return new ResourceLoader(path, downloader);
     }
