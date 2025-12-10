@@ -26,6 +26,7 @@ public class CanvasRenderer extends Canvas implements Renderer {
         graphics.fillRect(0, 0, WIDTH, HEIGHT);
     }
 
+    @Override
     public void flip() {
         BufferStrategy strategy = getBufferStrategy();
 

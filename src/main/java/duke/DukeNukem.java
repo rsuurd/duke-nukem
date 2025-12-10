@@ -2,6 +2,7 @@ package duke;
 
 import duke.resources.ResourceLoader;
 import duke.ui.DukeNukemFrame;
+import duke.ui.KeyHandler;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -18,11 +19,7 @@ public class DukeNukem {
 
     private ScheduledExecutorService executor;
 
-    public DukeNukem(ResourceLoader resourceLoader, Renderer renderer) {
-        this(resourceLoader, new GameLoop(renderer));
-    }
-
-    protected DukeNukem(ResourceLoader resourceLoader, GameLoop gameLoop) {
+    public DukeNukem(ResourceLoader resourceLoader, GameLoop gameLoop) {
         this.resourceLoader = resourceLoader;
         this.gameLoop = gameLoop;
         this.executor = Executors.newSingleThreadScheduledExecutor(Thread.ofVirtual().factory());
@@ -41,10 +38,11 @@ public class DukeNukem {
     public static void main(String... parameters) {
         Path basePath = Paths.get(".dn1"); // TODO read from config or parameters
 
-        DukeNukemFrame frame = new DukeNukemFrame();
+        KeyHandler keyHandler = new KeyHandler();
+        DukeNukemFrame frame = new DukeNukemFrame(keyHandler);
         ResourceLoader resourceLoader = new ResourceLoader(basePath);
 
-        DukeNukem dukeNukem = new DukeNukem(resourceLoader, frame.getRenderer());
+        DukeNukem dukeNukem = new DukeNukem(resourceLoader, new GameLoop(frame.getRenderer()));
         dukeNukem.start();
 
         frame.addWindowListener(new WindowAdapter() {
