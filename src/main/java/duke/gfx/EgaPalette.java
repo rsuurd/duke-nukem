@@ -58,12 +58,13 @@ public class EgaPalette {
     }
 
     private void rebuildColorModel() {
-        byte[] r = new byte[16];
-        byte[] g = new byte[16];
-        byte[] b = new byte[16];
         byte[] palette = palettes[brightness];
+        int size = palette.length;
+        byte[] r = new byte[size];
+        byte[] g = new byte[size];
+        byte[] b = new byte[size];
 
-        for (int i = 0; i < palette.length; i++) {
+        for (int i = 0; i < size; i++) {
             int colorIndex = palette[i] & 0xFF;
             int color = COLORS[colorIndex];
             r[i] = (byte) ((color >> 16) & 0xFF);
@@ -71,7 +72,7 @@ public class EgaPalette {
             b[i] = (byte) (color & 0xFF);
         }
 
-        colorModel = new IndexColorModel(8, 16, r, g, b);
+        colorModel = new IndexColorModel(8, size, r, g, b);
         listeners.forEach(PaletteChangedListener::onPaletteChanged);
     }
 

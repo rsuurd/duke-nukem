@@ -2,6 +2,7 @@ package duke;
 
 import duke.gfx.EgaPalette;
 import duke.resources.ResourceLoader;
+import duke.ui.CanvasRenderer;
 import duke.ui.DukeNukemFrame;
 import duke.ui.KeyHandler;
 
@@ -29,7 +30,7 @@ public class DukeNukem {
     public void start() {
         resourceLoader.ensureResourcesExist();
 
-        executor.scheduleAtFixedRate(() -> gameLoop.tick(), 0L, 1L, MILLISECONDS);
+        executor.scheduleAtFixedRate(() -> gameLoop.tick(), 0L, 10L, MILLISECONDS);
     }
 
     public void stop() {
@@ -39,11 +40,15 @@ public class DukeNukem {
     public static void main(String... parameters) {
         Path basePath = Paths.get(".dn1"); // TODO read from config or parameters
 
-        KeyHandler keyHandler = new KeyHandler();
-        DukeNukemFrame frame = new DukeNukemFrame(keyHandler, new EgaPalette());
         ResourceLoader resourceLoader = new ResourceLoader(basePath);
+        KeyHandler keyHandler = new KeyHandler();
+        EgaPalette palette = new EgaPalette();
+        CanvasRenderer renderer = new CanvasRenderer(palette);
+        GameContext context = new GameContext(resourceLoader, renderer, palette, keyHandler);
+        DukeNukemFrame frame = new DukeNukemFrame(renderer, keyHandler);
+        GameLoop gameLoop = new GameLoop(context);
 
-        DukeNukem dukeNukem = new DukeNukem(resourceLoader, new GameLoop(frame.getRenderer()));
+        DukeNukem dukeNukem = new DukeNukem(resourceLoader, gameLoop);
         dukeNukem.start();
 
         frame.addWindowListener(new WindowAdapter() {

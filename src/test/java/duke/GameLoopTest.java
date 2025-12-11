@@ -1,5 +1,6 @@
 package duke;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,7 +15,14 @@ class GameLoopTest {
     private Renderer renderer;
 
     @InjectMocks
+    private GameContext context;
+
     private GameLoop gameLoop;
+
+    @BeforeEach
+    void create() {
+        gameLoop = new GameLoop(context);
+    }
 
     @Test
     void shouldRender() {

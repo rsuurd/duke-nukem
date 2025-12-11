@@ -1,17 +1,11 @@
 package duke.ui;
 
-import duke.Renderer;
-import duke.gfx.EgaPalette;
-
 import javax.swing.*;
 
 public class DukeNukemFrame extends JFrame {
-    private CanvasRenderer renderer;
-
-    public DukeNukemFrame(KeyHandler keyHandler, EgaPalette palette) {
+    public DukeNukemFrame(CanvasRenderer renderer, KeyHandler keyHandler) {
         super("Duke Nukem");
 
-        renderer = new CanvasRenderer(palette);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         add(renderer);
         pack();
@@ -21,9 +15,5 @@ public class DukeNukemFrame extends JFrame {
 
         setLocationRelativeTo(null);
         setVisible(true);
-    }
-
-    public Renderer getRenderer() {
-        return renderer;
     }
 }
