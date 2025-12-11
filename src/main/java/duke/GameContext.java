@@ -2,6 +2,7 @@ package duke;
 
 import duke.gfx.EgaPalette;
 import duke.resources.ResourceLoader;
+import duke.state.GameState;
 import duke.ui.KeyHandler;
 
 public class GameContext {
@@ -10,11 +11,15 @@ public class GameContext {
     private EgaPalette palette; // maybe combine renderer/palette in Gfx abstraction
     private KeyHandler keyHandler;
 
-    public GameContext(ResourceLoader resourceLoader, Renderer renderer, EgaPalette palette, KeyHandler keyHandler) {
+    // TODO probably need a StateManager around this later
+    private GameState gameState;
+
+    public GameContext(ResourceLoader resourceLoader, Renderer renderer, EgaPalette palette, KeyHandler keyHandler, GameState gameState) {
         this.resourceLoader = resourceLoader;
         this.renderer = renderer;
         this.palette = palette;
         this.keyHandler = keyHandler;
+        this.gameState = gameState;
     }
 
     public ResourceLoader getResourceLoader() {
@@ -31,5 +36,9 @@ public class GameContext {
 
     public KeyHandler getKeyHandler() {
         return keyHandler;
+    }
+
+    public GameState getGameState() {
+        return gameState;
     }
 }

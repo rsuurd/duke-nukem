@@ -34,15 +34,15 @@ public class GameLoop {
     }
 
     private void handleInput() {
-        // context.getInputHandler().process()
     }
 
     private void update() {
-        //context.getStateManager().update(context);
+        context.getGameState().update(context);
     }
 
     private void render() {
         context.getRenderer().clear();
+        context.getGameState().render(context);
         context.getRenderer().flip();
     }
 

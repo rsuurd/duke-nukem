@@ -15,20 +15,20 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class SpriteLoaderTest {
     @Mock
-    private ResourceLoader loader;
+    private Path path;
 
     @InjectMocks
     private SpriteLoader spriteLoader;
 
     @Test
     void shouldLoadFullScreenImage() throws IOException {
-        when(loader.resolve(any())).thenReturn(createTempImage((byte) 0xFF));
+        when(path.resolve(anyString())).thenReturn(createTempImage((byte) 0xFF));
 
         Sprite image = spriteLoader.readImage("FULLSCRN.DN1");
 
@@ -40,7 +40,7 @@ class SpriteLoaderTest {
 
     @Test
     void shouldLoadBackdrop() throws IOException {
-        when(loader.resolve(any())).thenReturn(createTempTiles(10 * 13, (byte) 0xFF));
+        when(path.resolve(anyString())).thenReturn(createTempTiles(10 * 13, (byte) 0xFF));
 
         Sprite image = spriteLoader.readBackdrop(0);
 
@@ -52,7 +52,7 @@ class SpriteLoaderTest {
 
     @Test
     void shouldLoadTiles() throws IOException {
-        when(loader.resolve(any())).thenReturn(createTempTiles(1, (byte) 0xFF));
+        when(path.resolve(anyString())).thenReturn(createTempTiles(1, (byte) 0xFF));
 
         List<Sprite> tiles = spriteLoader.readTiles("TILES.DN1", false);
 

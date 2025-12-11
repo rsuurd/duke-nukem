@@ -6,18 +6,19 @@ import duke.gfx.Sprite;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.math.BigInteger;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SpriteLoader {
-    private ResourceLoader loader;
+    private Path path;
 
-    public SpriteLoader(ResourceLoader loader) {
-        this.loader = loader;
+    public SpriteLoader(Path path) {
+        this.path = path;
     }
 
     public Sprite readImage(String name) {
-        try (RandomAccessFile in = new RandomAccessFile(loader.resolve(name).toFile(), "r")) {
+        try (RandomAccessFile in = new RandomAccessFile(path.resolve(name).toFile(), "r")) {
             int width = 320;
             int height = 200;
             byte[] pixels = new byte[width * height];
@@ -63,7 +64,7 @@ public class SpriteLoader {
     }
 
     public Sprite readBackdrop(int number) {
-        try (RandomAccessFile in = new RandomAccessFile(loader.resolve(String.format("DROP%d.DN1", number)).toFile(), "r")) {
+        try (RandomAccessFile in = new RandomAccessFile(path.resolve(String.format("DROP%d.DN1", number)).toFile(), "r")) {
             in.seek(3);
 
             int width = 208;
@@ -92,7 +93,7 @@ public class SpriteLoader {
     }
 
     public List<Sprite> readTiles(String name, boolean opaque) {
-        try (RandomAccessFile in = new RandomAccessFile(loader.resolve(name).toFile(), "r")) {
+        try (RandomAccessFile in = new RandomAccessFile(path.resolve(name).toFile(), "r")) {
             int count = in.readByte();
             int widthInBytes = in.readByte();
             int heightInPixels = in.readByte();

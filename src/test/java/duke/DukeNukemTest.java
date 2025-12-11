@@ -1,6 +1,8 @@
 package duke;
 
 import duke.resources.ResourceLoader;
+import duke.state.GameState;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,10 +18,20 @@ class DukeNukemTest {
     private ResourceLoader resourceLoader;
 
     @Mock
+    private GameState state;
+
+    @Mock
     private GameLoop gameLoop;
 
     @InjectMocks
+    private GameContext context;
+
     private DukeNukem dukeNukem;
+
+    @BeforeEach
+    void create() {
+        dukeNukem = new DukeNukem(context, gameLoop);
+    }
 
     @Test
     void shouldRunGame() throws InterruptedException {
@@ -28,6 +40,7 @@ class DukeNukemTest {
         dukeNukem.stop();
 
         verify(resourceLoader).ensureResourcesExist();
+        verify(state).start(context);
         verify(gameLoop, atLeastOnce()).tick();
     }
 }

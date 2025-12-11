@@ -2,6 +2,8 @@ package duke;
 
 import duke.gfx.EgaPalette;
 import duke.resources.ResourceLoader;
+import duke.state.GameState;
+import duke.state.MainMenu;
 import duke.ui.CanvasRenderer;
 import duke.ui.DukeNukemFrame;
 import duke.ui.KeyHandler;
@@ -16,20 +18,20 @@ import java.util.concurrent.ScheduledExecutorService;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 public class DukeNukem {
-    private ResourceLoader resourceLoader;
+    private GameContext context;
     private GameLoop gameLoop;
 
     private ScheduledExecutorService executor;
 
-    public DukeNukem(ResourceLoader resourceLoader, GameLoop gameLoop) {
-        this.resourceLoader = resourceLoader;
+    public DukeNukem(GameContext context, GameLoop gameLoop) {
+        this.context = context;
         this.gameLoop = gameLoop;
         this.executor = Executors.newSingleThreadScheduledExecutor(Thread.ofVirtual().factory());
     }
 
     public void start() {
-        resourceLoader.ensureResourcesExist();
-
+        context.getResourceLoader().ensureResourcesExist();
+        context.getGameState().start(context);
         executor.scheduleAtFixedRate(() -> gameLoop.tick(), 0L, 10L, MILLISECONDS);
     }
 
@@ -44,11 +46,12 @@ public class DukeNukem {
         KeyHandler keyHandler = new KeyHandler();
         EgaPalette palette = new EgaPalette();
         CanvasRenderer renderer = new CanvasRenderer(palette);
-        GameContext context = new GameContext(resourceLoader, renderer, palette, keyHandler);
+        GameState gameState = new MainMenu();
+        GameContext context = new GameContext(resourceLoader, renderer, palette, keyHandler, gameState);
         DukeNukemFrame frame = new DukeNukemFrame(renderer, keyHandler);
         GameLoop gameLoop = new GameLoop(context);
 
-        DukeNukem dukeNukem = new DukeNukem(resourceLoader, gameLoop);
+        DukeNukem dukeNukem = new DukeNukem(context, gameLoop);
         dukeNukem.start();
 
         frame.addWindowListener(new WindowAdapter() {

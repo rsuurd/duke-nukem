@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 
@@ -17,8 +18,11 @@ class ResourceLoaderTest {
     @Mock
     private SharewareDownloader downloader;
 
+    @Mock
+    private SpriteLoader spriteLoader;
+
     private ResourceLoader createResourceLoader(Path path) {
-        return new ResourceLoader(path, downloader);
+        return new ResourceLoader(path, downloader, spriteLoader);
     }
 
     @Test
@@ -36,5 +40,12 @@ class ResourceLoaderTest {
         createResourceLoader(path).ensureResourcesExist();
 
         verifyNoInteractions(downloader);
+    }
+
+    @Test
+    public void shouldReturnSpriteLoader() throws IOException {
+        ResourceLoader resourceLoader = createResourceLoader(Files.createTempDirectory("dn"));
+
+        assertThat(resourceLoader.getSpriteLoader()).isSameAs(spriteLoader);
     }
 }
