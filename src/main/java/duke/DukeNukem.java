@@ -1,5 +1,6 @@
 package duke;
 
+import duke.gfx.EgaPalette;
 import duke.resources.ResourceLoader;
 import duke.ui.DukeNukemFrame;
 import duke.ui.KeyHandler;
@@ -39,7 +40,7 @@ public class DukeNukem {
         Path basePath = Paths.get(".dn1"); // TODO read from config or parameters
 
         KeyHandler keyHandler = new KeyHandler();
-        DukeNukemFrame frame = new DukeNukemFrame(keyHandler);
+        DukeNukemFrame frame = new DukeNukemFrame(keyHandler, new EgaPalette());
         ResourceLoader resourceLoader = new ResourceLoader(basePath);
 
         DukeNukem dukeNukem = new DukeNukem(resourceLoader, new GameLoop(frame.getRenderer()));

@@ -5,13 +5,13 @@ import java.util.Arrays;
 public class Sprite {
     private int width;
     private int height;
-    private int pixels[];
+    private byte[] pixels;
 
     public Sprite(int width, int height) {
-        this(width, height, new int[width * height]);
+        this(width, height, new byte[width * height]);
     }
 
-    public Sprite(int width, int height, int[] pixels) {
+    public Sprite(int width, int height, byte[] pixels) {
         if (pixels.length != width * height) {
             throw new IllegalArgumentException("Sprite pixels do not match given dimensions");
         }
@@ -29,29 +29,33 @@ public class Sprite {
         return height;
     }
 
-    public int getPixel(int x, int y) {
+    public byte getPixel(int x, int y) {
         return pixels[y * width + x];
     }
 
+    public byte[] getPixels() {
+        return pixels;
+    }
+
     public void draw(Sprite sprite, int x, int y) {
-        int spiteWidth = sprite.getWidth();
+        int spriteWidth = sprite.getWidth();
         int startX = Math.max(0, -x);
         int startY = Math.max(0, -y);
-        int endX = Math.min(spiteWidth, width - x);
+        int endX = Math.min(spriteWidth, width - x);
         int endY = Math.min(sprite.getHeight(), height - y);
 
         if (startX >= endX || startY >= endY) {
             return;
         }
 
-        int[] spritePixels = sprite.pixels;
+        byte[] spritePixels = sprite.pixels;
 
         for (int yy = startY; yy < endY; yy++) {
-            int spriteRow = yy * spiteWidth;
+            int spriteRow = yy * spriteWidth;
             int row = (yy + y) * width;
 
             for (int xx = startX; xx < endX; xx++) {
-                int index = spritePixels[spriteRow + xx];
+                byte index = spritePixels[spriteRow + xx];
 
                 if (index != 0) {
                     pixels[row + xx + x] = index;
@@ -61,6 +65,6 @@ public class Sprite {
     }
 
     public void clear() {
-        Arrays.fill(pixels, 0);
+        Arrays.fill(pixels, (byte) 0);
     }
 }

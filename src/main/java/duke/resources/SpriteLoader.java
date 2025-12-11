@@ -20,7 +20,7 @@ public class SpriteLoader {
         try (RandomAccessFile in = new RandomAccessFile(loader.resolve(name).toFile(), "r")) {
             int width = 320;
             int height = 200;
-            int[] pixels = new int[width * height];
+            byte[] pixels = new byte[width * height];
 
             int size = (int) in.length() / 4;
             byte[] intensities = new byte[size];
@@ -43,7 +43,7 @@ public class SpriteLoader {
                 BigInteger blue = BigInteger.valueOf(blues[i]);
 
                 for (int bit = 7; bit >= 0; bit--) {
-                    int index = toIndex(intensity.testBit(bit), red.testBit(bit), green.testBit(bit), blue.testBit(bit));
+                    byte index = toIndex(intensity.testBit(bit), red.testBit(bit), green.testBit(bit), blue.testBit(bit));
 
                     pixels[y * width + x] = index;
 
@@ -69,7 +69,7 @@ public class SpriteLoader {
             int width = 208;
             int height = 160;
             int tileSize = 16;
-            int[] pixels = new int[width * height];
+            byte[] pixels = new byte[width * height];
 
             for (int row = 0; row < 10; row++) {
                 for (int col = 0; col < 13; col++) {
@@ -77,7 +77,7 @@ public class SpriteLoader {
 
                     for (int y = 0; y < tileSize; y++) {
                         for (int x = 0; x < tileSize; x++) {
-                            int pixel = tile.getPixel(x, y);
+                            byte pixel = tile.getPixel(x, y);
 
                             pixels[((row * tileSize) + y) * width + (col * tileSize) + x] = pixel;
                         }
@@ -114,7 +114,7 @@ public class SpriteLoader {
 
         if (in.read(data) != -1) {
             int width = widthInBytes * 8;
-            int[] pixels = new int[width * height];
+            byte[] pixels = new byte[width * height];
 
             int y = 0;
             int x = 0;
@@ -128,7 +128,7 @@ public class SpriteLoader {
 
                 for (int bit = 7; bit >= 0; bit--) {
                     if (opaque || opacity.testBit(bit)) {
-                        int index = toIndex(intensity.testBit(bit), red.testBit(bit), green.testBit(bit), blue.testBit(bit));
+                        byte index = toIndex(intensity.testBit(bit), red.testBit(bit), green.testBit(bit), blue.testBit(bit));
 
                         pixels[y * width + x] = index;
                     }
@@ -148,8 +148,8 @@ public class SpriteLoader {
         }
     }
 
-    private int toIndex(boolean intensity, boolean red, boolean green, boolean blue) {
-        int index = 0;
+    private byte toIndex(boolean intensity, boolean red, boolean green, boolean blue) {
+        byte index = 0;
 
         if (intensity) {
             index |= 0b0001;

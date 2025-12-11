@@ -35,7 +35,7 @@ class SpriteLoaderTest {
         assertThat(image).isNotNull();
         assertThat(image.getWidth()).isEqualTo(320);
         assertThat(image.getHeight()).isEqualTo(200);
-        assertThat(image.getPixel(0, 0)).isEqualTo(15);
+        assertThat(image.getPixel(0, 0)).isEqualTo((byte) 15);
     }
 
     @Test
@@ -47,7 +47,7 @@ class SpriteLoaderTest {
         assertThat(image).isNotNull();
         assertThat(image.getWidth()).isEqualTo(208);
         assertThat(image.getHeight()).isEqualTo(160);
-        assertThat(image.getPixel(0, 0)).isEqualTo(15);
+        assertThat(image.getPixel(0, 0)).isEqualTo((byte) 15);
     }
 
     @Test
@@ -62,7 +62,7 @@ class SpriteLoaderTest {
         assertThat(tile).isNotNull();
         assertThat(tile.getWidth()).isEqualTo(16);
         assertThat(tile.getHeight()).isEqualTo(16);
-        assertThat(tile.getPixel(0, 0)).isEqualTo(15);
+        assertThat(tile.getPixel(0, 0)).isEqualTo( (byte) 15);
     }
 
     private Path createTempImage(byte value) throws IOException {
