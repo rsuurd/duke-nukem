@@ -1,6 +1,7 @@
 package duke;
 
 import duke.gfx.EgaPalette;
+import duke.resources.AssetManager;
 import duke.resources.ResourceLoader;
 import duke.state.MainMenu;
 import duke.state.StateManager;
@@ -38,13 +39,13 @@ public class DukeNukem {
     public static void main(String... parameters) {
         Path basePath = Paths.get(".dn1"); // TODO read from config or parameters
         ResourceLoader resourceLoader = new ResourceLoader(basePath);
-        resourceLoader.ensureResourcesExist();
+        AssetManager assets = new AssetManager(resourceLoader);
+        assets.load();
 
         KeyHandler keyHandler = new KeyHandler();
         EgaPalette palette = new EgaPalette();
         CanvasRenderer renderer = new CanvasRenderer(palette);
-        GameContext context = new GameContext(resourceLoader, renderer, palette, keyHandler);
-
+        GameContext context = new GameContext(assets, renderer, palette, keyHandler);
         DukeNukemFrame frame = new DukeNukemFrame(renderer, keyHandler);
         StateManager manager = new StateManager(context, new MainMenu());
         GameLoop gameLoop = new GameLoop(context, manager);
