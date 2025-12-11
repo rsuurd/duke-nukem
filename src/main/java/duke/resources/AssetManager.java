@@ -28,12 +28,8 @@ public class AssetManager {
 
     private void loadTiles() {
         for (Category category : Category.values()) {
-            loadTilesForCategory(category);
+            tiles.computeIfAbsent(category, this::loadTiles);
         }
-    }
-
-    private void loadTilesForCategory(Category category) {
-        tiles.computeIfAbsent(category, this::loadTiles);
     }
 
     private List<Sprite> loadTiles(Category category) {

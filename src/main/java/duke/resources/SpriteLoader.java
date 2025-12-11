@@ -106,7 +106,7 @@ public class SpriteLoader {
 
             return tiles;
         } catch (IOException e) {
-            throw new RuntimeException("Could not read: " + name, e);
+            throw new DukeNukemException(String.format("Could not read %s", name), e);
         }
     }
 
