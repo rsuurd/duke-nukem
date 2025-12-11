@@ -1,5 +1,7 @@
 package duke;
 
+import duke.state.StateManager;
+
 import java.time.Duration;
 
 public class GameLoop {
@@ -7,11 +9,13 @@ public class GameLoop {
     private static final long TIME_STEP = Duration.ofSeconds(1).toNanos() / UPDATES_PER_SECOND;
 
     private GameContext context;
+    private StateManager manager;
 
     private long nextUpdate;
 
-    public GameLoop(GameContext context) {
+    public GameLoop(GameContext context, StateManager manager) {
         this.context = context;
+        this.manager = manager;
 
         nextUpdate = now();
     }
@@ -37,12 +41,12 @@ public class GameLoop {
     }
 
     private void update() {
-        context.getGameState().update(context);
+        manager.update();
     }
 
     private void render() {
         context.getRenderer().clear();
-        context.getGameState().render(context);
+        manager.render();
         context.getRenderer().flip();
     }
 

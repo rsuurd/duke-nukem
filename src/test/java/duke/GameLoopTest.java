@@ -1,6 +1,7 @@
 package duke;
 
 import duke.state.GameState;
+import duke.state.StateManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,24 +16,24 @@ class GameLoopTest {
     @Mock
     private Renderer renderer;
 
-    @Mock
-    private GameState gameState;
-
     @InjectMocks
     private GameContext context;
+
+    @Mock
+    private StateManager manager;
 
     private GameLoop gameLoop;
 
     @BeforeEach
     void create() {
-        gameLoop = new GameLoop(context);
+        gameLoop = new GameLoop(context, manager);
     }
 
     @Test
     void shouldUpdate() {
         gameLoop.tick();
 
-        verify(gameState).update(context);
+        verify(manager).update();
     }
 
     @Test
@@ -40,7 +41,7 @@ class GameLoopTest {
         gameLoop.tick();
 
         verify(renderer).clear();
-        verify(gameState).render(context);
+        verify(manager).render();
         verify(renderer).flip();
     }
 }

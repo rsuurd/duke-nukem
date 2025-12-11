@@ -2,8 +2,8 @@ package duke;
 
 import duke.gfx.EgaPalette;
 import duke.resources.ResourceLoader;
-import duke.state.GameState;
 import duke.state.MainMenu;
+import duke.state.StateManager;
 import duke.ui.CanvasRenderer;
 import duke.ui.DukeNukemFrame;
 import duke.ui.KeyHandler;
@@ -18,20 +18,16 @@ import java.util.concurrent.ScheduledExecutorService;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 public class DukeNukem {
-    private GameContext context;
     private GameLoop gameLoop;
 
     private ScheduledExecutorService executor;
 
-    public DukeNukem(GameContext context, GameLoop gameLoop) {
-        this.context = context;
+    public DukeNukem(GameLoop gameLoop) {
         this.gameLoop = gameLoop;
         this.executor = Executors.newSingleThreadScheduledExecutor(Thread.ofVirtual().factory());
     }
 
     public void start() {
-        context.getResourceLoader().ensureResourcesExist();
-        context.getGameState().start(context);
         executor.scheduleAtFixedRate(() -> gameLoop.tick(), 0L, 10L, MILLISECONDS);
     }
 
@@ -41,17 +37,19 @@ public class DukeNukem {
 
     public static void main(String... parameters) {
         Path basePath = Paths.get(".dn1"); // TODO read from config or parameters
-
         ResourceLoader resourceLoader = new ResourceLoader(basePath);
+        resourceLoader.ensureResourcesExist();
+
         KeyHandler keyHandler = new KeyHandler();
         EgaPalette palette = new EgaPalette();
         CanvasRenderer renderer = new CanvasRenderer(palette);
-        GameState gameState = new MainMenu();
-        GameContext context = new GameContext(resourceLoader, renderer, palette, keyHandler, gameState);
-        DukeNukemFrame frame = new DukeNukemFrame(renderer, keyHandler);
-        GameLoop gameLoop = new GameLoop(context);
+        GameContext context = new GameContext(resourceLoader, renderer, palette, keyHandler);
 
-        DukeNukem dukeNukem = new DukeNukem(context, gameLoop);
+        DukeNukemFrame frame = new DukeNukemFrame(renderer, keyHandler);
+        StateManager manager = new StateManager(context, new MainMenu());
+        GameLoop gameLoop = new GameLoop(context, manager);
+
+        DukeNukem dukeNukem = new DukeNukem(gameLoop);
         dukeNukem.start();
 
         frame.addWindowListener(new WindowAdapter() {
