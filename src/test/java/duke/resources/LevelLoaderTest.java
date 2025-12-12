@@ -1,6 +1,5 @@
 package duke.resources;
 
-import duke.level.LevelData;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -29,14 +28,10 @@ class LevelLoaderTest {
     void shouldLoadLevelData() throws IOException {
         when(path.resolve(anyString())).thenReturn(createTempLevelData());
 
-        LevelData data = loader.readLevel(1);
+        int[] data = loader.readLevel(1);
 
         assertThat(data).isNotNull();
-        for (int row = 0; row < 90; row++) {
-            for (int col = 0; col < 128; col++) {
-                assertThat(data.getTile(row, col)).isEqualTo(1);
-            }
-        }
+        assertThat(data).containsOnly(1);
     }
 
     private Path createTempLevelData() throws IOException {

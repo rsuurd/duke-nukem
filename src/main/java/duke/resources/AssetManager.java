@@ -1,6 +1,8 @@
 package duke.resources;
 
 import duke.gfx.Sprite;
+import duke.level.Level;
+import duke.level.LevelBuilder;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -80,6 +82,12 @@ public class AssetManager {
         return images.computeIfAbsent(String.format("DRPOP%d", number), n ->
                 resourceLoader.getSpriteLoader().readBackdrop(number)
         );
+    }
+
+    public Level getLevel(int number) {
+        int[] data = resourceLoader.getLevelLoader().readLevel(number);
+
+        return new LevelBuilder(number, data).build();
     }
 
     private enum Category {

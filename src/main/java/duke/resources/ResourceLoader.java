@@ -1,6 +1,7 @@
 package duke.resources;
 
 import duke.DukeNukemException;
+import duke.level.Level;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -12,15 +13,17 @@ public class ResourceLoader {
 
     private SharewareDownloader downloader;
     private SpriteLoader spriteLoader;
+    private LevelLoader levelLoader;
 
     public ResourceLoader(Path path) {
-        this(path, new SharewareDownloader(path), new SpriteLoader(path));
+        this(path, new SharewareDownloader(path), new SpriteLoader(path), new LevelLoader(path));
     }
 
-    protected ResourceLoader(Path path, SharewareDownloader downloader, SpriteLoader spriteLoader) {
+    protected ResourceLoader(Path path, SharewareDownloader downloader, SpriteLoader spriteLoader, LevelLoader levelLoader) {
         this.path = path;
         this.downloader = downloader;
         this.spriteLoader = spriteLoader;
+        this.levelLoader = levelLoader;
     }
 
     public void ensureResourcesExist() {
@@ -31,6 +34,10 @@ public class ResourceLoader {
 
     public SpriteLoader getSpriteLoader() {
         return spriteLoader;
+    }
+
+    public LevelLoader getLevelLoader() {
+        return levelLoader;
     }
 
     private boolean isEmptyDirectory(Path path) {

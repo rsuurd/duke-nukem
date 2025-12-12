@@ -1,6 +1,7 @@
 package duke.resources;
 
 import duke.gfx.Sprite;
+import duke.level.Level;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,17 +15,21 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class AssetManagerTest {
-    @Mock
+    @Mock(strictness = Mock.Strictness.LENIENT)
     private ResourceLoader resourceLoader;
 
-    @Mock
+    @Mock(strictness = Mock.Strictness.LENIENT)
     private SpriteLoader spriteLoader;
+
+    @Mock
+    private LevelLoader levelLoader;
 
     private AssetManager assetManager;
 
     @BeforeEach
     void create() {
         when(resourceLoader.getSpriteLoader()).thenReturn(spriteLoader);
+        when(resourceLoader.getLevelLoader()).thenReturn(levelLoader);
 
         assetManager = new AssetManager(resourceLoader);
     }
@@ -84,5 +89,15 @@ class AssetManagerTest {
         assetManager.getBackdrop(0);
 
         verify(spriteLoader, times(1)).readBackdrop(0);
+    }
+
+    @Test
+    void shouldLoadLevel() {
+        when(levelLoader.readLevel(anyInt())).thenReturn(new int[11520]);
+
+        Level level = assetManager.getLevel(1);
+
+        assertThat(level).isNotNull();
+        verify(levelLoader).readLevel(1);
     }
 }

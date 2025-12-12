@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 
@@ -21,19 +22,30 @@ class ResourceLoaderTest {
     @Mock
     private SpriteLoader spriteLoader;
 
+    @Mock
+    private LevelLoader levelLoader;
+
+    private ResourceLoader createResourceLoader() {
+        try {
+            return createResourceLoader(Files.createTempDirectory("dn"));
+        } catch (IOException e) {
+            return fail(e);
+        }
+    }
+
     private ResourceLoader createResourceLoader(Path path) {
-        return new ResourceLoader(path, downloader, spriteLoader);
+        return new ResourceLoader(path, downloader, spriteLoader, levelLoader);
     }
 
     @Test
-    public void shouldDownloadIfDirectoryIsEmpty() throws IOException {
-        createResourceLoader(Files.createTempDirectory("dn")).ensureResourcesExist();
+    void shouldDownloadIfDirectoryIsEmpty() {
+        createResourceLoader().ensureResourcesExist();
 
         verify(downloader).download();
     }
 
     @Test
-    public void shouldNotDownloadIfFilesArePresent() throws IOException {
+    void shouldNotDownloadIfFilesArePresent() throws IOException {
         Path path = Files.createTempDirectory("dn");
         Files.createFile(path.resolve("DN.DN1"));
 
@@ -43,9 +55,12 @@ class ResourceLoaderTest {
     }
 
     @Test
-    public void shouldReturnSpriteLoader() throws IOException {
-        ResourceLoader resourceLoader = createResourceLoader(Files.createTempDirectory("dn"));
+    void shouldReturnSpriteLoader() {
+        assertThat(createResourceLoader().getSpriteLoader()).isSameAs(spriteLoader);
+    }
 
-        assertThat(resourceLoader.getSpriteLoader()).isSameAs(spriteLoader);
+    @Test
+    void shouldReturnLevelLoader() {
+        assertThat(createResourceLoader().getLevelLoader()).isSameAs(levelLoader);
     }
 }
