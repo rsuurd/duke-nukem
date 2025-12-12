@@ -8,10 +8,10 @@ public class Level {
     private int[] tiles;
     private int backdrop;
 
-    // player start location
+    private int playerStart;
     // initial set of entities
 
-    public Level(int number, int[] tiles, int backdrop) {
+    public Level(int number, int[] tiles, int backdrop, int playerStart) {
         if (tiles.length != WIDTH * HEIGHT) {
             throw new IllegalArgumentException("Unexpected level size");
         }
@@ -19,6 +19,7 @@ public class Level {
         this.number = number;
         this.tiles = tiles;
         this.backdrop = backdrop;
+        this.playerStart = playerStart;
     }
 
     public int getNumber() {
@@ -31,6 +32,14 @@ public class Level {
 
     public static int getHeight() {
         return HEIGHT;
+    }
+
+    public int getPlayerStartX() {
+        return (playerStart % WIDTH) * 16; // TILE_SIZE
+    }
+
+    public int getPlayerStartY() {
+        return (playerStart / WIDTH) * 16; // TILE_SIZE
     }
 
     public int getTile(int row, int col) {

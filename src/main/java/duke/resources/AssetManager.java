@@ -3,6 +3,7 @@ package duke.resources;
 import duke.gfx.Sprite;
 import duke.level.Level;
 import duke.level.LevelBuilder;
+import duke.level.processors.ActiveProcessorRegistry;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -87,7 +88,10 @@ public class AssetManager {
     public Level getLevel(int number) {
         int[] data = resourceLoader.getLevelLoader().readLevel(number);
 
-        return new LevelBuilder(number, data).build();
+        // TODO grab from context?
+        ActiveProcessorRegistry registry = ActiveProcessorRegistry.createDefault();
+
+        return new LevelBuilder(registry, number, data).build();
     }
 
     private enum Category {
