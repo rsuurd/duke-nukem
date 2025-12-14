@@ -143,7 +143,7 @@ public class SpriteLoader {
                 }
             }
 
-            return new Sprite(width, height, pixels);
+            return new Sprite(width, height, pixels, opaque);
         } else {
             throw new DukeNukemException("Could not read tile");
         }

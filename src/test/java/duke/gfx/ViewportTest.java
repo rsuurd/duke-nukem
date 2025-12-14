@@ -8,7 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ViewportTest {
     @Test
     void shouldMoveLeft() {
-        Viewport viewport = create();
+        Viewport viewport = new Viewport();
 
         viewport.update(16, 0, false);
 
@@ -17,7 +17,7 @@ class ViewportTest {
 
     @Test
     void shouldMoveRight() {
-        Viewport viewport = create();
+        Viewport viewport = new Viewport();
 
         viewport.update(RIGHT_BOUND + 16, 0, false);
 
@@ -26,7 +26,7 @@ class ViewportTest {
 
     @Test
     void shouldNotMoveHorizontally() {
-        Viewport viewport = create();
+        Viewport viewport = new Viewport();
 
         for (int x = LEFT_BOUND; x <= RIGHT_BOUND; x++) {
             viewport.update(x, 0, false);
@@ -36,7 +36,7 @@ class ViewportTest {
 
     @Test
     void shouldMoveUp() {
-        Viewport viewport = create();
+        Viewport viewport = new Viewport();
 
         viewport.update(0, 16, false);
 
@@ -45,7 +45,7 @@ class ViewportTest {
 
     @Test
     void shouldMoveDown() {
-        Viewport viewport = create();
+        Viewport viewport = new Viewport();
 
         viewport.update(0, LOWER_BOUND + 16, false);
 
@@ -54,7 +54,7 @@ class ViewportTest {
 
     @Test
     void shouldNotMoveVertically() {
-        Viewport viewport = create();
+        Viewport viewport = new Viewport();
 
         for (int y = UPPER_BOUND; y <= LOWER_BOUND; y++) {
             viewport.update(0, y, false);
@@ -64,7 +64,7 @@ class ViewportTest {
 
     @Test
     void shouldCenterVertically() {
-        Viewport viewport = create();
+        Viewport viewport = new Viewport();
 
         int targetY = VERTICAL_CENTER + 32;
 
@@ -74,7 +74,15 @@ class ViewportTest {
         assertThat(viewport.getY()).isEqualTo(32);
     }
 
-    private Viewport create() {
-        return new Viewport();
+    @Test
+    void shouldDetermineScreenCoordinates() {
+        Viewport viewport = new Viewport();
+
+        assertThat(viewport.toScreenX(0)).isEqualTo(0);
+        assertThat(viewport.toScreenY(0)).isEqualTo(0);
+
+        viewport.update(100, 50, true);
+        assertThat(viewport.toScreenX(100)).isEqualTo(100 - viewport.getX());
+        assertThat(viewport.toScreenY(50)).isEqualTo(50 - viewport.getY());
     }
 }

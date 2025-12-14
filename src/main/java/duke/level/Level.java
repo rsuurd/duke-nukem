@@ -43,7 +43,10 @@ public class Level {
     }
 
     public int getTile(int row, int col) {
-        // check bounds
+        if (row < 0 || row >= HEIGHT || col < 0 || col >= WIDTH) {
+            return 0;
+        }
+
         return tiles[row * WIDTH + col];
     }
 

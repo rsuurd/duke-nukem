@@ -21,6 +21,16 @@ class LevelTest {
     }
 
     @Test
+    void shouldResolveDefaultTile() {
+        Level level = new Level(0, new int[Level.WIDTH * 90], 0, 0);
+
+        assertThat(level.getTile(-1, 0)).isEqualTo(0);
+        assertThat(level.getTile(0, -1)).isEqualTo(0);
+        assertThat(level.getTile(Level.HEIGHT, 0)).isEqualTo(0);
+        assertThat(level.getTile(0, Level.WIDTH)).isEqualTo(0);
+    }
+
+    @Test
     void shouldGetPlayerStartLocation() {
         Level level = new Level(0, new int[Level.WIDTH * 90], 0, 562);
 

@@ -21,14 +21,14 @@ public class Viewport {
     }
 
     private void centerVertically(int targetY) {
-        int distance = targetY - y - VERTICAL_CENTER;
+        int distance = toScreenY(targetY) - VERTICAL_CENTER;
         int scrollY = Math.min(Math.abs(distance), CENTERING_SPEED);
 
         y += (scrollY * Integer.signum(distance));
     }
 
     private void trackHorizontally(int targetX) {
-        int screenX = targetX - x;
+        int screenX = toScreenX(targetX);
 
         if (screenX < LEFT_BOUND) {
             x = targetX - LEFT_BOUND;
@@ -38,13 +38,21 @@ public class Viewport {
     }
 
     private void trackVertically(int targetY) {
-        int screenY = targetY - y;
+        int screenY = toScreenY(targetY);
 
         if (screenY < UPPER_BOUND) {
             y = targetY - UPPER_BOUND;
         } else if (screenY > LOWER_BOUND) {
             y = targetY - LOWER_BOUND;
         }
+    }
+
+    public int toScreenX(int worldX) {
+        return worldX - x;
+    }
+
+    public int toScreenY(int worldY) {
+        return worldY - y;
     }
 
     public int getX() {
