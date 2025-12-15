@@ -2,6 +2,7 @@ package duke.state;
 
 import duke.GameContext;
 import duke.Renderer;
+import duke.gameplay.Collision;
 import duke.gameplay.Player;
 import duke.gfx.*;
 import duke.level.Level;
@@ -17,18 +18,20 @@ public class GamePlayState implements GameState {
     private Hud hud;
 
     private Player player;
+    private Collision collision;
 
     // TODO fix construction
     public GamePlayState(AssetManager assets, Font font, Level level) {
-        this(level, new Viewport(), new LevelRenderer(assets, level), new Hud(assets, font), new Player());
+        this(level, new Viewport(), new LevelRenderer(assets, level), new Hud(assets, font), new Player(), new Collision());
     }
 
-    GamePlayState(Level level, Viewport viewport, LevelRenderer levelRenderer, Hud hud, Player player) {
+    GamePlayState(Level level, Viewport viewport, LevelRenderer levelRenderer, Hud hud, Player player, Collision collision) {
         this.level = level;
         this.viewport = viewport;
         this.levelRenderer = levelRenderer;
         this.hud = hud;
         this.player = player;
+        this.collision = collision;
     }
 
     @Override
@@ -40,8 +43,7 @@ public class GamePlayState implements GameState {
     @Override
     public void update(GameContext context) {
         player.processInput(context.getKeyHandler());
-        player.update();
-
+        collision.resolve(player, level);
         viewport.update(player.getX(), player.getY(), player.isGrounded());
     }
 

@@ -1,5 +1,6 @@
 package duke.state;
 
+import duke.gameplay.Collision;
 import duke.gameplay.Player;
 import duke.gfx.Hud;
 import duke.gfx.LevelRenderer;
@@ -23,6 +24,8 @@ class GamePlayStateTest extends GameContextTestSupport {
     private Hud hud;
     @Mock
     private Player player;
+    @Mock
+    private Collision collision;
 
     @InjectMocks
     private GamePlayState state;
@@ -42,7 +45,7 @@ class GamePlayStateTest extends GameContextTestSupport {
         state.update(context);
 
         verify(player).processInput(keyHandler);
-        verify(player).update();
+        verify(collision).resolve(player, level);
     }
 
     @Test

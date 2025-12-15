@@ -2,6 +2,8 @@ package duke.level;
 
 public class Level {
     public static final int TILE_SIZE = 16;
+    public static final int FLASHERS = 0x600;
+    public static final int SOLIDS = 0x3000;
 
     static final int WIDTH = 128;
     static final int HEIGHT = 90;
@@ -54,5 +56,12 @@ public class Level {
 
     public int getBackdrop() {
         return backdrop;
+    }
+
+    public boolean isSolid(int row, int col) {
+        int tileId = getTile(row, col);
+
+        // TODO more constants
+        return (tileId >= 0x1800) && (tileId <= 0x2FFF);
     }
 }

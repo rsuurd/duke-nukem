@@ -56,14 +56,4 @@ class PlayerTest {
         assertThat(player.getVelocityX()).isEqualTo(8);
         assertThat(player.getVelocityY()).isEqualTo(-16);
     }
-
-    @Test
-    void shouldUpdate() {
-        player.setVelocity(WALK_SPEED, 0);
-
-        player.update();
-
-        assertThat(player.getX()).isEqualTo(WALK_SPEED);
-        assertThat(player.getVelocityX()).isEqualTo(0);
-    }
 }

@@ -12,7 +12,7 @@ public class Player {
     private int velocityX;
     private int velocityY;
 
-    private boolean grounded = true;
+    private boolean grounded;
 
     public void moveTo(int x, int y) {
         this.x = x;
@@ -42,23 +42,20 @@ public class Player {
         }
     }
 
-    public void update() {
-        x += velocityX;
-        y += velocityY;
-
-        this.grounded = velocityY == 0;
-
-        // Friction
-        velocityX = 0;
-        velocityY = 0;
-    }
-
     public int getX() {
         return x;
     }
 
     public int getY() {
         return y;
+    }
+
+    public int getWidth() {
+        return 16;
+    }
+
+    public int getHeight() {
+        return 32;
     }
 
     public int getVelocityX() {
@@ -71,6 +68,10 @@ public class Player {
 
     public boolean isGrounded() {
         return grounded;
+    }
+
+    public void setGrounded(boolean grounded) {
+        this.grounded = grounded;
     }
 
     static final int WALK_SPEED = 8;

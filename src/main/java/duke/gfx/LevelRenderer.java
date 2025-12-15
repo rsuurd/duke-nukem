@@ -4,6 +4,8 @@ import duke.Renderer;
 import duke.level.Level;
 import duke.resources.AssetManager;
 
+import static duke.level.Level.*;
+
 public class LevelRenderer {
     private AssetManager assets;
     private Level level;
@@ -62,8 +64,4 @@ public class LevelRenderer {
 
         return assets.getTiles().get(spriteIndex);
     }
-
-    private static final int TILE_SIZE = 16;
-    private static final int FLASHERS = 0x600;
-    private static final int SOLIDS = 0x3000;
 }
