@@ -2,9 +2,10 @@ package duke.gfx;
 
 public class Viewport {
     static final int LEFT_BOUND = 88;
-    static final int RIGHT_BOUND = 120;
+    static final int RIGHT_BOUND = 136;
     static final int UPPER_BOUND = 48;
     static final int LOWER_BOUND = 112;
+    static final int HORIZONTAL_CENTER = 112;
     static final int VERTICAL_CENTER = 96;
     private static final int CENTERING_SPEED = 16;
 
@@ -18,6 +19,11 @@ public class Viewport {
 
         trackHorizontally(targetX);
         trackVertically(targetY);
+    }
+
+    public void center(int targetX, int targetY) {
+        x = targetX - HORIZONTAL_CENTER;
+        y = targetY - VERTICAL_CENTER;
     }
 
     private void centerVertically(int targetY) {

@@ -5,28 +5,30 @@ import duke.level.Level;
 import duke.resources.AssetManager;
 
 public class LevelRenderer {
+    private AssetManager assets;
     private Level level;
     int flasher;
 
-    public LevelRenderer(Level level) {
+    public LevelRenderer(AssetManager assets, Level level) {
+        this.assets = assets;
         this.level = level;
 
         flasher = 0;
     }
 
-    public void render(Renderer renderer, AssetManager assets, Viewport viewport) {
-        drawBackdrop(renderer, assets);
-        drawTiles(renderer, assets, viewport);
+    public void render(Renderer renderer, Viewport viewport) {
+        drawBackdrop(renderer);
+        drawTiles(renderer, viewport);
 
         flasher = (flasher + 1) % 4;
     }
 
-    private void drawBackdrop(Renderer renderer, AssetManager assets) {
+    private void drawBackdrop(Renderer renderer) {
         Sprite background = assets.getBackdrop(level.getBackdrop());
         renderer.draw(background, TILE_SIZE, TILE_SIZE);
     }
 
-    private void drawTiles(Renderer renderer, AssetManager assets, Viewport viewport) {
+    private void drawTiles(Renderer renderer, Viewport viewport) {
         int gridX = viewport.getX() / TILE_SIZE;
         int gridY = viewport.getY() / TILE_SIZE;
 

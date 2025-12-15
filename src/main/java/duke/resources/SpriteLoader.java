@@ -44,7 +44,7 @@ public class SpriteLoader {
                 BigInteger blue = BigInteger.valueOf(blues[i]);
 
                 for (int bit = 7; bit >= 0; bit--) {
-                    byte index = toIndex(intensity.testBit(bit), red.testBit(bit), green.testBit(bit), blue.testBit(bit));
+                    byte index = toIndex(true, intensity.testBit(bit), red.testBit(bit), green.testBit(bit), blue.testBit(bit));
 
                     pixels[y * width + x] = index;
 
@@ -128,11 +128,9 @@ public class SpriteLoader {
                 BigInteger blue = BigInteger.valueOf(data[i++]);
 
                 for (int bit = 7; bit >= 0; bit--) {
-                    if (opaque || opacity.testBit(bit)) {
-                        byte index = toIndex(intensity.testBit(bit), red.testBit(bit), green.testBit(bit), blue.testBit(bit));
+                    byte index = toIndex(opaque || opacity.testBit(bit), intensity.testBit(bit), red.testBit(bit), green.testBit(bit), blue.testBit(bit));
 
-                        pixels[y * width + x] = index;
-                    }
+                    pixels[y * width + x] = index;
 
                     x++;
 
@@ -143,13 +141,17 @@ public class SpriteLoader {
                 }
             }
 
-            return new Sprite(width, height, pixels, opaque);
+            return new Sprite(width, height, pixels);
         } else {
             throw new DukeNukemException("Could not read tile");
         }
     }
 
-    private byte toIndex(boolean intensity, boolean red, boolean green, boolean blue) {
+    private byte toIndex(boolean opaque, boolean intensity, boolean red, boolean green, boolean blue) {
+        if (!opaque) {
+            return (byte) 0xff;
+        }
+
         byte index = 0;
 
         if (intensity) {

@@ -1,6 +1,8 @@
 package duke.level;
 
 public class Level {
+    public static final int TILE_SIZE = 16;
+
     static final int WIDTH = 128;
     static final int HEIGHT = 90;
 
@@ -35,11 +37,11 @@ public class Level {
     }
 
     public int getPlayerStartX() {
-        return (playerStart % WIDTH) * 16; // TILE_SIZE
+        return (playerStart % WIDTH) * TILE_SIZE;
     }
 
     public int getPlayerStartY() {
-        return (playerStart / WIDTH) * 16; // TILE_SIZE
+        return (playerStart / WIDTH) * TILE_SIZE;
     }
 
     public int getTile(int row, int col) {

@@ -7,6 +7,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class ViewportTest {
     @Test
+    void shouldCenter() {
+        Viewport viewport = new Viewport();
+
+        viewport.center(0, 0);
+
+        assertThat(viewport.getX()).isEqualTo(-HORIZONTAL_CENTER);
+        assertThat(viewport.getY()).isEqualTo(-VERTICAL_CENTER);
+    }
+
+    @Test
     void shouldMoveLeft() {
         Viewport viewport = new Viewport();
 

@@ -3,7 +3,7 @@ package duke;
 import duke.gfx.EgaPalette;
 import duke.resources.AssetManager;
 import duke.resources.ResourceLoader;
-import duke.state.MainMenu;
+import duke.state.GamePlayState;
 import duke.state.StateManager;
 import duke.ui.CanvasRenderer;
 import duke.ui.DukeNukemFrame;
@@ -29,7 +29,13 @@ public class DukeNukem {
     }
 
     public void start() {
-        executor.scheduleAtFixedRate(() -> gameLoop.tick(), 0L, 10L, MILLISECONDS);
+        executor.scheduleAtFixedRate(() -> {
+            try {
+                gameLoop.tick();
+            } catch (Exception e) {
+                e.printStackTrace(System.err);
+            }
+        }, 0L, 10L, MILLISECONDS);
     }
 
     public void stop() {
@@ -47,7 +53,8 @@ public class DukeNukem {
         CanvasRenderer renderer = new CanvasRenderer(palette);
         GameContext context = new GameContext(assets, renderer, palette, keyHandler);
         DukeNukemFrame frame = new DukeNukemFrame(renderer, keyHandler);
-        StateManager manager = new StateManager(context, new MainMenu());
+        GamePlayState state = new GamePlayState(assets, assets.getLevel(1));
+        StateManager manager = new StateManager(context, state);
         GameLoop gameLoop = new GameLoop(context, manager);
 
         DukeNukem dukeNukem = new DukeNukem(gameLoop);

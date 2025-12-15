@@ -6,17 +6,12 @@ public class Sprite {
     private int width;
     private int height;
     private byte[] pixels;
-    private boolean opaque = true;
 
     public Sprite(int width, int height) {
         this(width, height, new byte[width * height]);
     }
 
     public Sprite(int width, int height, byte[] pixels) {
-        this(width, height, pixels, true);
-    }
-
-    public Sprite(int width, int height, byte[] pixels, boolean opaque) {
         if (pixels.length != width * height) {
             throw new IllegalArgumentException("Sprite pixels do not match given dimensions");
         }
@@ -24,7 +19,6 @@ public class Sprite {
         this.width = width;
         this.height = height;
         this.pixels = pixels;
-        this.opaque = opaque;
     }
 
     public int getWidth() {
@@ -63,7 +57,7 @@ public class Sprite {
             for (int xx = startX; xx < endX; xx++) {
                 byte index = spritePixels[spriteRow + xx];
 
-                if (sprite.opaque || index != 0) {
+                if (index != (byte) 0xff) {
                     pixels[row + xx + x] = index;
                 }
             }

@@ -52,18 +52,9 @@ class SpriteTest {
     }
 
     @Test
-    void shouldOverlayOpaqueSprite() {
-        Sprite sprite = new Sprite(1, 1, new byte[]{1});
-        Sprite overlay = new Sprite(1, 1, new byte[]{0});
-
-        sprite.draw(overlay, 0, 0);
-        assertThat(sprite.getPixel(0, 0)).isEqualTo((byte) 0);
-    }
-
-    @Test
     void shouldSkipTransparentPixels() {
         Sprite sprite = new Sprite(2, 1, new byte[]{1, 1});
-        Sprite overlay = new Sprite(2, 1, new byte[]{0, 2}, false);
+        Sprite overlay = new Sprite(2, 1, new byte[]{-1, 2});
 
         sprite.draw(overlay, 0, 0);
         assertThat(sprite.getPixel(0, 0)).isEqualTo((byte) 1);

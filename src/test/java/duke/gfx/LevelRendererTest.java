@@ -11,6 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
+import static duke.level.Level.TILE_SIZE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
@@ -38,9 +39,9 @@ class LevelRendererTest {
         Sprite backdrop = new Sprite(0, 0);
         when(assets.getBackdrop(level.getBackdrop())).thenReturn(backdrop);
 
-        levelRenderer.render(renderer, assets, viewport);
+        levelRenderer.render(renderer, viewport);
 
-        verify(renderer).draw(backdrop, 16, 16);
+        verify(renderer).draw(backdrop, TILE_SIZE, TILE_SIZE);
     }
 
     @Test
@@ -49,7 +50,7 @@ class LevelRendererTest {
         when(level.getTile(anyInt(), anyInt())).thenReturn(32);
         when(assets.getTiles()).thenReturn(List.of(tile, tile));
 
-        levelRenderer.render(renderer, assets, viewport);
+        levelRenderer.render(renderer, viewport);
 
         verify(renderer, times(180)).draw(eq(tile), anyInt(), anyInt());
     }
@@ -57,11 +58,11 @@ class LevelRendererTest {
     @Test
     void shouldTickFlasher() {
         for (int flasher = 1; flasher <= 3; flasher++) {
-            levelRenderer.render(renderer, assets, viewport);
+            levelRenderer.render(renderer, viewport);
             assertThat(levelRenderer.flasher).isEqualTo(flasher);
         }
 
-        levelRenderer.render(renderer, assets, viewport);
+        levelRenderer.render(renderer, viewport);
         assertThat(levelRenderer.flasher).isEqualTo(0);
     }
 }
