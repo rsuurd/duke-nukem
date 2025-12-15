@@ -7,10 +7,13 @@ import static duke.level.Level.TILE_SIZE;
 
 public class Hud {
     private AssetManager assets;
+    private Font font;
+
     private int frame;
 
-    public Hud(AssetManager assets) {
+    public Hud(AssetManager assets, Font font) {
         this.assets = assets;
+        this.font = font;
     }
 
     public void render(Renderer renderer) {
@@ -49,7 +52,8 @@ public class Hud {
         renderer.draw(assets.getBorder().get(38), 256, 0);
         renderer.draw(assets.getBorder().get(39), 272, 0);
         renderer.draw(assets.getBorder().get(8), 288, 0);
-        // renderer.drawText((String.format("%08d", score), 240, 24);
+
+        font.drawText(renderer, String.format("%08d", score), 240, 24);
     }
 
     private void drawHealth(Renderer renderer, int health) {

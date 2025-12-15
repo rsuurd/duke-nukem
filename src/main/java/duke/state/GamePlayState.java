@@ -3,10 +3,7 @@ package duke.state;
 import duke.GameContext;
 import duke.Renderer;
 import duke.gameplay.Player;
-import duke.gfx.Hud;
-import duke.gfx.LevelRenderer;
-import duke.gfx.Sprite;
-import duke.gfx.Viewport;
+import duke.gfx.*;
 import duke.level.Level;
 import duke.resources.AssetManager;
 
@@ -22,8 +19,8 @@ public class GamePlayState implements GameState {
     private Player player;
 
     // TODO fix construction
-    public GamePlayState(AssetManager assets, Level level) {
-        this(level, new Viewport(), new LevelRenderer(assets, level), new Hud(assets), new Player());
+    public GamePlayState(AssetManager assets, Font font, Level level) {
+        this(level, new Viewport(), new LevelRenderer(assets, level), new Hud(assets, font), new Player());
     }
 
     GamePlayState(Level level, Viewport viewport, LevelRenderer levelRenderer, Hud hud, Player player) {
