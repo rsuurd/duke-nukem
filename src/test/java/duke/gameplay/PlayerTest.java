@@ -15,7 +15,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class PlayerTest {
     @Mock
-    private KeyHandler keyHandler;
+    private KeyHandler.Input input;
 
     @Test
     void shouldMove() {
@@ -31,9 +31,9 @@ class PlayerTest {
     void shouldWalkLeftWhenStanding() {
         Player player = new Player(Player.State.STANDING, Player.Facing.LEFT);
 
-        when(keyHandler.isLeft()).thenReturn(true);
+        when(input.left()).thenReturn(true);
 
-        player.processInput(keyHandler);
+        player.processInput(input);
 
         assertThat(player.getState()).isEqualTo(Player.State.WALKING);
         assertThat(player.getFacing()).isEqualTo(Player.Facing.LEFT);
@@ -45,9 +45,9 @@ class PlayerTest {
     void shouldMoveLeft(Player.State state) {
         Player player = new Player(state, Player.Facing.LEFT);
 
-        when(keyHandler.isLeft()).thenReturn(true);
+        when(input.left()).thenReturn(true);
 
-        player.processInput(keyHandler);
+        player.processInput(input);
 
         assertThat(player.getState()).isEqualTo(state);
         assertThat(player.getVelocityX()).isEqualTo(-SPEED);
@@ -57,9 +57,9 @@ class PlayerTest {
     void shouldWalkRight() {
         Player player = new Player(Player.State.STANDING, Player.Facing.RIGHT);
 
-        when(keyHandler.isRight()).thenReturn(true);
+        when(input.right()).thenReturn(true);
 
-        player.processInput(keyHandler);
+        player.processInput(input);
 
         assertThat(player.getVelocityX()).isEqualTo(SPEED);
     }
@@ -69,9 +69,9 @@ class PlayerTest {
     void shouldMoveRight(Player.State state) {
         Player player = new Player(state, Player.Facing.LEFT);
 
-        when(keyHandler.isLeft()).thenReturn(true);
+        when(input.left()).thenReturn(true);
 
-        player.processInput(keyHandler);
+        player.processInput(input);
 
         assertThat(player.getState()).isEqualTo(state);
         assertThat(player.getVelocityX()).isEqualTo(-SPEED);
@@ -82,7 +82,7 @@ class PlayerTest {
         Player player = new Player(Player.State.WALKING, Player.Facing.LEFT);
         player.setVelocity(-SPEED, 0);
 
-        player.processInput(keyHandler);
+        player.processInput(input);
 
         assertThat(player.getState()).isEqualTo(Player.State.STANDING);
         assertThat(player.getVelocityX()).isEqualTo(0);
@@ -94,7 +94,7 @@ class PlayerTest {
         Player player = new Player(state, Player.Facing.RIGHT);
         player.setVelocity(SPEED, 0);
 
-        player.processInput(keyHandler);
+        player.processInput(input);
 
         assertThat(player.getState()).isEqualTo(state);
         assertThat(player.getVelocityX()).isEqualTo(0);
@@ -114,9 +114,9 @@ class PlayerTest {
     void shouldJumpWhenStandingOrWalking(Player.State state) {
         Player player = new Player(state, Player.Facing.RIGHT);
 
-        when(keyHandler.isJump()).thenReturn(true);
+        when(input.jump()).thenReturn(true);
 
-        player.processInput(keyHandler);
+        player.processInput(input);
 
         assertThat(player.getVelocityY()).isEqualTo(-15);
         assertThat(player.getState()).isEqualTo(Player.State.JUMPING);
@@ -127,9 +127,9 @@ class PlayerTest {
     void shouldNotJumpWhenNotStandingOrWalking(Player.State state) {
         Player player = new Player(state, Player.Facing.RIGHT);
 
-        when(keyHandler.isJump()).thenReturn(true);
+        when(input.jump()).thenReturn(true);
 
-        player.processInput(keyHandler);
+        player.processInput(input);
 
         assertThat(player.getVelocityY()).isEqualTo(0);
         assertThat(player.getState()).isEqualTo(state);

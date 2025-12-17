@@ -31,20 +31,20 @@ public class Player {
         this.velocityY = velocityY;
     }
 
-    public void processInput(KeyHandler input) {
-        if (input.isLeft()) {
+    public void processInput(KeyHandler.Input input) {
+        if (input.left()) {
             move(Facing.LEFT);
         }
 
-        if (input.isRight()) {
+        if (input.right()) {
             move(Facing.RIGHT);
         }
 
-        if (!input.isLeft() && !input.isRight()) {
+        if (!input.left() && !input.right()) {
             stopMove();
         }
 
-        if (input.isJump()) {
+        if (input.jump()) {
             jump();
         }
     }

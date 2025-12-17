@@ -4,6 +4,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Arrays;
 
+import static java.awt.event.KeyEvent.*;
+
 public class KeyHandler extends KeyAdapter {
     private boolean[] pressedKeys;
 
@@ -25,28 +27,12 @@ public class KeyHandler extends KeyAdapter {
         pressedKeys[keyCode] = pressed;
     }
 
-    public boolean isLeft() {
-        return isPressed(KeyEvent.VK_LEFT);
-    }
-
-    public boolean isRight() {
-        return isPressed(KeyEvent.VK_RIGHT);
-    }
-
-    public boolean isJump() {
-        return isPressed(KeyEvent.VK_ALT);
-    }
-
-    public boolean isFire() {
-        return isPressed(KeyEvent.VK_CONTROL);
-    }
-
-    public boolean isUsing() {
-        return isPressed(KeyEvent.VK_UP);
-    }
-
     public boolean isPressed(int keyCode) {
         return pressedKeys[keyCode];
+    }
+
+    public Input getInput() {
+        return new Input(isPressed(VK_LEFT), isPressed(VK_RIGHT), isPressed(VK_ALT), isPressed(VK_CONTROL), isPressed(VK_UP));
     }
 
     public void clear() {
@@ -71,4 +57,6 @@ public class KeyHandler extends KeyAdapter {
 
         return pressedKey;
     }
+
+    public record Input(boolean left, boolean right, boolean jump, boolean fire, boolean using) {}
 }

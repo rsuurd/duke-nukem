@@ -18,14 +18,14 @@ class KeyHandlerTest {
 
     @ParameterizedTest
     @MethodSource("keys")
-    void shouldHandle(int keyCode, Function<KeyHandler, Boolean> expected) {
+    void shouldHandle(int keyCode, Function<KeyHandler, Boolean> input) {
         KeyEvent keyEvent = create(keyCode);
 
         handler.keyPressed(keyEvent);
-        assertThat(expected.apply(handler)).isTrue();
+        assertThat(input.apply(handler)).isTrue();
 
         handler.keyReleased(keyEvent);
-        assertThat(expected.apply(handler)).isFalse();
+        assertThat(input.apply(handler)).isFalse();
     }
 
     @Test
@@ -38,11 +38,11 @@ class KeyHandlerTest {
 
     static Stream<Arguments> keys() {
         return Stream.of(
-                Arguments.of(KeyEvent.VK_LEFT, (Function<KeyHandler, Boolean>) KeyHandler::isLeft),
-                Arguments.of(KeyEvent.VK_RIGHT, (Function<KeyHandler, Boolean>) KeyHandler::isRight),
-                Arguments.of(KeyEvent.VK_UP, (Function<KeyHandler, Boolean>) KeyHandler::isUsing),
-                Arguments.of(KeyEvent.VK_ALT, (Function<KeyHandler, Boolean>) KeyHandler::isJump),
-                Arguments.of(KeyEvent.VK_CONTROL, (Function<KeyHandler, Boolean>) KeyHandler::isFire),
+                Arguments.of(KeyEvent.VK_LEFT, (Function<KeyHandler, Boolean>) handler -> handler.getInput().left()),
+                Arguments.of(KeyEvent.VK_RIGHT, (Function<KeyHandler, Boolean>) handler -> handler.getInput().right()),
+                Arguments.of(KeyEvent.VK_UP, (Function<KeyHandler, Boolean>) handler -> handler.getInput().using()),
+                Arguments.of(KeyEvent.VK_ALT, (Function<KeyHandler, Boolean>) handler -> handler.getInput().jump()),
+                Arguments.of(KeyEvent.VK_CONTROL, (Function<KeyHandler, Boolean>) handler -> handler.getInput().fire()),
                 Arguments.of(KeyEvent.VK_SPACE, (Function<KeyHandler, Boolean>) KeyHandler::isAnyKeyPressed)
         );
     }
