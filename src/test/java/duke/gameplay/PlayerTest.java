@@ -1,13 +1,14 @@
 package duke.gameplay;
 
 import duke.ui.KeyHandler;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static duke.gameplay.Player.WALK_SPEED;
+import static duke.gameplay.Player.SPEED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
@@ -16,15 +17,10 @@ class PlayerTest {
     @Mock
     private KeyHandler keyHandler;
 
-    private Player player;
-
-    @BeforeEach
-    void create() {
-        player = new Player();
-    }
-
     @Test
     void shouldMove() {
+        Player player = new Player();
+
         player.moveTo(20, 12);
 
         assertThat(player.getX()).isEqualTo(20);
@@ -32,25 +28,147 @@ class PlayerTest {
     }
 
     @Test
-    void shouldMoveLeft() {
+    void shouldWalkLeftWhenStanding() {
+        Player player = new Player(Player.State.STANDING, Player.Facing.LEFT);
+
         when(keyHandler.isLeft()).thenReturn(true);
 
         player.processInput(keyHandler);
 
-        assertThat(player.getVelocityX()).isEqualTo(-WALK_SPEED);
+        assertThat(player.getState()).isEqualTo(Player.State.WALKING);
+        assertThat(player.getFacing()).isEqualTo(Player.Facing.LEFT);
+        assertThat(player.getVelocityX()).isEqualTo(-SPEED);
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = Player.State.class, names = {"STANDING"}, mode = EnumSource.Mode.EXCLUDE)
+    void shouldMoveLeft(Player.State state) {
+        Player player = new Player(state, Player.Facing.LEFT);
+
+        when(keyHandler.isLeft()).thenReturn(true);
+
+        player.processInput(keyHandler);
+
+        assertThat(player.getState()).isEqualTo(state);
+        assertThat(player.getVelocityX()).isEqualTo(-SPEED);
     }
 
     @Test
-    void shouldMoveRight() {
+    void shouldWalkRight() {
+        Player player = new Player(Player.State.STANDING, Player.Facing.RIGHT);
+
         when(keyHandler.isRight()).thenReturn(true);
 
         player.processInput(keyHandler);
 
-        assertThat(player.getVelocityX()).isEqualTo(WALK_SPEED);
+        assertThat(player.getVelocityX()).isEqualTo(SPEED);
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = Player.State.class, names = {"STANDING"}, mode = EnumSource.Mode.EXCLUDE)
+    void shouldMoveRight(Player.State state) {
+        Player player = new Player(state, Player.Facing.LEFT);
+
+        when(keyHandler.isLeft()).thenReturn(true);
+
+        player.processInput(keyHandler);
+
+        assertThat(player.getState()).isEqualTo(state);
+        assertThat(player.getVelocityX()).isEqualTo(-SPEED);
+    }
+
+    @Test
+    void shouldStandWhenWalkingStops() {
+        Player player = new Player(Player.State.WALKING, Player.Facing.LEFT);
+        player.setVelocity(-SPEED, 0);
+
+        player.processInput(keyHandler);
+
+        assertThat(player.getState()).isEqualTo(Player.State.STANDING);
+        assertThat(player.getVelocityX()).isEqualTo(0);
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = Player.State.class, names = {"WALKING"}, mode = EnumSource.Mode.EXCLUDE)
+    void shouldStop(Player.State state) {
+        Player player = new Player(state, Player.Facing.RIGHT);
+        player.setVelocity(SPEED, 0);
+
+        player.processInput(keyHandler);
+
+        assertThat(player.getState()).isEqualTo(state);
+        assertThat(player.getVelocityX()).isEqualTo(0);
+    }
+
+    @ParameterizedTest
+    @EnumSource(Player.State.class)
+    void shouldIndicateIfGrounded(Player.State state) {
+        assertThat(new Player(state, Player.Facing.LEFT).isGrounded()).isEqualTo(switch (state) {
+            case STANDING, WALKING -> true;
+            default -> false;
+        });
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = Player.State.class, names = {"STANDING", "WALKING"})
+    void shouldJumpWhenStandingOrWalking(Player.State state) {
+        Player player = new Player(state, Player.Facing.RIGHT);
+
+        when(keyHandler.isJump()).thenReturn(true);
+
+        player.processInput(keyHandler);
+
+        assertThat(player.getVelocityY()).isEqualTo(-15);
+        assertThat(player.getState()).isEqualTo(Player.State.JUMPING);
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = Player.State.class, names = {"STANDING", "WALKING"}, mode = EnumSource.Mode.EXCLUDE)
+    void shouldNotJumpWhenNotStandingOrWalking(Player.State state) {
+        Player player = new Player(state, Player.Facing.RIGHT);
+
+        when(keyHandler.isJump()).thenReturn(true);
+
+        player.processInput(keyHandler);
+
+        assertThat(player.getVelocityY()).isEqualTo(0);
+        assertThat(player.getState()).isEqualTo(state);
+    }
+
+    @Test
+    void shouldLand() {
+        Player player = new Player(Player.State.FALLING, Player.Facing.LEFT);
+        player.setVelocity(0, 16);
+
+        player.land();
+
+        assertThat(player.getVelocityY()).isEqualTo(0);
+        assertThat(player.getState()).isEqualTo(Player.State.STANDING);
+    }
+
+    @Test
+    void shouldBump() {
+        Player player = new Player(Player.State.JUMPING, Player.Facing.LEFT);
+        player.setVelocity(0, -8);
+
+        player.bump();
+
+        assertThat(player.getVelocityY()).isEqualTo(0);
+    }
+
+    @Test
+    void shouldFall() {
+        Player player = new Player();
+
+        player.fall();
+
+        assertThat(player.getState()).isEqualTo(Player.State.FALLING);
     }
 
     @Test
     void shouldSetVelocity() {
+        Player player = new Player();
+
         player.setVelocity(8, -16);
 
         assertThat(player.getVelocityX()).isEqualTo(8);

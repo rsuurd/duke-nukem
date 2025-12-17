@@ -2,6 +2,7 @@ package duke.state;
 
 import duke.gameplay.Collision;
 import duke.gameplay.Player;
+import duke.gfx.Font;
 import duke.gfx.Hud;
 import duke.gfx.LevelRenderer;
 import duke.gfx.Viewport;
@@ -22,6 +23,8 @@ class GamePlayStateTest extends GameContextTestSupport {
     private LevelRenderer levelRenderer;
     @Mock
     private Hud hud;
+    @Mock
+    private Font font;
     @Mock
     private Player player;
     @Mock

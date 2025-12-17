@@ -16,20 +16,22 @@ public class GamePlayState implements GameState {
     private Viewport viewport;
     private LevelRenderer levelRenderer;
     private Hud hud;
+    private Font font;
 
     private Player player;
     private Collision collision;
 
     // TODO fix construction
     public GamePlayState(AssetManager assets, Font font, Level level) {
-        this(level, new Viewport(), new LevelRenderer(assets, level), new Hud(assets, font), new Player(), new Collision());
+        this(level, new Viewport(), new LevelRenderer(assets, level), new Hud(assets, font), font, new Player(), new Collision());
     }
 
-    GamePlayState(Level level, Viewport viewport, LevelRenderer levelRenderer, Hud hud, Player player, Collision collision) {
+    GamePlayState(Level level, Viewport viewport, LevelRenderer levelRenderer, Hud hud, Font font, Player player, Collision collision) {
         this.level = level;
         this.viewport = viewport;
         this.levelRenderer = levelRenderer;
         this.hud = hud;
+        this.font = font;
         this.player = player;
         this.collision = collision;
     }
@@ -57,6 +59,9 @@ public class GamePlayState implements GameState {
         Arrays.fill(HITBOX.getPixels(), (byte) 10);
         renderer.draw(HITBOX, viewport.toScreenX(player.getX()), viewport.toScreenY(player.getY()));
 
+        font.drawText(renderer, String.format("position: %d, %d", player.getX(), player.getY()), 16, 16);
+        font.drawText(renderer, String.format("velocity: %d, %d", player.getVelocityX(), player.getVelocityY()), 16, 24);
+        font.drawText(renderer, String.format("%s %s", player.getState(), player.getFacing()), 16, 32);
         // render enemies
         // projectiles / effects etc
         hud.render(renderer);

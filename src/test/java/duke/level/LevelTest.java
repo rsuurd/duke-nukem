@@ -37,4 +37,16 @@ class LevelTest {
         assertThat(level.getPlayerStartX()).isEqualTo(800);
         assertThat(level.getPlayerStartY()).isEqualTo(64);
     }
+
+    @Test
+    void shouldIndicateTileIsSolid() {
+        int[] tiles = new int[Level.WIDTH * 90];
+        tiles[0] = Level.BACKGROUNDS;
+        tiles[1] = Level.SOLIDS;
+
+        Level level = new Level(0, tiles, 0, 562);
+
+        assertThat(level.isSolid(0, 0)).isFalse();
+        assertThat(level.isSolid(0, 1)).isTrue();
+    }
 }

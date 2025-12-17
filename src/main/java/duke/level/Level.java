@@ -2,11 +2,14 @@ package duke.level;
 
 public class Level {
     public static final int TILE_SIZE = 16;
-    public static final int FLASHERS = 0x600;
-    public static final int SOLIDS = 0x3000;
+    public static final int FLASHERS = 0x0;
+    public static final int BACKGROUNDS = 0x600;
+    public static final int SOLIDS = 0x1800;
+    public static final int ACTIVE = 0x3000;
+    public static final int HACKS = 0x306A;
 
-    static final int WIDTH = 128;
-    static final int HEIGHT = 90;
+    public static final int WIDTH = 128;
+    public static final int HEIGHT = 90;
 
     private int number;
     private int[] tiles;
@@ -28,14 +31,6 @@ public class Level {
 
     public int getNumber() {
         return number;
-    }
-
-    public int getWidth() {
-        return WIDTH;
-    }
-
-    public static int getHeight() {
-        return HEIGHT;
     }
 
     public int getPlayerStartX() {
@@ -61,7 +56,6 @@ public class Level {
     public boolean isSolid(int row, int col) {
         int tileId = getTile(row, col);
 
-        // TODO more constants
-        return (tileId >= 0x1800) && (tileId <= 0x2FFF);
+        return (tileId >= SOLIDS) && (tileId < ACTIVE);
     }
 }

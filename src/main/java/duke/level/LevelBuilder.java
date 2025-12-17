@@ -33,7 +33,7 @@ public class LevelBuilder {
             int tileId = data[i];
 
             // anything below 0x3000 is never an active
-            if (tileId >= 0x3000) {
+            if (tileId >= Level.ACTIVE) {
                 registry.getProcessor(tileId).process(i, tileId, this);
             }
         }

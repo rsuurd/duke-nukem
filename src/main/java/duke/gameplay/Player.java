@@ -2,9 +2,6 @@ package duke.gameplay;
 
 import duke.ui.KeyHandler;
 
-import static java.awt.event.KeyEvent.VK_DOWN;
-import static java.awt.event.KeyEvent.VK_UP;
-
 public class Player {
     private int x;
     private int y;
@@ -12,7 +9,17 @@ public class Player {
     private int velocityX;
     private int velocityY;
 
-    private boolean grounded;
+    private State state;
+    private Facing facing;
+
+    public Player() {
+        this(State.STANDING, Facing.LEFT);
+    }
+
+    Player(State state, Facing facing) {
+        this.facing = facing;
+        this.state = state;
+    }
 
     public void moveTo(int x, int y) {
         this.x = x;
@@ -26,19 +33,19 @@ public class Player {
 
     public void processInput(KeyHandler input) {
         if (input.isLeft()) {
-            velocityX -= WALK_SPEED;
+            move(Facing.LEFT);
         }
 
         if (input.isRight()) {
-            velocityX += WALK_SPEED;
+            move(Facing.RIGHT);
         }
 
-        if (input.isPressed(VK_UP)) {
-            velocityY -= WALK_SPEED;
+        if (!input.isLeft() && !input.isRight()) {
+            stopMove();
         }
 
-        if (input.isPressed(VK_DOWN)) {
-            velocityY += WALK_SPEED;
+        if (input.isJump()) {
+            jump();
         }
     }
 
@@ -66,13 +73,69 @@ public class Player {
         return velocityY;
     }
 
+    public State getState() {
+        return state;
+    }
+
+    public Facing getFacing() {
+        return facing;
+    }
+
+    private void move(Facing facing) {
+        if (this.facing == facing) {
+            velocityX = (facing == Facing.LEFT) ? -SPEED : SPEED;
+
+            if (state == State.STANDING) {
+                state = State.WALKING;
+            }
+        } else {
+            this.facing = facing;
+        }
+    }
+
+    private void stopMove() {
+        velocityX = 0;
+
+        if (state == State.WALKING) {
+            state = State.STANDING;
+        }
+    }
+
     public boolean isGrounded() {
-        return grounded;
+        return state == State.STANDING || state == State.WALKING;
     }
 
-    public void setGrounded(boolean grounded) {
-        this.grounded = grounded;
+    private void jump() {
+        if (isGrounded()) {
+            velocityY = JUMP_POWER;
+            state = State.JUMPING;
+        }
     }
 
-    static final int WALK_SPEED = 8;
+    public void land() {
+        velocityY = 0;
+        state = State.STANDING;
+    }
+
+    public void bump() {
+        velocityY = 0;
+    }
+
+    public void fall() {
+        state = State.FALLING;
+    }
+
+    static final int JUMP_POWER = -15; // TODO influenced by boots
+    static final int SPEED = 8;
+
+    public enum State {
+        STANDING,
+        WALKING,
+        JUMPING,
+        FALLING
+    }
+
+    public enum Facing {
+        LEFT, RIGHT
+    }
 }
