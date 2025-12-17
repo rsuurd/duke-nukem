@@ -16,10 +16,10 @@ public class Hud {
         this.font = font;
     }
 
-    public void render(Renderer renderer) {
+    public void render(Renderer renderer, int score, int health) {
         drawBorders(renderer);
-        drawScore(renderer, 0);
-        drawHealth(renderer, 0);
+        drawScore(renderer, score);
+        drawHealth(renderer, health);
         drawFirePower(renderer, 1);
         drawInventory(renderer);
         drawHelp(renderer);

@@ -2,28 +2,26 @@ package duke.gameplay;
 
 import duke.ui.KeyHandler;
 
-public class Player {
-    private int x;
-    private int y;
-
+public class Player extends Active {
     private int velocityX;
     private int velocityY;
 
     private State state;
     private Facing facing;
 
+    private int health;
+
     public Player() {
         this(State.STANDING, Facing.LEFT);
     }
 
     Player(State state, Facing facing) {
+        super(0, 0, WIDTH, HEIGHT);
+
         this.facing = facing;
         this.state = state;
-    }
 
-    public void moveTo(int x, int y) {
-        this.x = x;
-        this.y = y;
+        health = 8;
     }
 
     public void setVelocity(int velocityX, int velocityY) {
@@ -49,22 +47,6 @@ public class Player {
         }
     }
 
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public int getWidth() {
-        return 16;
-    }
-
-    public int getHeight() {
-        return 32;
-    }
-
     public int getVelocityX() {
         return velocityX;
     }
@@ -79,6 +61,10 @@ public class Player {
 
     public Facing getFacing() {
         return facing;
+    }
+
+    public int getHealth() {
+        return health;
     }
 
     private void move(Facing facing) {
@@ -125,6 +111,8 @@ public class Player {
         state = State.FALLING;
     }
 
+    private static final int WIDTH = 16;
+    private static final int HEIGHT = 32;
     static final int JUMP_POWER = -15; // TODO influenced by boots
     static final int SPEED = 8;
 

@@ -42,7 +42,7 @@ class HudTest {
 
     @Test
     void shouldDrawScore() {
-        hud.render(renderer);
+        hud.render(renderer, 0, 0);
 
         verify(font).drawText(renderer, "00000000", 240, 24);
     }

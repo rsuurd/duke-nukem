@@ -55,18 +55,29 @@ public class GamePlayState implements GameState {
 
         levelRenderer.render(renderer, viewport);
 
-        // if collides, color hitbox red
-        Arrays.fill(HITBOX.getPixels(), (byte) 10);
-        renderer.draw(HITBOX, viewport.toScreenX(player.getX()), viewport.toScreenY(player.getY()));
+        // render enemies
+        // projectiles / effects etc
 
+        hud.render(renderer, 0, player.getHealth());
+
+        drawPlayer(renderer);
+        drawDebugInfo(renderer);
+    }
+
+    private void drawPlayer(Renderer renderer) {
+        renderer.draw(HITBOX, viewport.toScreenX(player.getX()), viewport.toScreenY(player.getY()));
+    }
+
+    private void drawDebugInfo(Renderer renderer) {
         font.drawText(renderer, String.format("position: %d, %d", player.getX(), player.getY()), 16, 16);
         font.drawText(renderer, String.format("velocity: %d, %d", player.getVelocityX(), player.getVelocityY()), 16, 24);
         font.drawText(renderer, String.format("%s %s", player.getState(), player.getFacing()), 16, 32);
-        // render enemies
-        // projectiles / effects etc
-        hud.render(renderer);
     }
 
-    // temporary graphic
+    // temporary graphic for player
     private static final Sprite HITBOX = new Sprite(16, 32);
+
+    static {
+        Arrays.fill(HITBOX.getPixels(), (byte) 10);
+    }
 }
