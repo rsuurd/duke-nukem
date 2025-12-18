@@ -34,24 +34,30 @@ public class Collision {
         int resolvedX = newX;
 
         if (collides(newX, player.getY(), player.getWidth(), player.getHeight(), level)) {
-            Collidable.Direction direction;
-
             if (velocityX > 0) {
-                direction = Collidable.Direction.RIGHT;
-                int right = newX + player.getWidth() - 1;
-                int col = right / TILE_SIZE;
-                resolvedX = col * TILE_SIZE - player.getWidth();
+                resolvedX = snapRight(player, newX);
             } else {
-                direction = Collidable.Direction.LEFT;
-                int col = newX / TILE_SIZE;
-                resolvedX = (col + 1) * TILE_SIZE;
+                resolvedX = snapLeft(player, newX);
             }
-
-            player.onCollide(direction);
         }
 
         player.moveTo(resolvedX, player.getY());
         player.setVelocity(0, player.getVelocityY());
+    }
+
+    private int snapRight(Player player, int newX) {
+        player.onCollide(Collidable.Direction.RIGHT);
+        int right = newX + player.getWidth() - 1;
+        int col = right / TILE_SIZE;
+
+        return col * TILE_SIZE - player.getWidth();
+    }
+
+    private int snapLeft(Player player, int newX) {
+        player.onCollide(Collidable.Direction.LEFT);
+        int col = newX / TILE_SIZE;
+
+        return (col + 1) * TILE_SIZE;
     }
 
     private void resolveYAxis(Player player, Level level) {
@@ -62,30 +68,28 @@ public class Collision {
         int resolvedY = newY;
 
         if (collides(player.getX(), newY, player.getWidth(), player.getHeight(), level)) {
-            Collidable.Direction direction;
-
             if (velocityY > 0) {
                 resolvedY = snapToGround(player, newY);
-                direction = Collidable.Direction.DOWN;
             } else {
-                resolvedY = snapToCeiling(newY);
-                direction = Collidable.Direction.UP;
+                resolvedY = snapToCeiling(player, newY);
             }
-
-            player.onCollide(direction);
         }
 
         player.moveTo(player.getX(), resolvedY);
     }
 
     private int snapToGround(Player player, int newY) {
+        player.onCollide(Collidable.Direction.DOWN);
+
         int bottom = newY + player.getHeight() - 1;
         int row = bottom / TILE_SIZE;
 
         return row * TILE_SIZE - player.getHeight();
     }
 
-    private int snapToCeiling(int newY) {
+    private int snapToCeiling(Player player, int newY) {
+        player.onCollide(Collidable.Direction.UP);
+
         int row = newY / TILE_SIZE;
 
         return (row + 1) * TILE_SIZE;
