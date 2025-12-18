@@ -2,7 +2,7 @@ package duke.gameplay;
 
 import duke.ui.KeyHandler;
 
-public class Player extends Active {
+public class Player extends Active implements Collidable {
     private int velocityX;
     private int velocityY;
 
@@ -98,12 +98,23 @@ public class Player extends Active {
         }
     }
 
-    public void land() {
+    @Override
+    public void onCollide(Direction direction) {
+        if (direction == Direction.DOWN) {
+            land();
+        } else if (direction == Direction.UP) {
+            bump();
+        } else {
+            velocityX = 0;
+        }
+    }
+
+    private void land() {
         velocityY = 0;
         state = State.STANDING;
     }
 
-    public void bump() {
+    private void bump() {
         velocityY = 0;
     }
 

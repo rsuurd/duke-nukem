@@ -63,6 +63,6 @@ class GamePlayStateTest extends GameContextTestSupport {
         state.render(context);
 
         verify(levelRenderer).render(renderer, viewport);
-        verify(hud).render(renderer);
+        verify(hud).render(renderer, 0, 0);
     }
 }

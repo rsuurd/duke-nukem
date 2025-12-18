@@ -34,14 +34,20 @@ public class Collision {
         int resolvedX = newX;
 
         if (collides(newX, player.getY(), player.getWidth(), player.getHeight(), level)) {
+            Collidable.Direction direction;
+
             if (velocityX > 0) {
+                direction = Collidable.Direction.RIGHT;
                 int right = newX + player.getWidth() - 1;
                 int col = right / TILE_SIZE;
                 resolvedX = col * TILE_SIZE - player.getWidth();
             } else {
+                direction = Collidable.Direction.LEFT;
                 int col = newX / TILE_SIZE;
                 resolvedX = (col + 1) * TILE_SIZE;
             }
+
+            player.onCollide(direction);
         }
 
         player.moveTo(resolvedX, player.getY());
@@ -56,15 +62,17 @@ public class Collision {
         int resolvedY = newY;
 
         if (collides(player.getX(), newY, player.getWidth(), player.getHeight(), level)) {
+            Collidable.Direction direction;
+
             if (velocityY > 0) {
                 resolvedY = snapToGround(player, newY);
-
-                player.land();
+                direction = Collidable.Direction.DOWN;
             } else {
                 resolvedY = snapToCeiling(newY);
-
-                player.bump();
+                direction = Collidable.Direction.UP;
             }
+
+            player.onCollide(direction);
         }
 
         player.moveTo(player.getX(), resolvedY);

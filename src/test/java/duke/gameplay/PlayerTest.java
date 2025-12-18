@@ -140,7 +140,7 @@ class PlayerTest {
         Player player = new Player(Player.State.FALLING, Player.Facing.LEFT);
         player.setVelocity(0, 16);
 
-        player.land();
+        player.onCollide(Collidable.Direction.DOWN);
 
         assertThat(player.getVelocityY()).isEqualTo(0);
         assertThat(player.getState()).isEqualTo(Player.State.STANDING);
@@ -151,7 +151,7 @@ class PlayerTest {
         Player player = new Player(Player.State.JUMPING, Player.Facing.LEFT);
         player.setVelocity(0, -8);
 
-        player.bump();
+        player.onCollide(Collidable.Direction.UP);
 
         assertThat(player.getVelocityY()).isEqualTo(0);
     }
