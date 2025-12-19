@@ -5,10 +5,13 @@ import duke.level.Level;
 import static duke.level.Level.TILE_SIZE;
 
 public class Collision {
-    public void resolve(Player player, Level level) {
-        applyGravity(player, level);
-        resolveXAxis(player, level);
-        resolveYAxis(player, level);
+    public void resolve(Movable movable, Level level) {
+        if (movable instanceof Player player) {
+            applyGravity(player, level);
+        }
+
+        resolveXAxis(movable, level);
+        resolveYAxis(movable, level);
     }
 
     private void applyGravity(Player player, Level level) {
@@ -22,77 +25,85 @@ public class Collision {
         }
 
         if (strength != 0) {
-            player.setVelocity(player.getVelocityX(), Math.min(player.getVelocityY() + strength, TILE_SIZE));
+            player.setVelocityY(Math.min(player.getVelocityY() + strength, TILE_SIZE));
         }
     }
 
-    private void resolveXAxis(Player player, Level level) {
-        int velocityX = player.getVelocityX();
+    private void resolveXAxis(Movable movable, Level level) {
+        int velocityX = movable.getVelocityX();
         if (velocityX == 0) return;
 
-        int newX = player.getX() + velocityX;
+        int newX = movable.getX() + velocityX;
         int resolvedX = newX;
 
-        if (collides(newX, player.getY(), player.getWidth(), player.getHeight(), level)) {
+        if (collides(newX, movable.getY(), movable.getWidth(), movable.getHeight(), level)) {
             if (velocityX > 0) {
-                resolvedX = snapRight(player, newX);
+                resolvedX = snapRight(movable, newX);
             } else {
-                resolvedX = snapLeft(player, newX);
+                resolvedX = snapLeft(movable, newX);
             }
         }
 
-        player.moveTo(resolvedX, player.getY());
-        player.setVelocity(0, player.getVelocityY());
+        movable.setX(resolvedX);
+        movable.setVelocityX(0);
     }
 
-    private int snapRight(Player player, int newX) {
-        player.onCollide(Collidable.Direction.RIGHT);
-        int right = newX + player.getWidth() - 1;
+    private int snapRight(Movable movable, int newX) {
+        onCollision(movable, Collidable.Direction.RIGHT);
+
+        int right = newX + movable.getWidth() - 1;
         int col = right / TILE_SIZE;
 
-        return col * TILE_SIZE - player.getWidth();
+        return col * TILE_SIZE - movable.getWidth();
     }
 
-    private int snapLeft(Player player, int newX) {
-        player.onCollide(Collidable.Direction.LEFT);
+    private int snapLeft(Movable movable, int newX) {
+        onCollision(movable, Collidable.Direction.LEFT);
+
         int col = newX / TILE_SIZE;
 
         return (col + 1) * TILE_SIZE;
     }
 
-    private void resolveYAxis(Player player, Level level) {
-        int velocityY = player.getVelocityY();
+    private void resolveYAxis(Movable movable, Level level) {
+        int velocityY = movable.getVelocityY();
         if (velocityY == 0) return;
 
-        int newY = player.getY() + velocityY;
+        int newY = movable.getY() + velocityY;
         int resolvedY = newY;
 
-        if (collides(player.getX(), newY, player.getWidth(), player.getHeight(), level)) {
+        if (collides(movable.getX(), newY, movable.getWidth(), movable.getHeight(), level)) {
             if (velocityY > 0) {
-                resolvedY = snapToGround(player, newY);
+                resolvedY = snapToGround(movable, newY);
             } else {
-                resolvedY = snapToCeiling(player, newY);
+                resolvedY = snapToCeiling(movable, newY);
             }
         }
 
-        player.moveTo(player.getX(), resolvedY);
+        movable.setY(resolvedY);
     }
 
-    private int snapToGround(Player player, int newY) {
-        player.onCollide(Collidable.Direction.DOWN);
+    private int snapToGround(Movable movable, int newY) {
+        onCollision(movable, Collidable.Direction.DOWN);
 
-        int bottom = newY + player.getHeight() - 1;
+        int bottom = newY + movable.getHeight() - 1;
         int row = bottom / TILE_SIZE;
 
-        return row * TILE_SIZE - player.getHeight();
+        return row * TILE_SIZE - movable.getHeight();
     }
 
-    private int snapToCeiling(Player player, int newY) {
-        player.onCollide(Collidable.Direction.UP);
+    private int snapToCeiling(Movable movable, int newY) {
+        onCollision(movable, Collidable.Direction.UP);
 
         int row = newY / TILE_SIZE;
 
         return (row + 1) * TILE_SIZE;
+    }
+
+    private void onCollision(Movable movable, Collidable.Direction direction) {
+        if (movable instanceof Collidable collidable) {
+            collidable.onCollision(direction);
+        }
     }
 
     private boolean collides(int x, int y, int width, int height, Level level) {
@@ -112,12 +123,12 @@ public class Collision {
         return false;
     }
 
-    private boolean isSolidBelow(Player player, Level level) {
-        int x = player.getX() + player.getVelocityX();
-        int y = player.getY() + player.getHeight();
+    private boolean isSolidBelow(Movable movable, Level level) {
+        int x = movable.getX() + movable.getVelocityX();
+        int y = movable.getY() + movable.getHeight();
 
         int left = x / TILE_SIZE;
-        int right = (x + player.getWidth() - 1) / TILE_SIZE;
+        int right = (x + movable.getWidth() - 1) / TILE_SIZE;
         int row = y / TILE_SIZE;
 
         for (int col = left; col <= right; col++) {

@@ -2,7 +2,7 @@ package duke.gameplay;
 
 import duke.ui.KeyHandler;
 
-public class Player extends Active implements Collidable {
+public class Player extends Active implements Movable, Collidable {
     private int velocityX;
     private int velocityY;
 
@@ -24,11 +24,6 @@ public class Player extends Active implements Collidable {
         health = 8;
     }
 
-    public void setVelocity(int velocityX, int velocityY) {
-        this.velocityX = velocityX;
-        this.velocityY = velocityY;
-    }
-
     public void processInput(KeyHandler.Input input) {
         if (input.left()) {
             move(Facing.LEFT);
@@ -47,12 +42,24 @@ public class Player extends Active implements Collidable {
         }
     }
 
+    @Override
     public int getVelocityX() {
         return velocityX;
     }
 
+    @Override
+    public void setVelocityX(int velocityX) {
+        this.velocityX = velocityX;
+    }
+
+    @Override
     public int getVelocityY() {
         return velocityY;
+    }
+
+    @Override
+    public void setVelocityY(int velocityY) {
+        this.velocityY = velocityY;
     }
 
     public State getState() {
@@ -80,7 +87,7 @@ public class Player extends Active implements Collidable {
     }
 
     private void stopMove() {
-        velocityX = 0;
+        setVelocityX(0);
 
         if (state == State.WALKING) {
             state = State.STANDING;
@@ -93,24 +100,24 @@ public class Player extends Active implements Collidable {
 
     private void jump() {
         if (isGrounded()) {
-            velocityY = JUMP_POWER;
+            setVelocityY(JUMP_POWER);
             state = State.JUMPING;
         }
     }
 
     @Override
-    public void onCollide(Direction direction) {
+    public void onCollision(Direction direction) {
         if (direction == Direction.DOWN) {
             land();
         } else if (direction == Direction.UP) {
             bump();
         } else {
-            velocityX = 0;
+            setVelocityX(0);
         }
     }
 
     private void land() {
-        velocityY = 0;
+        setVelocityY(0);
         state = State.STANDING;
     }
 

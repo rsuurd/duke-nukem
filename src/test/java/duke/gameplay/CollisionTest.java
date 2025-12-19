@@ -21,65 +21,65 @@ class CollisionTest {
 
     @Test
     void shouldCollideLeft() {
-        player.moveTo(16, 0);
-        player.setVelocity(-8, 0);
+        player.setX(16);
+        player.setVelocityX(-8);
         when(level.isSolid(anyInt(), anyInt())).thenReturn(true);
 
         new Collision().resolve(player, level);
 
         assertThat(player.getX()).isEqualTo(16);
         assertThat(player.getVelocityX()).isEqualTo(0);
-        verify(player).onCollide(Collidable.Direction.LEFT);
+        verify(player).onCollision(Collidable.Direction.LEFT);
     }
 
     @Test
     void shouldCollideRight() {
-        player.moveTo(16, 0);
-        player.setVelocity(8, 0);
+        player.setX(16);
+        player.setVelocityX(8);
         when(level.isSolid(anyInt(), anyInt())).thenReturn(true);
 
         new Collision().resolve(player, level);
 
         assertThat(player.getX()).isEqualTo(16);
         assertThat(player.getVelocityX()).isEqualTo(0);
-        verify(player).onCollide(Collidable.Direction.RIGHT);
+        verify(player).onCollision(Collidable.Direction.RIGHT);
     }
 
     @Test
     void shouldCollideUp() {
-        player.moveTo(0, 16);
-        player.setVelocity(0, -8);
+        player.setY(16);
+        player.setVelocityY(-8);
         when(level.isSolid(anyInt(), anyInt())).thenReturn(true);
 
         new Collision().resolve(player, level);
 
         assertThat(player.getY()).isEqualTo(16);
         assertThat(player.getVelocityY()).isEqualTo(0);
-        verify(player).onCollide(Collidable.Direction.UP);
+        verify(player).onCollision(Collidable.Direction.UP);
     }
 
     @Test
     void shouldCollideDown() {
-        player.moveTo(0, 16);
-        player.setVelocity(0, 8);
+        player.setY(16);
+        player.setVelocityY(8);
         when(level.isSolid(anyInt(), anyInt())).thenReturn(true);
 
         new Collision().resolve(player, level);
 
         assertThat(player.getY()).isEqualTo(16);
         assertThat(player.getVelocityY()).isEqualTo(0);
-        verify(player).onCollide(Collidable.Direction.DOWN);
+        verify(player).onCollision(Collidable.Direction.DOWN);
     }
 
     @Test
     void shouldApplyGravityWhenJumping() {
         player = spy(new Player(Player.State.JUMPING, Player.Facing.RIGHT));
-        player.setVelocity(0, -15);
+        player.setVelocityY(-15);
         new Collision().resolve(player, level);
 
         assertThat(player.getVelocityY()).isEqualTo(-13);
         assertThat(player.getState()).isEqualTo(Player.State.JUMPING);
-        verify(player, never()).onCollide(any());
+        verify(player, never()).onCollision(any());
     }
 
     @Test
@@ -100,6 +100,6 @@ class CollisionTest {
         assertThat(player.getVelocityY()).isEqualTo(16);
         assertThat(player.getState()).isEqualTo(Player.State.FALLING);
 
-        verify(player, never()).onCollide(any());
+        verify(player, never()).onCollision(any());
     }
 }

@@ -1,7 +1,7 @@
 package duke.gameplay;
 
 public interface Collidable {
-    void onCollide(Direction direction);
+    void onCollision(Direction direction);
 
     enum Direction {
         UP,

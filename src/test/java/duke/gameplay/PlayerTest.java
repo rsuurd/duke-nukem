@@ -21,7 +21,8 @@ class PlayerTest {
     void shouldMove() {
         Player player = new Player();
 
-        player.moveTo(20, 12);
+        player.setX(20);
+        player.setY(12);
 
         assertThat(player.getX()).isEqualTo(20);
         assertThat(player.getY()).isEqualTo(12);
@@ -80,7 +81,7 @@ class PlayerTest {
     @Test
     void shouldStandWhenWalkingStops() {
         Player player = new Player(Player.State.WALKING, Player.Facing.LEFT);
-        player.setVelocity(-SPEED, 0);
+        player.setVelocityX(-SPEED);
 
         player.processInput(input);
 
@@ -92,7 +93,7 @@ class PlayerTest {
     @EnumSource(value = Player.State.class, names = {"WALKING"}, mode = EnumSource.Mode.EXCLUDE)
     void shouldStop(Player.State state) {
         Player player = new Player(state, Player.Facing.RIGHT);
-        player.setVelocity(SPEED, 0);
+        player.setVelocityX(SPEED);
 
         player.processInput(input);
 
@@ -138,9 +139,9 @@ class PlayerTest {
     @Test
     void shouldLand() {
         Player player = new Player(Player.State.FALLING, Player.Facing.LEFT);
-        player.setVelocity(0, 16);
+        player.setVelocityY(16);
 
-        player.onCollide(Collidable.Direction.DOWN);
+        player.onCollision(Collidable.Direction.DOWN);
 
         assertThat(player.getVelocityY()).isEqualTo(0);
         assertThat(player.getState()).isEqualTo(Player.State.STANDING);
@@ -149,9 +150,9 @@ class PlayerTest {
     @Test
     void shouldBump() {
         Player player = new Player(Player.State.JUMPING, Player.Facing.LEFT);
-        player.setVelocity(0, -8);
+        player.setVelocityY(-8);
 
-        player.onCollide(Collidable.Direction.UP);
+        player.onCollision(Collidable.Direction.UP);
 
         assertThat(player.getVelocityY()).isEqualTo(0);
     }
@@ -169,7 +170,8 @@ class PlayerTest {
     void shouldSetVelocity() {
         Player player = new Player();
 
-        player.setVelocity(8, -16);
+        player.setVelocityX(8);
+        player.setVelocityY(-16);
 
         assertThat(player.getVelocityX()).isEqualTo(8);
         assertThat(player.getVelocityY()).isEqualTo(-16);

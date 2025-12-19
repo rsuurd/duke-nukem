@@ -38,7 +38,8 @@ public class GamePlayState implements GameState {
 
     @Override
     public void start(GameContext context) {
-        player.moveTo(level.getPlayerStartX(), level.getPlayerStartY());
+        player.setX(level.getPlayerStartX());
+        player.setY(level.getPlayerStartY());
         viewport.center(player.getX(), player.getY());
     }
 

@@ -40,7 +40,8 @@ class GamePlayStateTest extends GameContextTestSupport {
 
         state.start(context);
 
-        verify(player).moveTo(16, 16);
+        verify(player).setX(16);
+        verify(player).setY(16);
     }
 
     @Test
