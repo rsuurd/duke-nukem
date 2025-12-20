@@ -167,6 +167,15 @@ class PlayerTest {
     }
 
     @Test
+    void shouldNotFallWhileJumping() {
+        Player player = new Player(Player.State.JUMPING, Player.Facing.LEFT);
+
+        player.fall();
+
+        assertThat(player.getState()).isEqualTo(Player.State.JUMPING);
+    }
+
+    @Test
     void shouldSetVelocity() {
         Player player = new Player();
 

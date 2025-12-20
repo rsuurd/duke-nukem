@@ -6,27 +6,22 @@ import static duke.level.Level.TILE_SIZE;
 
 public class Collision {
     public void resolve(Movable movable, Level level) {
-        if (movable instanceof Player player) {
-            applyGravity(player, level);
+        if (movable instanceof Physics physics) {
+            applyGravity(physics, level);
         }
 
         resolveXAxis(movable, level);
         resolveYAxis(movable, level);
     }
 
-    private void applyGravity(Player player, Level level) {
-        int strength = 0;
-
-        if (player.getState() == Player.State.JUMPING) {
-            strength = GRAVITY;
-        } else if (!isSolidBelow(player, level)) {
-            player.fall();
-            strength = Player.SPEED;
+    private void applyGravity(Physics physics, Level level) {
+        if (!isSolidBelow(physics, level)) {
+            physics.fall();
         }
 
-        if (strength != 0) {
-            player.setVelocityY(Math.min(player.getVelocityY() + strength, TILE_SIZE));
-        }
+        int velocityY = Math.min(physics.getVelocityY() + physics.getVerticalAcceleration(), physics.getTerminalVelocity());
+
+        physics.setVelocityY(velocityY);
     }
 
     private void resolveXAxis(Movable movable, Level level) {
@@ -139,6 +134,4 @@ public class Collision {
 
         return false;
     }
-
-    private static final int GRAVITY = 2;
 }

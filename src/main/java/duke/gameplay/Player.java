@@ -2,7 +2,9 @@ package duke.gameplay;
 
 import duke.ui.KeyHandler;
 
-public class Player extends Active implements Movable, Collidable {
+import static duke.level.Level.TILE_SIZE;
+
+public class Player extends Active implements Movable, Collidable, Physics {
     private int velocityX;
     private int velocityY;
 
@@ -122,11 +124,27 @@ public class Player extends Active implements Movable, Collidable {
     }
 
     private void bump() {
-        velocityY = 0;
+        setVelocityY(0);
     }
 
     public void fall() {
-        state = State.FALLING;
+        if (state != State.JUMPING) {
+            state = State.FALLING;
+        }
+    }
+
+    @Override
+    public int getVerticalAcceleration() {
+        return switch (state) {
+            case STANDING, WALKING -> 0;
+            case JUMPING -> GRAVITY;
+            case FALLING -> SPEED;
+        };
+    }
+
+    @Override
+    public int getTerminalVelocity() {
+        return TILE_SIZE;
     }
 
     private static final int WIDTH = 16;
