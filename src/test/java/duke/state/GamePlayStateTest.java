@@ -49,6 +49,7 @@ class GamePlayStateTest extends GameContextTestSupport {
         state.update(context);
 
         verify(player).processInput(keyHandler.getInput());
+        verify(player).update();
         verify(collision).resolve(player, level);
     }
 

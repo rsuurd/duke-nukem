@@ -10,7 +10,8 @@ public class Player extends Active implements Movable, Collidable, Physics {
 
     private State state;
     private Facing facing;
-
+    private int hangTimeLeft;
+    private boolean moving;
     private int health;
 
     public Player() {
@@ -41,6 +42,22 @@ public class Player extends Active implements Movable, Collidable, Physics {
 
         if (input.jump()) {
             jump();
+        }
+    }
+
+    public void update() {
+        updateJump();
+    }
+
+    private void updateJump() {
+        if (getVelocityY() < 0) return;
+
+        if (state == State.JUMPING) {
+            if (--hangTimeLeft > 0) {
+                velocityY = 0;
+            } else {
+                state = State.FALLING;
+            }
         }
     }
 
@@ -82,6 +99,7 @@ public class Player extends Active implements Movable, Collidable, Physics {
 
             if (state == State.STANDING) {
                 state = State.WALKING;
+                moving = true;
             }
         } else {
             this.facing = facing;
@@ -93,6 +111,7 @@ public class Player extends Active implements Movable, Collidable, Physics {
 
         if (state == State.WALKING) {
             state = State.STANDING;
+            moving = false;
         }
     }
 
@@ -104,6 +123,7 @@ public class Player extends Active implements Movable, Collidable, Physics {
         if (isGrounded()) {
             setVelocityY(JUMP_POWER);
             state = State.JUMPING;
+            hangTimeLeft = HANG_TIME;
         }
     }
 
@@ -120,11 +140,13 @@ public class Player extends Active implements Movable, Collidable, Physics {
 
     private void land() {
         setVelocityY(0);
-        state = State.STANDING;
+        state = moving ? State.WALKING : State.STANDING;
+        hangTimeLeft = 0;
     }
 
     private void bump() {
         setVelocityY(0);
+        hangTimeLeft = 0;
     }
 
     public void fall() {
@@ -137,7 +159,7 @@ public class Player extends Active implements Movable, Collidable, Physics {
     public int getVerticalAcceleration() {
         return switch (state) {
             case STANDING, WALKING -> 0;
-            case JUMPING -> GRAVITY;
+            case JUMPING -> isHanging() ? 0 : GRAVITY;
             case FALLING -> SPEED;
         };
     }
@@ -147,9 +169,14 @@ public class Player extends Active implements Movable, Collidable, Physics {
         return TILE_SIZE;
     }
 
+    private boolean isHanging() {
+        return state == State.JUMPING && hangTimeLeft > 0 && getVelocityY() == 0;
+    }
+
     private static final int WIDTH = 16;
     private static final int HEIGHT = 32;
     static final int JUMP_POWER = -15; // TODO influenced by boots
+    static final int HANG_TIME = 4;
     static final int SPEED = 8;
 
     public enum State {

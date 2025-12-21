@@ -8,6 +8,7 @@ import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static duke.gameplay.Physics.GRAVITY;
 import static duke.gameplay.Player.SPEED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -184,5 +185,40 @@ class PlayerTest {
 
         assertThat(player.getVelocityX()).isEqualTo(8);
         assertThat(player.getVelocityY()).isEqualTo(-16);
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = Player.State.class, names = {"STANDING", "WALKING"})
+    void shouldHaveNoVerticalAcceleration(Player.State state) {
+        Player player = new Player(state, Player.Facing.LEFT);
+
+        assertThat(player.getVerticalAcceleration()).isEqualTo(0);
+    }
+
+    @Test
+    void shouldHaveGravityWhileJumping() {
+        Player player = new Player(Player.State.JUMPING, Player.Facing.LEFT);
+
+        assertThat(player.getVerticalAcceleration()).isEqualTo(GRAVITY);
+    }
+
+    @Test
+    void shouldFloatWhileHanging() {
+        Player player = new Player();
+        player.processInput(new KeyHandler.Input(false, false, true, false, false));
+        player.setVelocityY(0);
+
+        for (int frame = 1; frame < Player.HANG_TIME; frame++) {
+            player.update();
+            int verticalAcceleration = player.getVerticalAcceleration();
+            assertThat(verticalAcceleration).isEqualTo(0);
+        }
+    }
+
+    @Test
+    void shouldAccelerateWhileFalling() {
+        Player player = new Player(Player.State.FALLING, Player.Facing.LEFT);
+
+        assertThat(player.getVerticalAcceleration()).isEqualTo(SPEED);
     }
 }

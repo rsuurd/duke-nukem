@@ -6,16 +6,19 @@ import static duke.level.Level.TILE_SIZE;
 
 public class Collision {
     public void resolve(Movable movable, Level level) {
+        resolveXAxis(movable, level);
+
         if (movable instanceof Physics physics) {
             applyGravity(physics, level);
         }
 
-        resolveXAxis(movable, level);
         resolveYAxis(movable, level);
     }
 
     private void applyGravity(Physics physics, Level level) {
-        if (!isSolidBelow(physics, level)) {
+        if (isSolidBelow(physics, level) && physics.getVelocityY() >= 0) {
+            onCollision(physics, Collidable.Direction.DOWN);
+        } else {
             physics.fall();
         }
 
@@ -40,7 +43,6 @@ public class Collision {
         }
 
         movable.setX(resolvedX);
-        movable.setVelocityX(0);
     }
 
     private int snapRight(Movable movable, int newX) {
@@ -119,7 +121,7 @@ public class Collision {
     }
 
     private boolean isSolidBelow(Movable movable, Level level) {
-        int x = movable.getX() + movable.getVelocityX();
+        int x = movable.getX();
         int y = movable.getY() + movable.getHeight();
 
         int left = x / TILE_SIZE;

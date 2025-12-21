@@ -46,6 +46,7 @@ public class GamePlayState implements GameState {
     @Override
     public void update(GameContext context) {
         player.processInput(context.getKeyHandler().getInput());
+        player.update();
         collision.resolve(player, level);
         viewport.update(player.getX(), player.getY(), player.isGrounded());
     }

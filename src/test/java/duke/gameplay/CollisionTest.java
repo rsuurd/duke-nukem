@@ -48,7 +48,7 @@ class CollisionTest {
     @Test
     void shouldCollideUp() {
         player.setY(16);
-        player.setVelocityY(-8);
+        player.setVelocityY(Player.JUMP_POWER);
         when(level.isSolid(anyInt(), anyInt())).thenReturn(true);
 
         new Collision().resolve(player, level);
