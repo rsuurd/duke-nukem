@@ -1,6 +1,10 @@
 package duke.level;
 
+import duke.gameplay.Active;
 import duke.level.processors.ActiveProcessorRegistry;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class LevelBuilder {
     private ActiveProcessorRegistry registry;
@@ -9,11 +13,14 @@ public class LevelBuilder {
     private int[] data;
     private int backdrop;
     private int playerStart;
+    private List<Active> actives;
 
     public LevelBuilder(ActiveProcessorRegistry registry, int number, int[] data) {
         this.registry = registry;
         this.number = number;
         this.data = data;
+
+        actives = new ArrayList<>();
     }
 
     public LevelBuilder playerStart(int playerStart) {
@@ -24,6 +31,12 @@ public class LevelBuilder {
     // TODO maybe just do like replaceTile(idx, left | up | right | down, and let the builder calculate source index
     public void replaceTile(int index, int sourceIndex) {
         data[index] = data[sourceIndex];
+    }
+
+    public LevelBuilder add(Active active) {
+        actives.add(active);
+
+        return this;
     }
 
     public Level build() {
@@ -38,7 +51,7 @@ public class LevelBuilder {
             }
         }
 
-        return new Level(number, data, backdrop, playerStart);
+        return new Level(number, data, backdrop, playerStart, actives);
     }
 
     private void determineBackdrop() {

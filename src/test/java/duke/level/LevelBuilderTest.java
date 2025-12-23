@@ -1,5 +1,6 @@
 package duke.level;
 
+import duke.gameplay.Active;
 import duke.level.processors.ActiveProcessor;
 import duke.level.processors.ActiveProcessorRegistry;
 import org.junit.jupiter.api.Test;
@@ -38,5 +39,14 @@ class LevelBuilderTest {
         assertThat(level).isNotNull();
         verify(registry, atLeastOnce()).getProcessor(0x3000);
         verify(processor, atLeastOnce()).process(anyInt(), eq(0x3000), same(builder));
+    }
+
+    @Test
+    void shouldAddActive() {
+        Active active = new Active(0, 0, 0, 0) {};
+        Level level = new LevelBuilder(registry, 1, new int[Level.WIDTH * Level.HEIGHT]).add(active).build();
+
+        assertThat(level).isNotNull();
+        assertThat(level.getActives()).containsExactly(active);
     }
 }

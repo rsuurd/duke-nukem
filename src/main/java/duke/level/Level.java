@@ -1,5 +1,10 @@
 package duke.level;
 
+import duke.gameplay.Active;
+
+import java.util.Collections;
+import java.util.List;
+
 public class Level {
     public static final int TILE_SIZE = 16;
     public static final int FLASHERS = 0x0;
@@ -14,11 +19,11 @@ public class Level {
     private int number;
     private int[] tiles;
     private int backdrop;
-
     private int playerStart;
-    // initial set of entities
 
-    public Level(int number, int[] tiles, int backdrop, int playerStart) {
+    private List<Active> actives;
+
+    public Level(int number, int[] tiles, int backdrop, int playerStart, List<Active> actives) {
         if (tiles.length != WIDTH * HEIGHT) {
             throw new IllegalArgumentException("Unexpected level size");
         }
@@ -27,6 +32,7 @@ public class Level {
         this.tiles = tiles;
         this.backdrop = backdrop;
         this.playerStart = playerStart;
+        this.actives = actives;
     }
 
     public int getNumber() {
@@ -39,6 +45,10 @@ public class Level {
 
     public int getPlayerStartY() {
         return (playerStart / WIDTH) * TILE_SIZE;
+    }
+
+    public List<Active> getActives() {
+        return Collections.unmodifiableList(actives);
     }
 
     public int getTile(int row, int col) {
