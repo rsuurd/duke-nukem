@@ -62,4 +62,10 @@ class LevelTest {
                 level.getActives().add(new Active(0, 0, 0, 0) {})
         ).isInstanceOf(UnsupportedOperationException.class);
     }
+
+    @Test
+    void shouldConvertAddressToCoordinates() {
+        assertThat(Level.toX(562)).isEqualTo(800);
+        assertThat(Level.toY(562)).isEqualTo(64);
+    }
 }

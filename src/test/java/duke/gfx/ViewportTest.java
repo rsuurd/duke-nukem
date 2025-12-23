@@ -1,5 +1,7 @@
 package duke.gfx;
 
+import duke.gameplay.Active;
+import duke.gameplay.Movable;
 import org.junit.jupiter.api.Test;
 
 import static duke.gfx.Viewport.*;
@@ -94,5 +96,22 @@ class ViewportTest {
         viewport.update(100, 50, true);
         assertThat(viewport.toScreenX(100)).isEqualTo(100 - viewport.getX());
         assertThat(viewport.toScreenY(50)).isEqualTo(50 - viewport.getY());
+    }
+
+    @Test
+    void shouldDetermineVisibility() {
+        Viewport viewport = new Viewport();
+        Movable movable = new Active(0, 0, 16, 16) {};
+
+        assertThat(viewport.isVisible(movable)).isTrue();
+
+        movable.setX(-8);
+        movable.setY(-8);
+        assertThat(viewport.isVisible(movable)).isTrue();
+
+        movable.setX(-movable.getWidth());
+        movable.setY(-movable.getHeight());
+
+        assertThat(viewport.isVisible(movable)).isFalse();
     }
 }

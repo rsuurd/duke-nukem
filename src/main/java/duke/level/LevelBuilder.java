@@ -7,6 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LevelBuilder {
+    public static final int TOP = -Level.WIDTH;
+    public static final int BOTTOM = Level.WIDTH;
+    public static final int LEFT = -1;
+    public static final int RIGHT = 1;
+
     private ActiveProcessorRegistry registry;
 
     private int number;
@@ -28,9 +33,10 @@ public class LevelBuilder {
         return this;
     }
 
-    // TODO maybe just do like replaceTile(idx, left | up | right | down, and let the builder calculate source index
-    public void replaceTile(int index, int sourceIndex) {
-        data[index] = data[sourceIndex];
+    public LevelBuilder replaceTile(int index, int offset) {
+        data[index] = data[index + offset];
+
+        return this;
     }
 
     public LevelBuilder add(Active active) {

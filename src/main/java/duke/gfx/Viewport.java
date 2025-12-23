@@ -1,13 +1,19 @@
 package duke.gfx;
 
+import duke.gameplay.Movable;
+
 public class Viewport {
+    private static final int WIDTH = 224;
+    private static final int HEIGHT = 192;
+
     static final int LEFT_BOUND = 88;
     static final int RIGHT_BOUND = 136;
     static final int UPPER_BOUND = 48;
     static final int LOWER_BOUND = 112;
-    static final int HORIZONTAL_CENTER = 112;
-    static final int VERTICAL_CENTER = 96;
+    static final int HORIZONTAL_CENTER = WIDTH / 2;
+    static final int VERTICAL_CENTER = HEIGHT / 2;
     private static final int CENTERING_SPEED = 16;
+
 
     private int x;
     private int y;
@@ -67,5 +73,14 @@ public class Viewport {
 
     public int getY() {
         return y;
+    }
+
+    public boolean isVisible(Movable movable) {
+        int movableRight = movable.getX() + movable.getWidth();
+        int viewportRight = x + WIDTH;
+        int movableBottom = movable.getY() + movable.getHeight();
+        int viewportBottom = y + HEIGHT;
+
+        return movableRight > x && movable.getX() < viewportRight && movableBottom > y && movable.getY() < viewportBottom;
     }
 }

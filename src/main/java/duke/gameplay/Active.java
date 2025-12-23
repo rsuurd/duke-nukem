@@ -3,7 +3,6 @@ package duke.gameplay;
 public abstract class Active implements Movable {
     private int x, y;
     private int width, height;
-
     private int velocityX, velocityY;
 
     protected Active(int x, int y, int width, int height) {

@@ -1,31 +1,32 @@
 package duke.level.processors;
 
-import java.util.HashMap;
-import java.util.Map;
+import duke.level.LevelBuilder;
+
+import java.util.List;
 
 public class ActiveProcessorRegistry {
-    private static final ActiveProcessor NOOP = (index, tileId, builder) -> {
-    };
+    private List<ActiveProcessor> processors;
 
-    private Map<Integer, ActiveProcessor> processors;
-
-    public ActiveProcessorRegistry() {
-        processors = new HashMap<>();
-    }
-
-    public void addProcessor(int tileId, ActiveProcessor processor) {
-        processors.put(tileId, processor);
+    public ActiveProcessorRegistry(List<ActiveProcessor> processors) {
+        this.processors = processors;
     }
 
     public ActiveProcessor getProcessor(int tileId) {
-        return processors.getOrDefault(tileId, NOOP);
+        return processors.stream().filter(processor -> processor.canProcess(tileId)).findFirst().orElse(NOOP);
     }
 
     public static ActiveProcessorRegistry createDefault() {
-        ActiveProcessorRegistry registry = new ActiveProcessorRegistry();
-
-        registry.addProcessor(PlayerStartProcessor.TILE_ID, new PlayerStartProcessor());
-
-        return registry;
+        return new ActiveProcessorRegistry(List.of(new PlayerStartProcessor()));
     }
+
+    private static final ActiveProcessor NOOP = new ActiveProcessor() {
+        @Override
+        public boolean canProcess(int tileId) {
+            return true;
+        }
+
+        @Override
+        public void process(int index, int tileId, LevelBuilder builder) {
+        }
+    };
 }

@@ -40,11 +40,11 @@ public class Level {
     }
 
     public int getPlayerStartX() {
-        return (playerStart % WIDTH) * TILE_SIZE;
+        return toX(playerStart);
     }
 
     public int getPlayerStartY() {
-        return (playerStart / WIDTH) * TILE_SIZE;
+        return toY(playerStart);
     }
 
     public List<Active> getActives() {
@@ -67,5 +67,13 @@ public class Level {
         int tileId = getTile(row, col);
 
         return (tileId >= SOLIDS) && (tileId < ACTIVE);
+    }
+
+    public static int toX(int address) {
+        return (address % WIDTH) * TILE_SIZE;
+    }
+
+    public static int toY(int address) {
+        return (address / WIDTH) * TILE_SIZE;
     }
 }

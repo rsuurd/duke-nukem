@@ -5,6 +5,8 @@ import duke.level.processors.ActiveProcessor;
 import duke.level.processors.ActiveProcessorRegistry;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -48,5 +50,22 @@ class LevelBuilderTest {
 
         assertThat(level).isNotNull();
         assertThat(level.getActives()).containsExactly(active);
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {LevelBuilder.TOP, LevelBuilder.BOTTOM, LevelBuilder.LEFT, LevelBuilder.RIGHT})
+    void shouldReplaceTile(int offset) {
+        int[] data = new int[Level.WIDTH * Level.HEIGHT];
+        int row = 1;
+        int col = 1;
+        int address = row * Level.WIDTH + col;
+
+        data[address + offset] = 0x1;
+
+        Level level = new LevelBuilder(registry, 1, data)
+                .replaceTile(address, offset)
+                .build();
+
+        assertThat(level.getTile(row, col)).isEqualTo(0x1);
     }
 }

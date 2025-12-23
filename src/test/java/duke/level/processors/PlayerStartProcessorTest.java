@@ -22,6 +22,6 @@ class PlayerStartProcessorTest {
         new PlayerStartProcessor().process(20, PlayerStartProcessor.TILE_ID, builder);
 
         verify(builder).playerStart(20);
-        verify(builder).replaceTile(20, 19);
+        verify(builder).replaceTile(20, LevelBuilder.LEFT);
     }
 }
