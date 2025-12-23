@@ -1,8 +1,10 @@
 package duke.gameplay;
 
-public abstract class Active implements Movable, Collidable {
-    protected int x, y;
-    protected int width, height;
+public abstract class Active implements Movable {
+    private int x, y;
+    private int width, height;
+
+    private int velocityX, velocityY;
 
     protected Active(int x, int y, int width, int height) {
         setX(x);
@@ -40,5 +42,25 @@ public abstract class Active implements Movable, Collidable {
     @Override
     public int getHeight() {
         return height;
+    }
+
+    @Override
+    public int getVelocityX() {
+        return velocityX;
+    }
+
+    @Override
+    public void setVelocityX(int velocityX) {
+        this.velocityX = velocityX;
+    }
+
+    @Override
+    public int getVelocityY() {
+        return velocityY;
+    }
+
+    @Override
+    public void setVelocityY(int velocityY) {
+        this.velocityY = velocityY;
     }
 }

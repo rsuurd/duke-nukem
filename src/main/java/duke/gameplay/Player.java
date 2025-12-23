@@ -5,9 +5,6 @@ import duke.ui.KeyHandler;
 import static duke.level.Level.TILE_SIZE;
 
 public class Player extends Active implements Movable, Collidable, Physics {
-    private int velocityX;
-    private int velocityY;
-
     private State state;
     private Facing facing;
     private int hangTimeLeft;
@@ -53,7 +50,7 @@ public class Player extends Active implements Movable, Collidable, Physics {
 
         if (state == State.JUMPING) {
             if (--hangTimeLeft > 0) {
-                velocityY = 0;
+                setVelocityY(0);
             } else {
                 state = State.FALLING;
             }
@@ -71,26 +68,6 @@ public class Player extends Active implements Movable, Collidable, Physics {
         }
     }
 
-    @Override
-    public int getVelocityX() {
-        return velocityX;
-    }
-
-    @Override
-    public void setVelocityX(int velocityX) {
-        this.velocityX = velocityX;
-    }
-
-    @Override
-    public int getVelocityY() {
-        return velocityY;
-    }
-
-    @Override
-    public void setVelocityY(int velocityY) {
-        this.velocityY = velocityY;
-    }
-
     public State getState() {
         return state;
     }
@@ -105,7 +82,7 @@ public class Player extends Active implements Movable, Collidable, Physics {
 
     private void move(Facing facing) {
         if (this.facing == facing) {
-            velocityX = (facing == Facing.LEFT) ? -SPEED : SPEED;
+            setVelocityX((facing == Facing.LEFT) ? -SPEED : SPEED);
 
             if (state == State.STANDING) {
                 state = State.WALKING;
