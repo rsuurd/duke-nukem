@@ -9,8 +9,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static duke.gameplay.Physics.GRAVITY;
+import static duke.gameplay.Player.JUMP_POWER;
 import static duke.gameplay.Player.SPEED;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -85,6 +87,7 @@ class PlayerTest {
         player.setVelocityX(-SPEED);
 
         player.processInput(input);
+        player.update();
 
         assertThat(player.getState()).isEqualTo(Player.State.STANDING);
         assertThat(player.getVelocityX()).isEqualTo(0);
@@ -95,8 +98,10 @@ class PlayerTest {
     void shouldStop(Player.State state) {
         Player player = new Player(state, Player.Facing.RIGHT);
         player.setVelocityX(SPEED);
+        player.setVelocityY(JUMP_POWER);
 
         player.processInput(input);
+        player.update();
 
         assertThat(player.getState()).isEqualTo(state);
         assertThat(player.getVelocityX()).isEqualTo(0);

@@ -36,9 +36,7 @@ public class Player extends Active implements Movable, Collidable, Physics {
             move(Facing.RIGHT);
         }
 
-        if (!input.left() && !input.right()) {
-            stopMove();
-        }
+        moving = input.left() || input.right();
 
         if (input.jump()) {
             jump();
@@ -46,6 +44,7 @@ public class Player extends Active implements Movable, Collidable, Physics {
     }
 
     public void update() {
+        applyFriction();
         updateJump();
     }
 
@@ -57,6 +56,17 @@ public class Player extends Active implements Movable, Collidable, Physics {
                 velocityY = 0;
             } else {
                 state = State.FALLING;
+            }
+        }
+    }
+
+    // maybe move this over to Physics
+    private void applyFriction() {
+        if (!moving) {
+            setVelocityX(0);
+
+            if (state == State.WALKING) {
+                state = State.STANDING;
             }
         }
     }
@@ -99,19 +109,9 @@ public class Player extends Active implements Movable, Collidable, Physics {
 
             if (state == State.STANDING) {
                 state = State.WALKING;
-                moving = true;
             }
         } else {
             this.facing = facing;
-        }
-    }
-
-    private void stopMove() {
-        setVelocityX(0);
-
-        if (state == State.WALKING) {
-            state = State.STANDING;
-            moving = false;
         }
     }
 
