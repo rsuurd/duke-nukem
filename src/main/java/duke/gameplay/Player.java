@@ -15,6 +15,7 @@ public class Player extends Active implements Movable, Collidable, Physics, Spri
     private Facing facing;
     private int hangTimeLeft;
     private boolean moving;
+    private boolean firing;
     private int health;
 
     public Player() {
@@ -40,6 +41,7 @@ public class Player extends Active implements Movable, Collidable, Physics, Spri
         }
 
         moving = input.left() || input.right();
+        firing = input.fire();
 
         if (input.jump()) {
             jump();
@@ -49,12 +51,19 @@ public class Player extends Active implements Movable, Collidable, Physics, Spri
     public void update() {
         applyFriction();
         updateJump();
+        updateAnimation();
+    }
 
+    private void updateAnimation() {
         animation.tick();
 
         // swap animation based on state and facing, should probably make something more sophisticated later
-        int animationIndex = (state.ordinal() * 2) + facing.ordinal();
-        animation.setAnimation(ANIMATIONS.get(animationIndex));
+        if (firing && state == State.STANDING) {
+            animation.setAnimation(facing == Facing.LEFT ? SHOOT_LEFT : SHOOT_RIGHT);
+        } else {
+            int animationIndex = (state.ordinal() * 2) + facing.ordinal();
+            animation.setAnimation(ANIMATIONS.get(animationIndex));
+        }
     }
 
     private void updateJump() {
@@ -201,4 +210,8 @@ public class Player extends Active implements Movable, Collidable, Physics, Spri
         new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(40), 1, 1),
         new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(44), 1, 1)
     );
+
+    //shooting left/right
+    private static AnimationDescriptor SHOOT_LEFT = new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(12), 1, 1);
+    private static AnimationDescriptor SHOOT_RIGHT = new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(28), 1, 1);
 }
