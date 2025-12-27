@@ -29,4 +29,29 @@ class AnimationTest {
 
         assertThat(animation.getCurrentBaseIndex()).isEqualTo(20);
     }
+
+    @Test
+    void shouldSwitchAnimation() {
+        AnimationDescriptor different = new AnimationDescriptor(spriteDescriptor, 2, 2);
+
+        Animation animation = new Animation(descriptor);
+        animation.tick();
+        animation.tick();
+        animation.tick();
+
+        animation.setAnimation(different);
+
+        assertThat(animation.getCurrentBaseIndex()).isEqualTo(20);
+    }
+
+    @Test
+    void shouldNotSwitchToSameAnimation() {
+        Animation animation = new Animation(descriptor);
+        animation.tick();
+        animation.tick();
+
+        animation.setAnimation(descriptor);
+
+        assertThat(animation.getCurrentBaseIndex()).isEqualTo(24);
+    }
 }

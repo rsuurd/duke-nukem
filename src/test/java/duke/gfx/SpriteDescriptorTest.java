@@ -26,4 +26,17 @@ class SpriteDescriptorTest {
 
         assertThat(descriptor).isNotNull();
     }
+
+    @Test
+    void shouldCopyDescriptorWithNewBaseIndex() {
+        SpriteDescriptor descriptor = new SpriteDescriptor(assets -> null, 0, 0, 0, 2, 2);
+        SpriteDescriptor newDescriptor = descriptor.withBaseIndex(4);
+
+        assertThat(newDescriptor.sheetSelector()).isEqualTo(descriptor.sheetSelector());
+        assertThat(newDescriptor.baseIndex()).isEqualTo(4);
+        assertThat(newDescriptor.offsetX()).isEqualTo(descriptor.offsetX());
+        assertThat(newDescriptor.offsetY()).isEqualTo(descriptor.offsetY());
+        assertThat(newDescriptor.rows()).isEqualTo(descriptor.rows());
+        assertThat(newDescriptor.cols()).isEqualTo(descriptor.cols());
+    }
 }

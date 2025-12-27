@@ -16,4 +16,8 @@ public record SpriteDescriptor(Function<AssetManager, List<Sprite>> sheetSelecto
             throw new IllegalArgumentException("cols must be positive");
         }
     }
+
+    public SpriteDescriptor withBaseIndex(int baseIndex) {
+        return new SpriteDescriptor(sheetSelector(), baseIndex, offsetX(), offsetY(), rows(), cols());
+    }
 }

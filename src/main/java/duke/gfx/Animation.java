@@ -7,10 +7,19 @@ public class Animation {
     private int timer;
 
     public Animation(AnimationDescriptor descriptor) {
-        this.descriptor = descriptor;
+        setAnimation(descriptor);
+    }
 
-        currentFrame = 0;
-        timer = 0;
+    public void setAnimation(AnimationDescriptor descriptor) {
+        if (this.descriptor != descriptor) {
+            this.descriptor = descriptor;
+            this.currentFrame = 0;
+            this.timer = 0;
+        }
+    }
+
+    public SpriteDescriptor getSpriteDescriptor() {
+        return descriptor.spriteDescriptor();
     }
 
     public void tick() {
