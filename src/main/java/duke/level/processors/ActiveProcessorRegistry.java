@@ -16,7 +16,7 @@ public class ActiveProcessorRegistry {
     }
 
     public static ActiveProcessorRegistry createDefault() {
-        return new ActiveProcessorRegistry(List.of(new PlayerStartProcessor(), new DecorationProcessor(), new AcmeProcessor()));
+        return new ActiveProcessorRegistry(List.of(new PlayerStartProcessor(), new DecorationProcessor(), new AcmeProcessor(), new SecurityCameraProcessor()));
     }
 
     private static final ActiveProcessor NOOP = new ActiveProcessor() {
