@@ -13,6 +13,7 @@ import static duke.level.Level.TILE_SIZE;
 public class Player extends Active implements Movable, Collidable, Physics, SpriteRenderable {
     private State state;
     private Facing facing;
+    private boolean jumpReady;
     private int hangTimeLeft;
     private boolean moving;
     private boolean firing;
@@ -29,6 +30,7 @@ public class Player extends Active implements Movable, Collidable, Physics, Spri
         this.state = state;
 
         health = 8;
+        jumpReady = true;
     }
 
     public void processInput(KeyHandler.Input input) {
@@ -45,6 +47,8 @@ public class Player extends Active implements Movable, Collidable, Physics, Spri
 
         if (input.jump()) {
             jump();
+        } else {
+            jumpReady = isGrounded();
         }
     }
 
@@ -118,9 +122,10 @@ public class Player extends Active implements Movable, Collidable, Physics, Spri
     }
 
     private void jump() {
-        if (isGrounded()) {
+        if (jumpReady && isGrounded()) {
             setVelocityY(JUMP_POWER);
             state = State.JUMPING;
+            jumpReady = false;
             hangTimeLeft = HANG_TIME;
         }
     }

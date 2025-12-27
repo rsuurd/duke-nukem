@@ -12,7 +12,6 @@ import static duke.gameplay.Physics.GRAVITY;
 import static duke.gameplay.Player.JUMP_POWER;
 import static duke.gameplay.Player.SPEED;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
