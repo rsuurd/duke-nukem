@@ -4,7 +4,7 @@ import duke.gfx.EgaPalette;
 import duke.gfx.Font;
 import duke.resources.AssetManager;
 import duke.resources.ResourceLoader;
-import duke.state.GamePlayState;
+import duke.state.GameplayState;
 import duke.state.StateManager;
 import duke.ui.CanvasRenderer;
 import duke.ui.DukeNukemFrame;
@@ -51,11 +51,10 @@ public class DukeNukem {
 
         KeyHandler keyHandler = new KeyHandler();
         EgaPalette palette = new EgaPalette();
-        Font font = new Font(assets);
         CanvasRenderer renderer = new CanvasRenderer(palette);
         GameContext context = new GameContext(assets, renderer, palette, keyHandler);
         DukeNukemFrame frame = new DukeNukemFrame(renderer, keyHandler);
-        GamePlayState state = new GamePlayState(assets, font, assets.getLevel(1));
+        GameplayState state = new GameplayState(assets);
         StateManager manager = new StateManager(context, state);
         GameLoop gameLoop = new GameLoop(context, manager);
 

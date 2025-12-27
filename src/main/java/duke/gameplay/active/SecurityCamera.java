@@ -1,9 +1,6 @@
 package duke.gameplay.active;
 
-import duke.gameplay.Active;
-import duke.gameplay.Movable;
-import duke.gameplay.SpriteRenderable;
-import duke.gameplay.Updatable;
+import duke.gameplay.*;
 import duke.gfx.Animation;
 import duke.gfx.AnimationDescriptor;
 import duke.gfx.SpriteDescriptor;
@@ -14,12 +11,20 @@ import java.util.List;
 import static duke.level.Level.TILE_SIZE;
 
 public class SecurityCamera extends Active implements Movable, Updatable, SpriteRenderable {
+    private Animation animation;
+
     public SecurityCamera(int x, int y) {
         super(x, y, TILE_SIZE, TILE_SIZE);
+
+        animation = new Animation(DESCRIPTORS.getFirst());
     }
 
     @Override
-    public void update() {
+    public void update(GameplayContext context) {
+        int col = context.player().getX() / TILE_SIZE;
+        int index = Integer.signum(col - (getX() / TILE_SIZE)) + 1;
+
+        animation.setAnimation(DESCRIPTORS.get(index));
     }
 
     @Override
@@ -38,7 +43,4 @@ public class SecurityCamera extends Active implements Movable, Updatable, Sprite
                 new AnimationDescriptor(descriptor.withBaseIndex(210), 1, 1)
         );
     }
-
-    private static Animation animation = new Animation(DESCRIPTORS.getFirst());
-
 }

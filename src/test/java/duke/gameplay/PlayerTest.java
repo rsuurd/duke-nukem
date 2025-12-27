@@ -19,6 +19,9 @@ class PlayerTest {
     @Mock
     private KeyHandler.Input input;
 
+    @Mock
+    private GameplayContext context;
+
     @Test
     void shouldMove() {
         Player player = new Player();
@@ -86,7 +89,7 @@ class PlayerTest {
         player.setVelocityX(-SPEED);
 
         player.processInput(input);
-        player.update();
+        player.update(context);
 
         assertThat(player.getState()).isEqualTo(Player.State.STANDING);
         assertThat(player.getVelocityX()).isEqualTo(0);
@@ -100,7 +103,7 @@ class PlayerTest {
         player.setVelocityY(JUMP_POWER);
 
         player.processInput(input);
-        player.update();
+        player.update(context);
 
         assertThat(player.getState()).isEqualTo(state);
         assertThat(player.getVelocityX()).isEqualTo(0);
@@ -213,7 +216,7 @@ class PlayerTest {
         player.setVelocityY(0);
 
         for (int frame = 1; frame < Player.HANG_TIME; frame++) {
-            player.update();
+            player.update(context);
             int verticalAcceleration = player.getVerticalAcceleration();
             assertThat(verticalAcceleration).isEqualTo(0);
         }

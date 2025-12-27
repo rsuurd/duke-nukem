@@ -1,5 +1,6 @@
 package duke.gameplay.active;
 
+import duke.GameContext;
 import duke.gameplay.*;
 import duke.gfx.Animation;
 import duke.gfx.AnimationDescriptor;
@@ -14,7 +15,7 @@ public class Acme extends Active implements Movable, Collidable, Physics, Updata
     }
 
     @Override
-    public void update() {
+    public void update(GameplayContext context) {
 
     }
 

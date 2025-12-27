@@ -25,5 +25,5 @@ abstract class GameContextTestSupport {
     protected KeyHandler keyHandler;
 
     @InjectMocks
-    protected GameContext context;
+    protected GameContext gameContext;
 }

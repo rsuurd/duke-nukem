@@ -11,7 +11,7 @@ class MainMenuTest extends GameContextTestSupport {
 
     @Test
     void shouldRender() {
-        mainMenu.render(context);
+        mainMenu.render(gameContext);
 
         verify(assets).getImage("DN");
         verify(renderer).draw(any(), eq(0), eq(0));
