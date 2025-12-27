@@ -1,5 +1,7 @@
-package duke.gameplay;
+package duke.gameplay.active;
 
+import duke.gameplay.Active;
+import duke.gameplay.SpriteRenderable;
 import duke.gfx.Animation;
 import duke.level.Level;
 

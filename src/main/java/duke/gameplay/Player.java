@@ -8,15 +8,14 @@ import duke.ui.KeyHandler;
 
 import java.util.List;
 
-import static duke.level.Level.TILE_SIZE;
-
-public class Player extends Active implements Movable, Collidable, Physics, SpriteRenderable {
+public class Player extends Active implements Movable, Collidable, Physics, Updatable, SpriteRenderable {
     private State state;
     private Facing facing;
     private boolean jumpReady;
     private int hangTimeLeft;
     private boolean moving;
     private boolean firing;
+
     private int health;
 
     public Player() {
@@ -52,6 +51,7 @@ public class Player extends Active implements Movable, Collidable, Physics, Spri
         }
     }
 
+    @Override
     public void update() {
         applyFriction();
         updateJump();
@@ -82,7 +82,6 @@ public class Player extends Active implements Movable, Collidable, Physics, Spri
         }
     }
 
-    // maybe move this over to Physics
     private void applyFriction() {
         if (!moving) {
             setVelocityX(0);
@@ -165,11 +164,6 @@ public class Player extends Active implements Movable, Collidable, Physics, Spri
             case JUMPING -> isHanging() ? 0 : GRAVITY;
             case FALLING -> SPEED;
         };
-    }
-
-    @Override
-    public int getTerminalVelocity() {
-        return TILE_SIZE;
     }
 
     private boolean isHanging() {

@@ -2,6 +2,7 @@ package duke.state;
 
 import duke.GameContext;
 import duke.Renderer;
+import duke.gameplay.Active;
 import duke.gameplay.Collision;
 import duke.gameplay.Player;
 import duke.gameplay.SpriteRenderable;

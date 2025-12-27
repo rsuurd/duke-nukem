@@ -1,6 +1,6 @@
 package duke.level.processors;
 
-import duke.gameplay.Decoration;
+import duke.gameplay.active.Decoration;
 import duke.gfx.Animation;
 import duke.gfx.AnimationDescriptor;
 import duke.gfx.SpriteDescriptor;

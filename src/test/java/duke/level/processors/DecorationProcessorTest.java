@@ -1,6 +1,6 @@
 package duke.level.processors;
 
-import duke.gameplay.Decoration;
+import duke.gameplay.active.Decoration;
 import duke.level.LevelBuilder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
