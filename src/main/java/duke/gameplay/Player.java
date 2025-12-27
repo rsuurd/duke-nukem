@@ -10,7 +10,7 @@ import java.util.List;
 
 import static duke.level.Level.TILE_SIZE;
 
-public class Player extends Active implements Movable, Collidable, Physics {
+public class Player extends Active implements Movable, Collidable, Physics, SpriteRenderable {
     private State state;
     private Facing facing;
     private int hangTimeLeft;

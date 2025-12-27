@@ -4,6 +4,7 @@ import duke.GameContext;
 import duke.Renderer;
 import duke.gameplay.Collision;
 import duke.gameplay.Player;
+import duke.gameplay.SpriteRenderable;
 import duke.gfx.*;
 import duke.level.Level;
 import duke.resources.AssetManager;
@@ -16,17 +17,17 @@ public class GamePlayState implements GameState {
     private LevelRenderer levelRenderer;
     private Hud hud;
     private Font font;
-    private AnimationRenderer animationRenderer;
+    private SpriteRenderer spriteRenderer;
 
     private Player player;
     private Collision collision;
 
     // TODO fix construction
     public GamePlayState(AssetManager assets, Font font, Level level) {
-        this(level, new Viewport(), new LevelRenderer(assets, level), new Hud(assets, font), font, new Player(), new Collision(), new AnimationRenderer(assets));
+        this(level, new Viewport(), new LevelRenderer(assets, level), new Hud(assets, font), font, new Player(), new Collision(), new SpriteRenderer(assets));
     }
 
-    GamePlayState(Level level, Viewport viewport, LevelRenderer levelRenderer, Hud hud, Font font, Player player, Collision collision, AnimationRenderer animationRenderer) {
+    GamePlayState(Level level, Viewport viewport, LevelRenderer levelRenderer, Hud hud, Font font, Player player, Collision collision, SpriteRenderer spriteRenderer) {
         this.level = level;
         this.viewport = viewport;
         this.levelRenderer = levelRenderer;
@@ -34,7 +35,7 @@ public class GamePlayState implements GameState {
         this.font = font;
         this.player = player;
         this.collision = collision;
-        this.animationRenderer = animationRenderer;
+        this.spriteRenderer = spriteRenderer;
     }
 
     @Override
@@ -58,6 +59,15 @@ public class GamePlayState implements GameState {
 
         levelRenderer.render(renderer, viewport);
 
+        level.getActives().stream().filter(viewport::isVisible).forEach(active -> {
+            if (active instanceof SpriteRenderable renderable) {
+                int x = viewport.toScreenX(active.getX());
+                int y = viewport.toScreenY(active.getY());
+
+                spriteRenderer.render(renderer, renderable, x, y);
+            }
+        });
+
         // render enemies
         // projectiles / effects etc
 
@@ -71,7 +81,7 @@ public class GamePlayState implements GameState {
         int x = viewport.toScreenX(player.getX());
         int y = viewport.toScreenY(player.getY());
 
-        animationRenderer.render(renderer, player.getAnimation(), x, y);
+        spriteRenderer.render(renderer, player, x, y);
     }
 
     private void drawDebugInfo(Renderer renderer) {

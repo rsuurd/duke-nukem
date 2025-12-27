@@ -4,14 +4,14 @@ import duke.gameplay.Movable;
 
 public class Viewport {
     private static final int WIDTH = 224;
-    private static final int HEIGHT = 192;
+    private static final int HEIGHT = 176;
 
     static final int LEFT_BOUND = 88;
     static final int RIGHT_BOUND = 136;
     static final int UPPER_BOUND = 48;
     static final int LOWER_BOUND = 112;
-    static final int HORIZONTAL_CENTER = WIDTH / 2;
-    static final int VERTICAL_CENTER = HEIGHT / 2;
+    static final int HORIZONTAL_CENTER = 112;
+    static final int VERTICAL_CENTER = 96;
     private static final int CENTERING_SPEED = 16;
 
 

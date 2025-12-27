@@ -1,6 +1,7 @@
 package duke.gfx;
 
 import duke.Renderer;
+import duke.gameplay.SpriteRenderable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -12,12 +13,12 @@ import java.util.List;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-class AnimationRendererTest {
+class SpriteRendererTest {
     @Mock
     private Renderer renderer;
 
     @InjectMocks
-    private AnimationRenderer animationRenderer;
+    private SpriteRenderer spriteRenderer;
 
     @Test
     void shouldRenderAnimation() {
@@ -26,7 +27,22 @@ class AnimationRendererTest {
         AnimationDescriptor animationDescriptor = new AnimationDescriptor(spriteDescriptor, 1, 1);
         Animation animation = new Animation(animationDescriptor);
 
-        animationRenderer.render(renderer, animation, 0, 0);
+        spriteRenderer.render(renderer, new SpriteRenderable() {
+            @Override
+            public int getX() {
+                return 0;
+            }
+
+            @Override
+            public int getY() {
+                return 0;
+            }
+
+            @Override
+            public Animation getAnimation() {
+                return animation;
+            }
+        }, 0, 0);
 
         verify(renderer).draw(sprite, -8, -8);
         verify(renderer).draw(sprite, 8, -8);

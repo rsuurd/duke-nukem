@@ -16,7 +16,7 @@ public class ActiveProcessorRegistry {
     }
 
     public static ActiveProcessorRegistry createDefault() {
-        return new ActiveProcessorRegistry(List.of(new PlayerStartProcessor()));
+        return new ActiveProcessorRegistry(List.of(new PlayerStartProcessor(), new DecorationProcessor()));
     }
 
     private static final ActiveProcessor NOOP = new ActiveProcessor() {

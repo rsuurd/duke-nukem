@@ -1,20 +1,20 @@
 package duke.gfx;
 
 import duke.Renderer;
+import duke.gameplay.SpriteRenderable;
 import duke.resources.AssetManager;
 
 import java.util.List;
 
-import static duke.level.Level.TILE_SIZE;
-
-public class AnimationRenderer {
+public class SpriteRenderer {
     private AssetManager assets;
 
-    public AnimationRenderer(AssetManager assets) {
+    public SpriteRenderer(AssetManager assets) {
         this.assets = assets;
     }
 
-    public void render(Renderer renderer, Animation animation, int x, int y) {
+    public void render(Renderer renderer, SpriteRenderable renderable, int x, int y) {
+        Animation animation = renderable.getAnimation();
         SpriteDescriptor spriteDescriptor = animation.getSpriteDescriptor();
 
         List<Sprite> sprites = spriteDescriptor.sheetSelector().apply(assets);
