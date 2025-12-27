@@ -27,7 +27,7 @@ class GamePlayStateTest extends GameContextTestSupport {
     @Mock
     private Collision collision;
     @Mock
-    private AnimationRenderer animationRenderer;
+    private SpriteRenderer spriteRenderer;
 
     @InjectMocks
     private GamePlayState state;
@@ -65,6 +65,6 @@ class GamePlayStateTest extends GameContextTestSupport {
 
         verify(levelRenderer).render(renderer, viewport);
         verify(hud).render(renderer, 0, 0);
-        verify(animationRenderer).render(renderer, player, player.getX(), player.getY());
+        verify(spriteRenderer).render(renderer, player, player.getX(), player.getY());
     }
 }
