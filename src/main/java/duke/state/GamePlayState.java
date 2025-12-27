@@ -8,25 +8,25 @@ import duke.gfx.*;
 import duke.level.Level;
 import duke.resources.AssetManager;
 
-import java.util.Arrays;
-
 // TODO refactor for testing
 public class GamePlayState implements GameState {
+    private AssetManager assets;
     private Level level;
     private Viewport viewport;
     private LevelRenderer levelRenderer;
     private Hud hud;
     private Font font;
+    private AnimationRenderer animationRenderer;
 
     private Player player;
     private Collision collision;
 
     // TODO fix construction
     public GamePlayState(AssetManager assets, Font font, Level level) {
-        this(level, new Viewport(), new LevelRenderer(assets, level), new Hud(assets, font), font, new Player(), new Collision());
+        this(level, new Viewport(), new LevelRenderer(assets, level), new Hud(assets, font), font, new Player(), new Collision(), new AnimationRenderer(assets));
     }
 
-    GamePlayState(Level level, Viewport viewport, LevelRenderer levelRenderer, Hud hud, Font font, Player player, Collision collision) {
+    GamePlayState(Level level, Viewport viewport, LevelRenderer levelRenderer, Hud hud, Font font, Player player, Collision collision, AnimationRenderer animationRenderer) {
         this.level = level;
         this.viewport = viewport;
         this.levelRenderer = levelRenderer;
@@ -34,6 +34,7 @@ public class GamePlayState implements GameState {
         this.font = font;
         this.player = player;
         this.collision = collision;
+        this.animationRenderer = animationRenderer;
     }
 
     @Override
@@ -67,19 +68,15 @@ public class GamePlayState implements GameState {
     }
 
     private void drawPlayer(Renderer renderer) {
-        renderer.draw(HITBOX, viewport.toScreenX(player.getX()), viewport.toScreenY(player.getY()));
+        int x = viewport.toScreenX(player.getX());
+        int y = viewport.toScreenY(player.getY());
+
+        animationRenderer.render(renderer, player.getAnimation(), x, y);
     }
 
     private void drawDebugInfo(Renderer renderer) {
         font.drawText(renderer, String.format("position: %d, %d", player.getX(), player.getY()), 16, 16);
         font.drawText(renderer, String.format("velocity: %d, %d", player.getVelocityX(), player.getVelocityY()), 16, 24);
         font.drawText(renderer, String.format("%s %s", player.getState(), player.getFacing()), 16, 32);
-    }
-
-    // temporary graphic for player
-    private static final Sprite HITBOX = new Sprite(16, 32);
-
-    static {
-        Arrays.fill(HITBOX.getPixels(), (byte) 10);
     }
 }

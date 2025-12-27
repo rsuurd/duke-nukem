@@ -2,10 +2,7 @@ package duke.state;
 
 import duke.gameplay.Collision;
 import duke.gameplay.Player;
-import duke.gfx.Font;
-import duke.gfx.Hud;
-import duke.gfx.LevelRenderer;
-import duke.gfx.Viewport;
+import duke.gfx.*;
 import duke.level.Level;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -29,6 +26,8 @@ class GamePlayStateTest extends GameContextTestSupport {
     private Player player;
     @Mock
     private Collision collision;
+    @Mock
+    private AnimationRenderer animationRenderer;
 
     @InjectMocks
     private GamePlayState state;
@@ -66,5 +65,6 @@ class GamePlayStateTest extends GameContextTestSupport {
 
         verify(levelRenderer).render(renderer, viewport);
         verify(hud).render(renderer, 0, 0);
+        verify(animationRenderer).render(renderer, player.getAnimation(), player.getX(), player.getY());
     }
 }
