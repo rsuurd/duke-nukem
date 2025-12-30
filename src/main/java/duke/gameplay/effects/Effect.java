@@ -6,17 +6,15 @@ import duke.gameplay.SpriteRenderable;
 import duke.gameplay.Updatable;
 import duke.gfx.Animation;
 import duke.gfx.AnimationDescriptor;
-import duke.gfx.SpriteDescriptor;
 import duke.level.Level;
-import duke.resources.AssetManager;
 
-public class Sparks extends Active implements Updatable, SpriteRenderable {
+public class Effect extends Active implements Updatable, SpriteRenderable {
     private Animation animation;
 
-    public Sparks(int x, int y) {
+    protected Effect(int x, int y, AnimationDescriptor animationDescriptor) {
         super(x, y, Level.TILE_SIZE, Level.TILE_SIZE);
 
-        animation = new Animation(new AnimationDescriptor(new SpriteDescriptor(AssetManager::getAnim, 42, 0, 0, 1, 1), 6, 1, AnimationDescriptor.Type.ONE_SHOT));
+        animation = new Animation(animationDescriptor);
     }
 
     @Override

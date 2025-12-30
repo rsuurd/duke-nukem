@@ -51,6 +51,6 @@ public class Animation {
     }
 
     public boolean isFinished() {
-        return descriptor.type() == AnimationDescriptor.Type.ONE_SHOT && currentFrame == lastFrame() && timer == descriptor.ticksPerFrame();
+        return descriptor.type() == AnimationDescriptor.Type.ONE_SHOT && currentFrame >= lastFrame() && timer == descriptor.ticksPerFrame();
     }
 }

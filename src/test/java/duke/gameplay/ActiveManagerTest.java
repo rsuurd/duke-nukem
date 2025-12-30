@@ -68,14 +68,17 @@ class ActiveManagerTest {
     }
 
     @Test
-    void shouldAddSpawnsToActives() {
+    void shouldAddSpawnsToActivesAfterUpdate() {
         TestActive active = mock();
 
         manager.spawn(active);
 
+        assertThat(manager.getSpawns()).containsExactly(active);
+
         manager.update(context, viewport);
 
         assertThat(manager.getActives()).containsExactly(active);
+        assertThat(manager.getSpawns()).isEmpty();
     }
 
     private static class TestActive extends Active implements Updatable {

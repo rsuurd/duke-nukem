@@ -1,6 +1,6 @@
 package duke.gameplay;
 
-import duke.gameplay.effects.Sparks;
+import duke.gameplay.effects.Effect;
 import duke.level.Level;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -67,6 +67,6 @@ class BoltTest {
         bolt.update(context);
 
         assertThat(bolt.isActive()).isFalse();
-        verify(activeManager).spawn(any(Sparks.class));
+        verify(activeManager).spawn(any(Effect.class));
     }
 }
