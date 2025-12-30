@@ -1,5 +1,6 @@
 package duke.gameplay;
 
+import duke.gameplay.effects.Sparks;
 import duke.gfx.Animation;
 import duke.gfx.AnimationDescriptor;
 import duke.gfx.SpriteDescriptor;
@@ -32,8 +33,12 @@ public class Bolt extends Active implements Updatable, SpriteRenderable {
     public void update(GameplayContext context) {
         setX(getX() + getVelocityX());
 
-        if (isFarAway(context.getPlayer()) || collides(context.getLevel())) {
+        if (isFarAway(context.getPlayer())) {
             active = false;
+        } else if (collides(context.getLevel())) {
+            // TODO onHit
+            active = false;
+            context.spawn(new Sparks(getX(), getY()));
         }
 
         updateAnimation();

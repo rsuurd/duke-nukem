@@ -3,6 +3,7 @@ package duke.state;
 import duke.GameContext;
 import duke.Renderer;
 import duke.gameplay.*;
+import duke.gameplay.effects.Sparks;
 import duke.gfx.*;
 import duke.level.Level;
 import duke.resources.AssetManager;
@@ -52,6 +53,7 @@ public class GameplayState implements GameState {
         Level level = context.getLevel();
 
         level.getActives().forEach(active -> context.spawn(active));
+        context.flushSpawns();
 
         player.setX(level.getPlayerStartX());
         player.setY(level.getPlayerStartY());
@@ -110,13 +112,19 @@ public class GameplayState implements GameState {
             if (viewport.isVisible(active)) {
                 if (active instanceof Updatable updatable) {
                     updatable.update(context);
-
-                    if (active instanceof Bolt bolt && !bolt.isActive()) {
-                        iterator.remove();
-                    }
                 }
             }
+
+            if (active instanceof Bolt bolt && !bolt.isActive()) {
+                iterator.remove();
+            }
+
+            if (active instanceof Sparks sparks && sparks.getAnimation().isFinished()) {
+                iterator.remove();
+            }
         }
+
+        context.flushSpawns();
     }
 
     private void drawPlayer(Renderer renderer) {

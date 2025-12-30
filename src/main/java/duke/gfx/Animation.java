@@ -14,8 +14,7 @@ public class Animation {
         if (this.descriptor != descriptor) {
             this.descriptor = descriptor;
             this.currentFrame = 0;
-            // ensure you call tick() AFTER setting animation
-            this.timer = -1;
+            this.timer = 0;
         }
     }
 

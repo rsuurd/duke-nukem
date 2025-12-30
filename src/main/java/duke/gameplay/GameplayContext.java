@@ -6,15 +6,17 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class GameplayContext {
-    private final Player player;
-    private final Level level;
-    private final List<Active> actives;
+    private Player player;
+    private Level level;
+    private List<Active> actives;
+    private List<Active> spawns;
 
     public GameplayContext(Player player, Level level) {
         this.player = player;
         this.level = level;
 
         actives = new LinkedList<>();
+        spawns = new LinkedList<>();
     }
 
     public Player getPlayer() {
@@ -30,6 +32,11 @@ public class GameplayContext {
     }
 
     public void spawn(Active active) {
-        actives.add(active);
+        spawns.add(active);
+    }
+
+    public void flushSpawns() {
+        actives.addAll(spawns);
+        spawns.clear();
     }
 }

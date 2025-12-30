@@ -80,6 +80,8 @@ class GameplayStateTest extends GameContextTestSupport {
     void shouldUpdateVisibleActives() {
         TestActive active = spy();
         context.spawn(active);
+        context.flushSpawns();
+
         when(viewport.isVisible(any())).thenReturn(true);
 
         state.update(gameContext);
@@ -91,6 +93,8 @@ class GameplayStateTest extends GameContextTestSupport {
     void shouldNotUpdateInvisibleActives() {
         TestActive active = spy();
         context.spawn(active);
+        context.flushSpawns();
+
         when(viewport.isVisible(any())).thenReturn(false);
 
         state.update(gameContext);
@@ -105,6 +109,16 @@ class GameplayStateTest extends GameContextTestSupport {
         state.update(gameContext);
 
         assertThat(context.getActives()).hasExactlyElementsOfTypes(Bolt.class);
+    }
+
+    @Test
+    void shouldAddSpawnsToActives() {
+        TestActive active = spy();
+        context.spawn(active);
+
+        state.update(gameContext);
+
+        assertThat(context.getActives()).contains(active);
     }
 
     private static class TestActive extends Active implements Updatable {

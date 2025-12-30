@@ -11,19 +11,19 @@ class AnimationTest {
         Animation animation = new Animation(ANIMATION_DESCRIPTOR);
 
         for (int i = 0; i < TICKS_PER_FRAME; i++) {
-            animation.tick();
             assertThat(animation.getCurrentBaseIndex()).isEqualTo(BASE_INDEX);
+            animation.tick();
         }
 
         animation.tick();
-        assertThat(animation.getCurrentBaseIndex()).isEqualTo(BASE_INDEX + 4);
+        assertThat(animation.getCurrentBaseIndex()).isEqualTo(NEXT_FRAME_INDEX);
     }
 
     @Test
     void shouldLoop() {
         Animation animation = new Animation(ANIMATION_DESCRIPTOR);
 
-        for (int i = 0; i <= FRAMES * TICKS_PER_FRAME; i++) {
+        for (int i = 0; i < FRAMES * TICKS_PER_FRAME; i++) {
             animation.tick();
         }
 
@@ -38,9 +38,7 @@ class AnimationTest {
 
         for (int i = 0; i < FRAMES * TICKS_PER_FRAME; i++) {
             animation.tick();
-            System.err.println(animation.getCurrentBaseIndex());
         }
-        animation.tick();
 
         assertThat(animation.getCurrentBaseIndex()).isEqualTo(BASE_INDEX + 12);
         assertThat(animation.isFinished()).isTrue();
@@ -58,7 +56,7 @@ class AnimationTest {
         animation.setAnimation(different);
         animation.tick();
 
-        assertThat(animation.getCurrentBaseIndex()).isEqualTo(20);
+        assertThat(animation.getCurrentBaseIndex()).isEqualTo(BASE_INDEX);
     }
 
     @Test
@@ -70,10 +68,11 @@ class AnimationTest {
 
         animation.setAnimation(ANIMATION_DESCRIPTOR);
 
-        assertThat(animation.getCurrentBaseIndex()).isEqualTo(24);
+        assertThat(animation.getCurrentBaseIndex()).isEqualTo(NEXT_FRAME_INDEX);
     }
 
     private static final int BASE_INDEX = 20;
+    private static final int NEXT_FRAME_INDEX = BASE_INDEX + 4;
     private static final SpriteDescriptor SPRITE_DESCRIPTOR = new SpriteDescriptor(assets -> emptyList(), BASE_INDEX, 0, 0, 2, 2);
     private static final int FRAMES = 4;
     private static final int TICKS_PER_FRAME = 2;

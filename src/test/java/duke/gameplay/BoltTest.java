@@ -1,5 +1,6 @@
 package duke.gameplay;
 
+import duke.gameplay.effects.Sparks;
 import duke.level.Level;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,7 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class BoltTest {
@@ -58,8 +59,11 @@ class BoltTest {
         Bolt bolt = new Bolt(0, 0, Facing.RIGHT);
         when(level.isSolid(anyInt(), anyInt())).thenReturn(true);
 
-        bolt.update(new GameplayContext(player, level));
+        GameplayContext context = spy(new GameplayContext(player, level));
+
+        bolt.update(context);
 
         assertThat(bolt.isActive()).isFalse();
+        verify(context).spawn(any(Sparks.class));
     }
 }
