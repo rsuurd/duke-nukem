@@ -73,7 +73,7 @@ class CollisionTest {
 
     @Test
     void shouldApplyGravityWhenJumping() {
-        player = spy(new Player(Player.State.JUMPING, Player.Facing.RIGHT));
+        player = spy(new Player(Player.State.JUMPING, Facing.RIGHT));
         player.setVelocityY(-15);
         new Collision().resolve(player, level);
 

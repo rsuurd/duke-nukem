@@ -58,6 +58,10 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
         updateAnimation();
     }
 
+    public boolean isFiring() {
+        return firing;
+    }
+
     private void updateAnimation() {
         animation.tick();
 
@@ -181,10 +185,6 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
         WALKING,
         JUMPING,
         FALLING
-    }
-
-    public enum Facing {
-        LEFT, RIGHT
     }
 
     private Animation animation = new Animation(ANIMATIONS.getFirst());

@@ -27,7 +27,7 @@ class SharewareDownloaderTest {
 
     @Test
     void shouldIndicateFailure() throws IOException {
-        Supplier<InputStream> streamSupplier = mock(Supplier.class);
+        Supplier<InputStream> streamSupplier = mock();
         when(streamSupplier.get()).thenThrow(DukeNukemException.class);
 
         SharewareDownloader downloader = new SharewareDownloader(Files.createTempDirectory("dn"), streamSupplier);

@@ -35,21 +35,21 @@ class PlayerTest {
 
     @Test
     void shouldWalkLeftWhenStanding() {
-        Player player = new Player(Player.State.STANDING, Player.Facing.LEFT);
+        Player player = new Player(Player.State.STANDING, Facing.LEFT);
 
         when(input.left()).thenReturn(true);
 
         player.processInput(input);
 
         assertThat(player.getState()).isEqualTo(Player.State.WALKING);
-        assertThat(player.getFacing()).isEqualTo(Player.Facing.LEFT);
+        assertThat(player.getFacing()).isEqualTo(Facing.LEFT);
         assertThat(player.getVelocityX()).isEqualTo(-SPEED);
     }
 
     @ParameterizedTest
     @EnumSource(value = Player.State.class, names = {"STANDING"}, mode = EnumSource.Mode.EXCLUDE)
     void shouldMoveLeft(Player.State state) {
-        Player player = new Player(state, Player.Facing.LEFT);
+        Player player = new Player(state, Facing.LEFT);
 
         when(input.left()).thenReturn(true);
 
@@ -61,7 +61,7 @@ class PlayerTest {
 
     @Test
     void shouldWalkRight() {
-        Player player = new Player(Player.State.STANDING, Player.Facing.RIGHT);
+        Player player = new Player(Player.State.STANDING, Facing.RIGHT);
 
         when(input.right()).thenReturn(true);
 
@@ -73,7 +73,7 @@ class PlayerTest {
     @ParameterizedTest
     @EnumSource(value = Player.State.class, names = {"STANDING"}, mode = EnumSource.Mode.EXCLUDE)
     void shouldMoveRight(Player.State state) {
-        Player player = new Player(state, Player.Facing.LEFT);
+        Player player = new Player(state, Facing.LEFT);
 
         when(input.left()).thenReturn(true);
 
@@ -85,7 +85,7 @@ class PlayerTest {
 
     @Test
     void shouldStandWhenWalkingStops() {
-        Player player = new Player(Player.State.WALKING, Player.Facing.LEFT);
+        Player player = new Player(Player.State.WALKING, Facing.LEFT);
         player.setVelocityX(-SPEED);
 
         player.processInput(input);
@@ -98,7 +98,7 @@ class PlayerTest {
     @ParameterizedTest
     @EnumSource(value = Player.State.class, names = {"WALKING"}, mode = EnumSource.Mode.EXCLUDE)
     void shouldStop(Player.State state) {
-        Player player = new Player(state, Player.Facing.RIGHT);
+        Player player = new Player(state, Facing.RIGHT);
         player.setVelocityX(SPEED);
         player.setVelocityY(JUMP_POWER);
 
@@ -112,7 +112,7 @@ class PlayerTest {
     @ParameterizedTest
     @EnumSource(Player.State.class)
     void shouldIndicateIfGrounded(Player.State state) {
-        assertThat(new Player(state, Player.Facing.LEFT).isGrounded()).isEqualTo(switch (state) {
+        assertThat(new Player(state, Facing.LEFT).isGrounded()).isEqualTo(switch (state) {
             case STANDING, WALKING -> true;
             default -> false;
         });
@@ -121,7 +121,7 @@ class PlayerTest {
     @ParameterizedTest
     @EnumSource(value = Player.State.class, names = {"STANDING", "WALKING"})
     void shouldJumpWhenStandingOrWalking(Player.State state) {
-        Player player = new Player(state, Player.Facing.RIGHT);
+        Player player = new Player(state, Facing.RIGHT);
 
         when(input.jump()).thenReturn(true);
 
@@ -134,7 +134,7 @@ class PlayerTest {
     @ParameterizedTest
     @EnumSource(value = Player.State.class, names = {"STANDING", "WALKING"}, mode = EnumSource.Mode.EXCLUDE)
     void shouldNotJumpWhenNotStandingOrWalking(Player.State state) {
-        Player player = new Player(state, Player.Facing.RIGHT);
+        Player player = new Player(state, Facing.RIGHT);
 
         when(input.jump()).thenReturn(true);
 
@@ -146,7 +146,7 @@ class PlayerTest {
 
     @Test
     void shouldLand() {
-        Player player = new Player(Player.State.FALLING, Player.Facing.LEFT);
+        Player player = new Player(Player.State.FALLING, Facing.LEFT);
         player.setVelocityY(16);
 
         player.onCollision(Collidable.Direction.DOWN);
@@ -157,7 +157,7 @@ class PlayerTest {
 
     @Test
     void shouldBump() {
-        Player player = new Player(Player.State.JUMPING, Player.Facing.LEFT);
+        Player player = new Player(Player.State.JUMPING, Facing.LEFT);
         player.setVelocityY(-8);
 
         player.onCollision(Collidable.Direction.UP);
@@ -176,7 +176,7 @@ class PlayerTest {
 
     @Test
     void shouldNotFallWhileJumping() {
-        Player player = new Player(Player.State.JUMPING, Player.Facing.LEFT);
+        Player player = new Player(Player.State.JUMPING, Facing.LEFT);
 
         player.fall();
 
@@ -197,14 +197,14 @@ class PlayerTest {
     @ParameterizedTest
     @EnumSource(value = Player.State.class, names = {"STANDING", "WALKING"})
     void shouldHaveNoVerticalAcceleration(Player.State state) {
-        Player player = new Player(state, Player.Facing.LEFT);
+        Player player = new Player(state, Facing.LEFT);
 
         assertThat(player.getVerticalAcceleration()).isEqualTo(0);
     }
 
     @Test
     void shouldHaveGravityWhileJumping() {
-        Player player = new Player(Player.State.JUMPING, Player.Facing.LEFT);
+        Player player = new Player(Player.State.JUMPING, Facing.LEFT);
 
         assertThat(player.getVerticalAcceleration()).isEqualTo(GRAVITY);
     }
@@ -224,7 +224,7 @@ class PlayerTest {
 
     @Test
     void shouldAccelerateWhileFalling() {
-        Player player = new Player(Player.State.FALLING, Player.Facing.LEFT);
+        Player player = new Player(Player.State.FALLING, Facing.LEFT);
 
         assertThat(player.getVerticalAcceleration()).isEqualTo(SPEED);
     }

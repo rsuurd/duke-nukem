@@ -7,8 +7,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
-import java.util.List;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -38,7 +36,7 @@ class GameplayStateTest extends GameContextTestSupport {
     void setUp() {
         context = new GameplayContext(player, level);
 
-        state = new GameplayState(assets, viewport, levelRenderer, hud, font, spriteRenderer, collision, context);
+        state = new GameplayState(viewport, levelRenderer, hud, font, spriteRenderer, collision, context);
     }
 
     @Test
@@ -79,9 +77,9 @@ class GameplayStateTest extends GameContextTestSupport {
 
     @Test
     void shouldUpdateVisibleActives() {
+        TestActive active = spy();
+        context.spawn(active);
         when(viewport.isVisible(any())).thenReturn(true);
-        TestActive active = spy(new TestActive());
-        when(level.getActives()).thenReturn(List.of(active));
 
         state.update(gameContext);
 
@@ -90,9 +88,9 @@ class GameplayStateTest extends GameContextTestSupport {
 
     @Test
     void shouldNotUpdateInvisibleActives() {
+        TestActive active = spy();
+        context.spawn(active);
         when(viewport.isVisible(any())).thenReturn(false);
-        Active active = spy(new TestActive());
-        when(level.getActives()).thenReturn(List.of(active));
 
         state.update(gameContext);
 

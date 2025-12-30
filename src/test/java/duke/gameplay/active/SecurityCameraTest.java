@@ -29,7 +29,7 @@ class SecurityCameraTest {
     @ParameterizedTest
     @MethodSource("playerLocation")
     void shouldFacePlayer(int playerX, int expectedBaseIndex) {
-        when(context.player().getX()).thenReturn(playerX);
+        when(context.getPlayer().getX()).thenReturn(playerX);
 
         SecurityCamera securityCamera = new SecurityCamera(16, 0);
 
