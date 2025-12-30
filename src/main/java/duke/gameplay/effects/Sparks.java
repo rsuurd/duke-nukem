@@ -28,4 +28,9 @@ public class Sparks extends Active implements Updatable, SpriteRenderable {
     public void update(GameplayContext context) {
         animation.tick();
     }
+
+    @Override
+    public boolean isActive() {
+        return !animation.isFinished();
+    }
 }

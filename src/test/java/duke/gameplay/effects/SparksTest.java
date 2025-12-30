@@ -10,10 +10,11 @@ class SparksTest {
     void shouldRunOnce() {
         Sparks sparks = new Sparks(0, 0);
 
-        for (int i = 0; i <= 6; i++) {
+        for (int i = 0; i < 6; i++) {
+            assertThat(sparks.isActive()).isTrue();
             sparks.update(mock());
         }
 
-        assertThat(sparks.getAnimation().isFinished()).isTrue();
+        assertThat(sparks.isActive()).isFalse();
     }
 }

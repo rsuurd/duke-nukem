@@ -4,6 +4,7 @@ public abstract class Active implements Movable {
     private int x, y;
     private int width, height;
     private int velocityX, velocityY;
+    private boolean active;
 
     protected Active(int x, int y, int width, int height) {
         setX(x);
@@ -11,6 +12,8 @@ public abstract class Active implements Movable {
 
         this.width = width;
         this.height = height;
+
+        active = true;
     }
 
     @Override
@@ -61,5 +64,13 @@ public abstract class Active implements Movable {
     @Override
     public void setVelocityY(int velocityY) {
         this.velocityY = velocityY;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    protected void deactivate() {
+        active = false;
     }
 }

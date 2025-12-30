@@ -1,7 +1,6 @@
 package duke.gameplay;
 
 import duke.Renderer;
-import duke.gameplay.effects.Sparks;
 import duke.gfx.SpriteRenderer;
 import duke.gfx.Viewport;
 
@@ -25,11 +24,7 @@ public class ActiveManager {
                 }
             }
 
-            if (active instanceof Bolt bolt && !bolt.isActive()) {
-                iterator.remove();
-            }
-
-            if (active instanceof Sparks sparks && sparks.getAnimation().isFinished()) {
+            if (!active.isActive()) {
                 iterator.remove();
             }
         }

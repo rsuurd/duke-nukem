@@ -15,7 +15,6 @@ public class Bolt extends Active implements Updatable, SpriteRenderable {
 
     private Facing facing;
     private int flash = 1;
-    private boolean active = true;
 
     public Bolt(int x, int y, Facing facing) {
         super(x, y, Level.TILE_SIZE, 2);
@@ -34,7 +33,7 @@ public class Bolt extends Active implements Updatable, SpriteRenderable {
         setX(getX() + getVelocityX());
 
         if (isFarAway(context.getPlayer())) {
-            active = false;
+            deactivate();
         } else if (collides(context.getLevel())) {
             onHit(context);
         }
@@ -81,12 +80,8 @@ public class Bolt extends Active implements Updatable, SpriteRenderable {
         return animation;
     }
 
-    public boolean isActive() {
-        return active;
-    }
-
     private void onHit(GameplayContext context) {
-        active = false;
+        deactivate();
         int hitX = getX() + (8 * ((facing == LEFT) ? 1 : -1));
         context.getActiveManager().spawn(new Sparks(hitX, getY() - 4));
     }

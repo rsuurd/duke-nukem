@@ -1,7 +1,5 @@
 package duke.gameplay;
 
-import duke.gameplay.effects.Sparks;
-import duke.gfx.Animation;
 import duke.gfx.Viewport;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,7 +44,7 @@ class ActiveManagerTest {
 
         manager.update(context, viewport);
 
-        verifyNoInteractions(active);
+        verify(active, never()).update(any());
     }
 
     @Test
@@ -59,24 +57,10 @@ class ActiveManagerTest {
     }
 
     @Test
-    void shouldRemoveInactiveBolt() {
-        Bolt bolt = mock();
-        when(bolt.isActive()).thenReturn(false);
-        manager.getActives().add(bolt);
-
-        manager.update(context, viewport);
-
-        assertThat(manager.getActives()).isEmpty();
-    }
-
-    @Test
-    void shouldRemoveFinishedSparks() {
-        Sparks sparks = mock();
-        Animation animation = mock();
-        when(animation.isFinished()).thenReturn(true);
-        when(sparks.getAnimation()).thenReturn(animation);
-
-        manager.getActives().add(sparks);
+    void shouldRemoveInactives() {
+        TestActive active = mock();
+        when(active.isActive()).thenReturn(false);
+        manager.getActives().add(active);
 
         manager.update(context, viewport);
 
