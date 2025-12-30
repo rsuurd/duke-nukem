@@ -69,7 +69,10 @@ public class GameplayState implements GameState {
         collision.resolve(player, context.getLevel());
 
         if (player.isFiring()) {
+            // TODO check if we can fire
+            // we can flush here because we are not iterating over actives
             context.spawn(Bolt.create(player));
+            context.flushSpawns();
         }
 
         viewport.update(player.getX(), player.getY(), player.isGrounded());
