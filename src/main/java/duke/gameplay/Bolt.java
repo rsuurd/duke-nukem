@@ -4,6 +4,7 @@ import duke.gameplay.effects.EffectsFactory;
 import duke.gfx.Animation;
 import duke.gfx.AnimationDescriptor;
 import duke.gfx.SpriteDescriptor;
+import duke.gfx.SpriteRenderable;
 import duke.level.Level;
 import duke.resources.AssetManager;
 
@@ -76,8 +77,13 @@ public class Bolt extends Active implements Updatable, SpriteRenderable {
     }
 
     @Override
-    public Animation getAnimation() {
-        return animation;
+    public SpriteDescriptor getSpriteDescriptor() {
+        return animation.getSpriteDescriptor();
+    }
+
+    @Override
+    public int getBaseIndex() {
+        return animation.getCurrentBaseIndex();
     }
 
     private void onHit(GameplayContext context) {

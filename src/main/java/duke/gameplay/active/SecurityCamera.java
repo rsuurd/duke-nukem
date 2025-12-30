@@ -4,6 +4,7 @@ import duke.gameplay.*;
 import duke.gfx.Animation;
 import duke.gfx.AnimationDescriptor;
 import duke.gfx.SpriteDescriptor;
+import duke.gfx.SpriteRenderable;
 import duke.resources.AssetManager;
 
 import java.util.List;
@@ -28,8 +29,18 @@ public class SecurityCamera extends Active implements Movable, Updatable, Sprite
     }
 
     @Override
-    public Animation getAnimation() {
-        return animation;
+    public SpriteDescriptor getSpriteDescriptor() {
+        return animation.getSpriteDescriptor();
+    }
+
+    @Override
+    public int getBaseIndex() {
+        return animation.getCurrentBaseIndex();
+    }
+
+    @Override
+    public Layer getLayer() {
+        return Layer.BACKGROUND;
     }
 
     private static List<AnimationDescriptor> DESCRIPTORS;

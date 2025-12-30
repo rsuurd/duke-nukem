@@ -1,7 +1,6 @@
 package duke.gfx;
 
 import duke.Renderer;
-import duke.gameplay.SpriteRenderable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -10,7 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class SpriteRendererTest {
@@ -21,28 +20,15 @@ class SpriteRendererTest {
     private SpriteRenderer spriteRenderer;
 
     @Test
-    void shouldRenderAnimation() {
+    void shouldRenderQuadSprite() {
         Sprite sprite = new Sprite(16, 16);
         SpriteDescriptor spriteDescriptor = new SpriteDescriptor(assets -> List.of(sprite, sprite, sprite, sprite), 0, -8, -8, 2, 2);
-        AnimationDescriptor animationDescriptor = new AnimationDescriptor(spriteDescriptor, 1, 1);
-        Animation animation = new Animation(animationDescriptor);
 
-        spriteRenderer.render(renderer, new SpriteRenderable() {
-            @Override
-            public int getX() {
-                return 0;
-            }
+        SpriteRenderable renderable = mock();
+        when(renderable.getSpriteDescriptor()).thenReturn(spriteDescriptor);
+        when(renderable.getBaseIndex()).thenReturn(0);
 
-            @Override
-            public int getY() {
-                return 0;
-            }
-
-            @Override
-            public Animation getAnimation() {
-                return animation;
-            }
-        }, 0, 0);
+        spriteRenderer.render(renderer, renderable, 0, 0);
 
         verify(renderer).draw(sprite, -8, -8);
         verify(renderer).draw(sprite, 8, -8);

@@ -1,7 +1,6 @@
 package duke.resources;
 
 import duke.DukeNukemException;
-import duke.level.Level;
 
 import java.io.IOException;
 import java.nio.file.Files;

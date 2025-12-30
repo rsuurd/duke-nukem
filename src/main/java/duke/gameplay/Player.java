@@ -3,6 +3,7 @@ package duke.gameplay;
 import duke.gfx.Animation;
 import duke.gfx.AnimationDescriptor;
 import duke.gfx.SpriteDescriptor;
+import duke.gfx.SpriteRenderable;
 import duke.resources.AssetManager;
 import duke.ui.KeyHandler;
 
@@ -15,7 +16,6 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     private int hangTimeLeft;
     private boolean moving;
     private boolean firing;
-
     private int health;
 
     public Player() {
@@ -192,8 +192,14 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
 
     private Animation animation = new Animation(ANIMATIONS.getFirst());
 
-    public Animation getAnimation() {
-        return animation;
+    @Override
+    public SpriteDescriptor getSpriteDescriptor() {
+        return animation.getSpriteDescriptor();
+    }
+
+    @Override
+    public int getBaseIndex() {
+        return animation.getCurrentBaseIndex();
     }
 
     private static SpriteDescriptor BASE_DESCRIPTOR = new SpriteDescriptor(AssetManager::getMan, 0, -8, 0, 2, 2);

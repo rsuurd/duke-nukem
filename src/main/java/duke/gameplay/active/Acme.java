@@ -1,9 +1,8 @@
 package duke.gameplay.active;
 
 import duke.gameplay.*;
-import duke.gfx.Animation;
-import duke.gfx.AnimationDescriptor;
 import duke.gfx.SpriteDescriptor;
+import duke.gfx.SpriteRenderable;
 import duke.resources.AssetManager;
 
 import static duke.level.Level.TILE_SIZE;
@@ -32,9 +31,7 @@ public class Acme extends Active implements Movable, Collidable, Physics, Updata
     }
 
     @Override
-    public Animation getAnimation() {
-        return ANIMATION;
+    public SpriteDescriptor getSpriteDescriptor() {
+        return new SpriteDescriptor(AssetManager::getObjects, 83, 0, 0, 1, 2);
     }
-
-    private static Animation ANIMATION = new Animation(new AnimationDescriptor(new SpriteDescriptor(AssetManager::getObjects, 83, 0, 0, 1, 2), 1, 1));
 }

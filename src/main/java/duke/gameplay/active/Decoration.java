@@ -2,21 +2,22 @@ package duke.gameplay.active;
 
 import duke.gameplay.Active;
 import duke.gameplay.Layer;
-import duke.gameplay.SpriteRenderable;
-import duke.gfx.Animation;
+import duke.gfx.SpriteDescriptor;
+import duke.gfx.SpriteRenderable;
 import duke.level.Level;
 
 public class Decoration extends Active implements SpriteRenderable {
-    private Animation animation;
+    private SpriteDescriptor spriteDescriptor;
 
-    public Decoration(int x, int y, Animation animation) {
+    public Decoration(int x, int y, SpriteDescriptor spriteDescriptor) {
         super(x, y, Level.TILE_SIZE, Level.TILE_SIZE);
 
-        this.animation = animation;
+        this.spriteDescriptor = spriteDescriptor;
     }
 
-    public Animation getAnimation() {
-        return animation;
+    @Override
+    public SpriteDescriptor getSpriteDescriptor() {
+        return spriteDescriptor;
     }
 
     @Override

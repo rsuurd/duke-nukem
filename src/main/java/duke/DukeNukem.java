@@ -1,7 +1,6 @@
 package duke;
 
 import duke.gfx.EgaPalette;
-import duke.gfx.Font;
 import duke.resources.AssetManager;
 import duke.resources.ResourceLoader;
 import duke.state.GameplayState;

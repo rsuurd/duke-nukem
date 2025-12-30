@@ -1,6 +1,5 @@
 package duke;
 
-import duke.state.GameState;
 import duke.state.StateManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
