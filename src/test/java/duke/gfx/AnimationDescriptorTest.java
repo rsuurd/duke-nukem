@@ -18,6 +18,7 @@ class AnimationDescriptorTest {
         AnimationDescriptor descriptor = new AnimationDescriptor(spriteDescriptor, 4, 2);
 
         assertThat(descriptor).isNotNull();
+        assertThat(descriptor.type()).isEqualTo(AnimationDescriptor.Type.LOOP);
     }
 
     @Test

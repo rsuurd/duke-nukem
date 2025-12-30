@@ -6,52 +6,76 @@ import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class AnimationTest {
-    private SpriteDescriptor spriteDescriptor = new SpriteDescriptor(assets -> emptyList(), 20, 0, 0, 2, 2);
-    private AnimationDescriptor descriptor = new AnimationDescriptor(spriteDescriptor, 4, 2);
-
     @Test
     void shouldAdvanceBaseIndex() {
-        Animation animation = new Animation(descriptor);
+        Animation animation = new Animation(ANIMATION_DESCRIPTOR);
+
+        for (int i = 0; i < TICKS_PER_FRAME; i++) {
+            animation.tick();
+            assertThat(animation.getCurrentBaseIndex()).isEqualTo(BASE_INDEX);
+        }
 
         animation.tick();
-        assertThat(animation.getCurrentBaseIndex()).isEqualTo(20);
-        animation.tick();
-        assertThat(animation.getCurrentBaseIndex()).isEqualTo(24);
+        assertThat(animation.getCurrentBaseIndex()).isEqualTo(BASE_INDEX + 4);
     }
 
     @Test
     void shouldLoop() {
-        Animation animation = new Animation(descriptor);
+        Animation animation = new Animation(ANIMATION_DESCRIPTOR);
 
-        for (int i = 0; i < descriptor.frames() * descriptor.ticksPerFrame(); i++) {
+        for (int i = 0; i <= FRAMES * TICKS_PER_FRAME; i++) {
             animation.tick();
         }
 
-        assertThat(animation.getCurrentBaseIndex()).isEqualTo(20);
+        animation.tick();
+
+        assertThat(animation.getCurrentBaseIndex()).isEqualTo(BASE_INDEX);
+    }
+
+    @Test
+    void shouldRunOnce() {
+        Animation animation = new Animation(new AnimationDescriptor(SPRITE_DESCRIPTOR, FRAMES, TICKS_PER_FRAME, AnimationDescriptor.Type.ONE_SHOT));
+
+        for (int i = 0; i < FRAMES * TICKS_PER_FRAME; i++) {
+            animation.tick();
+            System.err.println(animation.getCurrentBaseIndex());
+        }
+        animation.tick();
+
+        assertThat(animation.getCurrentBaseIndex()).isEqualTo(BASE_INDEX + 12);
+        assertThat(animation.isFinished()).isTrue();
     }
 
     @Test
     void shouldSwitchAnimation() {
-        AnimationDescriptor different = new AnimationDescriptor(spriteDescriptor, 2, 2);
+        AnimationDescriptor different = new AnimationDescriptor(SPRITE_DESCRIPTOR, 2, 2);
 
-        Animation animation = new Animation(descriptor);
+        Animation animation = new Animation(ANIMATION_DESCRIPTOR);
         animation.tick();
         animation.tick();
         animation.tick();
 
         animation.setAnimation(different);
+        animation.tick();
 
         assertThat(animation.getCurrentBaseIndex()).isEqualTo(20);
     }
 
     @Test
     void shouldNotSwitchToSameAnimation() {
-        Animation animation = new Animation(descriptor);
+        Animation animation = new Animation(ANIMATION_DESCRIPTOR);
+        animation.tick();
         animation.tick();
         animation.tick();
 
-        animation.setAnimation(descriptor);
+        animation.setAnimation(ANIMATION_DESCRIPTOR);
 
         assertThat(animation.getCurrentBaseIndex()).isEqualTo(24);
     }
+
+    private static final int BASE_INDEX = 20;
+    private static final SpriteDescriptor SPRITE_DESCRIPTOR = new SpriteDescriptor(assets -> emptyList(), BASE_INDEX, 0, 0, 2, 2);
+    private static final int FRAMES = 4;
+    private static final int TICKS_PER_FRAME = 2;
+    private static final AnimationDescriptor ANIMATION_DESCRIPTOR = new AnimationDescriptor(SPRITE_DESCRIPTOR, FRAMES, TICKS_PER_FRAME);
 }

@@ -63,8 +63,6 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     }
 
     private void updateAnimation() {
-        animation.tick();
-
         // swap animation based on state and facing, should probably make something more sophisticated later
         if (firing && state == State.STANDING) {
             animation.setAnimation(facing == Facing.LEFT ? SHOOT_LEFT : SHOOT_RIGHT);
@@ -72,6 +70,8 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
             int animationIndex = (state.ordinal() * 2) + facing.ordinal();
             animation.setAnimation(ANIMATIONS.get(animationIndex));
         }
+
+        animation.tick();
     }
 
     private void updateJump() {
