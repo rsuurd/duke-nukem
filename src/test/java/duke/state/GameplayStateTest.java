@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -95,6 +96,15 @@ class GameplayStateTest extends GameContextTestSupport {
         state.update(gameContext);
 
         verifyNoInteractions(active);
+    }
+
+    @Test
+    void shouldShoot() {
+        when(player.isFiring()).thenReturn(true);
+
+        state.update(gameContext);
+
+        assertThat(context.getActives()).hasExactlyElementsOfTypes(Bolt.class);
     }
 
     private static class TestActive extends Active implements Updatable {
