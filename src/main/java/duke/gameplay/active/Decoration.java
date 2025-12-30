@@ -1,6 +1,7 @@
 package duke.gameplay.active;
 
 import duke.gameplay.Active;
+import duke.gameplay.Layer;
 import duke.gameplay.SpriteRenderable;
 import duke.gfx.Animation;
 import duke.level.Level;
@@ -16,5 +17,10 @@ public class Decoration extends Active implements SpriteRenderable {
 
     public Animation getAnimation() {
         return animation;
+    }
+
+    @Override
+    public Layer getLayer() {
+        return Layer.BACKGROUND;
     }
 }

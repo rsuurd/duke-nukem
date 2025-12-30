@@ -7,4 +7,8 @@ public interface SpriteRenderable {
     int getY();
 
     Animation getAnimation();
+
+    default Layer getLayer() {
+        return Layer.FOREGROUND;
+    }
 }

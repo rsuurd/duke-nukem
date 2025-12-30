@@ -49,7 +49,7 @@ public class Bolt extends Active implements Updatable, SpriteRenderable {
     private boolean isFarAway(Player player) {
         int distance = Math.abs(player.getX() - getX());
 
-        return distance >= Level.TILE_SIZE * 10;
+        return distance >= Level.TILE_SIZE * 8;
     }
 
     private boolean collides(Level level) {

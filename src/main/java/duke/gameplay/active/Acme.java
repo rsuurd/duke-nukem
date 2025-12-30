@@ -1,6 +1,5 @@
 package duke.gameplay.active;
 
-import duke.GameContext;
 import duke.gameplay.*;
 import duke.gfx.Animation;
 import duke.gfx.AnimationDescriptor;
@@ -34,8 +33,8 @@ public class Acme extends Active implements Movable, Collidable, Physics, Updata
 
     @Override
     public Animation getAnimation() {
-        return animation;
+        return ANIMATION;
     }
 
-    private static Animation animation = new Animation(new AnimationDescriptor(new SpriteDescriptor(AssetManager::getObjects, 83, 0, 0, 1, 2), 1, 1));
+    private static Animation ANIMATION = new Animation(new AnimationDescriptor(new SpriteDescriptor(AssetManager::getObjects, 83, 0, 0, 1, 2), 1, 1));
 }

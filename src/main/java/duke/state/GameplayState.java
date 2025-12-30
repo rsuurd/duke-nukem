@@ -6,6 +6,7 @@ import duke.gameplay.*;
 import duke.gfx.*;
 import duke.level.Level;
 import duke.resources.AssetManager;
+import duke.ui.KeyHandler;
 
 // TODO refactor for testing
 public class GameplayState implements GameState {
@@ -51,14 +52,18 @@ public class GameplayState implements GameState {
 
         player.setX(level.getPlayerStartX());
         player.setY(level.getPlayerStartY());
-        viewport.center(player.getX(), player.getY());
     }
 
     @Override
     public void update(GameContext gameContext) {
+        updatePlayer(gameContext.getKeyHandler().getInput());
+        context.getActiveManager().update(context);
+    }
+
+    private void updatePlayer(KeyHandler.Input input) {
         Player player = context.getPlayer();
 
-        player.processInput(gameContext.getKeyHandler().getInput());
+        player.processInput(input);
         player.update(context);
         collision.resolve(player, context.getLevel());
 
@@ -67,22 +72,15 @@ public class GameplayState implements GameState {
         }
 
         viewport.update(player.getX(), player.getY(), player.isGrounded());
-        context.getActiveManager().update(context, viewport);
     }
 
     @Override
     public void render(GameContext gameContext) {
         Renderer renderer = gameContext.getRenderer();
         levelRenderer.render(renderer, viewport);
-
-        // background actives
-        context.getActiveManager().render(renderer, spriteRenderer, viewport);
-
-        // player
+        context.getActiveManager().render(renderer, spriteRenderer, viewport, Layer.BACKGROUND);
         drawPlayer(renderer);
-
-        // foreground actives
-
+        context.getActiveManager().render(renderer, spriteRenderer, viewport, Layer.FOREGROUND);
         hud.render(renderer, 0, context.getPlayer().getHealth());
 
         drawDebugInfo(renderer);

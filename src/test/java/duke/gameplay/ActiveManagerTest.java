@@ -1,6 +1,5 @@
 package duke.gameplay;
 
-import duke.gfx.Viewport;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,9 +14,6 @@ class ActiveManagerTest {
     @Mock
     private GameplayContext context;
 
-    @Mock
-    private Viewport viewport;
-
     private ActiveManager manager;
 
     @BeforeEach
@@ -26,25 +22,13 @@ class ActiveManagerTest {
     }
 
     @Test
-    void shouldUpdateVisibleActives() {
+    void shouldUpdateActives() {
         TestActive active = mock();
-        when(viewport.isVisible(active)).thenReturn(true);
         manager.getActives().add(active);
 
-        manager.update(context, viewport);
+        manager.update(context);
 
         verify(active).update(context);
-    }
-
-    @Test
-    void shouldSkipInvisibleActives() {
-        TestActive active = mock();
-        when(viewport.isVisible(active)).thenReturn(false);
-        manager.getActives().add(active);
-
-        manager.update(context, viewport);
-
-        verify(active, never()).update(any());
     }
 
     @Test
@@ -62,7 +46,7 @@ class ActiveManagerTest {
         when(active.isActive()).thenReturn(false);
         manager.getActives().add(active);
 
-        manager.update(context, viewport);
+        manager.update(context);
 
         assertThat(manager.getActives()).isEmpty();
     }
@@ -75,7 +59,7 @@ class ActiveManagerTest {
 
         assertThat(manager.getSpawns()).containsExactly(active);
 
-        manager.update(context, viewport);
+        manager.update(context);
 
         assertThat(manager.getActives()).containsExactly(active);
         assertThat(manager.getSpawns()).isEmpty();

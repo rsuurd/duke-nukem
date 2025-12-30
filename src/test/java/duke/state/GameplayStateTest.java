@@ -82,7 +82,7 @@ class GameplayStateTest extends GameContextTestSupport {
     void shouldUpdateActives() {
         state.update(gameContext);
 
-        verify(context.getActiveManager()).update(context, viewport);
+        verify(context.getActiveManager()).update(context);
     }
 
     @Test
@@ -90,9 +90,9 @@ class GameplayStateTest extends GameContextTestSupport {
         state.render(gameContext);
 
         verify(levelRenderer).render(renderer, viewport);
-        verify(activeManager).render(renderer, spriteRenderer, viewport);
-        verify(hud).render(renderer, 0, 0);
+        verify(activeManager).render(renderer, spriteRenderer, viewport, Layer.BACKGROUND);
         verify(spriteRenderer).render(renderer, player, player.getX(), player.getY());
+        verify(activeManager).render(renderer, spriteRenderer, viewport, Layer.FOREGROUND);
+        verify(hud).render(renderer, 0, 0);
     }
-
 }

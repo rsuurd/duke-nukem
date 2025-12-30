@@ -12,16 +12,14 @@ public class ActiveManager {
     private List<Active> actives = new LinkedList<>();
     private List<Active> spawns = new LinkedList<>();
 
-    public void update(GameplayContext context, Viewport viewport) {
+    public void update(GameplayContext context) {
         Iterator<Active> iterator = actives.iterator();
 
         while (iterator.hasNext()) {
             Active active = iterator.next();
 
-            if (viewport.isVisible(active)) {
-                if (active instanceof Updatable updatable) {
-                    updatable.update(context);
-                }
+            if (active instanceof Updatable updatable) {
+                updatable.update(context);
             }
 
             if (!active.isActive()) {
@@ -46,16 +44,17 @@ public class ActiveManager {
         spawns.clear();
     }
 
-    public void render(Renderer renderer, SpriteRenderer spriteRenderer, Viewport viewport) {
-        actives.forEach(active -> {
-            // TODO should probably let spriterenderer do some visiblity checks
-            if (viewport.isVisible(active) && active instanceof SpriteRenderable renderable) {
-                int x = viewport.toScreenX(active.getX());
-                int y = viewport.toScreenY(active.getY());
+    public void render(Renderer renderer, SpriteRenderer spriteRenderer, Viewport viewport, Layer layer) {
+        for (Active active : actives) {
+            if (!(active instanceof SpriteRenderable renderable)) continue;
+            if (renderable.getLayer() != layer) continue;
+            if (!viewport.isVisible(active)) continue;
 
-                spriteRenderer.render(renderer, renderable, x, y);
-            }
-        });
+            int x = viewport.toScreenX(active.getX());
+            int y = viewport.toScreenY(active.getY());
+
+            spriteRenderer.render(renderer, renderable, x, y);
+        }
     }
 
     List<Active> getActives() {
