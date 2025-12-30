@@ -88,7 +88,7 @@ public class Bolt extends Active implements Updatable, SpriteRenderable {
     private void onHit(GameplayContext context) {
         active = false;
         int hitX = getX() + (8 * ((facing == LEFT) ? 1 : -1));
-        context.spawn(new Sparks(hitX, getY() - 4));
+        context.getActiveManager().spawn(new Sparks(hitX, getY() - 4));
     }
 
     public static Bolt create(Player player) {

@@ -5,11 +5,13 @@ import duke.gfx.*;
 import duke.level.Level;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class GameplayStateTest extends GameContextTestSupport {
     @Mock
@@ -28,15 +30,16 @@ class GameplayStateTest extends GameContextTestSupport {
     private Collision collision;
     @Mock
     private SpriteRenderer spriteRenderer;
+    @Mock
+    private ActiveManager activeManager;
 
+    @InjectMocks
     private GameplayContext context;
 
     private GameplayState state;
 
     @BeforeEach
     void setUp() {
-        context = new GameplayContext(player, level);
-
         state = new GameplayState(viewport, levelRenderer, hud, font, spriteRenderer, collision, context);
     }
 
@@ -61,6 +64,15 @@ class GameplayStateTest extends GameContextTestSupport {
     }
 
     @Test
+    void shouldShoot() {
+        when(player.isFiring()).thenReturn(true);
+
+        state.update(gameContext);
+
+        verify(activeManager).spawn(any(Bolt.class));
+    }
+
+    @Test
     void shouldUpdateViewport() {
         state.update(gameContext);
 
@@ -68,66 +80,20 @@ class GameplayStateTest extends GameContextTestSupport {
     }
 
     @Test
+    void shouldUpdateActives() {
+        state.update(gameContext);
+
+        verify(context.getActiveManager()).update(context, viewport);
+    }
+
+    @Test
     void shouldRender() {
         state.render(gameContext);
 
         verify(levelRenderer).render(renderer, viewport);
+        verify(activeManager).render(renderer, spriteRenderer, viewport);
         verify(hud).render(renderer, 0, 0);
         verify(spriteRenderer).render(renderer, player, player.getX(), player.getY());
     }
 
-    @Test
-    void shouldUpdateVisibleActives() {
-        TestActive active = spy();
-        context.spawn(active);
-        context.flushSpawns();
-
-        when(viewport.isVisible(any())).thenReturn(true);
-
-        state.update(gameContext);
-
-        verify(active).update(context);
-    }
-
-    @Test
-    void shouldNotUpdateInvisibleActives() {
-        TestActive active = spy();
-        context.spawn(active);
-        context.flushSpawns();
-
-        when(viewport.isVisible(any())).thenReturn(false);
-
-        state.update(gameContext);
-
-        verifyNoInteractions(active);
-    }
-
-    @Test
-    void shouldShoot() {
-        when(player.isFiring()).thenReturn(true);
-
-        state.update(gameContext);
-
-        assertThat(context.getActives()).hasExactlyElementsOfTypes(Bolt.class);
-    }
-
-    @Test
-    void shouldAddSpawnsToActives() {
-        TestActive active = spy();
-        context.spawn(active);
-
-        state.update(gameContext);
-
-        assertThat(context.getActives()).contains(active);
-    }
-
-    private static class TestActive extends Active implements Updatable {
-        private TestActive() {
-            super(0, 0, 16, 16);
-        }
-
-        @Override
-        public void update(GameplayContext context) {
-        }
-    }
 }

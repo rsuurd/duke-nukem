@@ -19,7 +19,7 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     private int health;
 
     public Player() {
-        this(State.STANDING, Facing.LEFT);
+        this(State.STANDING, Facing.RIGHT);
     }
 
     Player(State state, Facing facing) {
@@ -56,6 +56,9 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
         applyFriction();
         updateJump();
         updateAnimation();
+
+        // context.collision().resolve(...);
+        // if shoot pressed and can shoot, spawn bolt
     }
 
     public boolean isFiring() {
@@ -196,18 +199,18 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     private static SpriteDescriptor BASE_DESCRIPTOR = new SpriteDescriptor(AssetManager::getMan, 0, -8, 0, 2, 2);
 
     private static List<AnimationDescriptor> ANIMATIONS = List.of(
-        // standing left/right
-        new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(50), 1, 1),
-        new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(54), 1, 1),
-        // walking left/right
-        new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(0), 4, 2),
-        new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(16), 4, 2),
-        // jumping left/right
-        new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(32), 1, 1),
-        new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(36), 1, 1),
-        // falling left/right
-        new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(40), 1, 1),
-        new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(44), 1, 1)
+            // standing left/right
+            new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(50), 1, 1),
+            new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(54), 1, 1),
+            // walking left/right
+            new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(0), 4, 2),
+            new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(16), 4, 2),
+            // jumping left/right
+            new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(32), 1, 1),
+            new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(36), 1, 1),
+            // falling left/right
+            new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(40), 1, 1),
+            new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(44), 1, 1)
     );
 
     //shooting left/right

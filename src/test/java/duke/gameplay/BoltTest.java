@@ -21,6 +21,9 @@ class BoltTest {
     @Mock
     private Level level;
 
+    @Mock
+    private ActiveManager activeManager;
+
     @ParameterizedTest
     @EnumSource(Facing.class)
     void shouldCreate(Facing facing) {
@@ -39,7 +42,7 @@ class BoltTest {
     void shouldUpdate() {
         Bolt bolt = new Bolt(0, 0, Facing.RIGHT);
 
-        bolt.update(new GameplayContext(player, level));
+        bolt.update(new GameplayContext(player, level, activeManager));
 
         assertThat(bolt.getX()).isEqualTo(16);
     }
@@ -49,7 +52,7 @@ class BoltTest {
         Bolt bolt = new Bolt(0, 0, Facing.RIGHT);
         when(player.getX()).thenReturn(200);
 
-        bolt.update(new GameplayContext(player, level));
+        bolt.update(new GameplayContext(player, level, activeManager));
 
         assertThat(bolt.isActive()).isFalse();
     }
@@ -59,11 +62,11 @@ class BoltTest {
         Bolt bolt = new Bolt(0, 0, Facing.RIGHT);
         when(level.isSolid(anyInt(), anyInt())).thenReturn(true);
 
-        GameplayContext context = spy(new GameplayContext(player, level));
+        GameplayContext context = spy(new GameplayContext(player, level, activeManager));
 
         bolt.update(context);
 
         assertThat(bolt.isActive()).isFalse();
-        verify(context).spawn(any(Sparks.class));
+        verify(activeManager).spawn(any(Sparks.class));
     }
 }
