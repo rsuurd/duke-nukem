@@ -11,12 +11,12 @@ class AnimationTest {
         Animation animation = new Animation(ANIMATION_DESCRIPTOR);
 
         for (int i = 0; i < TICKS_PER_FRAME; i++) {
-            assertThat(animation.getCurrentBaseIndex()).isEqualTo(BASE_INDEX);
+            assertThat(animation.getSpriteDescriptor().baseIndex()).isEqualTo(BASE_INDEX);
             animation.tick();
         }
 
         animation.tick();
-        assertThat(animation.getCurrentBaseIndex()).isEqualTo(NEXT_FRAME_INDEX);
+        assertThat(animation.getSpriteDescriptor().baseIndex()).isEqualTo(NEXT_FRAME_INDEX);
     }
 
     @Test
@@ -29,7 +29,7 @@ class AnimationTest {
 
         animation.tick();
 
-        assertThat(animation.getCurrentBaseIndex()).isEqualTo(BASE_INDEX);
+        assertThat(animation.getSpriteDescriptor().baseIndex()).isEqualTo(BASE_INDEX);
     }
 
     @Test
@@ -40,7 +40,7 @@ class AnimationTest {
             animation.tick();
         }
 
-        assertThat(animation.getCurrentBaseIndex()).isEqualTo(BASE_INDEX + 12);
+        assertThat(animation.getSpriteDescriptor().baseIndex()).isEqualTo(BASE_INDEX + 12);
         assertThat(animation.isFinished()).isTrue();
     }
 
@@ -56,7 +56,7 @@ class AnimationTest {
         animation.setAnimation(different);
         animation.tick();
 
-        assertThat(animation.getCurrentBaseIndex()).isEqualTo(BASE_INDEX);
+        assertThat(animation.getSpriteDescriptor().baseIndex()).isEqualTo(BASE_INDEX);
     }
 
     @Test
@@ -68,7 +68,7 @@ class AnimationTest {
 
         animation.setAnimation(ANIMATION_DESCRIPTOR);
 
-        assertThat(animation.getCurrentBaseIndex()).isEqualTo(NEXT_FRAME_INDEX);
+        assertThat(animation.getSpriteDescriptor().baseIndex()).isEqualTo(NEXT_FRAME_INDEX);
     }
 
     private static final int BASE_INDEX = 20;

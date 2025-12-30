@@ -19,20 +19,20 @@ public class Animation {
     }
 
     public SpriteDescriptor getSpriteDescriptor() {
-        return descriptor.spriteDescriptor();
+        return descriptor.getDescriptors().get(currentFrame);
     }
 
     public void tick() {
-        if (isFinished() || descriptor.frames() <= 1 || descriptor.ticksPerFrame() <= 0) return;
+        if (isFinished() || descriptor.getFrames() <= 1 || descriptor.getTicksPerFrame() <= 0) return;
 
-        if (++timer >= descriptor.ticksPerFrame()) {
+        if (++timer >= descriptor.getTicksPerFrame()) {
             advanceFrame();
         }
     }
 
     private void advanceFrame() {
-        if (descriptor.type() == AnimationDescriptor.Type.LOOP) {
-            currentFrame = (currentFrame + 1) % descriptor.frames();
+        if (descriptor.getType() == AnimationDescriptor.Type.LOOP) {
+            currentFrame = (currentFrame + 1) % descriptor.getFrames();
             timer = 0;
         } else if (currentFrame < lastFrame()) {
             currentFrame++;
@@ -41,16 +41,10 @@ public class Animation {
     }
 
     private int lastFrame() {
-        return descriptor.frames() - 1;
-    }
-
-    public int getCurrentBaseIndex() {
-        SpriteDescriptor base = descriptor.spriteDescriptor();
-
-        return base.baseIndex() + (currentFrame * (base.rows() * base.cols()));
+        return descriptor.getFrames() - 1;
     }
 
     public boolean isFinished() {
-        return descriptor.type() == AnimationDescriptor.Type.ONE_SHOT && currentFrame >= lastFrame() && timer == descriptor.ticksPerFrame();
+        return descriptor.getType() == AnimationDescriptor.Type.ONE_SHOT && currentFrame >= lastFrame() && timer == descriptor.getTicksPerFrame();
     }
 }

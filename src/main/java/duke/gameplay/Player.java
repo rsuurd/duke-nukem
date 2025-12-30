@@ -197,11 +197,6 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
         return animation.getSpriteDescriptor();
     }
 
-    @Override
-    public int getBaseIndex() {
-        return animation.getCurrentBaseIndex();
-    }
-
     private static SpriteDescriptor BASE_DESCRIPTOR = new SpriteDescriptor(AssetManager::getMan, 0, -8, 0, 2, 2);
 
     private static List<AnimationDescriptor> ANIMATIONS = List.of(

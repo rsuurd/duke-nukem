@@ -35,7 +35,7 @@ class SecurityCameraTest {
 
         securityCamera.update(context);
 
-        assertThat(securityCamera.getBaseIndex()).isEqualTo(expectedBaseIndex);
+        assertThat(securityCamera.getSpriteDescriptor().baseIndex()).isEqualTo(expectedBaseIndex);
     }
 
     static Stream<Arguments> playerLocation() {

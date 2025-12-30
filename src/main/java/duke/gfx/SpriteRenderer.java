@@ -19,7 +19,7 @@ public class SpriteRenderer {
 
         for (int row = 0; row < spriteDescriptor.rows(); row++) {
             for (int col = 0; col < spriteDescriptor.cols(); col++) {
-                int spriteIndex = renderable.getBaseIndex() + (row * spriteDescriptor.cols()) + col;
+                int spriteIndex = renderable.getSpriteDescriptor().baseIndex() + (row * spriteDescriptor.cols()) + col;
                 Sprite sprite = sprites.get(spriteIndex);
 
                 int screenX = x + spriteDescriptor.offsetX() + (col * sprite.getWidth());

@@ -1,37 +1,40 @@
 package duke.gfx;
 
+import duke.resources.AssetManager;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@ExtendWith(MockitoExtension.class)
 class AnimationDescriptorTest {
-    @Mock
-    private SpriteDescriptor spriteDescriptor;
+    private static final SpriteDescriptor SPRITE_DESCRIPTOR = new SpriteDescriptor(AssetManager::getTiles, 0, 0, 0, 2, 2);
 
     @Test
     void shouldCreateAnimationDescriptor() {
-        AnimationDescriptor descriptor = new AnimationDescriptor(spriteDescriptor, 4, 2);
+        AnimationDescriptor descriptor = new AnimationDescriptor(SPRITE_DESCRIPTOR, 4, 2);
 
         assertThat(descriptor).isNotNull();
-        assertThat(descriptor.type()).isEqualTo(AnimationDescriptor.Type.LOOP);
+        assertThat(descriptor.getType()).isEqualTo(AnimationDescriptor.Type.LOOP);
+        assertThat(descriptor.getDescriptors()).hasSize(4);
+        assertThat(descriptor.getDescriptors()).containsExactly(
+                SPRITE_DESCRIPTOR.withBaseIndex(0),
+                SPRITE_DESCRIPTOR.withBaseIndex(4),
+                SPRITE_DESCRIPTOR.withBaseIndex(8),
+                SPRITE_DESCRIPTOR.withBaseIndex(12)
+        );
     }
 
     @Test
     void shouldRejectInvalidFrameCount() {
         assertThatThrownBy(() ->
-                new AnimationDescriptor(spriteDescriptor, 0, 0)
+                new AnimationDescriptor(SPRITE_DESCRIPTOR, 0, 0)
         ).isInstanceOf(IllegalArgumentException.class).hasMessageContaining("at least one frame is required");
     }
 
     @Test
     void shouldRejectInvalidTickCount() {
         assertThatThrownBy(() ->
-                new AnimationDescriptor(spriteDescriptor, 1, 0)
+                new AnimationDescriptor(SPRITE_DESCRIPTOR, 1, 0)
         ).isInstanceOf(IllegalArgumentException.class).hasMessageContaining("ticksPerFrame must be at least 1");
     }
 }

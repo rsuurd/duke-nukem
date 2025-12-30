@@ -24,11 +24,6 @@ public class Effect extends Active implements Updatable, SpriteRenderable {
     }
 
     @Override
-    public int getBaseIndex() {
-        return animation.getCurrentBaseIndex();
-    }
-
-    @Override
     public void update(GameplayContext context) {
         animation.tick();
     }

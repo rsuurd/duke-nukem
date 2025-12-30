@@ -81,11 +81,6 @@ public class Bolt extends Active implements Updatable, SpriteRenderable {
         return animation.getSpriteDescriptor();
     }
 
-    @Override
-    public int getBaseIndex() {
-        return animation.getCurrentBaseIndex();
-    }
-
     private void onHit(GameplayContext context) {
         deactivate();
         int hitX = getX() + (8 * ((facing == LEFT) ? 1 : -1));

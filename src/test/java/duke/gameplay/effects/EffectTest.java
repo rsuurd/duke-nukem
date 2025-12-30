@@ -11,7 +11,7 @@ class EffectTest {
     @Test
     void shouldRunOnce() {
         AnimationDescriptor animation = mock();
-        when(animation.type()).thenReturn(AnimationDescriptor.Type.ONE_SHOT);
+        when(animation.getType()).thenReturn(AnimationDescriptor.Type.ONE_SHOT);
 
         Effect effect = new Effect(0, 0, animation);
 

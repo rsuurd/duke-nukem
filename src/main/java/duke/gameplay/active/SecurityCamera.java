@@ -34,11 +34,6 @@ public class SecurityCamera extends Active implements Movable, Updatable, Sprite
     }
 
     @Override
-    public int getBaseIndex() {
-        return animation.getCurrentBaseIndex();
-    }
-
-    @Override
     public Layer getLayer() {
         return Layer.BACKGROUND;
     }

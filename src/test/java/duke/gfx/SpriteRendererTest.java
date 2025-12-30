@@ -26,7 +26,6 @@ class SpriteRendererTest {
 
         SpriteRenderable renderable = mock();
         when(renderable.getSpriteDescriptor()).thenReturn(spriteDescriptor);
-        when(renderable.getBaseIndex()).thenReturn(0);
 
         spriteRenderer.render(renderer, renderable, 0, 0);
 
