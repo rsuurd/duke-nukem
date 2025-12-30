@@ -50,6 +50,15 @@ class ActiveManagerTest {
     }
 
     @Test
+    void shouldSpawnBolt() {
+        Bolt bolt = mock();
+
+        manager.spawn(bolt);
+
+        assertThat(manager.getActives()).containsExactly(bolt);
+    }
+
+    @Test
     void shouldRemoveInactiveBolt() {
         Bolt bolt = mock();
         when(bolt.isActive()).thenReturn(false);

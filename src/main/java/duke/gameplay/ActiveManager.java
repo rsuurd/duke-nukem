@@ -37,6 +37,11 @@ public class ActiveManager {
         addPendingSpawns();
     }
 
+    public void spawn(Bolt bolt) {
+        // FIXME temporary workaround for bolt spawn/update frame delay
+        actives.add(bolt);
+    }
+
     public void spawn(Active active) {
         spawns.add(active);
     }

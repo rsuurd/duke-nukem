@@ -63,10 +63,7 @@ public class GameplayState implements GameState {
         collision.resolve(player, context.getLevel());
 
         if (player.isFiring()) {
-            Bolt bolt = Bolt.create(player);
-            context.getActiveManager().spawn(bolt);
-            // FIXME: update the bolt right away because spawns are added after update loop, otherwise there's a 1 frame delay
-            bolt.update(context);
+            context.getActiveManager().spawn(Bolt.create(player));
         }
 
         viewport.update(player.getX(), player.getY(), player.isGrounded());
