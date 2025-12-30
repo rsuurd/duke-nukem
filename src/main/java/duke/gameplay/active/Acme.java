@@ -32,6 +32,8 @@ public class Acme extends Active implements Movable, Collidable, Physics, Updata
 
     @Override
     public SpriteDescriptor getSpriteDescriptor() {
-        return new SpriteDescriptor(AssetManager::getObjects, 83, 0, 0, 1, 2);
+        return SPRITE;
     }
+
+    private static final SpriteDescriptor SPRITE = new SpriteDescriptor(AssetManager::getObjects, 83, 0, 0, 1, 2);
 }

@@ -7,8 +7,6 @@ import duke.gfx.SpriteRenderable;
 import duke.resources.AssetManager;
 import duke.ui.KeyHandler;
 
-import java.util.List;
-
 public class Player extends Active implements Movable, Collidable, Physics, Updatable, SpriteRenderable {
     private State state;
     private Facing facing;
@@ -17,6 +15,9 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     private boolean moving;
     private boolean firing;
     private int health;
+
+    private SpriteDescriptor spriteDescriptor;
+    private Animation animation;
 
     public Player() {
         this(State.STANDING, Facing.RIGHT);
@@ -30,6 +31,9 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
 
         health = 8;
         jumpReady = true;
+
+        spriteDescriptor = (facing == Facing.LEFT) ? STANDING_LEFT : STANDING_RIGHT;
+        animation = new Animation(WALKING_LEFT);
     }
 
     public void processInput(KeyHandler.Input input) {
@@ -63,18 +67,6 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
 
     public boolean isFiring() {
         return firing;
-    }
-
-    private void updateAnimation() {
-        // swap animation based on state and facing, should probably make something more sophisticated later
-        if (firing && state == State.STANDING) {
-            animation.setAnimation(facing == Facing.LEFT ? SHOOT_LEFT : SHOOT_RIGHT);
-        } else {
-            int animationIndex = (state.ordinal() * 2) + facing.ordinal();
-            animation.setAnimation(ANIMATIONS.get(animationIndex));
-        }
-
-        animation.tick();
     }
 
     private void updateJump() {
@@ -190,31 +182,41 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
         FALLING
     }
 
-    private Animation animation = new Animation(ANIMATIONS.getFirst());
-
     @Override
     public SpriteDescriptor getSpriteDescriptor() {
-        return animation.getSpriteDescriptor();
+        return spriteDescriptor;
+    }
+
+    private void updateAnimation() {
+        // TODO maybe create a map or array with some indexing instead of this horrible switch
+        switch (state) {
+            case STANDING -> {
+                if (firing) {
+                    spriteDescriptor = facing == Facing.LEFT ? SHOOT_LEFT : SHOOT_RIGHT;
+                } else {
+                    spriteDescriptor = (facing == Facing.LEFT) ? STANDING_LEFT : STANDING_RIGHT;
+                }
+            }
+            case JUMPING -> spriteDescriptor = (facing == Facing.LEFT) ? JUMPING_LEFT : JUMPING_RIGHT;
+            case FALLING -> spriteDescriptor = (facing == Facing.LEFT) ? FALLING_LEFT : FALLING_RIGHT;
+            case WALKING -> {
+                animation.tick();
+                animation.setAnimation(facing == Facing.LEFT ? WALKING_LEFT : WALKING_RIGHT);
+                spriteDescriptor = animation.getSpriteDescriptor();
+            }
+        }
     }
 
     private static SpriteDescriptor BASE_DESCRIPTOR = new SpriteDescriptor(AssetManager::getMan, 0, -8, 0, 2, 2);
 
-    private static List<AnimationDescriptor> ANIMATIONS = List.of(
-            // standing left/right
-            new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(50), 1, 1),
-            new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(54), 1, 1),
-            // walking left/right
-            new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(0), 4, 2),
-            new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(16), 4, 2),
-            // jumping left/right
-            new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(32), 1, 1),
-            new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(36), 1, 1),
-            // falling left/right
-            new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(40), 1, 1),
-            new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(44), 1, 1)
-    );
-
-    //shooting left/right
-    private static AnimationDescriptor SHOOT_LEFT = new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(12), 1, 1);
-    private static AnimationDescriptor SHOOT_RIGHT = new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(28), 1, 1);
+    private static SpriteDescriptor STANDING_LEFT = BASE_DESCRIPTOR.withBaseIndex(50);
+    private static SpriteDescriptor STANDING_RIGHT = BASE_DESCRIPTOR.withBaseIndex(54);
+    private static AnimationDescriptor WALKING_LEFT = new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(0), 4, 2);
+    private static AnimationDescriptor WALKING_RIGHT = new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(16), 4, 2);
+    private static SpriteDescriptor JUMPING_LEFT = BASE_DESCRIPTOR.withBaseIndex(32);
+    private static SpriteDescriptor JUMPING_RIGHT = BASE_DESCRIPTOR.withBaseIndex(36);
+    private static SpriteDescriptor FALLING_LEFT = BASE_DESCRIPTOR.withBaseIndex(40);
+    private static SpriteDescriptor FALLING_RIGHT = BASE_DESCRIPTOR.withBaseIndex(44);
+    private static SpriteDescriptor SHOOT_LEFT = BASE_DESCRIPTOR.withBaseIndex(12);
+    private static SpriteDescriptor SHOOT_RIGHT = BASE_DESCRIPTOR.withBaseIndex(28);
 }

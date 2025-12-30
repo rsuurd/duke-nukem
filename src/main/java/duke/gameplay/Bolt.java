@@ -12,21 +12,18 @@ import static duke.gameplay.Facing.LEFT;
 import static duke.gameplay.Facing.RIGHT;
 
 public class Bolt extends Active implements Updatable, SpriteRenderable {
-    private Animation animation;
-
     private Facing facing;
     private int flash = 1;
+
+    private SpriteDescriptor spriteDescriptor;
+    private Animation animation;
 
     public Bolt(int x, int y, Facing facing) {
         super(x, y, Level.TILE_SIZE, 2);
 
         this.facing = facing;
-
-        if (facing == Facing.LEFT) {
-            animation = new Animation(MUZZLE_FLASH_LEFT);
-        } else {
-            animation = new Animation(MUZZLE_FLASH_RIGHT);
-        }
+        spriteDescriptor = (facing == LEFT) ? MUZZLE_FLASH_LEFT : MUZZLE_FLASH_RIGHT;
+        animation = new Animation(BOLT);
     }
 
     @Override
@@ -68,17 +65,16 @@ public class Bolt extends Active implements Updatable, SpriteRenderable {
 
     private void updateAnimation() {
         if (flash == 0) {
-            animation.setAnimation(BOLT);
+            animation.tick();
+            spriteDescriptor = animation.getSpriteDescriptor();
         } else {
             flash--;
         }
-
-        animation.tick();
     }
 
     @Override
     public SpriteDescriptor getSpriteDescriptor() {
-        return animation.getSpriteDescriptor();
+        return spriteDescriptor;
     }
 
     private void onHit(GameplayContext context) {
@@ -95,8 +91,8 @@ public class Bolt extends Active implements Updatable, SpriteRenderable {
     }
 
     static final int SPEED = Level.TILE_SIZE;
-    private static SpriteDescriptor BASE = new SpriteDescriptor(AssetManager::getObjects, 6, 0, -10, 1, 1);
-    private static AnimationDescriptor MUZZLE_FLASH_LEFT = new AnimationDescriptor(BASE.withBaseIndex(46), 1, 1);
-    private static AnimationDescriptor MUZZLE_FLASH_RIGHT = new AnimationDescriptor(BASE.withBaseIndex(47), 1, 1);
-    private static AnimationDescriptor BOLT = new AnimationDescriptor(BASE.withBaseIndex(6), 4, 1);
+    private static final SpriteDescriptor BASE = new SpriteDescriptor(AssetManager::getObjects, 6, 0, -10, 1, 1);
+    private static final SpriteDescriptor MUZZLE_FLASH_LEFT = BASE.withBaseIndex(46);
+    private static final SpriteDescriptor MUZZLE_FLASH_RIGHT = BASE.withBaseIndex(47);
+    private static final AnimationDescriptor BOLT = new AnimationDescriptor(BASE.withBaseIndex(6), 4, 1);
 }
