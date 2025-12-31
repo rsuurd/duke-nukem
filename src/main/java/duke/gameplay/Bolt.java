@@ -55,8 +55,9 @@ public class Bolt extends Active implements Updatable, SpriteRenderable {
 
     private void checkCollision(GameplayContext context) {
         if (collidesWithTile(context, getY(), IS_SOLID)) return;
+        if (collidesWithTile(context, getY() + getHeight() - 1, DESTRUCTIBLE_BRICKS)) return;
 
-        collidesWithTile(context, getY() + getHeight() - 1, DESTRUCTIBLE_BRICKS);
+        collidesWithShootable(context);
     }
 
     private boolean collidesWithTile(GameplayContext context, int y, Predicate<Integer> check) {
@@ -80,12 +81,27 @@ public class Bolt extends Active implements Updatable, SpriteRenderable {
 
     private void onTileHit(GameplayContext context, int tileId, int row, int col) {
         if (DESTRUCTIBLE_BRICKS.test(tileId)) {
-            context.getLevel().setTile(row, col, DESTROYED_BRICKS);
+            context.getLevel().setTile(row, col, DESTROYED_BRICKS_TILE_ID);
         }
 
         // TODO fix positioning a bit better
         context.getActiveManager().spawn(EffectsFactory.createSparks(col * TILE_SIZE, row * TILE_SIZE));
         deactivate();
+    }
+
+    private void collidesWithShootable(GameplayContext context) {
+        for (Active active : context.getActiveManager().getActives()) {
+            if (active == this) continue;
+            if (!active.isActive()) continue;
+            if (!(active instanceof Shootable shootable)) continue;
+
+            if (active.intersects(this)) {
+                shootable.onShot(context, this);
+                deactivate();
+
+                return;
+            }
+        }
     }
 
     private void updateAnimation() {
@@ -109,12 +125,11 @@ public class Bolt extends Active implements Updatable, SpriteRenderable {
         return new Bolt(x, y, player.getFacing());
     }
 
-    private static final Predicate<Integer> IS_SOLID = Level::isSolid;
-    private static final Predicate<Integer> DESTRUCTIBLE_BRICKS = (tileId) -> tileId == 0x1800;
-
     static final int SPEED = TILE_SIZE;
-    static final int DESTROYED_BRICKS = 0x17e0;
-
+    static final int DESTRUCTIBLE_BRICKS_TILE_ID = 0x1800;
+    static final int DESTROYED_BRICKS_TILE_ID = 0x17e0;
+    private static final Predicate<Integer> IS_SOLID = Level::isSolid;
+    private static final Predicate<Integer> DESTRUCTIBLE_BRICKS = (tileId) -> tileId == DESTRUCTIBLE_BRICKS_TILE_ID;
     private static final SpriteDescriptor BASE = new SpriteDescriptor(AssetManager::getObjects, 6, 0, -10, 1, 1);
     private static final SpriteDescriptor MUZZLE_FLASH_LEFT = BASE.withBaseIndex(46);
     private static final SpriteDescriptor MUZZLE_FLASH_RIGHT = BASE.withBaseIndex(47);

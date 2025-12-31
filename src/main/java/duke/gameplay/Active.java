@@ -73,4 +73,9 @@ public abstract class Active implements Movable {
     protected void deactivate() {
         active = false;
     }
+
+    public boolean intersects(Active other) {
+        return (x < other.getX() + other.getWidth()) && (x + width > other.getX()) &&
+               (y < other.getY() + other.getHeight()) && (y + height > other.getY());
+    }
 }

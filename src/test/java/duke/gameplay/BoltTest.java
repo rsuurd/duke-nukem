@@ -9,6 +9,10 @@ import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
+
+import static duke.gameplay.Bolt.DESTROYED_BRICKS_TILE_ID;
+import static duke.gameplay.Bolt.DESTRUCTIBLE_BRICKS_TILE_ID;
 import static duke.level.Level.ACTIVE;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -77,12 +81,62 @@ class BoltTest {
     @Test
     void shouldCollideWithDestructibleBricks() {
         Bolt bolt = new Bolt(0, 0, Facing.RIGHT);
-        when(level.getTile(anyInt(), anyInt())).thenReturn(0x1800);
+        when(level.getTile(anyInt(), anyInt())).thenReturn(DESTRUCTIBLE_BRICKS_TILE_ID);
 
         bolt.update(new GameplayContext(player, level, activeManager));
 
         assertThat(bolt.isActive()).isFalse();
         verify(activeManager).spawn(any(Effect.class));
-        verify(level).setTile(0, 1, 0x17e0);
+        verify(level).setTile(0, 1, DESTROYED_BRICKS_TILE_ID);
+    }
+
+    @Test
+    void shouldHitShootable() {
+        GameplayContext context = new GameplayContext(player, level, activeManager);
+        TestShootable shootable = mock();
+        Bolt bolt = new Bolt(0, 0, Facing.RIGHT);
+        when(activeManager.getActives()).thenReturn(List.of(shootable));
+        when(shootable.isActive()).thenReturn(true);
+        when(shootable.intersects(bolt)).thenReturn(true);
+
+        bolt.update(context);
+
+        assertThat(bolt.isActive()).isFalse();
+        verify(shootable).onShot(context, bolt);
+    }
+
+    @Test
+    void shouldNotHitInactiveShootable() {
+        GameplayContext context = new GameplayContext(player, level, activeManager);
+        TestShootable shootable = mock();
+        Bolt bolt = new Bolt(0, 0, Facing.RIGHT);
+        when(activeManager.getActives()).thenReturn(List.of(shootable));
+        when(shootable.isActive()).thenReturn(false);
+
+        bolt.update(context);
+
+        assertThat(bolt.isActive()).isTrue();
+        verify(shootable, never()).intersects(any());
+        verify(shootable, never()).onShot(any(), any());
+    }
+
+    @Test
+    void shouldNotCheckNonShootables() {
+        GameplayContext context = new GameplayContext(player, level, activeManager);
+        Active active = mock();
+        Bolt bolt = new Bolt(0, 0, Facing.RIGHT);
+        when(activeManager.getActives()).thenReturn(List.of(active));
+        when(active.isActive()).thenReturn(true);
+
+        bolt.update(context);
+
+        assertThat(bolt.isActive()).isTrue();
+        verify(active, never()).intersects(any());
+    }
+
+    private abstract static class TestShootable extends Active implements Shootable {
+        private TestShootable() {
+            super(0, 0, 16, 16);
+        }
     }
 }
