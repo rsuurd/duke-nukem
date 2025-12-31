@@ -1,8 +1,11 @@
 package duke.gameplay.active;
 
+import duke.gameplay.ActiveManager;
 import duke.gameplay.GameplayContext;
 import duke.gameplay.Player;
+import duke.gameplay.effects.Effect;
 import duke.level.Level;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -14,7 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class SecurityCameraTest {
@@ -22,6 +25,8 @@ class SecurityCameraTest {
     private Player player;
     @Mock
     private Level level;
+    @Mock
+    private ActiveManager activeManager;
 
     @InjectMocks
     private GameplayContext context;
@@ -36,6 +41,16 @@ class SecurityCameraTest {
         securityCamera.update(context);
 
         assertThat(securityCamera.getSpriteDescriptor().baseIndex()).isEqualTo(expectedBaseIndex);
+    }
+
+    @Test
+    void shouldBeShot() {
+        SecurityCamera securityCamera = new SecurityCamera(16, 0);
+
+        securityCamera.onShot(context, mock());
+
+        verify(activeManager).spawn(any(Effect.class));
+        assertThat(securityCamera.isActive()).isFalse();
     }
 
     static Stream<Arguments> playerLocation() {
