@@ -8,8 +8,11 @@ import duke.gfx.SpriteRenderable;
 import duke.level.Level;
 import duke.resources.AssetManager;
 
+import java.util.function.Predicate;
+
 import static duke.gameplay.Facing.LEFT;
 import static duke.gameplay.Facing.RIGHT;
+import static duke.level.Level.TILE_SIZE;
 
 public class Bolt extends Active implements Updatable, SpriteRenderable {
     private Facing facing;
@@ -19,7 +22,7 @@ public class Bolt extends Active implements Updatable, SpriteRenderable {
     private Animation animation;
 
     public Bolt(int x, int y, Facing facing) {
-        super(x, y, Level.TILE_SIZE, 2);
+        super(x, y, TILE_SIZE, 8);
 
         this.facing = facing;
         spriteDescriptor = (facing == LEFT) ? MUZZLE_FLASH_LEFT : MUZZLE_FLASH_RIGHT;
@@ -32,8 +35,8 @@ public class Bolt extends Active implements Updatable, SpriteRenderable {
 
         if (isFarAway(context.getPlayer())) {
             deactivate();
-        } else if (collides(context.getLevel())) {
-            onHit(context);
+        } else {
+            checkCollision(context);
         }
 
         updateAnimation();
@@ -47,20 +50,42 @@ public class Bolt extends Active implements Updatable, SpriteRenderable {
     private boolean isFarAway(Player player) {
         int distance = Math.abs(player.getX() - getX());
 
-        return distance >= Level.TILE_SIZE * 8;
+        return distance >= TILE_SIZE * 8;
     }
 
-    private boolean collides(Level level) {
-        int row = getY() / Level.TILE_SIZE;
-        int col = getProbeX() / Level.TILE_SIZE;
+    private void checkCollision(GameplayContext context) {
+        if (collidesWithTile(context, getY(), IS_SOLID)) return;
 
-        return level.isSolid(row, col);
+        collidesWithTile(context, getY() + getHeight() - 1, DESTRUCTIBLE_BRICKS);
+    }
+
+    private boolean collidesWithTile(GameplayContext context, int y, Predicate<Integer> check) {
+        int row = y / TILE_SIZE;
+        int col = getProbeX() / TILE_SIZE;
+        int tileId = context.getLevel().getTile(row, col);
+        boolean collides = check.test(tileId);
+
+        if (collides) {
+            onTileHit(context, tileId, row, col);
+        }
+
+        return collides;
     }
 
     private int getProbeX() {
-        int remainder = (facing == LEFT) ? getX() % Level.TILE_SIZE : 0;
+        int remainder = (facing == LEFT) ? getX() % TILE_SIZE : 0;
 
         return getX() + remainder;
+    }
+
+    private void onTileHit(GameplayContext context, int tileId, int row, int col) {
+        if (DESTRUCTIBLE_BRICKS.test(tileId)) {
+            context.getLevel().setTile(row, col, DESTROYED_BRICKS);
+        }
+
+        // TODO fix positioning a bit better
+        context.getActiveManager().spawn(EffectsFactory.createSparks(col * TILE_SIZE, row * TILE_SIZE));
+        deactivate();
     }
 
     private void updateAnimation() {
@@ -77,12 +102,6 @@ public class Bolt extends Active implements Updatable, SpriteRenderable {
         return spriteDescriptor;
     }
 
-    private void onHit(GameplayContext context) {
-        deactivate();
-        int hitX = getX() + (8 * ((facing == LEFT) ? 1 : -1));
-        context.getActiveManager().spawn(EffectsFactory.createSparks(hitX, getY() - 4));
-    }
-
     public static Bolt create(Player player) {
         int x = player.getX();
         int y = player.getY() + 13;
@@ -90,7 +109,12 @@ public class Bolt extends Active implements Updatable, SpriteRenderable {
         return new Bolt(x, y, player.getFacing());
     }
 
-    static final int SPEED = Level.TILE_SIZE;
+    private static final Predicate<Integer> IS_SOLID = Level::isSolid;
+    private static final Predicate<Integer> DESTRUCTIBLE_BRICKS = (tileId) -> tileId == 0x1800;
+
+    static final int SPEED = TILE_SIZE;
+    static final int DESTROYED_BRICKS = 0x17e0;
+
     private static final SpriteDescriptor BASE = new SpriteDescriptor(AssetManager::getObjects, 6, 0, -10, 1, 1);
     private static final SpriteDescriptor MUZZLE_FLASH_LEFT = BASE.withBaseIndex(46);
     private static final SpriteDescriptor MUZZLE_FLASH_RIGHT = BASE.withBaseIndex(47);

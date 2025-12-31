@@ -9,6 +9,7 @@ import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static duke.level.Level.ACTIVE;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
@@ -58,15 +59,30 @@ class BoltTest {
     }
 
     @Test
-    void shouldCollideWithLevel() {
+    void shouldCollideWithSolids() {
+        for (int tileId = Level.SOLIDS; tileId < ACTIVE; tileId++) {
+            reset(activeManager);
+            Bolt bolt = new Bolt(0, 0, Facing.RIGHT);
+            when(level.getTile(anyInt(), anyInt())).thenReturn(tileId);
+
+            GameplayContext context = spy(new GameplayContext(player, level, activeManager));
+
+            bolt.update(context);
+
+            assertThat(bolt.isActive()).isFalse();
+            verify(activeManager).spawn(any(Effect.class));
+        }
+    }
+
+    @Test
+    void shouldCollideWithDestructibleBricks() {
         Bolt bolt = new Bolt(0, 0, Facing.RIGHT);
-        when(level.isSolid(anyInt(), anyInt())).thenReturn(true);
+        when(level.getTile(anyInt(), anyInt())).thenReturn(0x1800);
 
-        GameplayContext context = spy(new GameplayContext(player, level, activeManager));
-
-        bolt.update(context);
+        bolt.update(new GameplayContext(player, level, activeManager));
 
         assertThat(bolt.isActive()).isFalse();
         verify(activeManager).spawn(any(Effect.class));
+        verify(level).setTile(0, 1, 0x17e0);
     }
 }

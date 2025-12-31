@@ -52,11 +52,21 @@ public class Level {
     }
 
     public int getTile(int row, int col) {
-        if (row < 0 || row >= HEIGHT || col < 0 || col >= WIDTH) {
+        if (isInBounds(row, col)) {
+            return tiles[row * WIDTH + col];
+        } else {
             return 0;
         }
+    }
 
-        return tiles[row * WIDTH + col];
+    public void setTile(int row, int col, int tileId) {
+        if (isInBounds(row, col)) {
+            tiles[row * WIDTH + col] = tileId;
+        }
+    }
+
+    private boolean isInBounds(int row, int col) {
+        return row >= 0 && row < HEIGHT && col >= 0 && col < WIDTH;
     }
 
     public int getBackdrop() {
@@ -66,7 +76,7 @@ public class Level {
     public boolean isSolid(int row, int col) {
         int tileId = getTile(row, col);
 
-        return (tileId >= SOLIDS) && (tileId < ACTIVE);
+        return isSolid(tileId);
     }
 
     public static int toX(int address) {
@@ -75,5 +85,9 @@ public class Level {
 
     public static int toY(int address) {
         return (address / WIDTH) * TILE_SIZE;
+    }
+
+    public static boolean isSolid(int tileId) {
+        return (tileId >= SOLIDS) && (tileId < ACTIVE);
     }
 }

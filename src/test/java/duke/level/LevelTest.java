@@ -68,4 +68,21 @@ class LevelTest {
         assertThat(Level.toX(562)).isEqualTo(800);
         assertThat(Level.toY(562)).isEqualTo(64);
     }
+
+    @Test
+    void shouldSetTile() {
+        Level level = new Level(0, new int[Level.WIDTH * Level.HEIGHT], 0, 0, Collections.emptyList());
+
+        level.setTile(3, 3, 1);
+
+        assertThat(level.getTile(3, 3)).isEqualTo(1);
+    }
+
+    @Test
+    void shouldIgnoreInvalidLocationWhenSettingTile() {
+        Level level = new Level(0, new int[Level.WIDTH * Level.HEIGHT], 0, 0, Collections.emptyList());
+
+        level.setTile(-1, -1, 1);
+        level.setTile(Level.HEIGHT, Level.WIDTH, 1);
+    }
 }
