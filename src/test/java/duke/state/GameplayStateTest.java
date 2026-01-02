@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -62,16 +61,7 @@ class GameplayStateTest extends GameContextTestSupport {
         verify(player).processInput(keyHandler.getInput());
         verify(player).update(context);
         verify(collision).resolve(player, level);
-    }
-
-    @Test
-    void shouldShoot() {
-        when(player.isFiring()).thenReturn(true);
-
-        state.update(gameContext);
-
-        verify(activeManager).spawn(any(Bolt.class));
-        verify(soundManager).play(SoundManager.SFX_BOLT_INDEX);
+        verify(player).postMovement(context);
     }
 
     @Test

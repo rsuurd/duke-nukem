@@ -8,8 +8,6 @@ import duke.level.Level;
 import duke.resources.AssetManager;
 import duke.ui.KeyHandler;
 
-import static duke.sfx.SoundManager.SFX_BOLT_INDEX;
-
 // TODO refactor for testing
 public class GameplayState implements GameState {
     private Viewport viewport;
@@ -70,11 +68,7 @@ public class GameplayState implements GameState {
         player.processInput(input);
         player.update(context);
         collision.resolve(player, context.getLevel());
-
-        if (player.isFiring()) {
-            context.getActiveManager().spawn(Bolt.create(player));
-            context.getSoundManager().play(SFX_BOLT_INDEX);
-        }
+        player.postMovement(context);
 
         viewport.update(player.getX(), player.getY(), player.isGrounded());
     }

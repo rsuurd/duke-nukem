@@ -1,5 +1,6 @@
 package duke.gameplay;
 
+import duke.sfx.SoundManager;
 import duke.ui.KeyHandler;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,7 +13,8 @@ import static duke.gameplay.Physics.GRAVITY;
 import static duke.gameplay.Player.JUMP_POWER;
 import static duke.gameplay.Player.SPEED;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class PlayerTest {
@@ -227,5 +229,22 @@ class PlayerTest {
         Player player = new Player(Player.State.FALLING, Facing.LEFT);
 
         assertThat(player.getVerticalAcceleration()).isEqualTo(SPEED);
+    }
+
+    @Test
+    void shouldFireAfterMovement() {
+        ActiveManager activeManager = mock();
+        SoundManager soundManager = mock();
+        when(context.getActiveManager()).thenReturn(activeManager);
+        when(context.getSoundManager()).thenReturn(soundManager);
+        Player player = new Player(Player.State.STANDING, Facing.RIGHT);
+
+        when(input.fire()).thenReturn(true);
+
+        player.processInput(input);
+        player.postMovement(context);
+
+        verify(activeManager).spawn(any(Bolt.class));
+        verify(soundManager).play(SoundManager.SFX_BOLT_INDEX);
     }
 }

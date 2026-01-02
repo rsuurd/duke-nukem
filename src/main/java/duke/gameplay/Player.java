@@ -5,12 +5,14 @@ import duke.gfx.AnimationDescriptor;
 import duke.gfx.SpriteDescriptor;
 import duke.gfx.SpriteRenderable;
 import duke.resources.AssetManager;
+import duke.sfx.SoundManager;
 import duke.ui.KeyHandler;
 
 public class Player extends Active implements Movable, Collidable, Physics, Updatable, SpriteRenderable {
     private State state;
     private Facing facing;
     private boolean jumpReady;
+    private boolean gunReady;
     private int hangTimeLeft;
     private boolean moving;
     private boolean firing;
@@ -31,6 +33,7 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
 
         health = 8;
         jumpReady = true;
+        gunReady = true;
 
         spriteDescriptor = (facing == Facing.LEFT) ? STANDING_LEFT : STANDING_RIGHT;
         animation = new Animation(WALKING_LEFT);
@@ -57,7 +60,6 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
 
     @Override
     public void update(GameplayContext context) {
-
         applyFriction();
         updateJump();
         updateAnimation();
@@ -66,8 +68,13 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
         // if shoot pressed and can shoot, spawn bolt
     }
 
-    public boolean isFiring() {
-        return firing;
+    public void postMovement(GameplayContext context) {
+        if (firing && gunReady) {
+            context.getActiveManager().spawn(Bolt.create(this));
+            context.getSoundManager().play(SoundManager.SFX_BOLT_INDEX);
+        }
+
+        gunReady = !firing;
     }
 
     private void updateJump() {
