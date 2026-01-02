@@ -24,12 +24,16 @@ class AssetManagerTest {
     @Mock
     private LevelLoader levelLoader;
 
+    @Mock
+    private SoundLoader soundLoader;
+
     private AssetManager assetManager;
 
     @BeforeEach
     void create() {
         when(resourceLoader.getSpriteLoader()).thenReturn(spriteLoader);
         when(resourceLoader.getLevelLoader()).thenReturn(levelLoader);
+        when(resourceLoader.getSoundLoader()).thenReturn(soundLoader);
 
         assetManager = new AssetManager(resourceLoader);
     }
@@ -99,5 +103,12 @@ class AssetManagerTest {
 
         assertThat(level).isNotNull();
         verify(levelLoader).readLevel(1);
+    }
+
+    @Test
+    void shouldLoadSounds() {
+        assetManager.load();
+
+        verify(soundLoader).readSounds();
     }
 }

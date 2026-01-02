@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -29,6 +30,9 @@ class BoltTest {
     @Mock
     private ActiveManager activeManager;
 
+    @InjectMocks
+    private GameplayContext context;
+
     @ParameterizedTest
     @EnumSource(Facing.class)
     void shouldCreate(Facing facing) {
@@ -47,7 +51,7 @@ class BoltTest {
     void shouldUpdate() {
         Bolt bolt = new Bolt(0, 0, Facing.RIGHT);
 
-        bolt.update(new GameplayContext(player, level, activeManager));
+        bolt.update(context);
 
         assertThat(bolt.getX()).isEqualTo(16);
     }
@@ -57,7 +61,7 @@ class BoltTest {
         Bolt bolt = new Bolt(0, 0, Facing.RIGHT);
         when(player.getX()).thenReturn(200);
 
-        bolt.update(new GameplayContext(player, level, activeManager));
+        bolt.update(context);
 
         assertThat(bolt.isActive()).isFalse();
     }
@@ -68,8 +72,6 @@ class BoltTest {
             reset(activeManager);
             Bolt bolt = new Bolt(0, 0, Facing.RIGHT);
             when(level.getTile(anyInt(), anyInt())).thenReturn(tileId);
-
-            GameplayContext context = spy(new GameplayContext(player, level, activeManager));
 
             bolt.update(context);
 
@@ -83,7 +85,7 @@ class BoltTest {
         Bolt bolt = new Bolt(0, 0, Facing.RIGHT);
         when(level.getTile(anyInt(), anyInt())).thenReturn(DESTRUCTIBLE_BRICKS_TILE_ID);
 
-        bolt.update(new GameplayContext(player, level, activeManager));
+        bolt.update(context);
 
         assertThat(bolt.isActive()).isFalse();
         verify(activeManager).spawn(any(Effect.class));
@@ -92,7 +94,6 @@ class BoltTest {
 
     @Test
     void shouldHitShootable() {
-        GameplayContext context = new GameplayContext(player, level, activeManager);
         TestShootable shootable = mock();
         Bolt bolt = new Bolt(0, 0, Facing.RIGHT);
         when(activeManager.getActives()).thenReturn(List.of(shootable));
@@ -107,7 +108,6 @@ class BoltTest {
 
     @Test
     void shouldNotHitInactiveShootable() {
-        GameplayContext context = new GameplayContext(player, level, activeManager);
         TestShootable shootable = mock();
         Bolt bolt = new Bolt(0, 0, Facing.RIGHT);
         when(activeManager.getActives()).thenReturn(List.of(shootable));
@@ -122,7 +122,6 @@ class BoltTest {
 
     @Test
     void shouldNotCheckNonShootables() {
-        GameplayContext context = new GameplayContext(player, level, activeManager);
         Active active = mock();
         Bolt bolt = new Bolt(0, 0, Facing.RIGHT);
         when(activeManager.getActives()).thenReturn(List.of(active));

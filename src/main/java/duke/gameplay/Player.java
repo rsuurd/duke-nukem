@@ -57,6 +57,7 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
 
     @Override
     public void update(GameplayContext context) {
+
         applyFriction();
         updateJump();
         updateAnimation();

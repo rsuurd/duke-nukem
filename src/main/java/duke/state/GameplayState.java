@@ -8,6 +8,8 @@ import duke.level.Level;
 import duke.resources.AssetManager;
 import duke.ui.KeyHandler;
 
+import static duke.sfx.SoundManager.SFX_BOLT_INDEX;
+
 // TODO refactor for testing
 public class GameplayState implements GameState {
     private Viewport viewport;
@@ -19,7 +21,9 @@ public class GameplayState implements GameState {
     private GameplayContext context;
 
     // TODO fix construction
-    public GameplayState(AssetManager assets) {
+    public GameplayState(GameContext gameContext) {
+        AssetManager assets = gameContext.getAssets();
+
         viewport = new Viewport();
         Level level = assets.getLevel(1);
 
@@ -28,7 +32,7 @@ public class GameplayState implements GameState {
         hud = new Hud(assets, font);
         spriteRenderer = new SpriteRenderer(assets);
         collision = new Collision();
-        context = new GameplayContext(new Player(), level, new ActiveManager());
+        context = new GameplayContext(new Player(), level, new ActiveManager(), gameContext.getSoundManager());
     }
 
     GameplayState(Viewport viewport, LevelRenderer levelRenderer, Hud hud, Font font, SpriteRenderer spriteRenderer, Collision collision, GameplayContext context) {
@@ -69,6 +73,7 @@ public class GameplayState implements GameState {
 
         if (player.isFiring()) {
             context.getActiveManager().spawn(Bolt.create(player));
+            context.getSoundManager().play(SFX_BOLT_INDEX);
         }
 
         viewport.update(player.getX(), player.getY(), player.isGrounded());

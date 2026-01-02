@@ -3,6 +3,7 @@ package duke.state;
 import duke.gameplay.*;
 import duke.gfx.*;
 import duke.level.Level;
+import duke.sfx.SoundManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -31,7 +32,8 @@ class GameplayStateTest extends GameContextTestSupport {
     private SpriteRenderer spriteRenderer;
     @Mock
     private ActiveManager activeManager;
-
+    @Mock
+    private SoundManager soundManager;
     @InjectMocks
     private GameplayContext context;
 
@@ -69,6 +71,7 @@ class GameplayStateTest extends GameContextTestSupport {
         state.update(gameContext);
 
         verify(activeManager).spawn(any(Bolt.class));
+        verify(soundManager).play(SoundManager.SFX_BOLT_INDEX);
     }
 
     @Test

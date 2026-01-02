@@ -4,6 +4,7 @@ import duke.gfx.Sprite;
 import duke.level.Level;
 import duke.level.LevelBuilder;
 import duke.level.processors.ActiveProcessorRegistry;
+import duke.sfx.Sound;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -15,6 +16,7 @@ public class AssetManager {
 
     private Map<Category, List<Sprite>> tiles;
     private Map<String, Sprite> images;
+    private List<Sound> sounds;
 
     public AssetManager(ResourceLoader resourceLoader) {
         this.resourceLoader = resourceLoader;
@@ -27,6 +29,7 @@ public class AssetManager {
         resourceLoader.ensureResourcesExist();
 
         loadTiles();
+        loadSounds();
     }
 
     private void loadTiles() {
@@ -43,6 +46,10 @@ public class AssetManager {
 
     private List<Sprite> loadTiles(String name, boolean opaque) {
         return resourceLoader.getSpriteLoader().readTiles(name, opaque);
+    }
+
+    private void loadSounds() {
+        sounds = resourceLoader.getSoundLoader().readSounds();
     }
 
     public List<Sprite> getTiles() {
@@ -92,6 +99,10 @@ public class AssetManager {
         ActiveProcessorRegistry registry = ActiveProcessorRegistry.createDefault();
 
         return new LevelBuilder(registry, number, data).build();
+    }
+
+    public List<Sound> getSounds() {
+        return sounds;
     }
 
     private enum Category {

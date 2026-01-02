@@ -13,16 +13,18 @@ public class ResourceLoader {
     private SharewareDownloader downloader;
     private SpriteLoader spriteLoader;
     private LevelLoader levelLoader;
+    private SoundLoader soundLoader;
 
     public ResourceLoader(Path path) {
-        this(path, new SharewareDownloader(path), new SpriteLoader(path), new LevelLoader(path));
+        this(path, new SharewareDownloader(path), new SpriteLoader(path), new LevelLoader(path), new SoundLoader(path));
     }
 
-    protected ResourceLoader(Path path, SharewareDownloader downloader, SpriteLoader spriteLoader, LevelLoader levelLoader) {
+    protected ResourceLoader(Path path, SharewareDownloader downloader, SpriteLoader spriteLoader, LevelLoader levelLoader, SoundLoader soundLoader) {
         this.path = path;
         this.downloader = downloader;
         this.spriteLoader = spriteLoader;
         this.levelLoader = levelLoader;
+        this.soundLoader = soundLoader;
     }
 
     public void ensureResourcesExist() {
@@ -37,6 +39,10 @@ public class ResourceLoader {
 
     public LevelLoader getLevelLoader() {
         return levelLoader;
+    }
+
+    public SoundLoader getSoundLoader() {
+        return soundLoader;
     }
 
     private boolean isEmptyDirectory(Path path) {

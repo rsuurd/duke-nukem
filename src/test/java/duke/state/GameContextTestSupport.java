@@ -2,7 +2,6 @@ package duke.state;
 
 import duke.GameContext;
 import duke.Renderer;
-import duke.gfx.EgaPalette;
 import duke.resources.AssetManager;
 import duke.ui.KeyHandler;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,9 +16,6 @@ abstract class GameContextTestSupport {
 
     @Mock
     protected Renderer renderer;
-
-    @Mock
-    protected EgaPalette palette;
 
     @Mock
     protected KeyHandler keyHandler;
