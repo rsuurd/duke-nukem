@@ -5,6 +5,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
 class ScoreTest {
     @ParameterizedTest
@@ -17,7 +18,7 @@ class ScoreTest {
     void shouldFloatUp() {
         Score score = new Score(0, 100, 1000);
 
-        score.update(null);
+        score.update(mock());
 
         assertThat(score.getY()).isEqualTo(98);
     }

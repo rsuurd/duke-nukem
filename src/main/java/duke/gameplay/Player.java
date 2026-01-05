@@ -6,12 +6,17 @@ import duke.gfx.AnimationDescriptor;
 import duke.gfx.SpriteDescriptor;
 import duke.gfx.SpriteRenderable;
 import duke.resources.AssetManager;
-import duke.sfx.SoundManager;
+import duke.sfx.Sfx;
 import duke.ui.KeyHandler;
+
+import static duke.sfx.Sfx.*;
 
 public class Player extends Active implements Movable, Collidable, Physics, Updatable, SpriteRenderable {
     private State state;
     private Facing facing;
+
+    private boolean jumped;
+    private boolean bumped;
     private boolean landed;
 
     private boolean jumpReady;
@@ -40,6 +45,8 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
 
         spriteDescriptor = (facing == Facing.LEFT) ? STANDING_LEFT : STANDING_RIGHT;
         animation = new Animation(WALKING_LEFT);
+
+        reset();
     }
 
     public void processInput(KeyHandler.Input input) {
@@ -71,23 +78,33 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     }
 
     private void reset() {
+        jumped = false;
         landed = false;
+        bumped = false;
     }
 
     public void postMovement(GameplayContext context) {
         if (firing && gunReady) {
             context.getActiveManager().spawn(Bolt.create(this));
-            context.getSoundManager().play(SoundManager.SFX_BOLT_INDEX);
+            context.getSoundManager().play(PLAYER_GUN);
         }
 
         gunReady = !firing;
 
+        if (jumped) {
+            context.getSoundManager().play(PLAYER_JUMP);
+        }
+        if (bumped) {
+            context.getSoundManager().play(HIT_HEAD);
+        }
         if (landed) {
             context.getActiveManager().spawn(EffectsFactory.createDust(this));
+            context.getSoundManager().play(PLAYER_LAND);
         }
     }
 
     private void updateJump() {
+        jumped = getVelocityY() == JUMP_POWER;
         if (getVelocityY() < 0) return;
 
         if (state == State.JUMPING) {
@@ -169,6 +186,7 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     private void bump() {
         setVelocityY(0);
         hangTimeLeft = 0;
+        bumped = true;
     }
 
     public void fall() {

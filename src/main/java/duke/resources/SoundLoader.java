@@ -55,7 +55,8 @@ public class SoundLoader {
         int priority = in.readUnsignedByte();
         in.skipBytes(1);
 
-        if (shouldSkip(in)) return null;
+        String name = readName(in);
+        if (shouldSkip(name)) return null;
 
         long current = in.getFilePointer();
         in.seek(offset);
@@ -67,15 +68,15 @@ public class SoundLoader {
         return new Sound(priority, data);
     }
 
-    private boolean shouldSkip(RandomAccessFile in) throws IOException {
-        return "__UnNamed__".equals(readName(in));
-    }
-
     private String readName(RandomAccessFile in) throws IOException {
         byte[] bytes = new byte[12];
         in.read(bytes);
 
         return new String(bytes).trim();
+    }
+
+    private boolean shouldSkip(String name) {
+        return "__UnNamed__".equalsIgnoreCase(name);
     }
 
     private byte[] readData(RandomAccessFile in) throws IOException {

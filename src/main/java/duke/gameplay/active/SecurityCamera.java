@@ -5,6 +5,7 @@ import duke.gameplay.effects.EffectsFactory;
 import duke.gfx.SpriteDescriptor;
 import duke.gfx.SpriteRenderable;
 import duke.resources.AssetManager;
+import duke.sfx.Sfx;
 
 import java.util.List;
 
@@ -45,6 +46,7 @@ public class SecurityCamera extends Active implements Movable, Updatable, Sprite
     public void onShot(GameplayContext context, Bolt bolt) {
         context.getScoreManager().score(100, getX(), getY());
         context.getActiveManager().spawn(EffectsFactory.createSparks(getX(), getY()));
+        context.getSoundManager().play(Sfx.SMALL_DEATH);
 
         deactivate();
     }

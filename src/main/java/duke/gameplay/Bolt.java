@@ -86,6 +86,8 @@ public class Bolt extends Active implements Updatable, SpriteRenderable {
 
         // TODO fix positioning a bit better
         context.getActiveManager().spawn(EffectsFactory.createSparks(col * TILE_SIZE, row * TILE_SIZE));
+        context.getScoreManager().score(10);
+
         deactivate();
     }
 

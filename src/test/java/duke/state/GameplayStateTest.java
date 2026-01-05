@@ -1,20 +1,21 @@
 package duke.state;
 
+import duke.GameContext;
+import duke.GameContextFixture;
 import duke.gameplay.*;
 import duke.gfx.*;
 import duke.level.Level;
-import duke.sfx.SoundManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class GameplayStateTest extends GameContextTestSupport {
-    @Mock
-    private Level level;
+@ExtendWith(MockitoExtension.class)
+class GameplayStateTest {
     @Mock
     private Viewport viewport;
     @Mock
@@ -24,26 +25,27 @@ class GameplayStateTest extends GameContextTestSupport {
     @Mock
     private Font font;
     @Mock
-    private Player player;
-    @Mock
-    private Collision collision;
-    @Mock
     private SpriteRenderer spriteRenderer;
     @Mock
-    private ActiveManager activeManager;
-    @Mock
-    private SoundManager soundManager;
-    @Mock
-    private ScoreManager scoreManager;
+    private Collision collision;
 
-    @InjectMocks
-    private GameplayContext context;
+    private GameContext gameContext;
+    private GameplayContext gameplayContext;
 
     private GameplayState state;
 
+    private Level level;
+    private Player player;
+
     @BeforeEach
     void setUp() {
-        state = new GameplayState(viewport, levelRenderer, hud, font, spriteRenderer, collision, context);
+        gameContext = GameContextFixture.create();
+        gameplayContext = GameplayContextFixture.create();
+
+        state = new GameplayState(viewport, levelRenderer, hud, font, spriteRenderer, collision, gameplayContext);
+
+        player = gameplayContext.getPlayer();
+        level = gameplayContext.getLevel();
     }
 
     @Test
@@ -61,10 +63,10 @@ class GameplayStateTest extends GameContextTestSupport {
     void shouldUpdatePlayer() {
         state.update(gameContext);
 
-        verify(player).processInput(keyHandler.getInput());
-        verify(player).update(context);
+        verify(player).processInput(gameContext.getKeyHandler().getInput());
+        verify(player).update(gameplayContext);
         verify(collision).resolve(player, level);
-        verify(player).postMovement(context);
+        verify(player).postMovement(gameplayContext);
     }
 
     @Test
@@ -78,20 +80,20 @@ class GameplayStateTest extends GameContextTestSupport {
     void shouldUpdateActives() {
         state.update(gameContext);
 
-        verify(context.getActiveManager()).update(context);
+        verify(gameplayContext.getActiveManager()).update(gameplayContext);
     }
 
     @Test
     void shouldRender() {
         when(player.getHealth()).thenReturn(5);
-        when(scoreManager.getScore()).thenReturn(2430);
+        when(gameplayContext.getScoreManager().getScore()).thenReturn(2430);
 
         state.render(gameContext);
 
-        verify(levelRenderer).render(renderer, viewport);
-        verify(activeManager).render(renderer, spriteRenderer, viewport, Layer.BACKGROUND);
-        verify(spriteRenderer).render(renderer, player, player.getX(), player.getY());
-        verify(activeManager).render(renderer, spriteRenderer, viewport, Layer.FOREGROUND);
-        verify(hud).render(renderer, 2430, 5);
+        verify(levelRenderer).render(gameContext.getRenderer(), viewport);
+        verify(gameplayContext.getActiveManager()).render(gameContext.getRenderer(), spriteRenderer, viewport, Layer.BACKGROUND);
+        verify(spriteRenderer).render(gameContext.getRenderer(), player, player.getX(), player.getY());
+        verify(gameplayContext.getActiveManager()).render(gameContext.getRenderer(), spriteRenderer, viewport, Layer.FOREGROUND);
+        verify(hud).render(gameContext.getRenderer(), 2430, 5);
     }
 }

@@ -4,7 +4,6 @@ import duke.state.StateManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -12,10 +11,6 @@ import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class GameLoopTest {
-    @Mock
-    private Renderer renderer;
-
-    @InjectMocks
     private GameContext context;
 
     @Mock
@@ -25,6 +20,8 @@ class GameLoopTest {
 
     @BeforeEach
     void create() {
+        context = GameContextFixture.create();
+
         gameLoop = new GameLoop(context, manager);
     }
 
@@ -39,8 +36,8 @@ class GameLoopTest {
     void shouldRender() {
         gameLoop.tick();
 
-        verify(renderer).clear();
+        verify(context.getRenderer()).clear();
         verify(manager).render();
-        verify(renderer).flip();
+        verify(context.getRenderer()).flip();
     }
 }

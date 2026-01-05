@@ -53,8 +53,8 @@ public class SoundManager {
         line.start();
     }
 
-    public void play(int index) {
-        Sound sound = assets.getSounds().get(index);
+    public void play(Sfx sfx) {
+        Sound sound = assets.getSounds().get(sfx.ordinal());
 
         play(sound);
     }
@@ -90,7 +90,4 @@ public class SoundManager {
         line.flush();
         line.close();
     }
-
-    public static final int SFX_BOLT_INDEX = 6;
-    public static final int SFX_JUMP_INDEX = 13;
 }

@@ -3,12 +3,8 @@ package duke.gameplay;
 import duke.gameplay.effects.Effect;
 import duke.level.Level;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
@@ -19,20 +15,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
 class BoltTest {
-    @Mock
-    private Player player;
-
-    @Mock
-    private Level level;
-
-    @Mock
-    private ActiveManager activeManager;
-
-    @InjectMocks
-    private GameplayContext context;
-
     @ParameterizedTest
     @EnumSource(Facing.class)
     void shouldCreate(Facing facing) {
@@ -51,15 +34,16 @@ class BoltTest {
     void shouldUpdate() {
         Bolt bolt = new Bolt(0, 0, Facing.RIGHT);
 
-        bolt.update(context);
+        bolt.update(GameplayContextFixture.create());
 
         assertThat(bolt.getX()).isEqualTo(16);
     }
 
     @Test
     void shouldDespawnWhenFarAway() {
+        GameplayContext context = GameplayContextFixture.create();
         Bolt bolt = new Bolt(0, 0, Facing.RIGHT);
-        when(player.getX()).thenReturn(200);
+        when(context.getPlayer().getX()).thenReturn(200);
 
         bolt.update(context);
 
@@ -69,34 +53,39 @@ class BoltTest {
     @Test
     void shouldCollideWithSolids() {
         for (int tileId = Level.SOLIDS; tileId < ACTIVE; tileId++) {
-            reset(activeManager);
+            GameplayContext context = GameplayContextFixture.create();
+
             Bolt bolt = new Bolt(0, 0, Facing.RIGHT);
-            when(level.getTile(anyInt(), anyInt())).thenReturn(tileId);
+            when(context.getLevel().getTile(anyInt(), anyInt())).thenReturn(tileId);
 
             bolt.update(context);
 
             assertThat(bolt.isActive()).isFalse();
-            verify(activeManager).spawn(any(Effect.class));
+            verify(context.getActiveManager()).spawn(any(Effect.class));
         }
     }
 
     @Test
     void shouldCollideWithDestructibleBricks() {
+        GameplayContext context = GameplayContextFixture.create();
+
         Bolt bolt = new Bolt(0, 0, Facing.RIGHT);
-        when(level.getTile(anyInt(), anyInt())).thenReturn(DESTRUCTIBLE_BRICKS_TILE_ID);
+        when(context.getLevel().getTile(anyInt(), anyInt())).thenReturn(DESTRUCTIBLE_BRICKS_TILE_ID);
 
         bolt.update(context);
 
         assertThat(bolt.isActive()).isFalse();
-        verify(activeManager).spawn(any(Effect.class));
-        verify(level).setTile(0, 1, DESTROYED_BRICKS_TILE_ID);
+        verify(context.getActiveManager()).spawn(any(Effect.class));
+        verify(context.getLevel()).setTile(0, 1, DESTROYED_BRICKS_TILE_ID);
+        verify(context.getScoreManager()).score(10);
     }
 
     @Test
     void shouldHitShootable() {
+        GameplayContext context = GameplayContextFixture.create();
         TestShootable shootable = mock();
         Bolt bolt = new Bolt(0, 0, Facing.RIGHT);
-        when(activeManager.getActives()).thenReturn(List.of(shootable));
+        when(context.getActiveManager().getActives()).thenReturn(List.of(shootable));
         when(shootable.isActive()).thenReturn(true);
         when(shootable.intersects(bolt)).thenReturn(true);
 
@@ -108,9 +97,10 @@ class BoltTest {
 
     @Test
     void shouldNotHitInactiveShootable() {
+        GameplayContext context = GameplayContextFixture.create();
         TestShootable shootable = mock();
         Bolt bolt = new Bolt(0, 0, Facing.RIGHT);
-        when(activeManager.getActives()).thenReturn(List.of(shootable));
+        when(context.getActiveManager().getActives()).thenReturn(List.of(shootable));
         when(shootable.isActive()).thenReturn(false);
 
         bolt.update(context);
@@ -122,9 +112,10 @@ class BoltTest {
 
     @Test
     void shouldNotCheckNonShootables() {
+        GameplayContext context = GameplayContextFixture.create();
         Active active = mock();
         Bolt bolt = new Bolt(0, 0, Facing.RIGHT);
-        when(activeManager.getActives()).thenReturn(List.of(active));
+        when(context.getActiveManager().getActives()).thenReturn(List.of(active));
         when(active.isActive()).thenReturn(true);
 
         bolt.update(context);

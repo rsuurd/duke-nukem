@@ -1,7 +1,7 @@
 package duke.gameplay;
 
 import duke.gameplay.effects.Effect;
-import duke.gameplay.effects.EffectsFactory;
+import duke.sfx.Sfx;
 import duke.sfx.SoundManager;
 import duke.ui.KeyHandler;
 import org.junit.jupiter.api.Test;
@@ -16,15 +16,13 @@ import static duke.gameplay.Player.JUMP_POWER;
 import static duke.gameplay.Player.SPEED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class PlayerTest {
     @Mock
     private KeyHandler.Input input;
-
-    @Mock
-    private GameplayContext context;
 
     @Test
     void shouldMove() {
@@ -93,7 +91,7 @@ class PlayerTest {
         player.setVelocityX(-SPEED);
 
         player.processInput(input);
-        player.update(context);
+        player.update(GameplayContextFixture.create());
 
         assertThat(player.getState()).isEqualTo(Player.State.STANDING);
         assertThat(player.getVelocityX()).isEqualTo(0);
@@ -107,7 +105,7 @@ class PlayerTest {
         player.setVelocityY(JUMP_POWER);
 
         player.processInput(input);
-        player.update(context);
+        player.update(GameplayContextFixture.create());
 
         assertThat(player.getState()).isEqualTo(state);
         assertThat(player.getVelocityX()).isEqualTo(0);
@@ -161,16 +159,14 @@ class PlayerTest {
 
     @Test
     void shouldSpawnDustWhenLanding() {
-        ActiveManager activeManager = mock();
-        when(context.getActiveManager()).thenReturn(activeManager);
-
+        GameplayContext context = GameplayContextFixture.create();
         Player player = new Player(Player.State.FALLING, Facing.LEFT);
         player.setVelocityY(16);
 
         player.onCollision(Collidable.Direction.DOWN);
         player.postMovement(context);
 
-        verify(activeManager).spawn(any(Effect.class));
+        verify(context.getActiveManager()).spawn(any(Effect.class));
     }
 
     @Test
@@ -234,7 +230,7 @@ class PlayerTest {
         player.setVelocityY(0);
 
         for (int frame = 1; frame < Player.HANG_TIME; frame++) {
-            player.update(context);
+            player.update(GameplayContextFixture.create());
             int verticalAcceleration = player.getVerticalAcceleration();
             assertThat(verticalAcceleration).isEqualTo(0);
         }
@@ -249,10 +245,7 @@ class PlayerTest {
 
     @Test
     void shouldFireAfterMovement() {
-        ActiveManager activeManager = mock();
-        SoundManager soundManager = mock();
-        when(context.getActiveManager()).thenReturn(activeManager);
-        when(context.getSoundManager()).thenReturn(soundManager);
+        GameplayContext context = GameplayContextFixture.create();
         Player player = new Player(Player.State.STANDING, Facing.RIGHT);
 
         when(input.fire()).thenReturn(true);
@@ -260,7 +253,7 @@ class PlayerTest {
         player.processInput(input);
         player.postMovement(context);
 
-        verify(activeManager).spawn(any(Bolt.class));
-        verify(soundManager).play(SoundManager.SFX_BOLT_INDEX);
+        verify(context.getActiveManager()).spawn(any(Bolt.class));
+        verify(context.getSoundManager()).play(Sfx.PLAYER_GUN);
     }
 }

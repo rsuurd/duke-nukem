@@ -58,7 +58,7 @@ class SoundManagerTest {
     void shouldPlaySound() {
         when(assets.getSounds()).thenReturn(List.of(new Sound(1, new byte[]{0, 1, 2})));
 
-        manager.play(0);
+        manager.play(Sfx.PLAYER_DEATH);
 
         verify(line).write(any(), anyInt(), anyInt());
     }
@@ -69,7 +69,7 @@ class SoundManagerTest {
 
         when(assets.getSounds()).thenReturn(List.of(new Sound(1, new byte[]{0, 1, 2})));
 
-        manager.play(0);
+        manager.play(Sfx.PLAYER_DEATH);
 
         verify(line, never()).write(any(), anyInt(), anyInt());
     }
@@ -80,7 +80,7 @@ class SoundManagerTest {
 
         when(assets.getSounds()).thenReturn(List.of(new Sound(1, new byte[]{0, 1, 2})));
 
-        manager.play(0);
+        manager.play(Sfx.PLAYER_DEATH);
 
         verify(line, never()).write(any(), anyInt(), anyInt());
     }
