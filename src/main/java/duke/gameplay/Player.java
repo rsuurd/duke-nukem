@@ -1,5 +1,6 @@
 package duke.gameplay;
 
+import duke.gameplay.effects.EffectsFactory;
 import duke.gfx.Animation;
 import duke.gfx.AnimationDescriptor;
 import duke.gfx.SpriteDescriptor;
@@ -11,6 +12,8 @@ import duke.ui.KeyHandler;
 public class Player extends Active implements Movable, Collidable, Physics, Updatable, SpriteRenderable {
     private State state;
     private Facing facing;
+    private boolean landed;
+
     private boolean jumpReady;
     private boolean gunReady;
     private int hangTimeLeft;
@@ -60,12 +63,15 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
 
     @Override
     public void update(GameplayContext context) {
+        reset();
+
         applyFriction();
         updateJump();
         updateAnimation();
+    }
 
-        // context.collision().resolve(...);
-        // if shoot pressed and can shoot, spawn bolt
+    private void reset() {
+        landed = false;
     }
 
     public void postMovement(GameplayContext context) {
@@ -75,6 +81,10 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
         }
 
         gunReady = !firing;
+
+        if (landed) {
+            context.getActiveManager().spawn(EffectsFactory.createDust(this));
+        }
     }
 
     private void updateJump() {
@@ -149,6 +159,9 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
 
     private void land() {
         setVelocityY(0);
+        if (state == State.FALLING || state == State.JUMPING) {
+            landed = true;
+        }
         state = moving ? State.WALKING : State.STANDING;
         hangTimeLeft = 0;
     }

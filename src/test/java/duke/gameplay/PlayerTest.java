@@ -1,5 +1,7 @@
 package duke.gameplay;
 
+import duke.gameplay.effects.Effect;
+import duke.gameplay.effects.EffectsFactory;
 import duke.sfx.SoundManager;
 import duke.ui.KeyHandler;
 import org.junit.jupiter.api.Test;
@@ -155,6 +157,20 @@ class PlayerTest {
 
         assertThat(player.getVelocityY()).isEqualTo(0);
         assertThat(player.getState()).isEqualTo(Player.State.STANDING);
+    }
+
+    @Test
+    void shouldSpawnDustWhenLanding() {
+        ActiveManager activeManager = mock();
+        when(context.getActiveManager()).thenReturn(activeManager);
+
+        Player player = new Player(Player.State.FALLING, Facing.LEFT);
+        player.setVelocityY(16);
+
+        player.onCollision(Collidable.Direction.DOWN);
+        player.postMovement(context);
+
+        verify(activeManager).spawn(any(Effect.class));
     }
 
     @Test
