@@ -3,6 +3,7 @@ package duke.gameplay.active;
 import duke.gameplay.ActiveManager;
 import duke.gameplay.GameplayContext;
 import duke.gameplay.Player;
+import duke.gameplay.ScoreManager;
 import duke.gameplay.effects.Effect;
 import duke.level.Level;
 import org.junit.jupiter.api.Test;
@@ -27,6 +28,8 @@ class SecurityCameraTest {
     private Level level;
     @Mock
     private ActiveManager activeManager;
+    @Mock
+    private ScoreManager scoreManager;
 
     @InjectMocks
     private GameplayContext context;
@@ -51,6 +54,7 @@ class SecurityCameraTest {
 
         verify(activeManager).spawn(any(Effect.class));
         assertThat(securityCamera.isActive()).isFalse();
+        verify(scoreManager).score(100, 16, 0);
     }
 
     static Stream<Arguments> playerLocation() {

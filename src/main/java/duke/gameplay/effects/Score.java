@@ -1,0 +1,42 @@
+package duke.gameplay.effects;
+
+import duke.gameplay.GameplayContext;
+import duke.gfx.AnimationDescriptor;
+import duke.gfx.SpriteDescriptor;
+import duke.resources.AssetManager;
+
+import java.util.Map;
+
+public class Score extends Effect {
+    public Score(int x, int y, int points) {
+        super(x, y, DESCRIPTORS.get(points), TTL);
+    }
+
+    @Override
+    public void update(GameplayContext context) {
+        super.update(context);
+
+        setY(getY() - SPEED);
+    }
+
+    private static final int SPEED = 2;
+    private static final int TTL = 32;
+
+    private static AnimationDescriptor create(int baseIndex) {
+        return new AnimationDescriptor(new SpriteDescriptor(AssetManager::getNumbers, baseIndex, 0, 0, 1, 1), 2, 2);
+    }
+
+    private static Map<Integer, AnimationDescriptor> DESCRIPTORS = Map.of(
+            100, create(0),
+            200, create(2),
+            500, create(4),
+            1000, create(6),
+            2000, create(8),
+            5000, create(10),
+            10000, create(12)
+    );
+
+    public static boolean supports(int points) {
+        return DESCRIPTORS.containsKey(points);
+    }
+}

@@ -19,4 +19,15 @@ class EffectTest {
 
         assertThat(effect.isActive()).isFalse();
     }
+
+    @Test
+    void shouldTrackTtl() {
+        Effect effect = new Effect(0, 0, mock(), 2);
+
+        effect.update(mock());
+        assertThat(effect.isActive()).isTrue();
+
+        effect.update(mock());
+        assertThat(effect.isActive()).isFalse();
+    }
 }

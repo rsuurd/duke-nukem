@@ -43,6 +43,7 @@ public class SecurityCamera extends Active implements Movable, Updatable, Sprite
 
     @Override
     public void onShot(GameplayContext context, Bolt bolt) {
+        context.getScoreManager().score(100, getX(), getY());
         context.getActiveManager().spawn(EffectsFactory.createSparks(getX(), getY()));
 
         deactivate();

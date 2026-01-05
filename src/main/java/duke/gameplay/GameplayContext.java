@@ -8,12 +8,14 @@ public class GameplayContext {
     private Level level;
     private ActiveManager activeManager;
     private SoundManager soundManager;
+    private ScoreManager scoreManager;
 
-    public GameplayContext(Player player, Level level, ActiveManager activeManager, SoundManager soundManager) {
+    public GameplayContext(Player player, Level level, ActiveManager activeManager, SoundManager soundManager, ScoreManager scoreManager) {
         this.player = player;
         this.level = level;
         this.activeManager = activeManager;
         this.soundManager = soundManager;
+        this.scoreManager = scoreManager;
     }
 
     public Player getPlayer() {
@@ -30,5 +32,9 @@ public class GameplayContext {
 
     public SoundManager getSoundManager() {
         return soundManager;
+    }
+
+    public ScoreManager getScoreManager() {
+        return scoreManager;
     }
 }

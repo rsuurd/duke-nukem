@@ -33,6 +33,9 @@ class GameplayStateTest extends GameContextTestSupport {
     private ActiveManager activeManager;
     @Mock
     private SoundManager soundManager;
+    @Mock
+    private ScoreManager scoreManager;
+
     @InjectMocks
     private GameplayContext context;
 
@@ -80,12 +83,15 @@ class GameplayStateTest extends GameContextTestSupport {
 
     @Test
     void shouldRender() {
+        when(player.getHealth()).thenReturn(5);
+        when(scoreManager.getScore()).thenReturn(2430);
+
         state.render(gameContext);
 
         verify(levelRenderer).render(renderer, viewport);
         verify(activeManager).render(renderer, spriteRenderer, viewport, Layer.BACKGROUND);
         verify(spriteRenderer).render(renderer, player, player.getX(), player.getY());
         verify(activeManager).render(renderer, spriteRenderer, viewport, Layer.FOREGROUND);
-        verify(hud).render(renderer, 0, 0);
+        verify(hud).render(renderer, 2430, 5);
     }
 }
