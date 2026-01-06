@@ -1,49 +1,45 @@
 package duke.gameplay;
 
 public abstract class Active implements Movable {
-    private int x, y;
-    private int width, height;
+    private Rectangle bounds;
+
     private int velocityX, velocityY;
     private boolean active;
 
     protected Active(int x, int y, int width, int height) {
-        setX(x);
-        setY(y);
-
-        this.width = width;
-        this.height = height;
+        bounds = new Rectangle(x, y, width, height);
 
         active = true;
     }
 
     @Override
     public int getX() {
-        return x;
+        return bounds.getX();
     }
 
     @Override
     public void setX(int x) {
-        this.x = x;
+        bounds.setX(x);
     }
 
     @Override
     public int getY() {
-        return y;
+        return bounds.getY();
     }
 
     @Override
     public void setY(int y) {
-        this.y = y;
+        bounds.setY(y);
     }
 
     @Override
     public int getWidth() {
-        return width;
+        return bounds.getWidth();
     }
 
     @Override
     public int getHeight() {
-        return height;
+        return bounds.getHeight();
     }
 
     @Override
@@ -75,7 +71,6 @@ public abstract class Active implements Movable {
     }
 
     public boolean intersects(Active other) {
-        return (x < other.getX() + other.getWidth()) && (x + width > other.getX()) &&
-               (y < other.getY() + other.getHeight()) && (y + height > other.getY());
+        return bounds.intersects(other.bounds);
     }
 }
