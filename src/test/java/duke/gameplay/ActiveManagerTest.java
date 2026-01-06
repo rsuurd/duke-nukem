@@ -3,6 +3,7 @@ package duke.gameplay;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -12,13 +13,16 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class ActiveManagerTest {
     @Mock
-    private GameplayContext context;
+    private Collision collision;
 
+    @InjectMocks
     private ActiveManager manager;
 
+    private GameplayContext context;
+
     @BeforeEach
-    void createManager() {
-        manager = new ActiveManager();
+    void createContext() {
+        context = GameplayContextFixture.create();
     }
 
     @Test
@@ -29,6 +33,16 @@ class ActiveManagerTest {
         manager.update(context);
 
         verify(active).update(context);
+    }
+
+    @Test
+    void shouldResolveCollision() {
+        ActiveWithPhysics active = mock();
+        manager.getActives().add(active);
+
+        manager.update(context);
+
+        verify(collision).resolve(active, context.getLevel());
     }
 
     @Test
@@ -73,5 +87,19 @@ class ActiveManagerTest {
         @Override
         public void update(GameplayContext context) {
         }
+    }
+
+    private static class ActiveWithPhysics extends Active implements Physics {
+        private ActiveWithPhysics() {
+            super(0, 0, 0, 0);
+        }
+
+        @Override
+        public int getVerticalAcceleration() {
+            return 0;
+        }
+
+        @Override
+        public void fall() {}
     }
 }

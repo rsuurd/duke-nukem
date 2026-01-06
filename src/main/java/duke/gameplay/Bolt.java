@@ -11,7 +11,6 @@ import duke.resources.AssetManager;
 import java.util.function.Predicate;
 
 import static duke.gameplay.Facing.LEFT;
-import static duke.gameplay.Facing.RIGHT;
 import static duke.level.Level.TILE_SIZE;
 
 public class Bolt extends Active implements Updatable, SpriteRenderable {
@@ -27,6 +26,8 @@ public class Bolt extends Active implements Updatable, SpriteRenderable {
         this.facing = facing;
         spriteDescriptor = (facing == LEFT) ? MUZZLE_FLASH_LEFT : MUZZLE_FLASH_RIGHT;
         animation = new Animation(BOLT);
+
+        setVelocityX(facing == LEFT ? -SPEED : SPEED);
     }
 
     @Override
@@ -40,11 +41,6 @@ public class Bolt extends Active implements Updatable, SpriteRenderable {
         }
 
         updateAnimation();
-    }
-
-    @Override
-    public int getVelocityX() {
-        return SPEED * ((facing == RIGHT) ? 1 : -1);
     }
 
     private boolean isFarAway(Player player) {

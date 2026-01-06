@@ -5,100 +5,96 @@ import duke.level.Level;
 import static duke.level.Level.TILE_SIZE;
 
 public class Collision {
-    public void resolve(Movable movable, Level level) {
-        resolveXAxis(movable, level);
-
-        if (movable instanceof Physics physics) {
-            applyGravity(physics, level);
-        }
-
-        resolveYAxis(movable, level);
+    public void resolve(Physics body, Level level) {
+        resolveXAxis(body, level);
+        applyGravity(body, level);
+        resolveYAxis(body, level);
     }
 
-    private void applyGravity(Physics physics, Level level) {
-        if (isSolidBelow(physics, level) && physics.getVelocityY() >= 0) {
-            onCollision(physics, Collidable.Direction.DOWN);
+    private void applyGravity(Physics body, Level level) {
+        if (isSolidBelow(body, level) && body.getVelocityY() >= 0) {
+            onCollision(body, Collidable.Direction.DOWN);
         } else {
-            physics.fall();
+            body.fall();
         }
 
-        int velocityY = Math.min(physics.getVelocityY() + physics.getVerticalAcceleration(), physics.getTerminalVelocity());
+        int velocityY = Math.min(body.getVelocityY() + body.getVerticalAcceleration(), body.getTerminalVelocity());
 
-        physics.setVelocityY(velocityY);
+        body.setVelocityY(velocityY);
     }
 
-    private void resolveXAxis(Movable movable, Level level) {
-        int velocityX = movable.getVelocityX();
+    private void resolveXAxis(Physics body, Level level) {
+        int velocityX = body.getVelocityX();
         if (velocityX == 0) return;
 
-        int newX = movable.getX() + velocityX;
+        int newX = body.getX() + velocityX;
         int resolvedX = newX;
 
-        if (collides(newX, movable.getY(), movable.getWidth(), movable.getHeight(), level)) {
+        if (collides(newX, body.getY(), body.getWidth(), body.getHeight(), level)) {
             if (velocityX > 0) {
-                resolvedX = snapRight(movable, newX);
+                resolvedX = snapRight(body, newX);
             } else {
-                resolvedX = snapLeft(movable, newX);
+                resolvedX = snapLeft(body, newX);
             }
         }
 
-        movable.setX(resolvedX);
+        body.setX(resolvedX);
     }
 
-    private int snapRight(Movable movable, int newX) {
-        onCollision(movable, Collidable.Direction.RIGHT);
+    private int snapRight(Physics body, int newX) {
+        onCollision(body, Collidable.Direction.RIGHT);
 
-        int right = newX + movable.getWidth() - 1;
+        int right = newX + body.getWidth() - 1;
         int col = right / TILE_SIZE;
 
-        return col * TILE_SIZE - movable.getWidth();
+        return col * TILE_SIZE - body.getWidth();
     }
 
-    private int snapLeft(Movable movable, int newX) {
-        onCollision(movable, Collidable.Direction.LEFT);
+    private int snapLeft(Physics body, int newX) {
+        onCollision(body, Collidable.Direction.LEFT);
 
         int col = newX / TILE_SIZE;
 
         return (col + 1) * TILE_SIZE;
     }
 
-    private void resolveYAxis(Movable movable, Level level) {
-        int velocityY = movable.getVelocityY();
+    private void resolveYAxis(Physics body, Level level) {
+        int velocityY = body.getVelocityY();
         if (velocityY == 0) return;
 
-        int newY = movable.getY() + velocityY;
+        int newY = body.getY() + velocityY;
         int resolvedY = newY;
 
-        if (collides(movable.getX(), newY, movable.getWidth(), movable.getHeight(), level)) {
+        if (collides(body.getX(), newY, body.getWidth(), body.getHeight(), level)) {
             if (velocityY > 0) {
-                resolvedY = snapToGround(movable, newY);
+                resolvedY = snapToGround(body, newY);
             } else {
-                resolvedY = snapToCeiling(movable, newY);
+                resolvedY = snapToCeiling(body, newY);
             }
         }
 
-        movable.setY(resolvedY);
+        body.setY(resolvedY);
     }
 
-    private int snapToGround(Movable movable, int newY) {
-        onCollision(movable, Collidable.Direction.DOWN);
+    private int snapToGround(Physics body, int newY) {
+        onCollision(body, Collidable.Direction.DOWN);
 
-        int bottom = newY + movable.getHeight() - 1;
+        int bottom = newY + body.getHeight() - 1;
         int row = bottom / TILE_SIZE;
 
-        return row * TILE_SIZE - movable.getHeight();
+        return row * TILE_SIZE - body.getHeight();
     }
 
-    private int snapToCeiling(Movable movable, int newY) {
-        onCollision(movable, Collidable.Direction.UP);
+    private int snapToCeiling(Physics body, int newY) {
+        onCollision(body, Collidable.Direction.UP);
 
         int row = newY / TILE_SIZE;
 
         return (row + 1) * TILE_SIZE;
     }
 
-    private void onCollision(Movable movable, Collidable.Direction direction) {
-        if (movable instanceof Collidable collidable) {
+    private void onCollision(Physics body, Collidable.Direction direction) {
+        if (body instanceof Collidable collidable) {
             collidable.onCollision(direction);
         }
     }
@@ -120,12 +116,12 @@ public class Collision {
         return false;
     }
 
-    private boolean isSolidBelow(Movable movable, Level level) {
-        int x = movable.getX();
-        int y = movable.getY() + movable.getHeight();
+    private boolean isSolidBelow(Physics body, Level level) {
+        int x = body.getX();
+        int y = body.getY() + body.getHeight();
 
         int left = x / TILE_SIZE;
-        int right = (x + movable.getWidth() - 1) / TILE_SIZE;
+        int right = (x + body.getWidth() - 1) / TILE_SIZE;
         int row = y / TILE_SIZE;
 
         for (int col = left; col <= right; col++) {

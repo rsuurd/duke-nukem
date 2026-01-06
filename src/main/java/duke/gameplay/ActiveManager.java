@@ -10,8 +10,17 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class ActiveManager {
-    private List<Active> actives = new LinkedList<>();
-    private List<Active> spawns = new LinkedList<>();
+    private Collision collision;
+
+    private List<Active> actives;
+    private List<Active> spawns;
+
+    public ActiveManager(Collision collision) {
+        this.collision = collision;
+
+        actives = new LinkedList<>();
+        spawns = new LinkedList<>();
+    }
 
     public void update(GameplayContext context) {
         Iterator<Active> iterator = actives.iterator();
@@ -21,6 +30,10 @@ public class ActiveManager {
 
             if (active instanceof Updatable updatable) {
                 updatable.update(context);
+            }
+
+            if (active instanceof Physics body) {
+                collision.resolve(body, context.getLevel());
             }
 
             if (!active.isActive()) {

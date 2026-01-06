@@ -30,7 +30,7 @@ public class GameplayState implements GameState {
         hud = new Hud(assets, font);
         spriteRenderer = new SpriteRenderer(assets);
         collision = new Collision();
-        ActiveManager activeManager = new ActiveManager();
+        ActiveManager activeManager = new ActiveManager(collision);
         ScoreManager scoreManager = new ScoreManager(activeManager);
         context = new GameplayContext(new Player(), level, activeManager, gameContext.getSoundManager(), scoreManager);
     }
