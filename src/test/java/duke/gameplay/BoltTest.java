@@ -106,7 +106,7 @@ class BoltTest {
         bolt.update(context);
 
         assertThat(bolt.isActive()).isTrue();
-        verify(shootable, never()).intersects(any());
+        verify(shootable, never()).intersects(any(Active.class));
         verify(shootable, never()).onShot(any(), any());
     }
 
@@ -121,7 +121,7 @@ class BoltTest {
         bolt.update(context);
 
         assertThat(bolt.isActive()).isTrue();
-        verify(active, never()).intersects(any());
+        verify(active, never()).intersects(any(Active.class));
     }
 
     private abstract static class TestShootable extends Active implements Shootable {

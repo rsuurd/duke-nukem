@@ -1,5 +1,7 @@
 package duke.gameplay;
 
+import duke.level.Level;
+
 public abstract class Active implements Movable {
     private Rectangle bounds;
 
@@ -71,6 +73,18 @@ public abstract class Active implements Movable {
     }
 
     public boolean intersects(Active other) {
-        return bounds.intersects(other.bounds);
+        return intersects(other.bounds);
+    }
+
+    public boolean intersects(Rectangle rectangle) {
+        return bounds.intersects(rectangle);
+    }
+
+    public int getRow() {
+        return getY() / Level.TILE_SIZE;
+    }
+
+    public int getCol() {
+        return getX() / Level.TILE_SIZE;
     }
 }

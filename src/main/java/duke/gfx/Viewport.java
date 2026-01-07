@@ -14,7 +14,6 @@ public class Viewport {
     static final int VERTICAL_CENTER = 96;
     private static final int CENTERING_SPEED = 16;
 
-
     private int x;
     private int y;
 
