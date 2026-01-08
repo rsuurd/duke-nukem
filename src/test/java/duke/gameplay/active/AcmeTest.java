@@ -3,6 +3,7 @@ package duke.gameplay.active;
 import duke.gameplay.GameplayContext;
 import duke.gameplay.GameplayContextFixture;
 import duke.gameplay.Rectangle;
+import duke.gameplay.effects.Effect;
 import duke.sfx.Sfx;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,9 +37,7 @@ class AcmeTest {
     void shouldShake() {
         Acme acme = new Acme(0, 0);
 
-        when(context.getPlayer().intersects(any(Rectangle.class))).thenReturn(true);
-
-        acme.update(context);
+        wakeUp(acme);
 
         assertThat(acme.isIdle()).isFalse();
         assertThat(acme.isShaking()).isTrue();
@@ -49,40 +48,44 @@ class AcmeTest {
     @Test
     void shouldDetach() {
         Acme acme = new Acme(0, 0);
-        fastForward(acme, Acme.SHAKE_TIME);
 
-        acme.update(context);
+        wakeUp(acme);
+        fastForward(acme, Acme.SHAKE_TIME);
 
         assertThat(acme.isIdle()).isFalse();
         assertThat(acme.isShaking()).isFalse();
         assertThat(acme.isDetaching()).isTrue();
         assertThat(acme.isFalling()).isFalse();
 
+        assertThat(acme.getY()).isEqualTo(12);
         verify(context.getSoundManager()).play(Sfx.DANGER_SIGN);
     }
 
     @Test
     void shouldFall() {
         Acme acme = new Acme(0, 0);
+        wakeUp(acme);
         fastForward(acme, Acme.DETACH_TIME);
-
-        acme.update(context);
 
         assertThat(acme.isIdle()).isFalse();
         assertThat(acme.isShaking()).isFalse();
         assertThat(acme.isDetaching()).isFalse();
         assertThat(acme.isFalling()).isTrue();
+
+        assertThat(acme.getY()).isEqualTo(24);
     }
 
     @Test
     void shouldCrash() {
         Acme acme = new Acme(0, 0);
+        wakeUp(acme);
         fastForward(acme, Acme.DETACH_TIME);
         when(context.getLevel().isSolid(anyInt(), anyInt())).thenReturn(true);
 
         acme.update(context);
 
         assertThat(acme.isActive()).isFalse();
+        verify(context.getActiveManager()).spawn(any(Effect.class));
     }
 
     @Test
@@ -93,12 +96,17 @@ class AcmeTest {
 
         assertThat(acme.isActive()).isFalse();
         verify(context.getScoreManager()).score(500, 8, 0);
+        verify(context.getActiveManager(), times(2)).spawn(any(Effect.class));
+    }
+
+    private void wakeUp(Acme acme) {
+        when(context.getPlayer().intersects(any(Rectangle.class))).thenReturn(true);
+
+        acme.update(context);
     }
 
     private void fastForward(Acme acme, int ticks) {
-        when(context.getPlayer().intersects(any(Rectangle.class))).thenReturn(true);
-
-        for (int timer = -1; timer < ticks; timer++) {
+        for (int timer = 0; timer < ticks; timer++) {
             acme.update(context);
         }
     }

@@ -1,6 +1,7 @@
 package duke.gameplay.active;
 
 import duke.gameplay.*;
+import duke.gameplay.effects.EffectsFactory;
 import duke.gfx.SpriteDescriptor;
 import duke.gfx.SpriteRenderable;
 import duke.level.Level;
@@ -43,7 +44,7 @@ public class Acme extends Active implements Updatable, SpriteRenderable, Shootab
         }
 
         if (isFalling() && context.getLevel().isSolid(getRow(), getCol())) {
-            crash(context);
+            destroy(context);
         }
     }
 
@@ -79,9 +80,9 @@ public class Acme extends Active implements Updatable, SpriteRenderable, Shootab
 
     private void shake() {
         if (timer % 2 == 0) {
-            setY(getY() - 1);
-        } else {
             setY(getY() + 1);
+        } else {
+            setY(getY() - 1);
         }
     }
 
@@ -101,13 +102,6 @@ public class Acme extends Active implements Updatable, SpriteRenderable, Shootab
         setY(getY() + FALL_SPEED);
     }
 
-    private void crash(GameplayContext context) {
-        // particles
-        // smoke
-        // sound?
-        deactivate();
-    }
-
     @Override
     public SpriteDescriptor getSpriteDescriptor() {
         return SPRITE;
@@ -115,15 +109,23 @@ public class Acme extends Active implements Updatable, SpriteRenderable, Shootab
 
     @Override
     public void onShot(GameplayContext context, Bolt bolt) {
-        context.getScoreManager().score(500, getX() + 8, getY());
+        int effectsX = getX() + 8;
+
+        context.getScoreManager().score(500, effectsX, getY());
+        destroy(context);
+        context.getActiveManager().spawn(EffectsFactory.createSparks(effectsX, getY()));
+    }
+
+    private void destroy(GameplayContext context) {
+        context.getActiveManager().spawn(EffectsFactory.createSmoke(getX() + 8, getY() - 8));
         // particles
-        // sound
+
         deactivate();
     }
 
     private static final SpriteDescriptor SPRITE = new SpriteDescriptor(AssetManager::getObjects, 83, 0, 0, 1, 2);
 
     static final int SHAKE_TIME = 10;
-    static final int DETACH_TIME = SHAKE_TIME + 2;
-    private static final int FALL_SPEED = 8;
+    static final int DETACH_TIME = SHAKE_TIME + 1;
+    private static final int FALL_SPEED = 12;
 }

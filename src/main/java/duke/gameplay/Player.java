@@ -74,7 +74,6 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
 
         applyFriction();
         updateJump();
-        updateAnimation();
     }
 
     private void reset() {
@@ -101,6 +100,8 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
             context.getActiveManager().spawn(EffectsFactory.createDust(this));
             context.getSoundManager().play(PLAYER_LAND);
         }
+
+        updateAnimation();
     }
 
     private void updateJump() {

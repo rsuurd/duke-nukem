@@ -16,10 +16,10 @@ import static org.mockito.Mockito.*;
 
 class SecurityCameraTest {
     @ParameterizedTest
-    @MethodSource("playerLocation")
-    void shouldFacePlayer(int playerX, int expectedBaseIndex) {
+    @MethodSource("playerCol")
+    void shouldFacePlayer(int playerCol, int expectedBaseIndex) {
         GameplayContext context = GameplayContextFixture.create();
-        when(context.getPlayer().getX()).thenReturn(playerX);
+        when(context.getPlayer().getCol()).thenReturn(playerCol);
 
         SecurityCamera securityCamera = new SecurityCamera(16, 0);
 
@@ -41,11 +41,11 @@ class SecurityCameraTest {
         verify(context.getSoundManager()).play(Sfx.SMALL_DEATH);
     }
 
-    static Stream<Arguments> playerLocation() {
+    static Stream<Arguments> playerCol() {
         return Stream.of(
                 () -> new Object[]{0, 208},
-                () -> new Object[]{16, 209},
-                () -> new Object[]{32, 210}
+                () -> new Object[]{1, 209},
+                () -> new Object[]{2, 210}
         );
     }
 }

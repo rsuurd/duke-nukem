@@ -20,8 +20,9 @@ public class SecurityCamera extends Active implements Movable, Updatable, Sprite
 
     @Override
     public void update(GameplayContext context) {
-        int col = context.getPlayer().getCol();
-        index = Integer.signum(col - getCol()) + 1;
+        int distance = context.getPlayer().getCol() - getCol();
+
+        index = Integer.signum(distance) + 1;
     }
 
     @Override
