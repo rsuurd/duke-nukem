@@ -1,5 +1,6 @@
 package duke.gameplay;
 
+import duke.gameplay.effects.Effect;
 import duke.gameplay.effects.EffectsFactory;
 import duke.gfx.Animation;
 import duke.gfx.AnimationDescriptor;

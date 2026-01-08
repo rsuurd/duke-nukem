@@ -33,6 +33,9 @@ public class Effect extends Active implements Updatable, SpriteRenderable {
     public void update(GameplayContext context) {
         animation.tick();
 
+        setX(getX() + getVelocityX());
+        setY(getY() + getVelocityY());
+
         ttl--;
     }
 

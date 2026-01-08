@@ -1,10 +1,12 @@
 package duke.gameplay;
 
 import duke.Renderer;
+import duke.gameplay.effects.Effect;
 import duke.gfx.SpriteRenderable;
 import duke.gfx.SpriteRenderer;
 import duke.gfx.Viewport;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -51,6 +53,10 @@ public class ActiveManager {
 
     public void spawn(Active active) {
         spawns.add(active);
+    }
+
+    public void spawn(List<? extends Active> effects) {
+        spawns.addAll(effects);
     }
 
     private void addPendingSpawns() {

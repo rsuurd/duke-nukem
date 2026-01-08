@@ -39,12 +39,12 @@ public class Acme extends Active implements Updatable, SpriteRenderable, Shootab
             shake();
         }
 
-        if (isDetaching() || isFalling()) {
-            fall(context);
-        }
-
-        if (isFalling() && context.getLevel().isSolid(getRow(), getCol())) {
-            destroy(context);
+        if (isFalling()) {
+            if (context.getLevel().isSolid(getRow() + 1, getCol())) {
+                destroy(context);
+            } else {
+                fall(context);
+            }
         }
     }
 
@@ -86,12 +86,8 @@ public class Acme extends Active implements Updatable, SpriteRenderable, Shootab
         }
     }
 
-    boolean isDetaching() {
-        return timer >= SHAKE_TIME && timer < DETACH_TIME;
-    }
-
     boolean isFalling() {
-        return timer >= DETACH_TIME;
+        return timer >= SHAKE_TIME;
     }
 
     private void fall(GameplayContext context) {
@@ -112,13 +108,16 @@ public class Acme extends Active implements Updatable, SpriteRenderable, Shootab
         int effectsX = getX() + 8;
 
         context.getScoreManager().score(500, effectsX, getY());
-        destroy(context);
         context.getActiveManager().spawn(EffectsFactory.createSparks(effectsX, getY()));
+        destroy(context);
     }
 
     private void destroy(GameplayContext context) {
-        context.getActiveManager().spawn(EffectsFactory.createSmoke(getX() + 8, getY() - 8));
-        // particles
+        int effectsX = getX() + 8;
+        int effectsY = getY() - 8;
+
+        context.getActiveManager().spawn(EffectsFactory.createSmoke(effectsX, effectsY));
+        context.getActiveManager().spawn(EffectsFactory.createParticles(effectsX, effectsY));
 
         deactivate();
     }
@@ -126,6 +125,5 @@ public class Acme extends Active implements Updatable, SpriteRenderable, Shootab
     private static final SpriteDescriptor SPRITE = new SpriteDescriptor(AssetManager::getObjects, 83, 0, 0, 1, 2);
 
     static final int SHAKE_TIME = 10;
-    static final int DETACH_TIME = SHAKE_TIME + 1;
     private static final int FALL_SPEED = 12;
 }

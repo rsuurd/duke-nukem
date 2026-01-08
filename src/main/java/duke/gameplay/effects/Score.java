@@ -1,6 +1,5 @@
 package duke.gameplay.effects;
 
-import duke.gameplay.GameplayContext;
 import duke.gfx.AnimationDescriptor;
 import duke.gfx.SpriteDescriptor;
 import duke.resources.AssetManager;
@@ -10,13 +9,8 @@ import java.util.Map;
 public class Score extends Effect {
     public Score(int x, int y, int points) {
         super(x, y, DESCRIPTORS.get(points), TTL);
-    }
 
-    @Override
-    public void update(GameplayContext context) {
-        super.update(context);
-
-        setY(getY() - SPEED);
+        setVelocityY(-SPEED);
     }
 
     private static final int SPEED = 2;

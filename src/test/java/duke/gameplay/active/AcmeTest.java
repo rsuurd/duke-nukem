@@ -29,7 +29,6 @@ class AcmeTest {
 
         assertThat(acme.isIdle()).isTrue();
         assertThat(acme.isShaking()).isFalse();
-        assertThat(acme.isDetaching()).isFalse();
         assertThat(acme.isFalling()).isFalse();
     }
 
@@ -41,50 +40,33 @@ class AcmeTest {
 
         assertThat(acme.isIdle()).isFalse();
         assertThat(acme.isShaking()).isTrue();
-        assertThat(acme.isDetaching()).isFalse();
         assertThat(acme.isFalling()).isFalse();
-    }
-
-    @Test
-    void shouldDetach() {
-        Acme acme = new Acme(0, 0);
-
-        wakeUp(acme);
-        fastForward(acme, Acme.SHAKE_TIME);
-
-        assertThat(acme.isIdle()).isFalse();
-        assertThat(acme.isShaking()).isFalse();
-        assertThat(acme.isDetaching()).isTrue();
-        assertThat(acme.isFalling()).isFalse();
-
-        assertThat(acme.getY()).isEqualTo(12);
-        verify(context.getSoundManager()).play(Sfx.DANGER_SIGN);
     }
 
     @Test
     void shouldFall() {
         Acme acme = new Acme(0, 0);
         wakeUp(acme);
-        fastForward(acme, Acme.DETACH_TIME);
+        fastForward(acme, Acme.SHAKE_TIME);
 
         assertThat(acme.isIdle()).isFalse();
         assertThat(acme.isShaking()).isFalse();
-        assertThat(acme.isDetaching()).isFalse();
         assertThat(acme.isFalling()).isTrue();
 
-        assertThat(acme.getY()).isEqualTo(24);
+        assertThat(acme.getY()).isEqualTo(12);
     }
 
     @Test
     void shouldCrash() {
         Acme acme = new Acme(0, 0);
         wakeUp(acme);
-        fastForward(acme, Acme.DETACH_TIME);
+        fastForward(acme, Acme.SHAKE_TIME);
         when(context.getLevel().isSolid(anyInt(), anyInt())).thenReturn(true);
 
         acme.update(context);
 
         assertThat(acme.isActive()).isFalse();
+        verify(context.getActiveManager()).spawn(any(Effect.class));
         verify(context.getActiveManager()).spawn(any(Effect.class));
     }
 

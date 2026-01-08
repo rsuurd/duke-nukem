@@ -6,6 +6,8 @@ import duke.gfx.Sprite;
 import duke.gfx.SpriteDescriptor;
 import duke.resources.AssetManager;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
@@ -23,6 +25,18 @@ public class EffectsFactory {
 
     public static Effect createSmoke(int x, int y) {
         return createEffect(x, y, AssetManager::getObjects, GFX_SMOKE_INDEX, 5);
+    }
+
+    public static List<Effect> createParticles(int x, int y) {
+        List<Particle.Type> types = Arrays.asList(Particle.Type.values());
+        Collections.shuffle(types);
+
+        return List.of(
+                new Particle(x, y - 2, -1, -4, types.get(0)),
+                new Particle(x + 8, y, 1, -4, types.get(1)),
+                new Particle(x, y + 8, -6, 2, types.get(2)),
+                new Particle(x + 8, y + 8, 6, 0, types.get(3))
+        );
     }
 
     private static Effect createEffect(int x, int y, Function<AssetManager, List<Sprite>> selector, int baseIndex, int frames) {
