@@ -20,9 +20,10 @@ public class HealthBehavior implements ItemBehavior {
 
     @Override
     public void pickedUp(GameplayContext context, Item item) {
-        // context.getPlayer().addHealth(hp);
+        context.getPlayer().increaseHealth(hp);
         context.getScoreManager().score(points, item.getX(), item.getY());
         context.getSoundManager().play(sfx);
+
         item.destroy();
     }
 }

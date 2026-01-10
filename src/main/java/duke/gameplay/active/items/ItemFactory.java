@@ -8,6 +8,8 @@ import duke.sfx.Sfx;
 import java.util.List;
 import java.util.function.Function;
 
+import static duke.gameplay.Player.MAX_HEALTH;
+
 public class ItemFactory {
     public static Item createFootball(int x, int y) {
         return new Item(x, y, new SimpleSpriteRenderable(createItemSpriteDescriptor(FOOTBALL_SPRITE_INDEX)), new BonusItemBehavior(100));
@@ -53,7 +55,7 @@ public class ItemFactory {
         SpriteDescriptor spriteDescriptor = createItemSpriteDescriptor(NUCLEAR_MOLECULE_SPRITE_INDEX);
         AnimationDescriptor animationDescriptor = new AnimationDescriptor(spriteDescriptor, 9, 1);
 
-        return new Item(x, y, new AnimatedSpriteRenderable(animationDescriptor), new HealthBehavior(8, 1000, Sfx.GET_POWER_UP));
+        return new Item(x, y, new AnimatedSpriteRenderable(animationDescriptor), new HealthBehavior(MAX_HEALTH, 1000, Sfx.GET_POWER_UP));
     }
 
     private static SpriteDescriptor createItemSpriteDescriptor(int index) {

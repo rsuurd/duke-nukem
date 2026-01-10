@@ -12,8 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static duke.gameplay.Physics.GRAVITY;
-import static duke.gameplay.Player.JUMP_POWER;
-import static duke.gameplay.Player.SPEED;
+import static duke.gameplay.Player.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -255,5 +254,14 @@ class PlayerTest {
 
         verify(context.getActiveManager()).spawn(any(Bolt.class));
         verify(context.getSoundManager()).play(Sfx.PLAYER_GUN);
+    }
+
+    @Test
+    void shouldIncreaseHealth() {
+        Player player = new Player();
+
+        player.increaseHealth(MAX_HEALTH);
+
+        assertThat(player.getHealth()).isEqualTo(MAX_HEALTH);
     }
 }

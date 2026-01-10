@@ -38,7 +38,7 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
         this.facing = facing;
         this.state = state;
 
-        health = 8;
+        health = MAX_HEALTH;
         jumpReady = true;
         gunReady = true;
 
@@ -208,19 +208,6 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
         return state == State.JUMPING && hangTimeLeft > 0 && getVelocityY() == 0;
     }
 
-    private static final int WIDTH = 16;
-    private static final int HEIGHT = 32;
-    static final int JUMP_POWER = -15; // TODO influenced by boots
-    static final int HANG_TIME = 4;
-    static final int SPEED = 8;
-
-    public enum State {
-        STANDING,
-        WALKING,
-        JUMPING,
-        FALLING
-    }
-
     @Override
     public SpriteDescriptor getSpriteDescriptor() {
         return spriteDescriptor;
@@ -246,8 +233,31 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
         }
     }
 
-    private static SpriteDescriptor BASE_DESCRIPTOR = new SpriteDescriptor(AssetManager::getMan, 0, -8, 0, 2, 2);
+    public void increaseHealth(int amount) {
+        health += amount;
 
+        if (health > MAX_HEALTH) {
+            health = MAX_HEALTH;
+        }
+    }
+
+    public enum State {
+        STANDING,
+        WALKING,
+        JUMPING,
+        FALLING
+    }
+
+    private static final int WIDTH = 16;
+    private static final int HEIGHT = 32;
+
+    static final int JUMP_POWER = -15; // TODO influenced by boots
+    static final int HANG_TIME = 4;
+    static final int SPEED = 8;
+
+    public static final int MAX_HEALTH = 8;
+
+    private static SpriteDescriptor BASE_DESCRIPTOR = new SpriteDescriptor(AssetManager::getMan, 0, -8, 0, 2, 2);
     private static SpriteDescriptor STANDING_LEFT = BASE_DESCRIPTOR.withBaseIndex(50);
     private static SpriteDescriptor STANDING_RIGHT = BASE_DESCRIPTOR.withBaseIndex(54);
     private static AnimationDescriptor WALKING_LEFT = new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(0), 4, 2);

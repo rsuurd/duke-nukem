@@ -25,7 +25,7 @@ class HealthBehaviorTest {
 
         behavior.pickedUp(context, item);
 
-        // verify(context.getPlayer()).increaseHealth(1);
+        verify(context.getPlayer()).increaseHealth(1);
         verify(context.getSoundManager()).play(Sfx.GET_FOOD_ITEM);
         verify(context.getScoreManager()).score(100, item.getX(), item.getY());
         verify(item).destroy();
