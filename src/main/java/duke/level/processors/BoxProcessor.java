@@ -40,7 +40,7 @@ public class BoxProcessor implements ActiveProcessor {
         BOX_DESCRIPTORS.put(0x301f, new BoxDescriptor(Box.Type.BLUE, ItemFactory::createFloppy));
         BOX_DESCRIPTORS.put(0x3020, new BoxDescriptor(Box.Type.GREY, null)); // robohand
         BOX_DESCRIPTORS.put(0x3023, new BoxDescriptor(Box.Type.BLUE, null)); // balloon
-        BOX_DESCRIPTORS.put(0x3029, new BoxDescriptor(Box.Type.GREY, null)); // nuclear molecule
+        BOX_DESCRIPTORS.put(0x3029, new BoxDescriptor(Box.Type.GREY, ItemFactory::createNuclearMolecule));
         BOX_DESCRIPTORS.put(0x302d, new BoxDescriptor(Box.Type.BLUE, ItemFactory::createFlag));
         BOX_DESCRIPTORS.put(0x302e, new BoxDescriptor(Box.Type.BLUE, ItemFactory::createRadio));
         BOX_DESCRIPTORS.put(0x3033, new BoxDescriptor(Box.Type.GREY, null)); // robohand

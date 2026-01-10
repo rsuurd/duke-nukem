@@ -3,6 +3,7 @@ package duke.gameplay.active.items;
 import duke.gameplay.active.items.BonusItemBehavior.RandomBonusItemBehavior;
 import duke.gfx.*;
 import duke.resources.AssetManager;
+import duke.sfx.Sfx;
 
 import java.util.List;
 import java.util.function.Function;
@@ -48,6 +49,13 @@ public class ItemFactory {
         return new Item(x, y, new SimpleSpriteRenderable(createItemSpriteDescriptor(TURKEY_SPRITE_INDEX)), new HealthBehavior(2, 200));
     }
 
+    public static Item createNuclearMolecule(int x, int y) {
+        SpriteDescriptor spriteDescriptor = createItemSpriteDescriptor(NUCLEAR_MOLECULE_SPRITE_INDEX);
+        AnimationDescriptor animationDescriptor = new AnimationDescriptor(spriteDescriptor, 9, 1);
+
+        return new Item(x, y, new AnimatedSpriteRenderable(animationDescriptor), new HealthBehavior(8, 1000, Sfx.GET_POWER_UP));
+    }
+
     private static SpriteDescriptor createItemSpriteDescriptor(int index) {
         return createItemSpriteDescriptor(AssetManager::getObjects, index);
     }
@@ -71,6 +79,7 @@ public class ItemFactory {
     private static final int FOOTBALL_SPRITE_INDEX = 58;
     private static final int JOYSTICK_SPRITE_INDEX = 59;
     private static final int FLOPPY_SPRITE_INDEX = 60;
+    private static final int NUCLEAR_MOLECULE_SPRITE_INDEX = 74;
     private static final int FLAG_SPRITE_INDEX = 97;
     private static final int RADIO_SPRITE_INDEX = 102;
 
