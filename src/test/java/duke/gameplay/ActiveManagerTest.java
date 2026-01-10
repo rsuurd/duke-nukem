@@ -1,5 +1,6 @@
 package duke.gameplay;
 
+import duke.gfx.Viewport;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,6 +13,9 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ActiveManagerTest {
+    @Mock
+    private Viewport viewport;
+
     @Mock
     private Collision collision;
 
@@ -26,8 +30,21 @@ class ActiveManagerTest {
     }
 
     @Test
-    void shouldUpdateActives() {
-        TestActive active = mock();
+    void shouldActivateVisibleActives() {
+        TestActive active = spy(new TestActive());
+        manager.getActives().add(active);
+        when(viewport.isVisible(any())).thenReturn(true);
+
+        manager.update(context);
+
+        verify(active).activate();
+        verify(active).update(context);
+    }
+
+    @Test
+    void shouldUpdateActivatedActives() {
+        TestActive active = spy(new TestActive());
+        when(active.isActivated()).thenReturn(true);
         manager.getActives().add(active);
 
         manager.update(context);
@@ -36,13 +53,35 @@ class ActiveManagerTest {
     }
 
     @Test
-    void shouldResolveCollision() {
-        ActiveWithPhysics active = mock();
+    void shouldNotUpdateInactiveActives() {
+        TestActive active = spy(new TestActive());
         manager.getActives().add(active);
 
         manager.update(context);
 
+        verify(active, never()).update(context);
+    }
+
+    @Test
+    void shouldResolveCollision() {
+        ActiveWithPhysics active = spy(new ActiveWithPhysics());
+        manager.getActives().add(active);
+        when(viewport.isVisible(any())).thenReturn(true);
+
+        manager.update(context);
+
         verify(collision).resolve(active, context.getLevel());
+    }
+
+    @Test
+    void shouldNotResolveDistantCollision() {
+        ActiveWithPhysics active = spy(new ActiveWithPhysics());
+        manager.getActives().add(active);
+        when(viewport.isVisible(any())).thenReturn(false);
+
+        manager.update(context);
+
+        verify(collision, never()).resolve(active, context.getLevel());
     }
 
     @Test
@@ -55,9 +94,9 @@ class ActiveManagerTest {
     }
 
     @Test
-    void shouldRemoveInactives() {
-        TestActive active = mock();
-        when(active.isActive()).thenReturn(false);
+    void shouldRemoveDestroyedActives() {
+        TestActive active = spy(new TestActive());
+        when(active.isDestroyed()).thenReturn(true);
         manager.getActives().add(active);
 
         manager.update(context);
@@ -98,8 +137,5 @@ class ActiveManagerTest {
         public int getVerticalAcceleration() {
             return 0;
         }
-
-        @Override
-        public void fall() {}
     }
 }

@@ -36,7 +36,7 @@ class SecurityCameraTest {
         securityCamera.onShot(context, mock());
 
         verify(context.getActiveManager()).spawn(any(Effect.class));
-        assertThat(securityCamera.isActive()).isFalse();
+        assertThat(securityCamera.isActivated()).isFalse();
         verify(context.getScoreManager()).score(100, 16, 0);
         verify(context.getSoundManager()).play(Sfx.SMALL_DEATH);
     }

@@ -49,6 +49,6 @@ public class SecurityCamera extends Active implements Movable, Updatable, Sprite
         context.getActiveManager().spawn(EffectsFactory.createSparks(getX(), getY()));
         context.getSoundManager().play(Sfx.SMALL_DEATH);
 
-        deactivate();
+        destroy();
     }
 }

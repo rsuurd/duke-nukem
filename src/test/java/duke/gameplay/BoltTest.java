@@ -25,6 +25,7 @@ class BoltTest {
 
         Bolt bolt = Bolt.create(player);
 
+        assertThat(bolt.isActivated()).isTrue();
         assertThat(bolt.getX()).isEqualTo(192);
         assertThat(bolt.getY()).isEqualTo(205);
         assertThat(bolt.getVelocityX()).isEqualTo(Bolt.SPEED * ((facing == Facing.RIGHT) ? 1 : -1));
@@ -47,7 +48,7 @@ class BoltTest {
 
         bolt.update(context);
 
-        assertThat(bolt.isActive()).isFalse();
+        assertThat(bolt.isDestroyed()).isTrue();
     }
 
     @Test
@@ -60,7 +61,7 @@ class BoltTest {
 
             bolt.update(context);
 
-            assertThat(bolt.isActive()).isFalse();
+            assertThat(bolt.isDestroyed()).isTrue();
             verify(context.getActiveManager()).spawn(any(Effect.class));
         }
     }
@@ -74,7 +75,7 @@ class BoltTest {
 
         bolt.update(context);
 
-        assertThat(bolt.isActive()).isFalse();
+        assertThat(bolt.isDestroyed()).isTrue();
         verify(context.getActiveManager()).spawn(any(Effect.class));
         verify(context.getLevel()).setTile(0, 1, DESTROYED_BRICKS_TILE_ID);
         verify(context.getScoreManager()).score(10);
@@ -86,12 +87,12 @@ class BoltTest {
         TestShootable shootable = mock();
         Bolt bolt = new Bolt(0, 0, Facing.RIGHT);
         when(context.getActiveManager().getActives()).thenReturn(List.of(shootable));
-        when(shootable.isActive()).thenReturn(true);
+        when(shootable.isActivated()).thenReturn(true);
         when(shootable.intersects(bolt)).thenReturn(true);
 
         bolt.update(context);
 
-        assertThat(bolt.isActive()).isFalse();
+        assertThat(bolt.isDestroyed()).isTrue();
         verify(shootable).onShot(context, bolt);
     }
 
@@ -101,11 +102,27 @@ class BoltTest {
         TestShootable shootable = mock();
         Bolt bolt = new Bolt(0, 0, Facing.RIGHT);
         when(context.getActiveManager().getActives()).thenReturn(List.of(shootable));
-        when(shootable.isActive()).thenReturn(false);
+        when(shootable.isActivated()).thenReturn(false);
 
         bolt.update(context);
 
-        assertThat(bolt.isActive()).isTrue();
+        assertThat(bolt.isDestroyed()).isFalse();
+        verify(shootable, never()).intersects(any(Active.class));
+        verify(shootable, never()).onShot(any(), any());
+    }
+
+    @Test
+    void shouldNotHitDestroyedShootable() {
+        GameplayContext context = GameplayContextFixture.create();
+        TestShootable shootable = mock();
+        Bolt bolt = new Bolt(0, 0, Facing.RIGHT);
+        when(context.getActiveManager().getActives()).thenReturn(List.of(shootable));
+        when(shootable.isActivated()).thenReturn(true);
+        when(shootable.isDestroyed()).thenReturn(true);
+
+        bolt.update(context);
+
+        assertThat(bolt.isDestroyed()).isFalse();
         verify(shootable, never()).intersects(any(Active.class));
         verify(shootable, never()).onShot(any(), any());
     }
@@ -116,11 +133,11 @@ class BoltTest {
         Active active = mock();
         Bolt bolt = new Bolt(0, 0, Facing.RIGHT);
         when(context.getActiveManager().getActives()).thenReturn(List.of(active));
-        when(active.isActive()).thenReturn(true);
+        when(active.isActivated()).thenReturn(true);
 
         bolt.update(context);
 
-        assertThat(bolt.isActive()).isTrue();
+        assertThat(bolt.isDestroyed()).isFalse();
         verify(active, never()).intersects(any(Active.class));
     }
 

@@ -119,7 +119,7 @@ public class Acme extends Active implements Updatable, SpriteRenderable, Shootab
         context.getActiveManager().spawn(EffectsFactory.createSmoke(effectsX, effectsY));
         context.getActiveManager().spawn(EffectsFactory.createParticles(effectsX, effectsY));
 
-        deactivate();
+        destroy();
     }
 
     private static final SpriteDescriptor SPRITE = new SpriteDescriptor(AssetManager::getObjects, 83, 0, 0, 1, 2);

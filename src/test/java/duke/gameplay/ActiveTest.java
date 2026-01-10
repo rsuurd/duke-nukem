@@ -6,17 +6,31 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class ActiveTest {
     @Test
-    void shouldIndicateActive() {
-        assertThat(create().isActive()).isTrue();
+    void shouldIndicateInactive() {
+        assertThat(create().isActivated()).isFalse();
     }
 
     @Test
-    void shouldDeactivate() {
+    void shouldActivate() {
         Active active = create();
 
-        active.deactivate();
+        active.activate();
 
-        assertThat(active.isActive()).isFalse();
+        assertThat(active.isActivated()).isTrue();
+    }
+
+    @Test
+    void shouldIndicateIntact() {
+        assertThat(create().isDestroyed()).isFalse();
+    }
+
+    @Test
+    void shouldDestroy() {
+        Active active = create();
+
+        active.destroy();
+
+        assertThat(active.isDestroyed()).isTrue();
     }
 
     @Test

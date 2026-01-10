@@ -22,6 +22,8 @@ public class Effect extends Active implements Updatable, SpriteRenderable {
 
         animation = new Animation(animationDescriptor);
         this.ttl = ttl;
+
+        activate();
     }
 
     @Override
@@ -36,11 +38,8 @@ public class Effect extends Active implements Updatable, SpriteRenderable {
         setX(getX() + getVelocityX());
         setY(getY() + getVelocityY());
 
-        ttl--;
-    }
-
-    @Override
-    public boolean isActive() {
-        return ttl > 0;
+        if (--ttl <= 0) {
+            destroy();
+        }
     }
 }

@@ -17,7 +17,7 @@ class EffectTest {
 
         effect.update(mock());
 
-        assertThat(effect.isActive()).isFalse();
+        assertThat(effect.isDestroyed()).isTrue();
     }
 
     @Test
@@ -25,9 +25,11 @@ class EffectTest {
         Effect effect = new Effect(0, 0, mock(), 2);
 
         effect.update(mock());
-        assertThat(effect.isActive()).isTrue();
+        assertThat(effect.isActivated()).isTrue();
+        assertThat(effect.isDestroyed()).isFalse();
 
         effect.update(mock());
-        assertThat(effect.isActive()).isFalse();
+        assertThat(effect.isActivated()).isTrue();
+        assertThat(effect.isDestroyed()).isTrue();
     }
 }

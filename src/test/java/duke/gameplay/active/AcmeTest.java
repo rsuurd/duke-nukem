@@ -65,7 +65,7 @@ class AcmeTest {
 
         acme.update(context);
 
-        assertThat(acme.isActive()).isFalse();
+        assertThat(acme.isActivated()).isFalse();
         verify(context.getActiveManager()).spawn(any(Effect.class));
         verify(context.getActiveManager()).spawn(any(Effect.class));
     }
@@ -76,7 +76,7 @@ class AcmeTest {
 
         acme.onShot(context, mock());
 
-        assertThat(acme.isActive()).isFalse();
+        assertThat(acme.isActivated()).isFalse();
         verify(context.getScoreManager()).score(500, 8, 0);
         verify(context.getActiveManager(), times(2)).spawn(any(Effect.class));
     }

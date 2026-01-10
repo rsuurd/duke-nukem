@@ -30,7 +30,7 @@ public class GameplayState implements GameState {
         hud = new Hud(assets, font);
         spriteRenderer = new SpriteRenderer(assets);
         collision = new Collision();
-        ActiveManager activeManager = new ActiveManager(collision);
+        ActiveManager activeManager = new ActiveManager(viewport, collision, spriteRenderer);
         ScoreManager scoreManager = new ScoreManager(activeManager);
         context = new GameplayContext(new Player(), level, activeManager, gameContext.getSoundManager(), scoreManager);
     }
@@ -79,9 +79,9 @@ public class GameplayState implements GameState {
     public void render(GameContext gameContext) {
         Renderer renderer = gameContext.getRenderer();
         levelRenderer.render(renderer, viewport);
-        context.getActiveManager().render(renderer, spriteRenderer, viewport, Layer.BACKGROUND);
+        context.getActiveManager().render(renderer, Layer.BACKGROUND);
         drawPlayer(renderer);
-        context.getActiveManager().render(renderer, spriteRenderer, viewport, Layer.FOREGROUND);
+        context.getActiveManager().render(renderer, Layer.FOREGROUND);
         hud.render(renderer, context.getScoreManager().getScore(), context.getPlayer().getHealth());
 
         drawDebugInfo(renderer);

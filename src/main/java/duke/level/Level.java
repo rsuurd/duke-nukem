@@ -7,6 +7,7 @@ import java.util.List;
 
 public class Level {
     public static final int TILE_SIZE = 16;
+    public static final int HALF_TILE_SIZE = TILE_SIZE / 2;
     public static final int FLASHERS = 0x0;
     public static final int BACKGROUNDS = 0x600;
     public static final int SOLIDS = 0x1800;

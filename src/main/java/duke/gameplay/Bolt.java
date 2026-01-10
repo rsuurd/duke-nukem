@@ -28,6 +28,8 @@ public class Bolt extends Active implements Updatable, SpriteRenderable {
         animation = new Animation(BOLT);
 
         setVelocityX(facing == LEFT ? -SPEED : SPEED);
+
+        activate();
     }
 
     @Override
@@ -35,7 +37,7 @@ public class Bolt extends Active implements Updatable, SpriteRenderable {
         setX(getX() + getVelocityX());
 
         if (isFarAway(context.getPlayer())) {
-            deactivate();
+            destroy();
         } else {
             checkCollision(context);
         }
@@ -46,7 +48,7 @@ public class Bolt extends Active implements Updatable, SpriteRenderable {
     private boolean isFarAway(Player player) {
         int distance = Math.abs(player.getX() - getX());
 
-        return distance >= TILE_SIZE * 8;
+        return distance >= TILE_SIZE * 10;
     }
 
     private void checkCollision(GameplayContext context) {
@@ -84,18 +86,19 @@ public class Bolt extends Active implements Updatable, SpriteRenderable {
         context.getActiveManager().spawn(EffectsFactory.createSparks(col * TILE_SIZE, row * TILE_SIZE));
         context.getScoreManager().score(10);
 
-        deactivate();
+        destroy();
     }
 
     private void collidesWithShootable(GameplayContext context) {
         for (Active active : context.getActiveManager().getActives()) {
             if (active == this) continue;
-            if (!active.isActive()) continue;
+            if (!active.isActivated()) continue;
+            if (active.isDestroyed()) continue;
             if (!(active instanceof Shootable shootable)) continue;
 
             if (active.intersects(this)) {
                 shootable.onShot(context, this);
-                deactivate();
+                destroy();
 
                 return;
             }

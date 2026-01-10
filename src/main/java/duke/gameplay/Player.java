@@ -1,13 +1,11 @@
 package duke.gameplay;
 
-import duke.gameplay.effects.Effect;
 import duke.gameplay.effects.EffectsFactory;
 import duke.gfx.Animation;
 import duke.gfx.AnimationDescriptor;
 import duke.gfx.SpriteDescriptor;
 import duke.gfx.SpriteRenderable;
 import duke.resources.AssetManager;
-import duke.sfx.Sfx;
 import duke.ui.KeyHandler;
 
 import static duke.sfx.Sfx.*;

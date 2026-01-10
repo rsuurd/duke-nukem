@@ -33,5 +33,5 @@ public class Particle extends Effect {
         GREEN
     }
 
-    private static final int TTL = 32;
+    private static final int TTL = 16;
 }

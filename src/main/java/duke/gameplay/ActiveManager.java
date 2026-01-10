@@ -1,24 +1,26 @@
 package duke.gameplay;
 
 import duke.Renderer;
-import duke.gameplay.effects.Effect;
 import duke.gfx.SpriteRenderable;
 import duke.gfx.SpriteRenderer;
 import duke.gfx.Viewport;
 
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 public class ActiveManager {
+    private Viewport viewport;
     private Collision collision;
+    private SpriteRenderer spriteRenderer;
 
     private List<Active> actives;
     private List<Active> spawns;
 
-    public ActiveManager(Collision collision) {
+    public ActiveManager(Viewport viewport, Collision collision, SpriteRenderer spriteRenderer) {
+        this.viewport = viewport;
         this.collision = collision;
+        this.spriteRenderer = spriteRenderer;
 
         actives = new LinkedList<>();
         spawns = new LinkedList<>();
@@ -30,20 +32,33 @@ public class ActiveManager {
         while (iterator.hasNext()) {
             Active active = iterator.next();
 
-            if (active instanceof Updatable updatable) {
-                updatable.update(context);
-            }
+            wakeUpIfNeeded(active);
+            update(active, context);
 
-            if (active instanceof Physics body) {
-                collision.resolve(body, context.getLevel());
-            }
-
-            if (!active.isActive()) {
+            if (active.isDestroyed()) {
                 iterator.remove();
             }
         }
 
         addPendingSpawns();
+    }
+
+    private void wakeUpIfNeeded(Active active) {
+        if (!active.isActivated() && viewport.isVisible(active)) {
+            active.activate();
+        }
+    }
+
+    private void update(Active active, GameplayContext context) {
+        if (!active.isActivated()) return;
+
+        if (active instanceof Updatable updatable) {
+            updatable.update(context);
+        }
+
+        if (active instanceof Physics body) {
+            collision.resolve(body, context.getLevel());
+        }
     }
 
     public void spawn(Bolt bolt) {
@@ -55,8 +70,8 @@ public class ActiveManager {
         spawns.add(active);
     }
 
-    public void spawn(List<? extends Active> effects) {
-        spawns.addAll(effects);
+    public void spawn(List<? extends Active> actives) {
+        spawns.addAll(actives);
     }
 
     private void addPendingSpawns() {
@@ -64,7 +79,7 @@ public class ActiveManager {
         spawns.clear();
     }
 
-    public void render(Renderer renderer, SpriteRenderer spriteRenderer, Viewport viewport, Layer layer) {
+    public void render(Renderer renderer, Layer layer) {
         for (Active active : actives) {
             if (!(active instanceof SpriteRenderable renderable)) continue;
             if (renderable.getLayer() != layer) continue;
