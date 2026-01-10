@@ -14,6 +14,7 @@ public class ActiveManager {
     private Collision collision;
     private SpriteRenderer spriteRenderer;
 
+    private List<Bolt> bolts;
     private List<Active> actives;
     private List<Active> spawns;
 
@@ -22,11 +23,17 @@ public class ActiveManager {
         this.collision = collision;
         this.spriteRenderer = spriteRenderer;
 
+        bolts = new LinkedList<>();
         actives = new LinkedList<>();
         spawns = new LinkedList<>();
     }
 
     public void update(GameplayContext context) {
+        updateActives(context);
+        addPendingSpawns();
+    }
+
+    private void updateActives(GameplayContext context) {
         Iterator<Active> iterator = actives.iterator();
 
         while (iterator.hasNext()) {
@@ -39,8 +46,6 @@ public class ActiveManager {
                 iterator.remove();
             }
         }
-
-        addPendingSpawns();
     }
 
     private void wakeUpIfNeeded(Active active) {
@@ -50,7 +55,7 @@ public class ActiveManager {
     }
 
     private void update(Active active, GameplayContext context) {
-        if (!active.isActivated()) return;
+        if (!active.isActivated() || active.isDestroyed()) return;
 
         if (active instanceof Updatable updatable) {
             updatable.update(context);
@@ -59,11 +64,6 @@ public class ActiveManager {
         if (active instanceof Physics body) {
             collision.resolve(body, context.getLevel());
         }
-    }
-
-    public void spawn(Bolt bolt) {
-        // FIXME temporary workaround for bolt spawn/update frame delay
-        actives.add(bolt);
     }
 
     public void spawn(Active active) {

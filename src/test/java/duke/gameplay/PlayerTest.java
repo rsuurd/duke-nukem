@@ -252,7 +252,7 @@ class PlayerTest {
         player.processInput(input);
         player.postMovement(context);
 
-        verify(context.getActiveManager()).spawn(any(Bolt.class));
+        verify(context.getBoltManager()).spawn(any(Bolt.class));
         verify(context.getSoundManager()).play(Sfx.PLAYER_GUN);
     }
 

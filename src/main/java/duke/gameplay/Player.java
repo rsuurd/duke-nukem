@@ -83,7 +83,7 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
 
     public void postMovement(GameplayContext context) {
         if (firing && gunReady) {
-            context.getActiveManager().spawn(Bolt.create(this));
+            context.getBoltManager().spawn(Bolt.create(this));
             context.getSoundManager().play(PLAYER_GUN);
         }
 

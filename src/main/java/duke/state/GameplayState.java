@@ -30,9 +30,10 @@ public class GameplayState implements GameState {
         hud = new Hud(assets, font);
         spriteRenderer = new SpriteRenderer(assets);
         collision = new Collision();
+        BoltManager boltManager = new BoltManager(viewport, spriteRenderer);
         ActiveManager activeManager = new ActiveManager(viewport, collision, spriteRenderer);
         ScoreManager scoreManager = new ScoreManager(activeManager);
-        context = new GameplayContext(new Player(), level, activeManager, gameContext.getSoundManager(), scoreManager);
+        context = new GameplayContext(new Player(), level, boltManager, activeManager, gameContext.getSoundManager(), scoreManager);
     }
 
     GameplayState(Viewport viewport, LevelRenderer levelRenderer, Hud hud, Font font, SpriteRenderer spriteRenderer, Collision collision, GameplayContext context) {
@@ -61,6 +62,7 @@ public class GameplayState implements GameState {
     @Override
     public void update(GameContext gameContext) {
         updatePlayer(gameContext.getKeyHandler().getInput());
+        context.getBoltManager().update(context);
         context.getActiveManager().update(context);
     }
 
@@ -82,6 +84,7 @@ public class GameplayState implements GameState {
         context.getActiveManager().render(renderer, Layer.BACKGROUND);
         drawPlayer(renderer);
         context.getActiveManager().render(renderer, Layer.FOREGROUND);
+        context.getBoltManager().render(renderer);
         hud.render(renderer, context.getScoreManager().getScore(), context.getPlayer().getHealth());
 
         drawDebugInfo(renderer);

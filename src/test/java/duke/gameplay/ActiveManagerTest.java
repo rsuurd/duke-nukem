@@ -85,15 +85,6 @@ class ActiveManagerTest {
     }
 
     @Test
-    void shouldSpawnBolt() {
-        Bolt bolt = mock();
-
-        manager.spawn(bolt);
-
-        assertThat(manager.getActives()).containsExactly(bolt);
-    }
-
-    @Test
     void shouldRemoveDestroyedActives() {
         TestActive active = spy(new TestActive());
         when(active.isDestroyed()).thenReturn(true);
