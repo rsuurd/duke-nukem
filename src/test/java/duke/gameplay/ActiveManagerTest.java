@@ -63,6 +63,18 @@ class ActiveManagerTest {
     }
 
     @Test
+    void shouldNotUpdateDestroyedActives() {
+        TestActive active = mock();
+        manager.getActives().add(active);
+        when(active.isActivated()).thenReturn(true);
+        when(active.isDestroyed()).thenReturn(true);
+
+        manager.update(context);
+
+        verify(active, never()).update(context);
+    }
+
+    @Test
     void shouldResolveCollision() {
         ActiveWithPhysics active = spy(new ActiveWithPhysics());
         manager.getActives().add(active);
