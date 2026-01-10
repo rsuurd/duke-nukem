@@ -2,6 +2,7 @@ package duke.gameplay.active;
 
 import duke.gameplay.GameplayContext;
 import duke.gameplay.GameplayContextFixture;
+import duke.gameplay.active.items.Item;
 import duke.sfx.Sfx;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,12 +22,15 @@ class BoxTest {
 
     @Test
     void shouldBeShot() {
-        Box box = new Box(0, 0, Box.Type.GREY);
+        Item contents = mock();
+
+        Box box = new Box(0, 0, Box.Type.GREY, (x, y) -> contents);
 
         box.onShot(context, mock());
 
         assertThat(box.isActivated()).isFalse();
 
+        verify(context.getActiveManager()).spawn(contents);
         verify(context.getActiveManager()).spawn(anyList());
         verify(context.getSoundManager()).play(Sfx.BOX_EXPLODE);
     }
