@@ -23,8 +23,8 @@ public class ItemProcessor implements ActiveProcessor {
 
     static final Map<Integer, BiFunction<Integer, Integer, Item>> ITEM_MAPPINGS = Map.of(
             0x3050, ItemFactory::createFootball,
-//            0x3051, ItemFactory::createTurkey,
-//            0x3052, ItemFactory::createSoda,
+            0x3051, ItemFactory::createTurkeyLeg,
+            0x3052, ItemFactory::createSoda,
             0x3053, ItemFactory::createFloppy,
             0x3054, ItemFactory::createJoystick,
             0x3055, ItemFactory::createFlag,

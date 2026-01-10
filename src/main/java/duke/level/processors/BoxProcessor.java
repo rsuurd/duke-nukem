@@ -32,9 +32,9 @@ public class BoxProcessor implements ActiveProcessor {
         BOX_DESCRIPTORS.put(0x3006, new BoxDescriptor(Box.Type.GREY, null)); // shoes
         BOX_DESCRIPTORS.put(0x3008, new BoxDescriptor(Box.Type.GREY, null)); // grappling hook
         BOX_DESCRIPTORS.put(0x300f, new BoxDescriptor(Box.Type.GREY, null)); // gun upgrade
-        BOX_DESCRIPTORS.put(0x3012, new BoxDescriptor(Box.Type.RED, null)); // dynamite
-        BOX_DESCRIPTORS.put(0x3015, new BoxDescriptor(Box.Type.RED, null)); // soda
-        BOX_DESCRIPTORS.put(0x3018, new BoxDescriptor(Box.Type.RED, null)); // turkey
+        BOX_DESCRIPTORS.put(0x3012, new BoxDescriptor(Box.Type.GREY, null)); // dynamite
+        BOX_DESCRIPTORS.put(0x3015, new BoxDescriptor(Box.Type.RED, ItemFactory::createSoda));
+        BOX_DESCRIPTORS.put(0x3018, new BoxDescriptor(Box.Type.RED, ItemFactory::createTurkeyLeg));
         BOX_DESCRIPTORS.put(0x301d, new BoxDescriptor(Box.Type.BLUE, ItemFactory::createFootball));
         BOX_DESCRIPTORS.put(0x301e, new BoxDescriptor(Box.Type.BLUE, ItemFactory::createJoystick));
         BOX_DESCRIPTORS.put(0x301f, new BoxDescriptor(Box.Type.BLUE, ItemFactory::createFloppy));

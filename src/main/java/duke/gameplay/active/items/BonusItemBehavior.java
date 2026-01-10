@@ -1,6 +1,5 @@
 package duke.gameplay.active.items;
 
-import duke.gameplay.Bolt;
 import duke.gameplay.GameplayContext;
 import duke.sfx.Sfx;
 
@@ -16,14 +15,10 @@ public class BonusItemBehavior implements ItemBehavior {
     }
 
     @Override
-    public void pickedUp(GameplayContext context, Item source) {
-        context.getScoreManager().score(determinePoints(context), source.getX(), source.getY());
+    public void pickedUp(GameplayContext context, Item item) {
+        context.getScoreManager().score(determinePoints(context), item.getX(), item.getY());
         context.getSoundManager().play(Sfx.GET_BONUS_OBJECT);
-        source.destroy();
-    }
-
-    @Override
-    public void onShot(GameplayContext context, Bolt bolt) {
+        item.destroy();
     }
 
     public static class RandomBonusItemBehavior extends BonusItemBehavior {
