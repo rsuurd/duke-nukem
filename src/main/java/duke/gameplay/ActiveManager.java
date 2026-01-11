@@ -1,6 +1,7 @@
 package duke.gameplay;
 
 import duke.Renderer;
+import duke.gfx.Renderable;
 import duke.gfx.SpriteRenderable;
 import duke.gfx.SpriteRenderer;
 import duke.gfx.Viewport;
@@ -79,14 +80,14 @@ public class ActiveManager {
 
     public void render(Renderer renderer, Layer layer) {
         for (Active active : actives) {
-            if (!(active instanceof SpriteRenderable renderable)) continue;
+            if (!(active instanceof Renderable renderable)) continue;
             if (renderable.getLayer() != layer) continue;
             if (!viewport.isVisible(active)) continue;
 
             int x = viewport.toScreenX(active.getX());
             int y = viewport.toScreenY(active.getY());
 
-            spriteRenderer.render(renderer, renderable, x, y);
+            renderable.render(renderer, spriteRenderer, x, y);
         }
     }
 

@@ -1,12 +1,14 @@
 package duke.gameplay.active;
 
+import duke.Renderer;
 import duke.gameplay.*;
+import duke.gfx.Renderable;
 import duke.gfx.SpriteDescriptor;
-import duke.gfx.SpriteRenderable;
+import duke.gfx.SpriteRenderer;
 import duke.level.Level;
 import duke.resources.AssetManager;
 
-public class Elevator extends Active implements SpriteRenderable, Solid, Updatable {
+public class Elevator extends Active implements Renderable, Solid, Updatable {
     private int elevation;
 
     public Elevator(int x, int y) {
@@ -58,16 +60,19 @@ public class Elevator extends Active implements SpriteRenderable, Solid, Updatab
     }
 
     @Override
-    public SpriteDescriptor getSpriteDescriptor() {
-        return SPRITE_DESCRIPTOR;
-    }
-
-    @Override
     public int getHeight() {
         return (1 + elevation) * Level.TILE_SIZE;
     }
 
-    // TODO custom height based rendering
+    @Override
+    public void render(Renderer renderer, SpriteRenderer spriteRenderer, int screenX, int screenY) {
+        spriteRenderer.render(renderer, ELEVATOR_TOP_DESCRIPTOR, screenX, screenY);
 
-    private static final SpriteDescriptor SPRITE_DESCRIPTOR = new SpriteDescriptor(AssetManager::getObjects, 5, 0, 0, 1, 1);
+        for (int y = screenY + Level.TILE_SIZE; y < (screenY + getHeight()); y += Level.TILE_SIZE) {
+            spriteRenderer.render(renderer, ELEVATOR_BASE_DESCRIPTOR, screenX, y);
+        }
+    }
+
+    private static final SpriteDescriptor ELEVATOR_TOP_DESCRIPTOR = new SpriteDescriptor(AssetManager::getObjects, 5, 0, 0, 1, 1);
+    private static final SpriteDescriptor ELEVATOR_BASE_DESCRIPTOR = new SpriteDescriptor(AssetManager::getTiles, 215, 0, 0, 1, 1);
 }

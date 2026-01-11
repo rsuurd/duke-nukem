@@ -27,11 +27,11 @@ class SpriteRendererTest {
         SpriteRenderable renderable = mock();
         when(renderable.getSpriteDescriptor()).thenReturn(spriteDescriptor);
 
-        spriteRenderer.render(renderer, renderable, 0, 0);
+        spriteRenderer.render(renderer, renderable, 128, 128);
 
-        verify(renderer).draw(sprite, -8, -8);
-        verify(renderer).draw(sprite, 8, -8);
-        verify(renderer).draw(sprite, -8, 8);
-        verify(renderer).draw(sprite, 8, 8);
+        verify(renderer).draw(sprite, 120, 120);
+        verify(renderer).draw(sprite, 136, 120);
+        verify(renderer).draw(sprite, 120, 136);
+        verify(renderer).draw(sprite, 136, 136);
     }
 }
