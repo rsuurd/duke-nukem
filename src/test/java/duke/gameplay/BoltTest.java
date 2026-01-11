@@ -2,6 +2,7 @@ package duke.gameplay;
 
 import duke.gameplay.effects.Effect;
 import duke.level.Level;
+import duke.sfx.Sfx;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -79,6 +80,7 @@ class BoltTest {
         verify(context.getActiveManager()).spawn(any(Effect.class));
         verify(context.getLevel()).setTile(0, 1, DESTROYED_BRICKS_TILE_ID);
         verify(context.getScoreManager()).score(10);
+        verify(context.getSoundManager()).play(Sfx.HIT_A_BREAKER);
     }
 
     @Test

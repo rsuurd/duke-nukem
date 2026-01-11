@@ -7,6 +7,7 @@ import duke.gfx.SpriteDescriptor;
 import duke.gfx.SpriteRenderable;
 import duke.level.Level;
 import duke.resources.AssetManager;
+import duke.sfx.Sfx;
 
 import java.util.function.Predicate;
 
@@ -80,6 +81,7 @@ public class Bolt extends Active implements Updatable, SpriteRenderable {
     private void onTileHit(GameplayContext context, int tileId, int row, int col) {
         if (DESTRUCTIBLE_BRICKS.test(tileId)) {
             context.getLevel().setTile(row, col, DESTROYED_BRICKS_TILE_ID);
+            context.getSoundManager().play(Sfx.HIT_A_BREAKER);
         }
 
         // TODO fix positioning a bit better
