@@ -65,7 +65,7 @@ class GameplayStateTest {
 
         verify(player).processInput(gameContext.getKeyHandler().getInput());
         verify(player).update(gameplayContext);
-        verify(collision).resolve(player, level);
+        verify(collision).resolve(player, level, gameplayContext.getActiveManager().getActives());
         verify(player).postMovement(gameplayContext);
     }
 

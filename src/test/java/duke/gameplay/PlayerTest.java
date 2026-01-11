@@ -2,7 +2,6 @@ package duke.gameplay;
 
 import duke.gameplay.effects.Effect;
 import duke.sfx.Sfx;
-import duke.sfx.SoundManager;
 import duke.ui.KeyHandler;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -263,5 +262,14 @@ class PlayerTest {
         player.increaseHealth(MAX_HEALTH);
 
         assertThat(player.getHealth()).isEqualTo(MAX_HEALTH);
+    }
+
+    @Test
+    void shouldIndicateUsing() {
+        Player player = new Player();
+
+        player.processInput(new KeyHandler.Input(false, false, false, false, true));
+
+        assertThat(player.isUsing()).isTrue();
     }
 }

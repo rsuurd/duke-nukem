@@ -71,7 +71,7 @@ public class GameplayState implements GameState {
 
         player.processInput(input);
         player.update(context);
-        collision.resolve(player, context.getLevel());
+        collision.resolve(player, context.getLevel(), context.getActiveManager().getActives());
         player.postMovement(context);
 
         viewport.update(player.getX(), player.getY(), player.isGrounded());

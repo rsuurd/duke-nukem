@@ -96,4 +96,11 @@ public abstract class Active implements Movable {
     public int getCol() {
         return getX() / Level.TILE_SIZE;
     }
+
+    protected boolean hasOnTop(Physics body) {
+        int bodyBottom = body.getY() + body.getHeight();
+        int bodyRight = body.getX() + body.getWidth();
+
+        return bodyBottom == getY() && bodyRight > getX() && body.getX() < getX() + getWidth();
+    }
 }

@@ -6,6 +6,7 @@ import duke.sfx.SoundManager;
 public class GameplayContext {
     private Player player;
     private Level level;
+
     private BoltManager boltManager;
     private ActiveManager activeManager;
     private SoundManager soundManager;

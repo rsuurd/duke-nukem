@@ -14,7 +14,6 @@ public class ActiveManager {
     private Collision collision;
     private SpriteRenderer spriteRenderer;
 
-    private List<Bolt> bolts;
     private List<Active> actives;
     private List<Active> spawns;
 
@@ -23,7 +22,6 @@ public class ActiveManager {
         this.collision = collision;
         this.spriteRenderer = spriteRenderer;
 
-        bolts = new LinkedList<>();
         actives = new LinkedList<>();
         spawns = new LinkedList<>();
     }
@@ -62,7 +60,7 @@ public class ActiveManager {
         }
 
         if (active instanceof Physics body) {
-            collision.resolve(body, context.getLevel());
+            collision.resolve(body, context.getLevel(), actives);
         }
     }
 
@@ -92,7 +90,7 @@ public class ActiveManager {
         }
     }
 
-    List<Active> getActives() {
+    public List<Active> getActives() {
         return actives;
     }
 

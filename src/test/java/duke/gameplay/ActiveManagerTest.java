@@ -82,7 +82,7 @@ class ActiveManagerTest {
 
         manager.update(context);
 
-        verify(collision).resolve(active, context.getLevel());
+        verify(collision).resolve(active, context.getLevel(), manager.getActives());
     }
 
     @Test
@@ -93,7 +93,7 @@ class ActiveManagerTest {
 
         manager.update(context);
 
-        verify(collision, never()).resolve(active, context.getLevel());
+        verify(collision, never()).resolve(active, context.getLevel(), manager.getActives());
     }
 
     @Test

@@ -24,6 +24,7 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     private boolean moving;
     private boolean firing;
     private int health;
+    private boolean using;
 
     private SpriteDescriptor spriteDescriptor;
     private Animation animation;
@@ -59,6 +60,7 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
 
         moving = input.left() || input.right();
         firing = input.fire();
+        using = input.using();
 
         if (input.jump()) {
             jump();
@@ -241,6 +243,9 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
         }
     }
 
+    public boolean isUsing() {
+        return using;
+    }
     public enum State {
         STANDING,
         WALKING,
