@@ -39,6 +39,10 @@ public class LevelBuilder {
         return this;
     }
 
+    public int getTileId(int index) {
+        return data[index];
+    }
+
     public LevelBuilder add(Active active) {
         actives.add(active);
 

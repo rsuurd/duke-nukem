@@ -68,4 +68,14 @@ class LevelBuilderTest {
 
         assertThat(level.getTile(row, col)).isEqualTo(0x1);
     }
+
+    @Test
+    void shouldExposeTileId() {
+        int[] data = new int[Level.WIDTH * Level.HEIGHT];
+        Arrays.fill(data, 0x23);
+
+        LevelBuilder builder = new LevelBuilder(registry, 1, data);
+
+        assertThat(builder.getTileId(10)).isEqualTo(0x23);
+    }
 }
