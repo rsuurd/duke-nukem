@@ -9,4 +9,8 @@ public interface Renderable {
     default Layer getLayer() {
         return Layer.FOREGROUND;
     }
+
+    default boolean isVisible() {
+        return true;
+    }
 }

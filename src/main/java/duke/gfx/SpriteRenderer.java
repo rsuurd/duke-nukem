@@ -13,9 +13,11 @@ public class SpriteRenderer {
     }
 
     public void render(Renderer renderer, SpriteRenderable renderable, int x, int y) {
-        SpriteDescriptor spriteDescriptor = renderable.getSpriteDescriptor();
+        if (renderable.isVisible()) {
+            SpriteDescriptor spriteDescriptor = renderable.getSpriteDescriptor();
 
-        render(renderer, spriteDescriptor, x, y);
+            render(renderer, spriteDescriptor, x, y);
+        }
     }
 
     public void render(Renderer renderer, SpriteDescriptor spriteDescriptor, int x, int y) {

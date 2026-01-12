@@ -1,6 +1,7 @@
 package duke.gameplay;
 
 import duke.gameplay.effects.Effect;
+import duke.gameplay.effects.Explosion;
 import duke.sfx.Sfx;
 import duke.ui.KeyHandler;
 import org.junit.jupiter.api.Test;
@@ -9,6 +10,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.List;
 
 import static duke.gameplay.Physics.GRAVITY;
 import static duke.gameplay.Player.*;
@@ -271,5 +274,59 @@ class PlayerTest {
         player.processInput(new KeyHandler.Input(false, false, false, false, true));
 
         assertThat(player.isUsing()).isTrue();
+    }
+
+    @Test
+    void shouldTakeDamage() {
+        Player player = new Player();
+        GameplayContext context = GameplayContextFixture.create();
+        when(context.getActiveManager().getActives()).thenReturn(List.of(new Explosion(player.getX(), player.getY())));
+
+        player.postMovement(context);
+
+        assertThat(player.getHealth()).isEqualTo(7);
+        assertThat(player.isInvincible()).isTrue();
+    }
+
+    @Test
+    void shouldNotTakeDamageWhileInvincible() {
+        Player player = new Player();
+        GameplayContext context = GameplayContextFixture.create();
+        when(context.getActiveManager().getActives()).thenReturn(List.of(new Explosion(player.getX(), player.getY())));
+
+        player.postMovement(context);
+        player.postMovement(context);
+
+        assertThat(player.getHealth()).isEqualTo(7);
+        assertThat(player.isInvincible()).isTrue();
+    }
+
+    @Test
+    void shouldNotTakeDoubleDamage() {
+        Player player = new Player();
+        GameplayContext context = GameplayContextFixture.create();
+        when(context.getActiveManager().getActives()).thenReturn(
+                List.of(new Explosion(player.getX(), player.getY()), new Explosion(player.getX(), player.getY()))
+        );
+
+        player.postMovement(context);
+
+        assertThat(player.getHealth()).isEqualTo(7);
+        assertThat(player.isInvincible()).isTrue();
+    }
+
+    @Test
+    void shouldBeInvincible() {
+        Player player = new Player();
+        GameplayContext context = GameplayContextFixture.create();
+        when(context.getActiveManager().getActives()).thenReturn(List.of(new Explosion(player.getX(), player.getY())));
+
+        for (int i = INVINCIBILITY_TIME; i > 0; i--) {
+            player.postMovement(context);
+            assertThat(player.isInvincible()).isTrue();
+        }
+
+        player.postMovement(context);
+        assertThat(player.isInvincible()).isFalse();
     }
 }

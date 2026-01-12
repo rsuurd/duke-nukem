@@ -25,6 +25,7 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     private boolean firing;
     private int health;
     private boolean using;
+    private int invincibility;
 
     private SpriteDescriptor spriteDescriptor;
     private Animation animation;
@@ -84,6 +85,8 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     }
 
     public void postMovement(GameplayContext context) {
+        checkDamage(context);
+
         if (firing && gunReady) {
             context.getBoltManager().spawn(Bolt.create(this));
             context.getSoundManager().play(PLAYER_GUN);
@@ -103,6 +106,31 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
         }
 
         updateAnimation();
+    }
+
+    private void checkDamage(GameplayContext context) {
+        if (isInvincible()) {
+            invincibility--;
+            return;
+        }
+
+        for (Active active : context.getActiveManager().getActives()) {
+            if (active instanceof Damaging damaging && intersects(active)) {
+                health -= damaging.getDamage();
+                context.getSoundManager().play(PLAYER_HIT);
+                invincibility = INVINCIBILITY_TIME;
+                break;
+            }
+        }
+    }
+
+    boolean isInvincible() {
+        return invincibility > 0;
+    }
+
+    @Override
+    public boolean isVisible() {
+        return invincibility % 2 == 0;
     }
 
     private void updateJump() {
@@ -216,7 +244,13 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     }
 
     private void updateAnimation() {
-        // TODO maybe create a map or array with some indexing instead of this horrible switch
+        // TODO should probably move this into a PlayerRenderer
+        if (invincibility >= 12) {
+            spriteDescriptor = (facing == Facing.LEFT) ? XRAY_LEFT : XRAY_RIGHT;
+
+            return;
+        }
+
         switch (state) {
             case STANDING -> {
                 if (firing) {
@@ -246,6 +280,7 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     public boolean isUsing() {
         return using;
     }
+
     public enum State {
         STANDING,
         WALKING,
@@ -259,6 +294,7 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     static final int JUMP_POWER = -15; // TODO influenced by boots
     static final int HANG_TIME = 4;
     static final int SPEED = 8;
+    static final int INVINCIBILITY_TIME = 16;
 
     public static final int MAX_HEALTH = 8;
 
@@ -273,4 +309,6 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     private static SpriteDescriptor FALLING_RIGHT = BASE_DESCRIPTOR.withBaseIndex(44);
     private static SpriteDescriptor SHOOT_LEFT = BASE_DESCRIPTOR.withBaseIndex(12);
     private static SpriteDescriptor SHOOT_RIGHT = BASE_DESCRIPTOR.withBaseIndex(28);
+    private static SpriteDescriptor XRAY_LEFT = BASE_DESCRIPTOR.withBaseIndex(182);
+    private static SpriteDescriptor XRAY_RIGHT = BASE_DESCRIPTOR.withBaseIndex(186);
 }
