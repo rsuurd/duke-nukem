@@ -22,7 +22,7 @@ public class Elevator extends Active implements Renderable, Solid, Updatable {
         Player player = context.getPlayer();
         boolean onElevator = hasOnTop(player);
 
-        if (onElevator && player.isUsing() && canMoveUp(player, context.getLevel())) {
+        if (onElevator && player.isUsing() && canMoveUp(player, context)) {
             moveUp();
             push(player);
 //            context.getSoundManager().play(Sfx.ELEVATOR);
@@ -31,12 +31,12 @@ public class Elevator extends Active implements Renderable, Solid, Updatable {
         }
     }
 
-    private boolean canMoveUp(Player player, Level level) {
+    private boolean canMoveUp(Player player, WorldQuery query) {
         int rowAbove = player.getRow() - 1;
         int leftCol = player.getCol();
         int rightCol = (player.getX() + player.getWidth() - 1) / Level.TILE_SIZE;
 
-        return !(level.isSolid(rowAbove, leftCol) || level.isSolid(rowAbove, rightCol));
+        return !(query.isSolid(rowAbove, leftCol) || query.isSolid(rowAbove, rightCol));
     }
 
     private void moveUp() {

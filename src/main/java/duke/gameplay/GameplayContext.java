@@ -3,7 +3,7 @@ package duke.gameplay;
 import duke.level.Level;
 import duke.sfx.SoundManager;
 
-public class GameplayContext {
+public class GameplayContext implements WorldQuery {
     private Player player;
     private Level level;
 
@@ -43,5 +43,23 @@ public class GameplayContext {
 
     public ScoreManager getScoreManager() {
         return scoreManager;
+    }
+
+    @Override
+    public boolean isSolid(int row, int col) {
+        return level.isSolid(row, col) || occupiedBySolid(row, col);
+    }
+
+    private boolean occupiedBySolid(int row, int col) {
+        int x = col * Level.TILE_SIZE;
+        int y = row * Level.TILE_SIZE;
+
+        for (Active active : activeManager.getActives()) {
+            if (active instanceof Solid && active.intersects(x, y, Level.TILE_SIZE, Level.TILE_SIZE)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

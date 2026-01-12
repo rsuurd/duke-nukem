@@ -82,11 +82,15 @@ public abstract class Active implements Movable {
     }
 
     public boolean intersects(Active other) {
-        return intersects(other.bounds);
+        return bounds.intersects(other.bounds);
     }
 
     public boolean intersects(Rectangle rectangle) {
         return bounds.intersects(rectangle);
+    }
+
+    public boolean intersects(int x, int y, int width, int height) {
+        return this.bounds.intersects(x, y, width, height);
     }
 
     public int getRow() {

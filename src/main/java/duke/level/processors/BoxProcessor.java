@@ -1,10 +1,13 @@
 package duke.level.processors;
 
+import duke.gameplay.Active;
 import duke.gameplay.active.Box;
-import duke.gameplay.active.items.Item;
+import duke.gameplay.active.Dynamite;
 import duke.gameplay.active.items.ItemFactory;
+import duke.gfx.SpriteDescriptor;
 import duke.level.Level;
 import duke.level.LevelBuilder;
+import duke.resources.AssetManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,34 +25,38 @@ public class BoxProcessor implements ActiveProcessor {
         int y = Level.toY(index);
 
         BoxDescriptor descriptor = BOX_DESCRIPTORS.get(tileId);
-        builder.add(new Box(x, y, descriptor.type(), descriptor.contents())).replaceTile(index, LevelBuilder.LEFT);
+        builder.add(new Box(x, y, descriptor.spriteDescriptor(), descriptor.contents())).replaceTile(index, LevelBuilder.LEFT);
     }
 
+    private static final SpriteDescriptor GREY = new SpriteDescriptor(AssetManager::getObjects, 0, 0, 0, 1, 1);
+    private static final SpriteDescriptor RED = new SpriteDescriptor(AssetManager::getObjects, 101, 0, 0, 1, 1);
+    private static final SpriteDescriptor BLUE = new SpriteDescriptor(AssetManager::getObjects, 100, 0, 0, 1, 1);
     static final Map<Integer, BoxDescriptor> BOX_DESCRIPTORS = new HashMap<>();
 
     static {
-        BOX_DESCRIPTORS.put(0x3000, new BoxDescriptor(Box.Type.GREY, null));
-        BOX_DESCRIPTORS.put(0x3006, new BoxDescriptor(Box.Type.GREY, null)); // shoes
-        BOX_DESCRIPTORS.put(0x3008, new BoxDescriptor(Box.Type.GREY, null)); // grappling hook
-        BOX_DESCRIPTORS.put(0x300f, new BoxDescriptor(Box.Type.GREY, null)); // gun upgrade
-        BOX_DESCRIPTORS.put(0x3012, new BoxDescriptor(Box.Type.GREY, null)); // dynamite
-        BOX_DESCRIPTORS.put(0x3015, new BoxDescriptor(Box.Type.RED, ItemFactory::createSoda));
-        BOX_DESCRIPTORS.put(0x3018, new BoxDescriptor(Box.Type.RED, ItemFactory::createTurkeyLeg));
-        BOX_DESCRIPTORS.put(0x301d, new BoxDescriptor(Box.Type.BLUE, ItemFactory::createFootball));
-        BOX_DESCRIPTORS.put(0x301e, new BoxDescriptor(Box.Type.BLUE, ItemFactory::createJoystick));
-        BOX_DESCRIPTORS.put(0x301f, new BoxDescriptor(Box.Type.BLUE, ItemFactory::createFloppy));
-        BOX_DESCRIPTORS.put(0x3020, new BoxDescriptor(Box.Type.GREY, null)); // robohand
-        BOX_DESCRIPTORS.put(0x3023, new BoxDescriptor(Box.Type.BLUE, null)); // balloon
-        BOX_DESCRIPTORS.put(0x3029, new BoxDescriptor(Box.Type.GREY, ItemFactory::createNuclearMolecule));
-        BOX_DESCRIPTORS.put(0x302d, new BoxDescriptor(Box.Type.BLUE, ItemFactory::createFlag));
-        BOX_DESCRIPTORS.put(0x302e, new BoxDescriptor(Box.Type.BLUE, ItemFactory::createRadio));
-        BOX_DESCRIPTORS.put(0x3033, new BoxDescriptor(Box.Type.GREY, null)); // robohand
-        BOX_DESCRIPTORS.put(0x3037, new BoxDescriptor(Box.Type.GREY, null)); // D
-        BOX_DESCRIPTORS.put(0x3038, new BoxDescriptor(Box.Type.GREY, null)); // U
-        BOX_DESCRIPTORS.put(0x3039, new BoxDescriptor(Box.Type.GREY, null)); // K
-        BOX_DESCRIPTORS.put(0x303a, new BoxDescriptor(Box.Type.GREY, null)); // E
+        BOX_DESCRIPTORS.put(0x3000, new BoxDescriptor(GREY, null));
+        BOX_DESCRIPTORS.put(0x3006, new BoxDescriptor(GREY, null)); // shoes
+        BOX_DESCRIPTORS.put(0x3008, new BoxDescriptor(GREY, null)); // grappling hook
+        BOX_DESCRIPTORS.put(0x300f, new BoxDescriptor(GREY, null)); // gun upgrade
+        BOX_DESCRIPTORS.put(0x3012, new BoxDescriptor(GREY, Dynamite::new));
+        BOX_DESCRIPTORS.put(0x3015, new BoxDescriptor(RED, ItemFactory::createSoda));
+        BOX_DESCRIPTORS.put(0x3018, new BoxDescriptor(RED, ItemFactory::createTurkeyLeg));
+        BOX_DESCRIPTORS.put(0x301d, new BoxDescriptor(BLUE, ItemFactory::createFootball));
+        BOX_DESCRIPTORS.put(0x301e, new BoxDescriptor(BLUE, ItemFactory::createJoystick));
+        BOX_DESCRIPTORS.put(0x301f, new BoxDescriptor(BLUE, ItemFactory::createFloppy));
+        BOX_DESCRIPTORS.put(0x3020, new BoxDescriptor(GREY, null)); // robohand
+        BOX_DESCRIPTORS.put(0x3023, new BoxDescriptor(BLUE, null)); // balloon
+        BOX_DESCRIPTORS.put(0x3029, new BoxDescriptor(GREY, ItemFactory::createNuclearMolecule));
+        BOX_DESCRIPTORS.put(0x302d, new BoxDescriptor(BLUE, ItemFactory::createFlag));
+        BOX_DESCRIPTORS.put(0x302e, new BoxDescriptor(BLUE, ItemFactory::createRadio));
+        BOX_DESCRIPTORS.put(0x3033, new BoxDescriptor(GREY, null)); // access card
+        BOX_DESCRIPTORS.put(0x3037, new BoxDescriptor(GREY, null)); // D
+        BOX_DESCRIPTORS.put(0x3038, new BoxDescriptor(GREY, null)); // U
+        BOX_DESCRIPTORS.put(0x3039, new BoxDescriptor(GREY, null)); // K
+        BOX_DESCRIPTORS.put(0x303a, new BoxDescriptor(GREY, null)); // E
     }
 
-    private record BoxDescriptor(Box.Type type, BiFunction<Integer, Integer, Item> contents) {
+    private record BoxDescriptor(SpriteDescriptor spriteDescriptor,
+                                 BiFunction<Integer, Integer, ? extends Active> contents) {
     }
 }

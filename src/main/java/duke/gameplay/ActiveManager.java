@@ -61,7 +61,7 @@ public class ActiveManager {
         }
 
         if (active instanceof Physics body) {
-            collision.resolve(body, context.getLevel(), actives);
+            collision.resolve(body, context);
         }
     }
 

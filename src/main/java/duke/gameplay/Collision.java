@@ -1,20 +1,16 @@
 package duke.gameplay;
 
-import duke.level.Level;
-
-import java.util.List;
-
 import static duke.level.Level.TILE_SIZE;
 
 public class Collision {
-    public void resolve(Physics body, Level level, List<Active> actives) {
-        resolveXAxis(body, level, actives);
-        applyGravity(body, level, actives);
-        resolveYAxis(body, level, actives);
+    public void resolve(Physics body, WorldQuery query) {
+        resolveXAxis(body, query);
+        applyGravity(body, query);
+        resolveYAxis(body, query);
     }
 
-    private void applyGravity(Physics body, Level level, List<Active> actives) {
-        if (isSolidBelow(body, level, actives) && body.getVelocityY() >= 0) {
+    private void applyGravity(Physics body, WorldQuery query) {
+        if (body.getVelocityY() >= 0 && isSolidBelow(body, query)) {
             onCollision(body, Collidable.Direction.DOWN);
         } else {
             body.fall();
@@ -25,14 +21,14 @@ public class Collision {
         body.setVelocityY(velocityY);
     }
 
-    private void resolveXAxis(Physics body, Level level, List<Active> actives) {
+    private void resolveXAxis(Physics body, WorldQuery query) {
         int velocityX = body.getVelocityX();
         if (velocityX == 0) return;
 
         int newX = body.getX() + velocityX;
         int resolvedX = newX;
 
-        if (collides(newX, body.getY(), body.getWidth(), body.getHeight(), body, level, actives)) {
+        if (collides(newX, body.getY(), body.getWidth(), body.getHeight(), query)) {
             if (velocityX > 0) {
                 resolvedX = snapRight(body, newX);
             } else {
@@ -60,14 +56,14 @@ public class Collision {
         return (col + 1) * TILE_SIZE;
     }
 
-    private void resolveYAxis(Physics body, Level level, List<Active> actives) {
+    private void resolveYAxis(Physics body, WorldQuery query) {
         int velocityY = body.getVelocityY();
         if (velocityY == 0) return;
 
         int newY = body.getY() + velocityY;
         int resolvedY = newY;
 
-        if (collides(body.getX(), newY, body.getWidth(), body.getHeight(), body, level, actives)) {
+        if (collides(body.getX(), newY, body.getWidth(), body.getHeight(), query)) {
             if (velocityY > 0) {
                 resolvedY = snapToGround(body, newY);
             } else {
@@ -101,11 +97,7 @@ public class Collision {
         }
     }
 
-    private boolean collides(int x, int y, int width, int height, Physics body, Level level, List<Active> actives) {
-        return collidesWithTile(x, y, width, height, level) || collidesWithSolid(x, y, width, height, body, actives);
-    }
-
-    private boolean collidesWithTile(int x, int y, int width, int height, Level level) {
+    private boolean collides(int x, int y, int width, int height, WorldQuery query) {
         int left = x / TILE_SIZE;
         int right = (x + width - 1) / TILE_SIZE;
         int top = y / TILE_SIZE;
@@ -113,7 +105,7 @@ public class Collision {
 
         for (int row = top; row <= bottom; row++) {
             for (int col = left; col <= right; col++) {
-                if (level.isSolid(row, col)) {
+                if (query.isSolid(row, col)) {
                     return true;
                 }
             }
@@ -122,26 +114,10 @@ public class Collision {
         return false;
     }
 
-    private boolean collidesWithSolid(int x, int y, int width, int height, Physics body, List<Active> actives) {
-        Rectangle bounds = new Rectangle(x, y, width, height);
-
-        for (Active active : actives) {
-            if (active == body) continue;
-
-            if (active instanceof Solid && active.intersects(bounds)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private boolean isSolidBelow(Physics body, Level level, List<Active> actives) {
+    private boolean isSolidBelow(Physics body, WorldQuery query) {
         int x = body.getX();
         int y = body.getY() + body.getHeight();
-        int width = body.getWidth();
-        int height = 1;
 
-        return collides(x, y, width, height, body, level, actives);
+        return collides(x, y, body.getWidth(), 1, query);
     }
 }

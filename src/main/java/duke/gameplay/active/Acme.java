@@ -24,7 +24,7 @@ public class Acme extends Active implements Updatable, SpriteRenderable, Shootab
     @Override
     public void update(GameplayContext context) {
         if (detectionArea == null) {
-            detectionArea = createDetectionArea(context.getLevel());
+            detectionArea = createDetectionArea(context);
         }
 
         if (isIdle()) {
@@ -40,7 +40,7 @@ public class Acme extends Active implements Updatable, SpriteRenderable, Shootab
         }
 
         if (isFalling()) {
-            if (context.getLevel().isSolid(getRow() + 1, getCol())) {
+            if (context.isSolid(getRow() + 1, getCol())) {
                 destroy(context);
             } else {
                 fall(context);
@@ -48,17 +48,17 @@ public class Acme extends Active implements Updatable, SpriteRenderable, Shootab
         }
     }
 
-    private Rectangle createDetectionArea(Level level) {
+    private Rectangle createDetectionArea(GameplayContext context) {
         int top = getY() + getHeight();
 
-        return new Rectangle(getX(), top, getWidth(), findFloorBelow(level) - top);
+        return new Rectangle(getX(), top, getWidth(), findFloorBelow(context) - top);
     }
 
-    private int findFloorBelow(Level level) {
+    private int findFloorBelow(GameplayContext context) {
         int col = getCol();
 
         for (int row = (getY() + getHeight()) / TILE_SIZE; row < Level.HEIGHT; row++) {
-            if (level.isSolid(row, col)) {
+            if (context.isSolid(row, col)) {
                 return row * TILE_SIZE;
             }
         }

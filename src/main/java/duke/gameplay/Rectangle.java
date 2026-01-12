@@ -35,7 +35,10 @@ public class Rectangle {
     }
 
     public boolean intersects(Rectangle other) {
-        return x < other.x + other.width && x + width > other.x &&
-                y < other.y + other.height && y + height > other.y;
+        return intersects(other.x, other.y, other.width, other.height);
+    }
+
+    public boolean intersects(int otherX, int otherY, int otherWidth, int otherHeight) {
+        return x < otherX + otherWidth && x + width > otherX && y < otherY + otherHeight && y + height > otherY;
     }
 }

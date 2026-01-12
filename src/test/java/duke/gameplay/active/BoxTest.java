@@ -24,7 +24,7 @@ class BoxTest {
     void shouldBeShot() {
         Item contents = mock();
 
-        Box box = new Box(0, 0, Box.Type.GREY, (x, y) -> contents);
+        Box box = new Box(0, 0, mock(), (x, y) -> contents);
 
         box.onShot(context, mock());
 

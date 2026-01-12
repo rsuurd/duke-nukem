@@ -1,13 +1,10 @@
 package duke.gameplay;
 
-import duke.level.Level;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -15,19 +12,19 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class CollisionTest {
-    @Mock
-    private Level level;
-
     @Spy
     private Player player;
+
+    @Mock
+    private WorldQuery query;
 
     @Test
     void shouldCollideLeft() {
         player.setX(16);
         player.setVelocityX(-8);
-        when(level.isSolid(anyInt(), anyInt())).thenReturn(true);
+        when(query.isSolid(anyInt(), anyInt())).thenReturn(true);
 
-        new Collision().resolve(player, level, List.of());
+        new Collision().resolve(player, query);
 
         assertThat(player.getX()).isEqualTo(16);
         assertThat(player.getVelocityX()).isEqualTo(0);
@@ -38,9 +35,9 @@ class CollisionTest {
     void shouldCollideRight() {
         player.setX(16);
         player.setVelocityX(8);
-        when(level.isSolid(anyInt(), anyInt())).thenReturn(true);
+        when(query.isSolid(anyInt(), anyInt())).thenReturn(true);
 
-        new Collision().resolve(player, level, List.of());
+        new Collision().resolve(player, query);
 
         assertThat(player.getX()).isEqualTo(16);
         assertThat(player.getVelocityX()).isEqualTo(0);
@@ -51,9 +48,9 @@ class CollisionTest {
     void shouldCollideUp() {
         player.setY(16);
         player.setVelocityY(Player.JUMP_POWER);
-        when(level.isSolid(anyInt(), anyInt())).thenReturn(true);
+        when(query.isSolid(anyInt(), anyInt())).thenReturn(true);
 
-        new Collision().resolve(player, level, List.of());
+        new Collision().resolve(player, query);
 
         assertThat(player.getY()).isEqualTo(16);
         assertThat(player.getVelocityY()).isEqualTo(0);
@@ -64,9 +61,9 @@ class CollisionTest {
     void shouldCollideDown() {
         player.setY(16);
         player.setVelocityY(8);
-        when(level.isSolid(anyInt(), anyInt())).thenReturn(true);
+        when(query.isSolid(anyInt(), anyInt())).thenReturn(true);
 
-        new Collision().resolve(player, level, List.of());
+        new Collision().resolve(player, query);
 
         assertThat(player.getY()).isEqualTo(16);
         assertThat(player.getVelocityY()).isEqualTo(0);
@@ -77,7 +74,7 @@ class CollisionTest {
     void shouldApplyGravityWhenJumping() {
         player = spy(new Player(Player.State.JUMPING, Facing.RIGHT));
         player.setVelocityY(-15);
-        new Collision().resolve(player, level, List.of());
+        new Collision().resolve(player, query);
 
         assertThat(player.getVelocityY()).isEqualTo(-13);
         assertThat(player.getState()).isEqualTo(Player.State.JUMPING);
@@ -86,40 +83,22 @@ class CollisionTest {
 
     @Test
     void shouldFall() {
-        when(level.isSolid(anyInt(), anyInt())).thenReturn(false);
+        when(query.isSolid(anyInt(), anyInt())).thenReturn(false);
 
         Collision collision = new Collision();
 
-        collision.resolve(player, level, List.of());
+        collision.resolve(player, query);
         assertThat(player.getVelocityY()).isEqualTo(8);
         assertThat(player.getState()).isEqualTo(Player.State.FALLING);
 
-        collision.resolve(player, level, List.of());
+        collision.resolve(player, query);
         assertThat(player.getVelocityY()).isEqualTo(16);
         assertThat(player.getState()).isEqualTo(Player.State.FALLING);
 
-        collision.resolve(player, level, List.of());
+        collision.resolve(player, query);
         assertThat(player.getVelocityY()).isEqualTo(16);
         assertThat(player.getState()).isEqualTo(Player.State.FALLING);
 
         verify(player, never()).onCollision(any());
-    }
-
-    @Test
-    void shouldCollideWithSolidActive() {
-        player.setX(48);
-        player.setVelocityX(-8);
-
-        new Collision().resolve(player, level, List.of(new SolidActive(32, 16)));
-
-        assertThat(player.getX()).isEqualTo(48);
-        assertThat(player.getVelocityX()).isEqualTo(0);
-        verify(player).onCollision(Collidable.Direction.LEFT);
-    }
-
-    private static class SolidActive extends Active implements Solid {
-        private SolidActive(int x, int y) {
-            super(x, y, Level.TILE_SIZE, Level.TILE_SIZE);
-        }
     }
 }
