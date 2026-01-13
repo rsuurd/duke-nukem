@@ -3,6 +3,7 @@ package duke.level.processors;
 import duke.gameplay.Active;
 import duke.gameplay.active.Box;
 import duke.gameplay.active.Dynamite;
+import duke.gameplay.active.items.Balloon;
 import duke.gameplay.active.items.ItemFactory;
 import duke.gfx.SpriteDescriptor;
 import duke.level.Level;
@@ -45,7 +46,7 @@ public class BoxProcessor implements ActiveProcessor {
         BOX_DESCRIPTORS.put(0x301e, new BoxDescriptor(BLUE, ItemFactory::createJoystick));
         BOX_DESCRIPTORS.put(0x301f, new BoxDescriptor(BLUE, ItemFactory::createFloppy));
         BOX_DESCRIPTORS.put(0x3020, new BoxDescriptor(GREY, null)); // robohand
-        BOX_DESCRIPTORS.put(0x3023, new BoxDescriptor(BLUE, null)); // balloon
+        BOX_DESCRIPTORS.put(0x3023, new BoxDescriptor(BLUE, (x, y) -> new Balloon(x, y - Level.TILE_SIZE)));
         BOX_DESCRIPTORS.put(0x3029, new BoxDescriptor(GREY, ItemFactory::createNuclearMolecule));
         BOX_DESCRIPTORS.put(0x302d, new BoxDescriptor(BLUE, ItemFactory::createFlag));
         BOX_DESCRIPTORS.put(0x302e, new BoxDescriptor(BLUE, ItemFactory::createRadio));

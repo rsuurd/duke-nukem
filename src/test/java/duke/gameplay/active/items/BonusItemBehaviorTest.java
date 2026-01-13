@@ -23,7 +23,7 @@ class BonusItemBehaviorTest {
 
     @Test
     void shouldPickUp() {
-        ItemBehavior behavior = new BonusItemBehavior(100);
+        ItemBehavior behavior = new BonusItemBehavior(100, Sfx.GET_BONUS_OBJECT);
 
         behavior.pickedUp(context, item);
 
