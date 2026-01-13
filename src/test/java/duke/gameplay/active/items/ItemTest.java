@@ -6,6 +6,7 @@ import duke.gfx.AnimatedSpriteRenderable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 class ItemTest {
@@ -30,6 +31,7 @@ class ItemTest {
 
         item.update(context);
 
+        assertThat(item.isDestroyed()).isTrue();
         verify(behavior).pickedUp(context, item);
     }
 
@@ -39,6 +41,7 @@ class ItemTest {
 
         item.update(context);
 
+        assertThat(item.isDestroyed()).isFalse();
         verifyNoInteractions(behavior);
     }
 

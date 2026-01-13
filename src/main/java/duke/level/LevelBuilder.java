@@ -4,6 +4,7 @@ import duke.gameplay.Active;
 import duke.level.processors.ActiveProcessorRegistry;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class LevelBuilder {
@@ -60,6 +61,8 @@ public class LevelBuilder {
                 registry.getProcessor(tileId).process(i, tileId, this);
             }
         }
+
+        // post process: associate door actives with locks so we dont have to search
 
         return new Level(number, data, backdrop, playerStart, actives);
     }

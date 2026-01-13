@@ -1,6 +1,8 @@
 package duke.gfx;
 
 import duke.Renderer;
+import duke.gameplay.active.items.Key;
+import duke.gameplay.player.Inventory;
 import duke.resources.AssetManager;
 
 import static duke.level.Level.TILE_SIZE;
@@ -16,12 +18,12 @@ public class Hud {
         this.font = font;
     }
 
-    public void render(Renderer renderer, int score, int health) {
+    public void render(Renderer renderer, int score, int health, Inventory inventory) {
         drawBorders(renderer);
         drawScore(renderer, score);
         drawHealth(renderer, health);
         drawFirePower(renderer, 1);
-        drawInventory(renderer);
+        drawInventory(renderer, inventory);
         drawHelp(renderer);
 
         frame = (frame + 1) % 2;
@@ -88,7 +90,7 @@ public class Hud {
         }
     }
 
-    private void drawInventory(Renderer renderer) {
+    private void drawInventory(Renderer renderer, Inventory inventory) {
         renderer.draw(assets.getBorder().get(14), 224, 128);
         renderer.draw(assets.getBorder().get(8), 240, 128);
         renderer.draw(assets.getBorder().get(8), 288, 128);
@@ -101,11 +103,11 @@ public class Hud {
         renderer.draw(assets.getBorder().get(8), 272, 176);
         renderer.draw(assets.getBorder().get(8), 288, 176);
 
-//        for (Key.Type key : Key.Type.values()) {
-//            if (gameState.getInventory().hasKey(key)) {
-//                renderer.draw(assets.getObject(124 + key.ordinal()), 240 + (key.ordinal() * TILE_SIZE), 144);
-//            }
-//        }
+        for (Key.Type key : Key.Type.values()) {
+            if (inventory.hasKey(key)) {
+                renderer.draw(assets.getObjects().get(124 + key.ordinal()), 240 + (key.ordinal() * TILE_SIZE), 144);
+            }
+        }
     }
 
     private void drawHelp(Renderer renderer) {

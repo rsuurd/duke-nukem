@@ -1,6 +1,5 @@
 package duke.gameplay.active.items;
 
-import duke.gameplay.active.items.BonusItemBehavior.RandomBonusItemBehavior;
 import duke.gfx.*;
 import duke.resources.AssetManager;
 import duke.sfx.Sfx;
@@ -9,53 +8,58 @@ import java.util.List;
 import java.util.function.Function;
 
 import static duke.gameplay.Player.MAX_HEALTH;
+import static duke.gameplay.active.items.ItemBehaviorFactory.*;
 
 public class ItemFactory {
+    public static Key createKey(int x, int y, Key.Type type) {
+        return new Key(x, y, type);
+    }
+
     public static Item createFootball(int x, int y) {
-        return new Item(x, y, new SimpleSpriteRenderable(createItemSpriteDescriptor(FOOTBALL_SPRITE_INDEX)), new BonusItemBehavior(100));
+        return new Item(x, y, new SimpleSpriteRenderable(createItemSpriteDescriptor(FOOTBALL_SPRITE_INDEX)), bonus(100, Sfx.GET_BONUS_OBJECT));
     }
 
     public static Item createFloppy(int x, int y) {
-        return new Item(x, y, new SimpleSpriteRenderable(createItemSpriteDescriptor(FLOPPY_SPRITE_INDEX)), new BonusItemBehavior(5000));
+        return new Item(x, y, new SimpleSpriteRenderable(createItemSpriteDescriptor(FLOPPY_SPRITE_INDEX)), bonus(5000, Sfx.GET_BONUS_OBJECT));
     }
 
     public static Item createJoystick(int x, int y) {
-        return new Item(x, y, new SimpleSpriteRenderable(createItemSpriteDescriptor(JOYSTICK_SPRITE_INDEX)), new BonusItemBehavior(2000));
+        return new Item(x, y, new SimpleSpriteRenderable(createItemSpriteDescriptor(JOYSTICK_SPRITE_INDEX)), bonus(2000, Sfx.GET_BONUS_OBJECT));
     }
 
     public static Item createFlag(int x, int y) {
-        return new Item(x, y, new AnimatedSpriteRenderable(createItemAnimationDescriptor(FLAG_SPRITE_INDEX)), new RandomBonusItemBehavior());
+        return new Item(x, y, new AnimatedSpriteRenderable(createItemAnimationDescriptor(FLAG_SPRITE_INDEX)), randomBonus());
     }
 
     public static Item createRadio(int x, int y) {
-        return new Item(x, y, new AnimatedSpriteRenderable(createItemAnimationDescriptor(RADIO_SPRITE_INDEX)), new RandomBonusItemBehavior());
+        return new Item(x, y, new AnimatedSpriteRenderable(createItemAnimationDescriptor(RADIO_SPRITE_INDEX)), randomBonus());
     }
 
     public static Item createSoda(int x, int y) {
         AnimationDescriptor itemAnimationDescriptor = new AnimationDescriptor(createItemSpriteDescriptor(AssetManager::getAnim, SODA_SPRITE_INDEX), 4, 4);
 
-        return new Soda(x, y, new AnimatedSpriteRenderable(itemAnimationDescriptor), new HealthBehavior(1, 200));
+        return new Soda(x, y, new AnimatedSpriteRenderable(itemAnimationDescriptor), health(1, 200, Sfx.GET_FOOD_ITEM));
     }
 
     public static Item createFizzingSoda(int x, int y) {
         AnimationDescriptor itemAnimationDescriptor = new AnimationDescriptor(createItemSpriteDescriptor(AssetManager::getAnim, FIZZING_SODA_SPRITE_INDEX), 4, 4);
 
-        return new FizzingSoda(x, y, new AnimatedSpriteRenderable(itemAnimationDescriptor), new BonusItemBehavior(1000));
+        return new FizzingSoda(x, y, new AnimatedSpriteRenderable(itemAnimationDescriptor), bonus(1000, Sfx.GET_BONUS_OBJECT));
     }
 
     public static Item createTurkeyLeg(int x, int y) {
-        return new TurkeyLeg(x, y, new SimpleSpriteRenderable(createItemSpriteDescriptor(TURKEY_LEG_SPRITE_INDEX)), new HealthBehavior(1, 100));
+        return new TurkeyLeg(x, y, new SimpleSpriteRenderable(createItemSpriteDescriptor(TURKEY_LEG_SPRITE_INDEX)), health(1, 100, Sfx.GET_FOOD_ITEM));
     }
 
     public static Item createTurkey(int x, int y) {
-        return new Item(x, y, new SimpleSpriteRenderable(createItemSpriteDescriptor(TURKEY_SPRITE_INDEX)), new HealthBehavior(2, 200));
+        return new Item(x, y, new SimpleSpriteRenderable(createItemSpriteDescriptor(TURKEY_SPRITE_INDEX)), health(2, 200, Sfx.GET_FOOD_ITEM));
     }
 
     public static Item createNuclearMolecule(int x, int y) {
         SpriteDescriptor spriteDescriptor = createItemSpriteDescriptor(NUCLEAR_MOLECULE_SPRITE_INDEX);
         AnimationDescriptor animationDescriptor = new AnimationDescriptor(spriteDescriptor, 9, 1);
 
-        return new Item(x, y, new AnimatedSpriteRenderable(animationDescriptor), new HealthBehavior(MAX_HEALTH, 1000, Sfx.GET_POWER_UP));
+        return new Item(x, y, new AnimatedSpriteRenderable(animationDescriptor), health(MAX_HEALTH, 1000, Sfx.GET_POWER_UP));
     }
 
     private static SpriteDescriptor createItemSpriteDescriptor(int index) {

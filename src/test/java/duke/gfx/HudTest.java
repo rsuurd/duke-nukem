@@ -1,6 +1,7 @@
 package duke.gfx;
 
 import duke.Renderer;
+import duke.gameplay.player.Inventory;
 import duke.resources.AssetManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,8 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class HudTest {
@@ -42,7 +42,7 @@ class HudTest {
 
     @Test
     void shouldDrawScore() {
-        hud.render(renderer, 0, 0);
+        hud.render(renderer, 0, 0, mock());
 
         verify(font).drawText(renderer, "00000000", 240, 24);
     }

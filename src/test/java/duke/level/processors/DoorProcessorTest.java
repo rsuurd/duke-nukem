@@ -1,6 +1,6 @@
 package duke.level.processors;
 
-import duke.gameplay.active.items.Item;
+import duke.gameplay.active.Door;
 import duke.level.LevelBuilder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -11,32 +11,32 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class ItemProcessorTest {
+class DoorProcessorTest {
     @Mock
     private LevelBuilder builder;
 
-    private ItemProcessor processor = new ItemProcessor();
+    private ActiveProcessor processor = new DoorProcessor();
 
     @ParameterizedTest
     @MethodSource("tileIds")
     void shouldProcess(int tileId) {
+        when(builder.add(any())).thenReturn(builder);
+
         assertThat(processor.canProcess(tileId)).isTrue();
 
-        when(builder.add(any())).thenReturn(builder);
-        when(builder.replaceTile(anyInt(), anyInt())).thenReturn(builder);
+        processor.process(80, tileId, builder);
 
-        processor.process(20, tileId, builder);
-
-        verify(builder).add(isA(Item.class));
-        verify(builder).replaceTile(20, LevelBuilder.LEFT);
+        verify(builder).add(isA(Door.class));
+        verify(builder).replaceTile(80, LevelBuilder.LEFT);
     }
 
     static Stream<Integer> tileIds() {
-        return ItemProcessor.ITEM_MAPPINGS.keySet().stream();
+        return DoorProcessor.DOOR_TILE_IDS.keySet().stream();
     }
 }

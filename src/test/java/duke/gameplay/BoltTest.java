@@ -53,7 +53,7 @@ class BoltTest {
     }
 
     @Test
-    void shouldCollideWithSolids() {
+    void shouldCollideWithSolidTiles() {
         for (int tileId = Level.SOLIDS; tileId < ACTIVE; tileId++) {
             GameplayContext context = GameplayContextFixture.create();
 
@@ -130,21 +130,44 @@ class BoltTest {
     }
 
     @Test
-    void shouldNotCheckNonShootables() {
+    void shouldHitSolidActives() {
         GameplayContext context = GameplayContextFixture.create();
-        Active active = mock();
+        TestSolid solid = mock();
+        when(solid.isSolid()).thenReturn(true);
         Bolt bolt = new Bolt(0, 0, Facing.RIGHT);
-        when(context.getActiveManager().getActives()).thenReturn(List.of(active));
-        when(active.isActivated()).thenReturn(true);
+        when(context.getActiveManager().getActives()).thenReturn(List.of(solid));
+        when(solid.isActivated()).thenReturn(true);
+        when(solid.intersects(bolt)).thenReturn(true);
+
+        bolt.update(context);
+
+        assertThat(bolt.isDestroyed()).isTrue();
+        verify(context.getActiveManager()).spawn(isA(Effect.class));
+    }
+
+    @Test
+    void shouldNotHitNonSolidActives() {
+        GameplayContext context = GameplayContextFixture.create();
+        TestSolid solid = mock();
+        when(solid.isSolid()).thenReturn(false);
+        Bolt bolt = new Bolt(0, 0, Facing.RIGHT);
+        when(context.getActiveManager().getActives()).thenReturn(List.of(solid));
+        when(solid.isActivated()).thenReturn(true);
+        when(solid.intersects(bolt)).thenReturn(true);
 
         bolt.update(context);
 
         assertThat(bolt.isDestroyed()).isFalse();
-        verify(active, never()).intersects(any(Active.class));
     }
 
     private abstract static class TestShootable extends Active implements Shootable {
         private TestShootable() {
+            super(0, 0, 16, 16);
+        }
+    }
+
+    private abstract static class TestSolid extends Active implements Solid {
+        private TestSolid() {
             super(0, 0, 16, 16);
         }
     }

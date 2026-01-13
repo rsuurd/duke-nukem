@@ -58,5 +58,6 @@ public class KeyHandler extends KeyAdapter {
         return pressedKey;
     }
 
-    public record Input(boolean left, boolean right, boolean jump, boolean fire, boolean using) {}
+    public record Input(boolean left, boolean right, boolean jump, boolean fire, boolean using) {
+    }
 }

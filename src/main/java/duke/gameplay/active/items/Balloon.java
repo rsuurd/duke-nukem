@@ -16,7 +16,7 @@ public class Balloon extends Item implements Collidable, Renderable, Shootable {
     private boolean popped;
 
     public Balloon(int x, int y) {
-        this(x, y, new BonusItemBehavior(10000, Sfx.GET_BALLOON));
+        this(x, y, ItemBehaviorFactory.bonus(10000, Sfx.GET_BALLOON));
     }
 
     Balloon(int x, int y, ItemBehavior behavior) {

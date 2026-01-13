@@ -30,20 +30,57 @@ class ActiveManagerTest {
     }
 
     @Test
+    void shouldHandleInteractionWhenRequestedAndAble() {
+        when(context.getPlayer().isUsing()).thenReturn(true);
+        InteractableActive active = mock();
+        when(active.isActivated()).thenReturn(true);
+        when(active.canInteract(any())).thenReturn(true);
+        manager.getActives().add(active);
+
+        manager.update(context);
+
+        verify(active).interactRequested(context);
+    }
+
+    @Test
+    void shouldNotHandleInteractionWhenRequestedAndNotAble() {
+        when(context.getPlayer().isUsing()).thenReturn(true);
+        InteractableActive active = mock();
+        when(active.isActivated()).thenReturn(true);
+        when(active.canInteract(any())).thenReturn(false);
+        manager.getActives().add(active);
+
+        manager.update(context);
+
+        verify(active, never()).interactRequested(context);
+    }
+
+    @Test
+    void shouldNotHandleInteractionWhenNotRequested() {
+        when(context.getPlayer().isUsing()).thenReturn(false);
+        InteractableActive active = mock();
+        manager.getActives().add(active);
+
+        manager.update(context);
+
+        verify(active, never()).canInteract(context.getPlayer());
+        verify(active, never()).interactRequested(context);
+    }
+
+    @Test
     void shouldActivateVisibleActives() {
-        TestActive active = spy(new TestActive());
+        TestActive active = mock();
         manager.getActives().add(active);
         when(viewport.isVisible(any())).thenReturn(true);
 
         manager.update(context);
 
         verify(active).activate();
-        verify(active).update(context);
     }
 
     @Test
     void shouldUpdateActivatedActives() {
-        TestActive active = spy(new TestActive());
+        TestActive active = mock();
         when(active.isActivated()).thenReturn(true);
         manager.getActives().add(active);
 
@@ -54,7 +91,7 @@ class ActiveManagerTest {
 
     @Test
     void shouldNotUpdateInactiveActives() {
-        TestActive active = spy(new TestActive());
+        TestActive active = mock();
         manager.getActives().add(active);
 
         manager.update(context);
@@ -76,9 +113,9 @@ class ActiveManagerTest {
 
     @Test
     void shouldResolveCollision() {
-        ActiveWithPhysics active = spy(new ActiveWithPhysics());
+        ActiveWithPhysics active = mock();
+        when(active.isActivated()).thenReturn(true);
         manager.getActives().add(active);
-        when(viewport.isVisible(any())).thenReturn(true);
 
         manager.update(context);
 
@@ -86,10 +123,10 @@ class ActiveManagerTest {
     }
 
     @Test
-    void shouldNotResolveDistantCollision() {
-        ActiveWithPhysics active = spy(new ActiveWithPhysics());
+    void shouldNotResolveCollisionForInactiveActives() {
+        ActiveWithPhysics active = mock();
+        when(active.isActivated()).thenReturn(false);
         manager.getActives().add(active);
-        when(viewport.isVisible(any())).thenReturn(false);
 
         manager.update(context);
 
@@ -98,7 +135,7 @@ class ActiveManagerTest {
 
     @Test
     void shouldRemoveDestroyedActives() {
-        TestActive active = spy(new TestActive());
+        TestActive active = mock();
         when(active.isDestroyed()).thenReturn(true);
         manager.getActives().add(active);
 
@@ -121,24 +158,21 @@ class ActiveManagerTest {
         assertThat(manager.getSpawns()).isEmpty();
     }
 
-    private static class TestActive extends Active implements Updatable {
-        private TestActive() {
+    private static abstract class InteractableActive extends Active implements Interactable {
+        private InteractableActive() {
             super(0, 0, 0, 0);
-        }
-
-        @Override
-        public void update(GameplayContext context) {
         }
     }
 
-    private static class ActiveWithPhysics extends Active implements Physics {
-        private ActiveWithPhysics() {
+    private static abstract class TestActive extends Active implements Updatable {
+        private TestActive() {
             super(0, 0, 0, 0);
         }
+    }
 
-        @Override
-        public int getVerticalAcceleration() {
-            return 0;
+    private static abstract class ActiveWithPhysics extends Active implements Physics {
+        private ActiveWithPhysics() {
+            super(0, 0, 0, 0);
         }
     }
 }

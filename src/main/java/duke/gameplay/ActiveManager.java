@@ -2,7 +2,6 @@ package duke.gameplay;
 
 import duke.Renderer;
 import duke.gfx.Renderable;
-import duke.gfx.SpriteRenderable;
 import duke.gfx.SpriteRenderer;
 import duke.gfx.Viewport;
 
@@ -28,8 +27,23 @@ public class ActiveManager {
     }
 
     public void update(GameplayContext context) {
+        updateInteraction(context);
         updateActives(context);
         addPendingSpawns();
+    }
+
+    private void updateInteraction(GameplayContext context) {
+        Player player = context.getPlayer();
+
+        if (player.isUsing()) {
+            for (Active active : actives) {
+                if (shouldCheck(active) && active instanceof Interactable interactable && interactable.canInteract(player)) {
+                    interactable.interactRequested(context);
+
+                    return;
+                }
+            }
+        }
     }
 
     private void updateActives(GameplayContext context) {
@@ -54,7 +68,7 @@ public class ActiveManager {
     }
 
     private void update(Active active, GameplayContext context) {
-        if (!active.isActivated() || active.isDestroyed()) return;
+        if (!shouldCheck(active)) return;
 
         if (active instanceof Updatable updatable) {
             updatable.update(context);
@@ -63,6 +77,10 @@ public class ActiveManager {
         if (active instanceof Physics body) {
             collision.resolve(body, context);
         }
+    }
+
+    private boolean shouldCheck(Active active) {
+        return active.isActivated() && !active.isDestroyed();
     }
 
     public void spawn(Active active) {

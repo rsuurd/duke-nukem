@@ -55,7 +55,7 @@ public class GameplayContext implements WorldQuery {
         int y = row * Level.TILE_SIZE;
 
         for (Active active : activeManager.getActives()) {
-            if (active instanceof Solid && active.intersects(x, y, Level.TILE_SIZE, Level.TILE_SIZE)) {
+            if (active instanceof Solid solid && solid.isSolid() && active.intersects(x, y, Level.TILE_SIZE, Level.TILE_SIZE)) {
                 return true;
             }
         }

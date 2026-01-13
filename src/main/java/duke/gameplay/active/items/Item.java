@@ -24,6 +24,7 @@ public class Item extends Active implements Physics, Updatable, SpriteRenderable
     public void update(GameplayContext context) {
         if (context.getPlayer().intersects(this)) {
             behavior.pickedUp(context, this);
+            destroy();
         }
 
         if (renderable instanceof AnimatedSpriteRenderable animated) {
@@ -34,10 +35,5 @@ public class Item extends Active implements Physics, Updatable, SpriteRenderable
     @Override
     public SpriteDescriptor getSpriteDescriptor() {
         return renderable.getSpriteDescriptor();
-    }
-
-    // TODO
-    public void destroy() {
-        super.destroy();
     }
 }

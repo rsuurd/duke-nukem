@@ -1,19 +1,12 @@
 package duke.gameplay.active.items;
 
 import duke.gameplay.GameplayContext;
-import duke.sfx.Sfx;
 
 public class BonusItemBehavior implements ItemBehavior {
     private int points;
-    private Sfx sfx;
 
     public BonusItemBehavior(int points) {
-        this(points, Sfx.GET_BONUS_OBJECT);
-    }
-
-    public BonusItemBehavior(int points, Sfx sfx) {
         this.points = points;
-        this.sfx = sfx;
     }
 
     protected int determinePoints(GameplayContext context) {
@@ -23,8 +16,6 @@ public class BonusItemBehavior implements ItemBehavior {
     @Override
     public void pickedUp(GameplayContext context, Item item) {
         context.getScoreManager().score(determinePoints(context), item.getX(), item.getY());
-        context.getSoundManager().play(sfx);
-        item.destroy();
     }
 
     public static class RandomBonusItemBehavior extends BonusItemBehavior {

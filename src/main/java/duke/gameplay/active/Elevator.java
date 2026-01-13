@@ -8,7 +8,7 @@ import duke.gfx.SpriteRenderer;
 import duke.level.Level;
 import duke.resources.AssetManager;
 
-public class Elevator extends Active implements Renderable, Solid, Updatable {
+public class Elevator extends Active implements Renderable, Solid, Updatable, Interactable {
     private int elevation;
 
     public Elevator(int x, int y) {
@@ -18,15 +18,21 @@ public class Elevator extends Active implements Renderable, Solid, Updatable {
     }
 
     @Override
-    public void update(GameplayContext context) {
-        Player player = context.getPlayer();
-        boolean onElevator = hasOnTop(player);
+    public boolean canInteract(Player player) {
+        return hasOnTop(player);
+    }
 
-        if (onElevator && player.isUsing() && canMoveUp(player, context)) {
+    @Override
+    public void interactRequested(GameplayContext context) {
+        if (canMoveUp(context.getPlayer(), context)) {
             moveUp();
-            push(player);
-//            context.getSoundManager().play(Sfx.ELEVATOR);
-        } else if (!onElevator) {
+            push(context.getPlayer());
+        }
+    }
+
+    @Override
+    public void update(GameplayContext context) {
+        if (!hasOnTop(context.getPlayer())) {
             moveDown();
         }
     }

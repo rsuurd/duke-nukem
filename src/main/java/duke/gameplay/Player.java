@@ -1,6 +1,7 @@
 package duke.gameplay;
 
 import duke.gameplay.effects.EffectsFactory;
+import duke.gameplay.player.Inventory;
 import duke.gfx.Animation;
 import duke.gfx.AnimationDescriptor;
 import duke.gfx.SpriteDescriptor;
@@ -29,6 +30,7 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
 
     private SpriteDescriptor spriteDescriptor;
     private Animation animation;
+    private Inventory inventory;
 
     public Player() {
         this(State.STANDING, Facing.RIGHT);
@@ -46,6 +48,7 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
 
         spriteDescriptor = (facing == Facing.LEFT) ? STANDING_LEFT : STANDING_RIGHT;
         animation = new Animation(WALKING_LEFT);
+        inventory = new Inventory();
 
         reset();
     }
@@ -279,6 +282,10 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
 
     public boolean isUsing() {
         return using;
+    }
+
+    public Inventory getInventory() {
+        return inventory;
     }
 
     public enum State {

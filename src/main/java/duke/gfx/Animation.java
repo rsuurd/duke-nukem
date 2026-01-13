@@ -13,8 +13,7 @@ public class Animation {
     public void setAnimation(AnimationDescriptor descriptor) {
         if (this.descriptor != descriptor) {
             this.descriptor = descriptor;
-            this.currentFrame = 0;
-            this.timer = 0;
+            reset();
         }
     }
 
@@ -42,6 +41,11 @@ public class Animation {
 
     private int lastFrame() {
         return descriptor.getFrames() - 1;
+    }
+
+    public void reset() {
+        currentFrame = 0;
+        timer = 0;
     }
 
     public boolean isFinished() {

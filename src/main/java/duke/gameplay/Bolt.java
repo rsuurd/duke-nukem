@@ -84,8 +84,7 @@ public class Bolt extends Active implements Updatable, SpriteRenderable {
             context.getSoundManager().play(Sfx.HIT_A_BREAKER);
         }
 
-        // TODO fix positioning a bit better
-        context.getActiveManager().spawn(EffectsFactory.createSparks(col * TILE_SIZE, row * TILE_SIZE));
+        spawnSparks(context);
         context.getScoreManager().score(10);
 
         destroy();
@@ -96,15 +95,26 @@ public class Bolt extends Active implements Updatable, SpriteRenderable {
             if (active == this) continue;
             if (!active.isActivated()) continue;
             if (active.isDestroyed()) continue;
-            if (!(active instanceof Shootable shootable)) continue;
 
             if (active.intersects(this)) {
-                shootable.onShot(context, this);
-                destroy();
+                if (active instanceof Solid solid && solid.isSolid()) {
+                    spawnSparks(context);
+                    destroy();
+                }
+
+                if (active instanceof Shootable shootable) {
+                    shootable.onShot(context, this);
+                    destroy();
+                }
 
                 return;
             }
         }
+    }
+
+    private void spawnSparks(GameplayContext context) {
+        // TODO offset X position based on facing
+        context.getActiveManager().spawn(EffectsFactory.createSparks(getX(), getY()));
     }
 
     private void updateAnimation() {

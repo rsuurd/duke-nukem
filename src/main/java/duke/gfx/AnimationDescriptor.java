@@ -13,7 +13,11 @@ public class AnimationDescriptor {
     }
 
     public AnimationDescriptor(SpriteDescriptor spriteDescriptor, int frames, int ticksPerFrame, Type type) {
-        if (frames < 1) {
+        this(createDescriptors(spriteDescriptor, frames), ticksPerFrame, type);
+    }
+
+    public AnimationDescriptor(List<SpriteDescriptor> frameDescriptors, int ticksPerFrame, Type type) {
+        if (frameDescriptors.isEmpty()) {
             throw new IllegalArgumentException("at least one frame is required");
         }
 
@@ -21,19 +25,19 @@ public class AnimationDescriptor {
             throw new IllegalArgumentException("ticksPerFrame must be at least 1");
         }
 
-        this.descriptors = createDescriptors(spriteDescriptor, frames);
+        this.descriptors = frameDescriptors;
         this.ticksPerFrame = ticksPerFrame;
         this.type = type;
     }
 
-    private List<SpriteDescriptor> createDescriptors(SpriteDescriptor descriptor, int frames) {
+    private static List<SpriteDescriptor> createDescriptors(SpriteDescriptor descriptor, int frames) {
         List<SpriteDescriptor> descriptors = new ArrayList<>(frames);
 
         for (int i = 0; i < frames; i++) {
             descriptors.add(descriptor.withBaseIndex(descriptor.baseIndex() + i * (descriptor.rows() * descriptor.cols())));
         }
 
-        return List.copyOf(descriptors);
+        return descriptors;
     }
 
     public List<SpriteDescriptor> getDescriptors() {

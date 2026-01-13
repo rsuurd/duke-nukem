@@ -2,7 +2,7 @@ package duke.gfx;
 
 import duke.Renderer;
 
-public interface SpriteRenderable extends Renderable{
+public interface SpriteRenderable extends Renderable {
     SpriteDescriptor getSpriteDescriptor();
 
     @Override
