@@ -1,6 +1,7 @@
 package duke.gfx;
 
 import duke.Renderer;
+import duke.gameplay.Player;
 import duke.gameplay.active.items.Key;
 import duke.gameplay.player.Inventory;
 import duke.resources.AssetManager;
@@ -18,12 +19,12 @@ public class Hud {
         this.font = font;
     }
 
-    public void render(Renderer renderer, int score, int health, Inventory inventory) {
+    public void render(Renderer renderer, int score, Player player) {
         drawBorders(renderer);
         drawScore(renderer, score);
-        drawHealth(renderer, health);
+        drawHealth(renderer, player.getHealth().getCurrent());
         drawFirePower(renderer, 1);
-        drawInventory(renderer, inventory);
+        drawInventory(renderer, player.getInventory());
         drawHelp(renderer);
 
         frame = (frame + 1) % 2;
@@ -61,7 +62,6 @@ public class Hud {
     private void drawHealth(Renderer renderer, int health) {
         renderer.draw(assets.getBorder().get(14), 224, 40);
         renderer.draw(assets.getBorder().get(8), 240, 40);
-
 
         int healthLabelIndex = ((health == 0) && (frame == 0)) ? 42 : 36;
         renderer.draw(assets.getBorder().get(healthLabelIndex), 256, 40);

@@ -16,9 +16,19 @@ public class ActiveProcessorRegistry {
     }
 
     public static ActiveProcessorRegistry createDefault() {
-        return new ActiveProcessorRegistry(List.of(new PlayerStartProcessor(), new DecorationProcessor(), new AcmeProcessor(),
-                new SecurityCameraProcessor(), new BoxProcessor(), new ItemProcessor(), new SpikesProcessor(),
-                new ElevatorProcessor(), new BridgeProcessor(), new DoorProcessor(), new LockProcessor()));
+        return new ActiveProcessorRegistry(List.of(
+                new PlayerStartProcessor(),
+                new DecorationProcessor(),
+                new AcmeProcessor(),
+                new SecurityCameraProcessor(),
+                new BoxProcessor(),
+                new ItemProcessor(),
+                new SpikesProcessor(),
+                new ElevatorProcessor(),
+                new BridgeProcessor(),
+                new DoorProcessor(),
+                new LockProcessor()
+        ));
     }
 
     private static final ActiveProcessor NOOP = new ActiveProcessor() {

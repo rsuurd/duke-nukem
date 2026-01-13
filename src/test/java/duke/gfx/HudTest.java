@@ -1,7 +1,7 @@
 package duke.gfx;
 
 import duke.Renderer;
-import duke.gameplay.player.Inventory;
+import duke.gameplay.Player;
 import duke.resources.AssetManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,7 +42,11 @@ class HudTest {
 
     @Test
     void shouldDrawScore() {
-        hud.render(renderer, 0, 0, mock());
+        Player player = mock();
+        when(player.getHealth()).thenReturn(mock());
+        when(player.getInventory()).thenReturn(mock());
+
+        hud.render(renderer, 0, player);
 
         verify(font).drawText(renderer, "00000000", 240, 24);
     }

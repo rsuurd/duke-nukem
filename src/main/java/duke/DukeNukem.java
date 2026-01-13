@@ -53,6 +53,7 @@ public class DukeNukem {
         EgaPalette palette = new EgaPalette();
         SoundManager sounds = new SoundManager(assets);
         sounds.init();
+        sounds.toggle();
 
         CanvasRenderer renderer = new CanvasRenderer(palette);
         GameContext context = new GameContext(assets, renderer, palette, keyHandler, sounds);

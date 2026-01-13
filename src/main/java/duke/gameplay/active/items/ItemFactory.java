@@ -7,8 +7,8 @@ import duke.sfx.Sfx;
 import java.util.List;
 import java.util.function.Function;
 
-import static duke.gameplay.Player.MAX_HEALTH;
 import static duke.gameplay.active.items.ItemBehaviorFactory.*;
+import static duke.gameplay.player.Health.MAX_HEALTH;
 
 public class ItemFactory {
     public static Key createKey(int x, int y, Key.Type type) {

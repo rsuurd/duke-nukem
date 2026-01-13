@@ -3,7 +3,6 @@ package duke.state;
 import duke.GameContext;
 import duke.GameContextFixture;
 import duke.gameplay.*;
-import duke.gameplay.player.Inventory;
 import duke.gfx.*;
 import duke.level.Level;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,7 +11,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class GameplayStateTest {
@@ -85,9 +85,6 @@ class GameplayStateTest {
 
     @Test
     void shouldRender() {
-        Inventory inventory = mock();
-        when(player.getHealth()).thenReturn(5);
-        when(player.getInventory()).thenReturn(inventory);
         when(gameplayContext.getScoreManager().getScore()).thenReturn(2430);
 
         state.render(gameContext);
@@ -96,6 +93,6 @@ class GameplayStateTest {
         verify(gameplayContext.getActiveManager()).render(gameContext.getRenderer(), Layer.BACKGROUND);
         verify(spriteRenderer).render(gameContext.getRenderer(), player, player.getX(), player.getY());
         verify(gameplayContext.getActiveManager()).render(gameContext.getRenderer(), Layer.FOREGROUND);
-        verify(hud).render(gameContext.getRenderer(), 2430, 5, inventory);
+        verify(hud).render(gameContext.getRenderer(), 2430, player);
     }
 }

@@ -11,6 +11,6 @@ public class HealthBehavior implements ItemBehavior {
 
     @Override
     public void pickedUp(GameplayContext context, Item item) {
-        context.getPlayer().increaseHealth(hp);
+        context.getPlayer().getHealth().increaseHealth(hp);
     }
 }

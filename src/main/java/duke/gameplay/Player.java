@@ -1,6 +1,7 @@
 package duke.gameplay;
 
 import duke.gameplay.effects.EffectsFactory;
+import duke.gameplay.player.Health;
 import duke.gameplay.player.Inventory;
 import duke.gfx.Animation;
 import duke.gfx.AnimationDescriptor;
@@ -24,12 +25,11 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     private int hangTimeLeft;
     private boolean moving;
     private boolean firing;
-    private int health;
     private boolean using;
-    private int invincibility;
 
     private SpriteDescriptor spriteDescriptor;
     private Animation animation;
+    private Health health;
     private Inventory inventory;
 
     public Player() {
@@ -42,12 +42,12 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
         this.facing = facing;
         this.state = state;
 
-        health = MAX_HEALTH;
         jumpReady = true;
         gunReady = true;
 
         spriteDescriptor = (facing == Facing.LEFT) ? STANDING_LEFT : STANDING_RIGHT;
         animation = new Animation(WALKING_LEFT);
+        health = new Health();
         inventory = new Inventory();
 
         reset();
@@ -79,6 +79,8 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
 
         applyFriction();
         updateJump();
+
+        health.update(context);
     }
 
     private void reset() {
@@ -112,28 +114,20 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     }
 
     private void checkDamage(GameplayContext context) {
-        if (isInvincible()) {
-            invincibility--;
-            return;
-        }
+        if (health.isInvulnerable()) return;
 
         for (Active active : context.getActiveManager().getActives()) {
             if (active instanceof Damaging damaging && intersects(active)) {
-                health -= damaging.getDamage();
+                health.takeDamage(damaging);
                 context.getSoundManager().play(PLAYER_HIT);
-                invincibility = INVINCIBILITY_TIME;
                 break;
             }
         }
     }
 
-    boolean isInvincible() {
-        return invincibility > 0;
-    }
-
     @Override
     public boolean isVisible() {
-        return invincibility % 2 == 0;
+        return health.getInvulnerability() % 2 == 0;
     }
 
     private void updateJump() {
@@ -167,7 +161,7 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
         return facing;
     }
 
-    public int getHealth() {
+    public Health getHealth() {
         return health;
     }
 
@@ -248,7 +242,7 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
 
     private void updateAnimation() {
         // TODO should probably move this into a PlayerRenderer
-        if (invincibility >= 12) {
+        if (health.isDamageTaken()) {
             spriteDescriptor = (facing == Facing.LEFT) ? XRAY_LEFT : XRAY_RIGHT;
 
             return;
@@ -269,14 +263,6 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
                 animation.setAnimation(facing == Facing.LEFT ? WALKING_LEFT : WALKING_RIGHT);
                 spriteDescriptor = animation.getSpriteDescriptor();
             }
-        }
-    }
-
-    public void increaseHealth(int amount) {
-        health += amount;
-
-        if (health > MAX_HEALTH) {
-            health = MAX_HEALTH;
         }
     }
 
@@ -301,9 +287,6 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     static final int JUMP_POWER = -15; // TODO influenced by boots
     static final int HANG_TIME = 4;
     static final int SPEED = 8;
-    static final int INVINCIBILITY_TIME = 16;
-
-    public static final int MAX_HEALTH = 8;
 
     private static SpriteDescriptor BASE_DESCRIPTOR = new SpriteDescriptor(AssetManager::getMan, 0, -8, 0, 2, 2);
     private static SpriteDescriptor STANDING_LEFT = BASE_DESCRIPTOR.withBaseIndex(50);

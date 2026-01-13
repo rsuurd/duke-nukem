@@ -85,7 +85,7 @@ public class GameplayState implements GameState {
         drawPlayer(renderer);
         context.getActiveManager().render(renderer, Layer.FOREGROUND);
         context.getBoltManager().render(renderer);
-        hud.render(renderer, context.getScoreManager().getScore(), context.getPlayer().getHealth(), context.getPlayer().getInventory());
+        hud.render(renderer, context.getScoreManager().getScore(), context.getPlayer());
 
         drawDebugInfo(renderer);
     }
