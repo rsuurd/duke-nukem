@@ -4,7 +4,6 @@ import duke.gameplay.Active;
 import duke.level.processors.ActiveProcessorRegistry;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class LevelBuilder {

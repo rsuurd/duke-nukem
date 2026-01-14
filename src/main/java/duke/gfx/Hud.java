@@ -1,9 +1,9 @@
 package duke.gfx;
 
 import duke.Renderer;
-import duke.gameplay.Player;
 import duke.gameplay.active.items.Key;
 import duke.gameplay.player.Inventory;
+import duke.gameplay.player.Player;
 import duke.resources.AssetManager;
 
 import static duke.level.Level.TILE_SIZE;

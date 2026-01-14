@@ -4,7 +4,6 @@ import duke.gameplay.GameplayContext;
 import duke.gameplay.GameplayContextFixture;
 import duke.gameplay.Rectangle;
 import duke.gameplay.effects.Effect;
-import duke.sfx.Sfx;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -2,6 +2,7 @@ package duke.gameplay.active;
 
 import duke.Renderer;
 import duke.gameplay.*;
+import duke.gameplay.player.Player;
 import duke.gfx.Renderable;
 import duke.gfx.SpriteDescriptor;
 import duke.gfx.SpriteRenderer;

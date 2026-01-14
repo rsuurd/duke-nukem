@@ -1,7 +1,6 @@
 package duke.gameplay.player;
 
 import duke.gameplay.Facing;
-import duke.gameplay.Player;
 import duke.gfx.Animation;
 import duke.gfx.AnimationDescriptor;
 import duke.gfx.SpriteDescriptor;

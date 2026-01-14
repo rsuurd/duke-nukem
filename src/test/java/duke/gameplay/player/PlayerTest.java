@@ -1,10 +1,11 @@
-package duke.gameplay;
+package duke.gameplay.player;
 
+import duke.gameplay.Collidable;
+import duke.gameplay.Facing;
+import duke.gameplay.GameplayContext;
+import duke.gameplay.GameplayContextFixture;
 import duke.gameplay.effects.Effect;
 import duke.gameplay.effects.Explosion;
-import duke.gameplay.player.Health;
-import duke.gameplay.player.PlayerAnimator;
-import duke.gameplay.player.Weapon;
 import duke.ui.KeyHandler;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,8 +17,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 
 import static duke.gameplay.Physics.GRAVITY;
-import static duke.gameplay.Player.JUMP_POWER;
-import static duke.gameplay.Player.SPEED;
+import static duke.gameplay.player.Player.JUMP_POWER;
+import static duke.gameplay.player.Player.SPEED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;

@@ -1,5 +1,6 @@
 package duke.gameplay;
 
+import duke.gameplay.player.Player;
 import duke.level.Level;
 import duke.sfx.SoundManager;
 

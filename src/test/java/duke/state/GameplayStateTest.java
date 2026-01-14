@@ -2,7 +2,11 @@ package duke.state;
 
 import duke.GameContext;
 import duke.GameContextFixture;
-import duke.gameplay.*;
+import duke.gameplay.Collision;
+import duke.gameplay.GameplayContext;
+import duke.gameplay.GameplayContextFixture;
+import duke.gameplay.Layer;
+import duke.gameplay.player.Player;
 import duke.gfx.*;
 import duke.level.Level;
 import org.junit.jupiter.api.BeforeEach;

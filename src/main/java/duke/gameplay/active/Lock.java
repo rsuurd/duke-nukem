@@ -2,6 +2,7 @@ package duke.gameplay.active;
 
 import duke.gameplay.*;
 import duke.gameplay.active.items.Key;
+import duke.gameplay.player.Player;
 import duke.gfx.Animation;
 import duke.gfx.AnimationDescriptor;
 import duke.gfx.SpriteDescriptor;

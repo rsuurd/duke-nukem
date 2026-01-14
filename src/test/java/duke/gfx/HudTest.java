@@ -1,7 +1,7 @@
 package duke.gfx;
 
 import duke.Renderer;
-import duke.gameplay.Player;
+import duke.gameplay.player.Player;
 import duke.gameplay.player.Weapon;
 import duke.resources.AssetManager;
 import org.junit.jupiter.api.BeforeEach;

@@ -2,7 +2,7 @@ package duke.gameplay.active;
 
 import duke.gameplay.GameplayContext;
 import duke.gameplay.GameplayContextFixture;
-import duke.gameplay.Player;
+import duke.gameplay.player.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -3,6 +3,7 @@ package duke.state;
 import duke.GameContext;
 import duke.Renderer;
 import duke.gameplay.*;
+import duke.gameplay.player.Player;
 import duke.gfx.*;
 import duke.level.Level;
 import duke.resources.AssetManager;

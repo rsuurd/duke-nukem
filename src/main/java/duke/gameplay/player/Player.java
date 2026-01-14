@@ -1,10 +1,7 @@
-package duke.gameplay;
+package duke.gameplay.player;
 
+import duke.gameplay.*;
 import duke.gameplay.effects.EffectsFactory;
-import duke.gameplay.player.Health;
-import duke.gameplay.player.Inventory;
-import duke.gameplay.player.PlayerAnimator;
-import duke.gameplay.player.Weapon;
 import duke.gfx.SpriteDescriptor;
 import duke.gfx.SpriteRenderable;
 import duke.ui.KeyHandler;
