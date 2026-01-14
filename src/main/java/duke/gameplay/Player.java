@@ -3,12 +3,10 @@ package duke.gameplay;
 import duke.gameplay.effects.EffectsFactory;
 import duke.gameplay.player.Health;
 import duke.gameplay.player.Inventory;
+import duke.gameplay.player.PlayerAnimator;
 import duke.gameplay.player.Weapon;
-import duke.gfx.Animation;
-import duke.gfx.AnimationDescriptor;
 import duke.gfx.SpriteDescriptor;
 import duke.gfx.SpriteRenderable;
-import duke.resources.AssetManager;
 import duke.ui.KeyHandler;
 
 import static duke.sfx.Sfx.*;
@@ -26,17 +24,16 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     private boolean moving;
     private boolean using;
 
-    private SpriteDescriptor spriteDescriptor;
-    private Animation animation;
     private Weapon weapon;
     private Health health;
     private Inventory inventory;
+    private PlayerAnimator animator;
 
     public Player() {
-        this(State.STANDING, Facing.RIGHT, new Weapon(), new Health(), new Inventory());
+        this(State.STANDING, Facing.RIGHT, new Weapon(), new Health(), new Inventory(), new PlayerAnimator());
     }
 
-    Player(State state, Facing facing, Weapon weapon, Health health, Inventory inventory) {
+    Player(State state, Facing facing, Weapon weapon, Health health, Inventory inventory, PlayerAnimator animator) {
         super(0, 0, WIDTH, HEIGHT);
 
         this.facing = facing;
@@ -44,12 +41,10 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
 
         jumpReady = true;
 
-        spriteDescriptor = (facing == Facing.LEFT) ? STANDING_LEFT : STANDING_RIGHT;
-        animation = new Animation(WALKING_LEFT);
-
         this.weapon = weapon;
         this.health = health;
         this.inventory = inventory;
+        this.animator = animator;
 
         reset();
     }
@@ -107,7 +102,7 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
             context.getSoundManager().play(PLAYER_LAND);
         }
 
-        updateAnimation();
+        animator.animate(this);
     }
 
     private void checkDamage(GameplayContext context) {
@@ -164,6 +159,10 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
 
     public Health getHealth() {
         return health;
+    }
+
+    public Inventory getInventory() {
+        return inventory;
     }
 
     private void move(Facing facing) {
@@ -238,41 +237,11 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
 
     @Override
     public SpriteDescriptor getSpriteDescriptor() {
-        return spriteDescriptor;
-    }
-
-    private void updateAnimation() {
-        // TODO should probably move this into a PlayerRenderer
-        if (health.isDamageTaken()) {
-            spriteDescriptor = (facing == Facing.LEFT) ? XRAY_LEFT : XRAY_RIGHT;
-
-            return;
-        }
-
-        switch (state) {
-            case STANDING -> {
-                if (weapon.isTriggered()) {
-                    spriteDescriptor = facing == Facing.LEFT ? SHOOT_LEFT : SHOOT_RIGHT;
-                } else {
-                    spriteDescriptor = (facing == Facing.LEFT) ? STANDING_LEFT : STANDING_RIGHT;
-                }
-            }
-            case JUMPING -> spriteDescriptor = (facing == Facing.LEFT) ? JUMPING_LEFT : JUMPING_RIGHT;
-            case FALLING -> spriteDescriptor = (facing == Facing.LEFT) ? FALLING_LEFT : FALLING_RIGHT;
-            case WALKING -> {
-                animation.tick();
-                animation.setAnimation(facing == Facing.LEFT ? WALKING_LEFT : WALKING_RIGHT);
-                spriteDescriptor = animation.getSpriteDescriptor();
-            }
-        }
+        return animator.getSpriteDescriptor();
     }
 
     public boolean isUsing() {
         return using;
-    }
-
-    public Inventory getInventory() {
-        return inventory;
     }
 
     public enum State {
@@ -288,18 +257,4 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     static final int JUMP_POWER = -15; // TODO influenced by boots
     static final int HANG_TIME = 4;
     static final int SPEED = 8;
-
-    private static SpriteDescriptor BASE_DESCRIPTOR = new SpriteDescriptor(AssetManager::getMan, 0, -8, 0, 2, 2);
-    private static SpriteDescriptor STANDING_LEFT = BASE_DESCRIPTOR.withBaseIndex(50);
-    private static SpriteDescriptor STANDING_RIGHT = BASE_DESCRIPTOR.withBaseIndex(54);
-    private static AnimationDescriptor WALKING_LEFT = new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(0), 4, 2);
-    private static AnimationDescriptor WALKING_RIGHT = new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(16), 4, 2);
-    private static SpriteDescriptor JUMPING_LEFT = BASE_DESCRIPTOR.withBaseIndex(32);
-    private static SpriteDescriptor JUMPING_RIGHT = BASE_DESCRIPTOR.withBaseIndex(36);
-    private static SpriteDescriptor FALLING_LEFT = BASE_DESCRIPTOR.withBaseIndex(40);
-    private static SpriteDescriptor FALLING_RIGHT = BASE_DESCRIPTOR.withBaseIndex(44);
-    private static SpriteDescriptor SHOOT_LEFT = BASE_DESCRIPTOR.withBaseIndex(12);
-    private static SpriteDescriptor SHOOT_RIGHT = BASE_DESCRIPTOR.withBaseIndex(28);
-    private static SpriteDescriptor XRAY_LEFT = BASE_DESCRIPTOR.withBaseIndex(182);
-    private static SpriteDescriptor XRAY_RIGHT = BASE_DESCRIPTOR.withBaseIndex(186);
 }
