@@ -50,7 +50,7 @@ public class BoltManager {
         }
     }
 
-    List<Bolt> getBolts() {
-        return bolts;
+    public int countBolts() {
+        return bolts.size();
     }
 }

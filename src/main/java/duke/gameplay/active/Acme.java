@@ -10,7 +10,7 @@ import duke.sfx.Sfx;
 
 import static duke.level.Level.TILE_SIZE;
 
-public class Acme extends Active implements Updatable, SpriteRenderable, Shootable {
+public class Acme extends Active implements Updatable, SpriteRenderable, Shootable, Damaging {
     private Rectangle detectionArea;
 
     private int timer;

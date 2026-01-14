@@ -3,6 +3,7 @@ package duke.gameplay;
 import duke.gameplay.effects.EffectsFactory;
 import duke.gameplay.player.Health;
 import duke.gameplay.player.Inventory;
+import duke.gameplay.player.Weapon;
 import duke.gfx.Animation;
 import duke.gfx.AnimationDescriptor;
 import duke.gfx.SpriteDescriptor;
@@ -21,34 +22,34 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     private boolean landed;
 
     private boolean jumpReady;
-    private boolean gunReady;
     private int hangTimeLeft;
     private boolean moving;
-    private boolean firing;
     private boolean using;
 
     private SpriteDescriptor spriteDescriptor;
     private Animation animation;
+    private Weapon weapon;
     private Health health;
     private Inventory inventory;
 
     public Player() {
-        this(State.STANDING, Facing.RIGHT);
+        this(State.STANDING, Facing.RIGHT, new Weapon(), new Health(), new Inventory());
     }
 
-    Player(State state, Facing facing) {
+    Player(State state, Facing facing, Weapon weapon, Health health, Inventory inventory) {
         super(0, 0, WIDTH, HEIGHT);
 
         this.facing = facing;
         this.state = state;
 
         jumpReady = true;
-        gunReady = true;
 
         spriteDescriptor = (facing == Facing.LEFT) ? STANDING_LEFT : STANDING_RIGHT;
         animation = new Animation(WALKING_LEFT);
-        health = new Health();
-        inventory = new Inventory();
+
+        this.weapon = weapon;
+        this.health = health;
+        this.inventory = inventory;
 
         reset();
     }
@@ -63,7 +64,8 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
         }
 
         moving = input.left() || input.right();
-        firing = input.fire();
+
+        weapon.setTriggered(input.fire());
         using = input.using();
 
         if (input.jump()) {
@@ -92,12 +94,7 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     public void postMovement(GameplayContext context) {
         checkDamage(context);
 
-        if (firing && gunReady) {
-            context.getBoltManager().spawn(Bolt.create(this));
-            context.getSoundManager().play(PLAYER_GUN);
-        }
-
-        gunReady = !firing;
+        weapon.fire(context);
 
         if (jumped) {
             context.getSoundManager().play(PLAYER_JUMP);
@@ -127,7 +124,7 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
 
     @Override
     public boolean isVisible() {
-        return health.getInvulnerability() % 2 == 0;
+        return !health.isInvulnerable() || health.getInvulnerability() % 2 == 0;
     }
 
     private void updateJump() {
@@ -159,6 +156,10 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
 
     public Facing getFacing() {
         return facing;
+    }
+
+    public Weapon getWeapon() {
+        return weapon;
     }
 
     public Health getHealth() {
@@ -250,7 +251,7 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
 
         switch (state) {
             case STANDING -> {
-                if (firing) {
+                if (weapon.isTriggered()) {
                     spriteDescriptor = facing == Facing.LEFT ? SHOOT_LEFT : SHOOT_RIGHT;
                 } else {
                     spriteDescriptor = (facing == Facing.LEFT) ? STANDING_LEFT : STANDING_RIGHT;

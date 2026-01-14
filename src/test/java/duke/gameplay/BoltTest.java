@@ -20,9 +20,10 @@ class BoltTest {
     @ParameterizedTest
     @EnumSource(Facing.class)
     void shouldCreate(Facing facing) {
-        Player player = new Player(Player.State.STANDING, facing);
-        player.setX(192);
-        player.setY(192);
+        Player player = mock();
+        when(player.getFacing()).thenReturn(facing);
+        when(player.getX()).thenReturn(192);
+        when(player.getY()).thenReturn(192);
 
         Bolt bolt = Bolt.create(player);
 

@@ -35,7 +35,7 @@ class BoltManagerTest {
     void shouldSpawnBolt() {
         manager.spawn(mock());
 
-        assertThat(manager.getBolts()).hasSize(1);
+        assertThat(manager.countBolts()).isEqualTo(1);
     }
 
     @Test

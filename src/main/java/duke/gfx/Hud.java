@@ -23,7 +23,7 @@ public class Hud {
         drawBorders(renderer);
         drawScore(renderer, score);
         drawHealth(renderer, player.getHealth().getCurrent());
-        drawFirePower(renderer, 1);
+        drawFirePower(renderer, player.getWeapon().getFirepower());
         drawInventory(renderer, player.getInventory());
         drawHelp(renderer);
 
