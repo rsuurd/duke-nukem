@@ -75,7 +75,7 @@ class LockTest {
         lock.interactRequested(context);
 
         assertThat(lock.isLocked()).isFalse();
-        verify(door).open();
+        verify(door).open(context);
     }
 
     @Test
@@ -89,6 +89,6 @@ class LockTest {
         lock.interactRequested(context);
 
         assertThat(lock.isLocked()).isFalse();
-        verify(door, never()).open();
+        verify(door, never()).open(any());
     }
 }

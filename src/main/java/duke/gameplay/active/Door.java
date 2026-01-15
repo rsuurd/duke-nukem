@@ -10,6 +10,7 @@ import duke.gfx.AnimationDescriptor;
 import duke.gfx.SpriteDescriptor;
 import duke.gfx.SpriteRenderable;
 import duke.level.Level;
+import duke.sfx.Sfx;
 
 import static duke.gfx.SpriteDescriptor.OBJECTS;
 
@@ -30,8 +31,9 @@ public class Door extends Active implements Solid, SpriteRenderable, Updatable {
         return requiredKey == key;
     }
 
-    public void open() {
+    public void open(GameplayContext context) {
         closed = false;
+        context.getSoundManager().play(Sfx.OPEN_KEY_DOOR);
     }
 
     public void update(GameplayContext context) {

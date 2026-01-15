@@ -42,7 +42,7 @@ public class Lock extends Active implements Updatable, SpriteRenderable, Interac
 
             for (Active active : context.getActiveManager().getActives()) {
                 if (active instanceof Door door && door.requiresKey(requiredKey)) {
-                    door.open();
+                    door.open(context);
                 }
             }
         }
