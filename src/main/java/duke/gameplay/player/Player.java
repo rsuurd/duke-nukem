@@ -241,13 +241,6 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
         return using;
     }
 
-    public enum State {
-        STANDING,
-        WALKING,
-        JUMPING,
-        FALLING
-    }
-
     private static final int WIDTH = 16;
     private static final int HEIGHT = 32;
 

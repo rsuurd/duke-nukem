@@ -41,20 +41,20 @@ class PlayerTest {
 
     @Test
     void shouldWalkLeftWhenStanding() {
-        Player player = new Player(Player.State.STANDING, Facing.LEFT, mock(), mock(), mock(), mock());
+        Player player = new Player(State.STANDING, Facing.LEFT, mock(), mock(), mock(), mock());
 
         when(input.left()).thenReturn(true);
 
         player.processInput(input);
 
-        assertThat(player.getState()).isEqualTo(Player.State.WALKING);
+        assertThat(player.getState()).isEqualTo(State.WALKING);
         assertThat(player.getFacing()).isEqualTo(Facing.LEFT);
         assertThat(player.getVelocityX()).isEqualTo(-SPEED);
     }
 
     @ParameterizedTest
-    @EnumSource(value = Player.State.class, names = {"STANDING"}, mode = EnumSource.Mode.EXCLUDE)
-    void shouldMoveLeft(Player.State state) {
+    @EnumSource(value = State.class, names = {"STANDING"}, mode = EnumSource.Mode.EXCLUDE)
+    void shouldMoveLeft(State state) {
         Player player = new Player(state, Facing.LEFT, mock(), mock(), mock(), mock());
 
         when(input.left()).thenReturn(true);
@@ -67,7 +67,7 @@ class PlayerTest {
 
     @Test
     void shouldWalkRight() {
-        Player player = new Player(Player.State.STANDING, Facing.RIGHT, mock(), mock(), mock(), mock());
+        Player player = new Player(State.STANDING, Facing.RIGHT, mock(), mock(), mock(), mock());
 
         when(input.right()).thenReturn(true);
 
@@ -77,8 +77,8 @@ class PlayerTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = Player.State.class, names = {"STANDING"}, mode = EnumSource.Mode.EXCLUDE)
-    void shouldMoveRight(Player.State state) {
+    @EnumSource(value = State.class, names = {"STANDING"}, mode = EnumSource.Mode.EXCLUDE)
+    void shouldMoveRight(State state) {
         Player player = new Player(state, Facing.LEFT, mock(), mock(), mock(), mock());
 
         when(input.left()).thenReturn(true);
@@ -91,19 +91,19 @@ class PlayerTest {
 
     @Test
     void shouldStandWhenWalkingStops() {
-        Player player = new Player(Player.State.WALKING, Facing.LEFT, mock(), mock(), mock(), mock());
+        Player player = new Player(State.WALKING, Facing.LEFT, mock(), mock(), mock(), mock());
         player.setVelocityX(-SPEED);
 
         player.processInput(input);
         player.update(GameplayContextFixture.create());
 
-        assertThat(player.getState()).isEqualTo(Player.State.STANDING);
+        assertThat(player.getState()).isEqualTo(State.STANDING);
         assertThat(player.getVelocityX()).isEqualTo(0);
     }
 
     @ParameterizedTest
-    @EnumSource(value = Player.State.class, names = {"WALKING"}, mode = EnumSource.Mode.EXCLUDE)
-    void shouldStop(Player.State state) {
+    @EnumSource(value = State.class, names = {"WALKING"}, mode = EnumSource.Mode.EXCLUDE)
+    void shouldStop(State state) {
         Player player = new Player(state, Facing.RIGHT, mock(), mock(), mock(), mock());
         player.setVelocityX(SPEED);
         player.setVelocityY(JUMP_POWER);
@@ -116,8 +116,8 @@ class PlayerTest {
     }
 
     @ParameterizedTest
-    @EnumSource(Player.State.class)
-    void shouldIndicateIfGrounded(Player.State state) {
+    @EnumSource(State.class)
+    void shouldIndicateIfGrounded(State state) {
         assertThat(new Player(state, Facing.LEFT, mock(), mock(), mock(), mock()).isGrounded()).isEqualTo(switch (state) {
             case STANDING, WALKING -> true;
             default -> false;
@@ -125,8 +125,8 @@ class PlayerTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = Player.State.class, names = {"STANDING", "WALKING"})
-    void shouldJumpWhenStandingOrWalking(Player.State state) {
+    @EnumSource(value = State.class, names = {"STANDING", "WALKING"})
+    void shouldJumpWhenStandingOrWalking(State state) {
         Player player = new Player(state, Facing.RIGHT, mock(), mock(), mock(), mock());
 
         when(input.jump()).thenReturn(true);
@@ -134,12 +134,12 @@ class PlayerTest {
         player.processInput(input);
 
         assertThat(player.getVelocityY()).isEqualTo(-15);
-        assertThat(player.getState()).isEqualTo(Player.State.JUMPING);
+        assertThat(player.getState()).isEqualTo(State.JUMPING);
     }
 
     @ParameterizedTest
-    @EnumSource(value = Player.State.class, names = {"STANDING", "WALKING"}, mode = EnumSource.Mode.EXCLUDE)
-    void shouldNotJumpWhenNotStandingOrWalking(Player.State state) {
+    @EnumSource(value = State.class, names = {"STANDING", "WALKING"}, mode = EnumSource.Mode.EXCLUDE)
+    void shouldNotJumpWhenNotStandingOrWalking(State state) {
         Player player = new Player(state, Facing.RIGHT, mock(), mock(), mock(), mock());
 
         when(input.jump()).thenReturn(true);
@@ -152,19 +152,19 @@ class PlayerTest {
 
     @Test
     void shouldLand() {
-        Player player = new Player(Player.State.FALLING, Facing.LEFT, mock(), mock(), mock(), mock());
+        Player player = new Player(State.FALLING, Facing.LEFT, mock(), mock(), mock(), mock());
         player.setVelocityY(16);
 
         player.onCollision(Collidable.Direction.DOWN);
 
         assertThat(player.getVelocityY()).isEqualTo(0);
-        assertThat(player.getState()).isEqualTo(Player.State.STANDING);
+        assertThat(player.getState()).isEqualTo(State.STANDING);
     }
 
     @Test
     void shouldSpawnDustWhenLanding() {
         GameplayContext context = GameplayContextFixture.create();
-        Player player = new Player(Player.State.FALLING, Facing.LEFT, mock(), mock(), mock(), mock());
+        Player player = new Player(State.FALLING, Facing.LEFT, mock(), mock(), mock(), mock());
         player.setVelocityY(16);
 
         player.onCollision(Collidable.Direction.DOWN);
@@ -175,7 +175,7 @@ class PlayerTest {
 
     @Test
     void shouldBump() {
-        Player player = new Player(Player.State.JUMPING, Facing.LEFT, mock(), mock(), mock(), mock());
+        Player player = new Player(State.JUMPING, Facing.LEFT, mock(), mock(), mock(), mock());
         player.setVelocityY(-8);
 
         player.onCollision(Collidable.Direction.UP);
@@ -189,16 +189,16 @@ class PlayerTest {
 
         player.fall();
 
-        assertThat(player.getState()).isEqualTo(Player.State.FALLING);
+        assertThat(player.getState()).isEqualTo(State.FALLING);
     }
 
     @Test
     void shouldNotFallWhileJumping() {
-        Player player = new Player(Player.State.JUMPING, Facing.LEFT, mock(), mock(), mock(), mock());
+        Player player = new Player(State.JUMPING, Facing.LEFT, mock(), mock(), mock(), mock());
 
         player.fall();
 
-        assertThat(player.getState()).isEqualTo(Player.State.JUMPING);
+        assertThat(player.getState()).isEqualTo(State.JUMPING);
     }
 
     @Test
@@ -213,8 +213,8 @@ class PlayerTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = Player.State.class, names = {"STANDING", "WALKING"})
-    void shouldHaveNoVerticalAcceleration(Player.State state) {
+    @EnumSource(value = State.class, names = {"STANDING", "WALKING"})
+    void shouldHaveNoVerticalAcceleration(State state) {
         Player player = new Player(state, Facing.LEFT, mock(), mock(), mock(), mock());
 
         assertThat(player.getVerticalAcceleration()).isEqualTo(0);
@@ -222,7 +222,7 @@ class PlayerTest {
 
     @Test
     void shouldHaveGravityWhileJumping() {
-        Player player = new Player(Player.State.JUMPING, Facing.LEFT, mock(), mock(), mock(), mock());
+        Player player = new Player(State.JUMPING, Facing.LEFT, mock(), mock(), mock(), mock());
 
         assertThat(player.getVerticalAcceleration()).isEqualTo(GRAVITY);
     }
@@ -242,7 +242,7 @@ class PlayerTest {
 
     @Test
     void shouldAccelerateWhileFalling() {
-        Player player = new Player(Player.State.FALLING, Facing.LEFT, mock(), mock(), mock(), mock());
+        Player player = new Player(State.FALLING, Facing.LEFT, mock(), mock(), mock(), mock());
 
         assertThat(player.getVerticalAcceleration()).isEqualTo(SPEED);
     }
@@ -251,7 +251,7 @@ class PlayerTest {
     void shouldFireWeapon() {
         GameplayContext context = GameplayContextFixture.create();
         Weapon weapon = mock();
-        Player player = new Player(Player.State.STANDING, Facing.RIGHT, weapon, mock(), mock(), mock());
+        Player player = new Player(State.STANDING, Facing.RIGHT, weapon, mock(), mock(), mock());
 
         when(input.fire()).thenReturn(true);
 
@@ -274,7 +274,7 @@ class PlayerTest {
     @Test
     void shouldTakeDamage() {
         Health health = mock();
-        Player player = new Player(Player.State.STANDING, Facing.LEFT, mock(), health, mock(), mock());
+        Player player = new Player(State.STANDING, Facing.LEFT, mock(), health, mock(), mock());
         GameplayContext context = GameplayContextFixture.create();
         Explosion explosion = new Explosion(player.getX(), player.getY());
         when(context.getActiveManager().getActives()).thenReturn(List.of(explosion));
@@ -288,7 +288,7 @@ class PlayerTest {
     void shouldNotTakeDamageWhileInvulnerable() {
         Health health = mock();
         when(health.isInvulnerable()).thenReturn(true);
-        Player player = new Player(Player.State.STANDING, Facing.LEFT, mock(), health, mock(), mock());
+        Player player = new Player(State.STANDING, Facing.LEFT, mock(), health, mock(), mock());
         GameplayContext context = GameplayContextFixture.create();
 
         player.postMovement(context);
@@ -299,7 +299,7 @@ class PlayerTest {
     @Test
     void shouldNotTakeDoubleDamage() {
         Health health = mock();
-        Player player = new Player(Player.State.STANDING, Facing.LEFT, mock(), health, mock(), mock());
+        Player player = new Player(State.STANDING, Facing.LEFT, mock(), health, mock(), mock());
         GameplayContext context = GameplayContextFixture.create();
         Explosion explosion = new Explosion(player.getX(), player.getY());
         when(context.getActiveManager().getActives()).thenReturn(List.of(explosion, explosion));
@@ -312,7 +312,7 @@ class PlayerTest {
     @Test
     void shouldAnimate() {
         PlayerAnimator animator = mock();
-        Player player = new Player(Player.State.STANDING, Facing.LEFT, mock(), mock(), mock(), animator);
+        Player player = new Player(State.STANDING, Facing.LEFT, mock(), mock(), mock(), animator);
 
         player.postMovement(GameplayContextFixture.create());
 

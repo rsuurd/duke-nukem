@@ -4,11 +4,11 @@ import duke.gameplay.*;
 import duke.gameplay.effects.EffectsFactory;
 import duke.gfx.SpriteDescriptor;
 import duke.gfx.SpriteRenderable;
-import duke.resources.AssetManager;
 import duke.sfx.Sfx;
 
 import java.util.List;
 
+import static duke.gfx.SpriteDescriptor.ANIM;
 import static duke.level.Level.TILE_SIZE;
 
 public class SecurityCamera extends Active implements Movable, Updatable, SpriteRenderable, Shootable {
@@ -38,7 +38,7 @@ public class SecurityCamera extends Active implements Movable, Updatable, Sprite
     private static List<SpriteDescriptor> DESCRIPTORS;
 
     static {
-        SpriteDescriptor descriptor = new SpriteDescriptor(AssetManager::getAnim, 208, 0, 0, 1, 1);
+        SpriteDescriptor descriptor = new SpriteDescriptor(ANIM, 208);
 
         DESCRIPTORS = List.of(descriptor, descriptor.withBaseIndex(209), descriptor.withBaseIndex(210));
     }

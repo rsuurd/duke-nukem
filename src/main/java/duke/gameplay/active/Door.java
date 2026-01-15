@@ -10,7 +10,8 @@ import duke.gfx.AnimationDescriptor;
 import duke.gfx.SpriteDescriptor;
 import duke.gfx.SpriteRenderable;
 import duke.level.Level;
-import duke.resources.AssetManager;
+
+import static duke.gfx.SpriteDescriptor.OBJECTS;
 
 public class Door extends Active implements Solid, SpriteRenderable, Updatable {
     private boolean closed;
@@ -49,5 +50,5 @@ public class Door extends Active implements Solid, SpriteRenderable, Updatable {
     }
 
     private static final AnimationDescriptor DESCRIPTOR =
-            new AnimationDescriptor(new SpriteDescriptor(AssetManager::getObjects, 128, 0, 0, 1, 1), 8, 1, AnimationDescriptor.Type.ONE_SHOT);
+            new AnimationDescriptor(new SpriteDescriptor(OBJECTS, 128), 8, 1, AnimationDescriptor.Type.ONE_SHOT);
 }

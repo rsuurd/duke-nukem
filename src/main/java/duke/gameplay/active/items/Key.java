@@ -2,10 +2,11 @@ package duke.gameplay.active.items;
 
 import duke.gfx.SimpleSpriteRenderable;
 import duke.gfx.SpriteDescriptor;
-import duke.resources.AssetManager;
 import duke.sfx.Sfx;
 
 import java.util.Map;
+
+import static duke.gfx.SpriteDescriptor.OBJECTS;
 
 public class Key extends Item {
     public Key(int x, int y, Key.Type type) {
@@ -22,9 +23,9 @@ public class Key extends Item {
     }
 
     private static final Map<Type, SpriteDescriptor> DESCRIPTORS = Map.of(
-            Type.RED, new SpriteDescriptor(AssetManager::getObjects, 124, 0, 0, 1, 1),
-            Type.GREEN, new SpriteDescriptor(AssetManager::getObjects, 125, 0, 0, 1, 1),
-            Type.BLUE, new SpriteDescriptor(AssetManager::getObjects, 126, 0, 0, 1, 1),
-            Type.MAGENTA, new SpriteDescriptor(AssetManager::getObjects, 127, 0, 0, 1, 1)
+            Type.RED, new SpriteDescriptor(OBJECTS, 124),
+            Type.GREEN, new SpriteDescriptor(OBJECTS, 125),
+            Type.BLUE, new SpriteDescriptor(OBJECTS, 126),
+            Type.MAGENTA, new SpriteDescriptor(OBJECTS, 127)
     );
 }

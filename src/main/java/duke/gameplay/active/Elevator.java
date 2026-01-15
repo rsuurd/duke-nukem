@@ -7,7 +7,9 @@ import duke.gfx.Renderable;
 import duke.gfx.SpriteDescriptor;
 import duke.gfx.SpriteRenderer;
 import duke.level.Level;
-import duke.resources.AssetManager;
+
+import static duke.gfx.SpriteDescriptor.OBJECTS;
+import static duke.gfx.SpriteDescriptor.TILES;
 
 public class Elevator extends Active implements Renderable, Solid, Updatable, Interactable {
     private int elevation;
@@ -80,6 +82,6 @@ public class Elevator extends Active implements Renderable, Solid, Updatable, In
         }
     }
 
-    private static final SpriteDescriptor ELEVATOR_TOP_DESCRIPTOR = new SpriteDescriptor(AssetManager::getObjects, 5, 0, 0, 1, 1);
-    private static final SpriteDescriptor ELEVATOR_BASE_DESCRIPTOR = new SpriteDescriptor(AssetManager::getTiles, 215, 0, 0, 1, 1);
+    private static final SpriteDescriptor ELEVATOR_TOP_DESCRIPTOR = new SpriteDescriptor(OBJECTS, 5);
+    private static final SpriteDescriptor ELEVATOR_BASE_DESCRIPTOR = new SpriteDescriptor(TILES, 215);
 }

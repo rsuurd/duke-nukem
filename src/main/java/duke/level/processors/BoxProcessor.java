@@ -8,11 +8,12 @@ import duke.gameplay.active.items.ItemFactory;
 import duke.gfx.SpriteDescriptor;
 import duke.level.Level;
 import duke.level.LevelBuilder;
-import duke.resources.AssetManager;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiFunction;
+
+import static duke.gfx.SpriteDescriptor.OBJECTS;
 
 public class BoxProcessor implements ActiveProcessor {
     @Override
@@ -29,9 +30,9 @@ public class BoxProcessor implements ActiveProcessor {
         builder.add(new Box(x, y, descriptor.spriteDescriptor(), descriptor.contents())).replaceTile(index, LevelBuilder.LEFT);
     }
 
-    private static final SpriteDescriptor GREY = new SpriteDescriptor(AssetManager::getObjects, 0, 0, 0, 1, 1);
-    private static final SpriteDescriptor RED = new SpriteDescriptor(AssetManager::getObjects, 101, 0, 0, 1, 1);
-    private static final SpriteDescriptor BLUE = new SpriteDescriptor(AssetManager::getObjects, 100, 0, 0, 1, 1);
+    private static final SpriteDescriptor GREY = new SpriteDescriptor(OBJECTS, 0);
+    private static final SpriteDescriptor RED = new SpriteDescriptor(OBJECTS, 101);
+    private static final SpriteDescriptor BLUE = new SpriteDescriptor(OBJECTS, 100);
     static final Map<Integer, BoxDescriptor> BOX_DESCRIPTORS = new HashMap<>();
 
     static {

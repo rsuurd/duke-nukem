@@ -1,13 +1,13 @@
 package duke.gameplay.effects;
 
 import duke.gameplay.GameplayContext;
-import duke.gfx.AnimationDescriptor;
 import duke.gfx.SpriteDescriptor;
-import duke.resources.AssetManager;
+
+import static duke.gfx.SpriteDescriptor.OBJECTS;
 
 public class PoppedBalloon extends Effect {
     public PoppedBalloon(int x, int y) {
-        super(x, y, POPPED_BALLOON);
+        super(x, y, POPPED_BALLOON, 1);
     }
 
     @Override
@@ -19,7 +19,5 @@ public class PoppedBalloon extends Effect {
         }
     }
 
-    private static final AnimationDescriptor POPPED_BALLOON =
-            new AnimationDescriptor(new SpriteDescriptor(AssetManager::getObjects, 73, 0, 0, 1, 1), 1, 1);
-
+    private static final SpriteDescriptor POPPED_BALLOON = new SpriteDescriptor(OBJECTS, 73);
 }

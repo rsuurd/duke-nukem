@@ -1,13 +1,13 @@
 package duke.gfx;
 
-import duke.resources.AssetManager;
 import org.junit.jupiter.api.Test;
 
+import static duke.gfx.SpriteDescriptor.TILES;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class AnimationDescriptorTest {
-    private static final SpriteDescriptor SPRITE_DESCRIPTOR = new SpriteDescriptor(AssetManager::getTiles, 0, 0, 0, 2, 2);
+    private static final SpriteDescriptor SPRITE_DESCRIPTOR = new SpriteDescriptor(TILES, 0, 0, 0, 2, 2);
 
     @Test
     void shouldCreateAnimationDescriptor() {

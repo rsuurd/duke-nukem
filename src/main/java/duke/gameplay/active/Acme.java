@@ -5,9 +5,9 @@ import duke.gameplay.effects.EffectsFactory;
 import duke.gfx.SpriteDescriptor;
 import duke.gfx.SpriteRenderable;
 import duke.level.Level;
-import duke.resources.AssetManager;
 import duke.sfx.Sfx;
 
+import static duke.gfx.SpriteDescriptor.OBJECTS;
 import static duke.level.Level.TILE_SIZE;
 
 public class Acme extends Active implements Updatable, SpriteRenderable, Shootable, Damaging {
@@ -122,7 +122,7 @@ public class Acme extends Active implements Updatable, SpriteRenderable, Shootab
         destroy();
     }
 
-    private static final SpriteDescriptor SPRITE = new SpriteDescriptor(AssetManager::getObjects, 83, 0, 0, 1, 2);
+    private static final SpriteDescriptor SPRITE = new SpriteDescriptor(OBJECTS, 83, 0, 0, 1, 2);
 
     static final int SHAKE_TIME = 10;
     private static final int FALL_SPEED = 12;

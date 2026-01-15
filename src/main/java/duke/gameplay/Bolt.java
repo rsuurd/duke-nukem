@@ -7,12 +7,12 @@ import duke.gfx.AnimationDescriptor;
 import duke.gfx.SpriteDescriptor;
 import duke.gfx.SpriteRenderable;
 import duke.level.Level;
-import duke.resources.AssetManager;
 import duke.sfx.Sfx;
 
 import java.util.function.Predicate;
 
 import static duke.gameplay.Facing.LEFT;
+import static duke.gfx.SpriteDescriptor.OBJECTS;
 import static duke.level.Level.TILE_SIZE;
 
 public class Bolt extends Active implements Updatable, SpriteRenderable {
@@ -144,7 +144,7 @@ public class Bolt extends Active implements Updatable, SpriteRenderable {
     static final int DESTROYED_BRICKS_TILE_ID = 0x17e0;
     private static final Predicate<Integer> IS_SOLID = Level::isSolid;
     private static final Predicate<Integer> DESTRUCTIBLE_BRICKS = (tileId) -> tileId == DESTRUCTIBLE_BRICKS_TILE_ID;
-    private static final SpriteDescriptor BASE = new SpriteDescriptor(AssetManager::getObjects, 6, 0, -10, 1, 1);
+    private static final SpriteDescriptor BASE = new SpriteDescriptor(OBJECTS, 6, 0, -10, 1, 1);
     private static final SpriteDescriptor MUZZLE_FLASH_LEFT = BASE.withBaseIndex(46);
     private static final SpriteDescriptor MUZZLE_FLASH_RIGHT = BASE.withBaseIndex(47);
     private static final AnimationDescriptor BOLT = new AnimationDescriptor(BASE.withBaseIndex(6), 4, 1);

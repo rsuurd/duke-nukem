@@ -1,11 +1,11 @@
 package duke.gameplay.effects;
 
 import duke.gfx.AnimationDescriptor;
+import duke.gfx.SpriteDescriptor;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class EffectTest {
     @Test
@@ -22,7 +22,7 @@ class EffectTest {
 
     @Test
     void shouldTrackTtl() {
-        Effect effect = new Effect(0, 0, mock(), 2);
+        Effect effect = new Effect(0, 0, mock(SpriteDescriptor.class), 2);
 
         effect.update(mock());
         assertThat(effect.isActivated()).isTrue();

@@ -4,10 +4,11 @@ import duke.gameplay.active.Decoration;
 import duke.gfx.SpriteDescriptor;
 import duke.level.Level;
 import duke.level.LevelBuilder;
-import duke.resources.AssetManager;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static duke.gfx.SpriteDescriptor.ANIM;
 
 public class DecorationProcessor implements ActiveProcessor {
     @Override
@@ -23,7 +24,7 @@ public class DecorationProcessor implements ActiveProcessor {
     private static Map<Integer, SpriteDescriptor> MAPPINGS = new HashMap<>();
 
     static {
-        SpriteDescriptor BASE_DESCRIPTOR = new SpriteDescriptor(AssetManager::getAnim, 0, 0, 0, 1, 1);
+        SpriteDescriptor BASE_DESCRIPTOR = new SpriteDescriptor(ANIM, 0);
 
         MAPPINGS.put(0x3025, BASE_DESCRIPTOR.withBaseIndex(211));
         MAPPINGS.put(0x3026, BASE_DESCRIPTOR.withBaseIndex(212));

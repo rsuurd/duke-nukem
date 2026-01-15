@@ -4,6 +4,7 @@ import duke.Renderer;
 import duke.resources.AssetManager;
 
 import java.util.List;
+import java.util.function.Function;
 
 public class SpriteRenderer {
     private AssetManager assets;
@@ -35,6 +36,14 @@ public class SpriteRenderer {
                     renderer.draw(sprite, screenX, screenY);
                 }
             }
+        }
+    }
+
+    public void render(Renderer renderer, Function<AssetManager, List<Sprite>> sheetSelector, int index, int x, int y) {
+        Sprite sprite = sheetSelector.apply(assets).get(index);
+
+        if (isOnScreen(sprite, x, y)) {
+            renderer.draw(sprite, x, y);
         }
     }
 

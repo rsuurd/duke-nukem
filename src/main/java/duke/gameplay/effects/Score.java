@@ -2,9 +2,10 @@ package duke.gameplay.effects;
 
 import duke.gfx.AnimationDescriptor;
 import duke.gfx.SpriteDescriptor;
-import duke.resources.AssetManager;
 
 import java.util.Map;
+
+import static duke.gfx.SpriteDescriptor.NUMBERS;
 
 public class Score extends Effect {
     public Score(int x, int y, int points) {
@@ -17,10 +18,10 @@ public class Score extends Effect {
     private static final int TTL = 32;
 
     private static AnimationDescriptor create(int baseIndex) {
-        return new AnimationDescriptor(new SpriteDescriptor(AssetManager::getNumbers, baseIndex, 0, 0, 1, 1), 2, 2);
+        return new AnimationDescriptor(new SpriteDescriptor(NUMBERS, baseIndex), 2, 2);
     }
 
-    private static Map<Integer, AnimationDescriptor> DESCRIPTORS = Map.of(
+    private static final Map<Integer, AnimationDescriptor> DESCRIPTORS = Map.of(
             100, create(0),
             200, create(2),
             500, create(4),

@@ -1,9 +1,9 @@
 package duke.gameplay.effects;
 
 import duke.gameplay.GameplayContext;
-import duke.gfx.AnimationDescriptor;
 import duke.gfx.SpriteDescriptor;
-import duke.resources.AssetManager;
+
+import static duke.gfx.SpriteDescriptor.OBJECTS;
 
 public class Particle extends Effect {
     protected Particle(int x, int y, int velocityX, int velocityY, Particle.Type type) {
@@ -20,10 +20,8 @@ public class Particle extends Effect {
         setVelocityY(getVelocityY() + 1);
     }
 
-    private static AnimationDescriptor createDescriptor(int index) {
-        SpriteDescriptor descriptor = new SpriteDescriptor(AssetManager::getObjects, index, 0, 0, 1, 1);
-
-        return new AnimationDescriptor(descriptor, 1, 1);
+    private static SpriteDescriptor createDescriptor(int index) {
+        return new SpriteDescriptor(OBJECTS, index);
     }
 
     public enum Type {

@@ -8,8 +8,9 @@ import duke.gameplay.Shootable;
 import duke.gameplay.effects.PoppedBalloon;
 import duke.gfx.*;
 import duke.level.Level;
-import duke.resources.AssetManager;
 import duke.sfx.Sfx;
+
+import static duke.gfx.SpriteDescriptor.OBJECTS;
 
 public class Balloon extends Item implements Collidable, Renderable, Shootable {
     private Animation animation;
@@ -59,8 +60,8 @@ public class Balloon extends Item implements Collidable, Renderable, Shootable {
         spriteRenderer.render(renderer, animation.getSpriteDescriptor(), screenX, screenY + Level.TILE_SIZE);
     }
 
-    private static final SpriteDescriptor BALLOON = new SpriteDescriptor(AssetManager::getObjects, 69, 0, 0, 1, 1);
+    private static final SpriteDescriptor BALLOON = new SpriteDescriptor(OBJECTS, 69);
     private static final AnimationDescriptor BALLOON_STRING =
-            new AnimationDescriptor(new SpriteDescriptor(AssetManager::getObjects, 70, 0, 0, 1, 1), 3, 4);
+            new AnimationDescriptor(new SpriteDescriptor(OBJECTS, 70), 3, 4);
 
 }

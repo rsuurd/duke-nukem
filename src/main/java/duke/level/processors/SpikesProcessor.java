@@ -4,7 +4,8 @@ import duke.gameplay.active.Spikes;
 import duke.gfx.SpriteDescriptor;
 import duke.level.Level;
 import duke.level.LevelBuilder;
-import duke.resources.AssetManager;
+
+import static duke.gfx.SpriteDescriptor.OBJECTS;
 
 public class SpikesProcessor implements ActiveProcessor {
     static final int SPIKES_UP_TILE_ID = 0x3058;
@@ -32,6 +33,6 @@ public class SpikesProcessor implements ActiveProcessor {
     }
 
     private SpriteDescriptor createDescriptor(int spriteId) {
-        return new SpriteDescriptor(AssetManager::getObjects, spriteId, 0, 0, 1, 1);
+        return new SpriteDescriptor(OBJECTS, spriteId);
     }
 }

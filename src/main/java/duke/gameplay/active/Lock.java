@@ -8,9 +8,10 @@ import duke.gfx.AnimationDescriptor;
 import duke.gfx.SpriteDescriptor;
 import duke.gfx.SpriteRenderable;
 import duke.level.Level;
-import duke.resources.AssetManager;
 
 import java.util.List;
+
+import static duke.gfx.SpriteDescriptor.OBJECTS;
 
 public class Lock extends Active implements Updatable, SpriteRenderable, Interactable {
     private Key.Type requiredKey;
@@ -76,5 +77,5 @@ public class Lock extends Active implements Updatable, SpriteRenderable, Interac
     }
 
     private static final int GFX_LOCK_INDEX = 136;
-    private static final SpriteDescriptor LOCK_DESCRIPTOR = new SpriteDescriptor(AssetManager::getObjects, GFX_LOCK_INDEX, 0, 0, 1, 1);
+    private static final SpriteDescriptor LOCK_DESCRIPTOR = new SpriteDescriptor(OBJECTS, GFX_LOCK_INDEX);
 }

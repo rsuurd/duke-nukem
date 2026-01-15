@@ -9,9 +9,9 @@ import duke.gameplay.effects.EffectsFactory;
 import duke.gfx.Renderable;
 import duke.gfx.SpriteDescriptor;
 import duke.gfx.SpriteRenderer;
-import duke.resources.AssetManager;
 import duke.sfx.Sfx;
 
+import static duke.gfx.SpriteDescriptor.TILES;
 import static duke.level.Level.TILE_SIZE;
 
 public class Bridge extends Active implements Solid, Updatable, Renderable {
@@ -56,5 +56,5 @@ public class Bridge extends Active implements Solid, Updatable, Renderable {
         }
     }
 
-    private static final SpriteDescriptor DESCRIPTOR = new SpriteDescriptor(AssetManager::getTiles, 269, 0, 0, 1, 1);
+    private static final SpriteDescriptor DESCRIPTOR = new SpriteDescriptor(TILES, 269);
 }

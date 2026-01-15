@@ -3,7 +3,8 @@ package duke.gameplay.effects;
 import duke.gameplay.Damaging;
 import duke.gfx.AnimationDescriptor;
 import duke.gfx.SpriteDescriptor;
-import duke.resources.AssetManager;
+
+import static duke.gfx.SpriteDescriptor.ANIM;
 
 public class Explosion extends Effect implements Damaging {
     public Explosion(int x, int y) {
@@ -11,5 +12,5 @@ public class Explosion extends Effect implements Damaging {
     }
 
     private static final AnimationDescriptor EXPLOSION_ANIMATION =
-            new AnimationDescriptor(new SpriteDescriptor(AssetManager::getAnim, 92, 0, 0, 1, 1), 6, 1);
+            new AnimationDescriptor(new SpriteDescriptor(ANIM, 92), 6, 1);
 }

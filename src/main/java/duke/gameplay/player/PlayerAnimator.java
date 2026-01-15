@@ -5,7 +5,8 @@ import duke.gfx.Animation;
 import duke.gfx.AnimationDescriptor;
 import duke.gfx.SpriteDescriptor;
 import duke.gfx.SpriteRenderable;
-import duke.resources.AssetManager;
+
+import static duke.gfx.SpriteDescriptor.MAN;
 
 public class PlayerAnimator implements SpriteRenderable {
     private Animation animation;
@@ -16,7 +17,7 @@ public class PlayerAnimator implements SpriteRenderable {
     }
 
     public void animate(Player player) {
-        Player.State state = player.getState();
+        State state = player.getState();
         Facing facing = player.getFacing();
 
         if (player.getHealth().isDamageTaken()) {
@@ -48,7 +49,7 @@ public class PlayerAnimator implements SpriteRenderable {
         return currentDescriptor;
     }
 
-    private static SpriteDescriptor BASE_DESCRIPTOR = new SpriteDescriptor(AssetManager::getMan, 0, -8, 0, 2, 2);
+    private static SpriteDescriptor BASE_DESCRIPTOR = new SpriteDescriptor(MAN, 0, -8, 0, 2, 2);
     private static SpriteDescriptor STANDING_LEFT = BASE_DESCRIPTOR.withBaseIndex(50);
     private static SpriteDescriptor STANDING_RIGHT = BASE_DESCRIPTOR.withBaseIndex(54);
     private static AnimationDescriptor WALKING_LEFT = new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(0), 4, 2);

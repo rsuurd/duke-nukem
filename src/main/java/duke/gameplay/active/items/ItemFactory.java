@@ -9,6 +9,8 @@ import java.util.function.Function;
 
 import static duke.gameplay.active.items.ItemBehaviorFactory.*;
 import static duke.gameplay.player.Health.MAX_HEALTH;
+import static duke.gfx.SpriteDescriptor.ANIM;
+import static duke.gfx.SpriteDescriptor.OBJECTS;
 
 public class ItemFactory {
     public static Key createKey(int x, int y, Key.Type type) {
@@ -36,13 +38,13 @@ public class ItemFactory {
     }
 
     public static Item createSoda(int x, int y) {
-        AnimationDescriptor itemAnimationDescriptor = new AnimationDescriptor(createItemSpriteDescriptor(AssetManager::getAnim, SODA_SPRITE_INDEX), 4, 4);
+        AnimationDescriptor itemAnimationDescriptor = new AnimationDescriptor(createItemSpriteDescriptor(ANIM, SODA_SPRITE_INDEX), 4, 4);
 
         return new Soda(x, y, new AnimatedSpriteRenderable(itemAnimationDescriptor), health(1, 200, Sfx.GET_FOOD_ITEM));
     }
 
     public static Item createFizzingSoda(int x, int y) {
-        AnimationDescriptor itemAnimationDescriptor = new AnimationDescriptor(createItemSpriteDescriptor(AssetManager::getAnim, FIZZING_SODA_SPRITE_INDEX), 4, 4);
+        AnimationDescriptor itemAnimationDescriptor = new AnimationDescriptor(createItemSpriteDescriptor(ANIM, FIZZING_SODA_SPRITE_INDEX), 4, 4);
 
         return new FizzingSoda(x, y, new AnimatedSpriteRenderable(itemAnimationDescriptor), bonus(1000, Sfx.GET_BONUS_OBJECT));
     }
@@ -63,15 +65,15 @@ public class ItemFactory {
     }
 
     private static SpriteDescriptor createItemSpriteDescriptor(int index) {
-        return createItemSpriteDescriptor(AssetManager::getObjects, index);
+        return createItemSpriteDescriptor(OBJECTS, index);
     }
 
     private static SpriteDescriptor createItemSpriteDescriptor(Function<AssetManager, List<Sprite>> selector, int index) {
-        return new SpriteDescriptor(selector, index, 0, 0, 1, 1);
+        return new SpriteDescriptor(selector, index);
     }
 
     private static AnimationDescriptor createItemAnimationDescriptor(int index) {
-        return createItemAnimationDescriptor(AssetManager::getObjects, index);
+        return createItemAnimationDescriptor(OBJECTS, index);
     }
 
     private static AnimationDescriptor createItemAnimationDescriptor(Function<AssetManager, List<Sprite>> selector, int index) {

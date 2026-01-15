@@ -27,7 +27,8 @@ public class ActiveProcessorRegistry {
                 new ElevatorProcessor(),
                 new BridgeProcessor(),
                 new DoorProcessor(),
-                new LockProcessor()
+                new LockProcessor(),
+                new FlamethrowerProcessor()
         ));
     }
 

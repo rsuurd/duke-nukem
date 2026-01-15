@@ -7,8 +7,9 @@ import duke.gfx.AnimationDescriptor;
 import duke.gfx.SpriteDescriptor;
 import duke.gfx.SpriteRenderable;
 import duke.level.Level;
-import duke.resources.AssetManager;
 import duke.sfx.Sfx;
+
+import static duke.gfx.SpriteDescriptor.ANIM;
 
 public class Dynamite extends Active implements Updatable, SpriteRenderable {
     private Animation animation;
@@ -41,7 +42,7 @@ public class Dynamite extends Active implements Updatable, SpriteRenderable {
     }
 
     static final int TIMER = 16;
-    private static final AnimationDescriptor DESCRIPTOR = new AnimationDescriptor(new SpriteDescriptor(AssetManager::getAnim, 116, 0, 0, 1, 1), 2, 1);
+    private static final AnimationDescriptor DESCRIPTOR = new AnimationDescriptor(new SpriteDescriptor(ANIM, 116), 2, 1);
 
     static class ExplosionWave extends Active implements Updatable {
         private int timer;
