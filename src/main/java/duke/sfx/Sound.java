@@ -1,4 +1,4 @@
 package duke.sfx;
 
-public record Sound(int priority, byte[] data) {
+public record Sound(int priority, int[] frequencies) {
 }

@@ -7,8 +7,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.SourceDataLine;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -20,21 +18,13 @@ class SoundManagerTest {
     private AssetManager assets;
 
     @Mock
-    private SourceDataLine line;
+    private PcSpeaker speaker;
 
     private SoundManager manager;
 
     @BeforeEach
     void createManager() {
-        manager = new SoundManager(assets, Runnable::run, line);
-    }
-
-    @Test
-    void shouldOpenLine() throws LineUnavailableException {
-        manager.init();
-
-        verify(line).open();
-        verify(line).start();
+        manager = new SoundManager(assets, speaker);
     }
 
     @Test
@@ -47,41 +37,24 @@ class SoundManagerTest {
     }
 
     @Test
-    void shouldCloseLine() {
-        manager.shutdown();
-
-        verify(line).flush();
-        verify(line).close();
-    }
-
-    @Test
     void shouldPlaySound() {
-        when(assets.getSounds()).thenReturn(List.of(new Sound(1, new byte[]{0, 1, 2})));
+        Sound sound = mock();
+        when(assets.getSounds()).thenReturn(List.of(sound));
 
         manager.play(Sfx.PLAYER_DEATH);
 
-        verify(line).write(any(), anyInt(), anyInt());
+        verify(speaker).play(sound);
     }
 
     @Test
     void shouldNotPlaySoundWhenDisabled() {
+        Sound sound = mock();
         manager.toggle();
 
-        when(assets.getSounds()).thenReturn(List.of(new Sound(1, new byte[]{0, 1, 2})));
+        when(assets.getSounds()).thenReturn(List.of(sound));
 
         manager.play(Sfx.PLAYER_DEATH);
 
-        verify(line, never()).write(any(), anyInt(), anyInt());
-    }
-
-    @Test
-    void shouldNotPlayLowerPrioritySound() {
-        manager.setCurrentPriority(2);
-
-        when(assets.getSounds()).thenReturn(List.of(new Sound(1, new byte[]{0, 1, 2})));
-
-        manager.play(Sfx.PLAYER_DEATH);
-
-        verify(line, never()).write(any(), anyInt(), anyInt());
+        verifyNoInteractions(speaker);
     }
 }

@@ -3,6 +3,7 @@ package duke;
 import duke.gfx.EgaPalette;
 import duke.resources.AssetManager;
 import duke.resources.ResourceLoader;
+import duke.sfx.PcSpeaker;
 import duke.sfx.SoundManager;
 import duke.state.GameplayState;
 import duke.state.StateManager;
@@ -51,9 +52,9 @@ public class DukeNukem {
 
         KeyHandler keyHandler = new KeyHandler();
         EgaPalette palette = new EgaPalette();
-        SoundManager sounds = new SoundManager(assets);
-        sounds.init();
-        sounds.toggle();
+        PcSpeaker pcSpeaker = new PcSpeaker();
+        SoundManager sounds = new SoundManager(assets, pcSpeaker);
+        pcSpeaker.init();
 
         CanvasRenderer renderer = new CanvasRenderer(palette);
         GameContext context = new GameContext(assets, renderer, palette, keyHandler, sounds);

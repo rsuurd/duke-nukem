@@ -2,16 +2,11 @@ package duke.resources;
 
 import duke.sfx.Sound;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
-import static duke.sfx.SoundManager.SAMPLE_RATE;
-import static java.lang.Math.PI;
 
 public class SoundLoader {
     private Path path;
@@ -61,11 +56,11 @@ public class SoundLoader {
         long current = in.getFilePointer();
         in.seek(offset);
 
-        byte[] data = readData(in);
+        int[] frequencies = readFrequencies(in);
 
         in.seek(current);
 
-        return new Sound(priority, data);
+        return new Sound(priority, frequencies);
     }
 
     private String readName(RandomAccessFile in) throws IOException {
@@ -79,32 +74,16 @@ public class SoundLoader {
         return "__UnNamed__".equalsIgnoreCase(name);
     }
 
-    private byte[] readData(RandomAccessFile in) throws IOException {
+    private int[] readFrequencies(RandomAccessFile in) throws IOException {
+        List<Integer> frequencies = new ArrayList<>();
+
         int value;
 
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-
         while ((value = read(in)) != 0xFFFF) {
-            int frequency = (value == 0) ? 0 : 1193181 / value;
-
-            byte[] data = new byte[(int) ((1000f / 144) * SAMPLE_RATE) / 1000];
-
-            if (frequency == 0) {
-                Arrays.fill(data, (byte) 0);
-            } else {
-                double period = (double) SAMPLE_RATE / frequency;
-
-                for (int j = 0; j < data.length; j++) {
-                    double angle = 2.0 * PI * j / period;
-
-                    data[j] = (byte) (Math.signum(Math.sin(angle)) * 127f);
-                }
-            }
-
-            out.write(data);
+            frequencies.add(value);
         }
 
-        return out.toByteArray();
+        return frequencies.stream().mapToInt(i -> i).toArray();
     }
 
     private int read(RandomAccessFile in) throws IOException {
