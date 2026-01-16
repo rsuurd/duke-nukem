@@ -6,20 +6,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class ActiveTest {
     @Test
-    void shouldIndicateInactive() {
-        assertThat(create().isActivated()).isFalse();
-    }
-
-    @Test
-    void shouldActivate() {
-        Active active = create();
-
-        active.activate();
-
-        assertThat(active.isActivated()).isTrue();
-    }
-
-    @Test
     void shouldIndicateIntact() {
         assertThat(create().isDestroyed()).isFalse();
     }

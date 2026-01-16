@@ -6,6 +6,7 @@ import duke.gameplay.effects.EffectsFactory;
 import duke.gameplay.effects.ReactorDestructionSequence;
 import duke.gfx.*;
 import duke.level.Level;
+import duke.sfx.Sfx;
 
 public class Reactor extends Active implements Updatable, Damaging, Renderable, Shootable {
     private Animation animation;
@@ -21,6 +22,7 @@ public class Reactor extends Active implements Updatable, Damaging, Renderable, 
     @Override
     public void update(GameplayContext context) {
         animation.tick();
+        context.getSoundManager().play(Sfx.REACTOR_SOUND);
     }
 
     @Override

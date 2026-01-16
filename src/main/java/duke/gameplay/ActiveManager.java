@@ -1,6 +1,7 @@
 package duke.gameplay;
 
 import duke.Renderer;
+import duke.gameplay.active.Wakeable;
 import duke.gameplay.player.Player;
 import duke.gfx.Renderable;
 import duke.gfx.SpriteRenderer;
@@ -38,7 +39,7 @@ public class ActiveManager {
 
         if (player.isUsing()) {
             for (Active active : actives) {
-                if (shouldCheck(active) && active instanceof Interactable interactable && interactable.canInteract(player)) {
+                if (active instanceof Interactable interactable && interactable.canInteract(player)) {
                     interactable.interactRequested(context);
 
                     return;
@@ -53,8 +54,10 @@ public class ActiveManager {
         while (iterator.hasNext()) {
             Active active = iterator.next();
 
-            wakeUpIfNeeded(active);
-            update(active, context);
+            boolean visible = viewport.isVisible(active);
+
+            wakeUpIfNeeded(active, visible);
+            update(active, context, visible);
 
             if (active.isDestroyed()) {
                 iterator.remove();
@@ -62,14 +65,14 @@ public class ActiveManager {
         }
     }
 
-    private void wakeUpIfNeeded(Active active) {
-        if (!active.isActivated() && viewport.isVisible(active)) {
-            active.activate();
+    private void wakeUpIfNeeded(Active active, boolean visible) {
+        if (visible && active instanceof Wakeable wakeable && !wakeable.isAwake()) {
+            wakeable.wakeUp();
         }
     }
 
-    private void update(Active active, GameplayContext context) {
-        if (!shouldCheck(active)) return;
+    private void update(Active active, GameplayContext context, boolean visible) {
+        if (shouldSkipUpdate(active, visible)) return;
 
         if (active instanceof Updatable updatable) {
             updatable.update(context);
@@ -80,8 +83,12 @@ public class ActiveManager {
         }
     }
 
-    private boolean shouldCheck(Active active) {
-        return active.isActivated() && !active.isDestroyed();
+    private boolean shouldSkipUpdate(Active active, boolean visible) {
+        if (active.isDestroyed()) return true;
+        if (active instanceof Wakeable wakeable) {
+            return !wakeable.isAwake();
+        }
+        return !visible;
     }
 
     public void spawn(Active active) {

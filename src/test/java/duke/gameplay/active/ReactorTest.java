@@ -5,6 +5,7 @@ import duke.gameplay.Facing;
 import duke.gameplay.GameplayContext;
 import duke.gameplay.GameplayContextFixture;
 import duke.gameplay.effects.ReactorDestructionSequence;
+import duke.sfx.Sfx;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -20,6 +21,13 @@ class ReactorTest {
     void createReactor() {
         reactor = new Reactor(0, 0);
         context = GameplayContextFixture.create();
+    }
+
+    @Test
+    void shouldSpin() {
+        reactor.update(context);
+
+        verify(context.getSoundManager()).play(Sfx.REACTOR_SOUND);
     }
 
     @Test

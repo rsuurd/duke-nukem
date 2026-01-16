@@ -25,11 +25,11 @@ class EffectTest {
         Effect effect = new Effect(0, 0, mock(SpriteDescriptor.class), 2);
 
         effect.update(mock());
-        assertThat(effect.isActivated()).isTrue();
+        assertThat(effect.isAwake()).isTrue();
         assertThat(effect.isDestroyed()).isFalse();
 
         effect.update(mock());
-        assertThat(effect.isActivated()).isTrue();
+        assertThat(effect.isAwake()).isTrue();
         assertThat(effect.isDestroyed()).isTrue();
     }
 }

@@ -6,12 +6,11 @@ public abstract class Active implements Movable {
     private Rectangle bounds;
 
     private int velocityX, velocityY;
-    private boolean activated, destroyed;
+    private boolean destroyed;
 
     protected Active(int x, int y, int width, int height) {
         bounds = new Rectangle(x, y, width, height);
 
-        activated = false;
         destroyed = false;
     }
 
@@ -63,14 +62,6 @@ public abstract class Active implements Movable {
     @Override
     public void setVelocityY(int velocityY) {
         this.velocityY = velocityY;
-    }
-
-    public boolean isActivated() {
-        return activated;
-    }
-
-    protected void activate() {
-        activated = true;
     }
 
     public boolean isDestroyed() {

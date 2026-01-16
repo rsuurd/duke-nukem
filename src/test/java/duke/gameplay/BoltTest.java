@@ -28,7 +28,6 @@ class BoltTest {
 
         Bolt bolt = Bolt.create(player);
 
-        assertThat(bolt.isActivated()).isTrue();
         assertThat(bolt.getX()).isEqualTo(192);
         assertThat(bolt.getY()).isEqualTo(205);
         assertThat(bolt.getVelocityX()).isEqualTo(Bolt.SPEED * ((facing == Facing.RIGHT) ? 1 : -1));
@@ -80,7 +79,6 @@ class BoltTest {
         TestShootable shootable = mock();
         Bolt bolt = new Bolt(0, 0, Facing.RIGHT);
         when(context.getActiveManager().getActives()).thenReturn(List.of(shootable));
-        when(shootable.isActivated()).thenReturn(true);
         when(shootable.intersects(bolt)).thenReturn(true);
 
         bolt.update(context);
@@ -90,27 +88,11 @@ class BoltTest {
     }
 
     @Test
-    void shouldNotHitInactiveShootable() {
-        GameplayContext context = GameplayContextFixture.create();
-        TestShootable shootable = mock();
-        Bolt bolt = new Bolt(0, 0, Facing.RIGHT);
-        when(context.getActiveManager().getActives()).thenReturn(List.of(shootable));
-        when(shootable.isActivated()).thenReturn(false);
-
-        bolt.update(context);
-
-        assertThat(bolt.isDestroyed()).isFalse();
-        verify(shootable, never()).intersects(any(Active.class));
-        verify(shootable, never()).onShot(any(), any());
-    }
-
-    @Test
     void shouldNotHitDestroyedShootable() {
         GameplayContext context = GameplayContextFixture.create();
         TestShootable shootable = mock();
         Bolt bolt = new Bolt(0, 0, Facing.RIGHT);
         when(context.getActiveManager().getActives()).thenReturn(List.of(shootable));
-        when(shootable.isActivated()).thenReturn(true);
         when(shootable.isDestroyed()).thenReturn(true);
 
         bolt.update(context);
@@ -127,7 +109,6 @@ class BoltTest {
         when(solid.isSolid()).thenReturn(true);
         Bolt bolt = new Bolt(0, 0, Facing.RIGHT);
         when(context.getActiveManager().getActives()).thenReturn(List.of(solid));
-        when(solid.isActivated()).thenReturn(true);
         when(solid.intersects(bolt)).thenReturn(true);
 
         bolt.update(context);
@@ -143,7 +124,6 @@ class BoltTest {
         when(solid.isSolid()).thenReturn(false);
         Bolt bolt = new Bolt(0, 0, Facing.RIGHT);
         when(context.getActiveManager().getActives()).thenReturn(List.of(solid));
-        when(solid.isActivated()).thenReturn(true);
         when(solid.intersects(bolt)).thenReturn(true);
 
         bolt.update(context);

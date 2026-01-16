@@ -30,8 +30,6 @@ public class Bolt extends Active implements Updatable, SpriteRenderable {
         animation = new Animation(BOLT);
 
         setVelocityX(facing == LEFT ? -SPEED : SPEED);
-
-        activate();
     }
 
     @Override
@@ -82,7 +80,6 @@ public class Bolt extends Active implements Updatable, SpriteRenderable {
     private void collidesWithShootable(GameplayContext context) {
         for (Active active : context.getActiveManager().getActives()) {
             if (active == this) continue;
-            if (!active.isActivated()) continue;
             if (active.isDestroyed()) continue;
 
             if (active.intersects(this)) {

@@ -28,7 +28,7 @@ class BoxTest {
 
         box.onShot(context, mock());
 
-        assertThat(box.isActivated()).isFalse();
+        assertThat(box.isDestroyed()).isTrue();
 
         verify(context.getActiveManager()).spawn(contents);
         verify(context.getActiveManager()).spawn(anyList());

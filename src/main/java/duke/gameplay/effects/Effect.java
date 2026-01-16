@@ -3,10 +3,11 @@ package duke.gameplay.effects;
 import duke.gameplay.Active;
 import duke.gameplay.GameplayContext;
 import duke.gameplay.Updatable;
+import duke.gameplay.active.Wakeable;
 import duke.gfx.*;
 import duke.level.Level;
 
-public class Effect extends Active implements Updatable, SpriteRenderable {
+public class Effect extends Active implements Updatable, SpriteRenderable, Wakeable {
     private SpriteRenderable renderable;
     protected int ttl;
 
@@ -27,8 +28,15 @@ public class Effect extends Active implements Updatable, SpriteRenderable {
 
         this.renderable = renderable;
         this.ttl = ttl;
-        activate();
     }
+
+    @Override
+    public boolean isAwake() {
+        return true;
+    }
+
+    @Override
+    public void wakeUp() {}
 
     @Override
     public SpriteDescriptor getSpriteDescriptor() {

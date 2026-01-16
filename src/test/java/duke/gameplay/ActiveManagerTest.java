@@ -1,5 +1,6 @@
 package duke.gameplay;
 
+import duke.gameplay.active.Wakeable;
 import duke.gfx.Viewport;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,7 +34,6 @@ class ActiveManagerTest {
     void shouldHandleInteractionWhenRequestedAndAble() {
         when(context.getPlayer().isUsing()).thenReturn(true);
         InteractableActive active = mock();
-        when(active.isActivated()).thenReturn(true);
         when(active.canInteract(any())).thenReturn(true);
         manager.getActives().add(active);
 
@@ -46,7 +46,6 @@ class ActiveManagerTest {
     void shouldNotHandleInteractionWhenRequestedAndNotAble() {
         when(context.getPlayer().isUsing()).thenReturn(true);
         InteractableActive active = mock();
-        when(active.isActivated()).thenReturn(true);
         when(active.canInteract(any())).thenReturn(false);
         manager.getActives().add(active);
 
@@ -68,21 +67,21 @@ class ActiveManagerTest {
     }
 
     @Test
-    void shouldActivateVisibleActives() {
-        TestActive active = mock();
+    void shouldWakeUpSleepingActives() {
+        SleepingActive active = mock();
         manager.getActives().add(active);
-        when(viewport.isVisible(any())).thenReturn(true);
+        when(viewport.isVisible(active)).thenReturn(true);
 
         manager.update(context);
 
-        verify(active).activate();
+        verify(active).wakeUp();
     }
 
     @Test
-    void shouldUpdateActivatedActives() {
-        TestActive active = mock();
-        when(active.isActivated()).thenReturn(true);
+    void shouldUpdateAwakeActives() {
+        SleepingActive active = mock();
         manager.getActives().add(active);
+        when(active.isAwake()).thenReturn(true);
 
         manager.update(context);
 
@@ -90,7 +89,18 @@ class ActiveManagerTest {
     }
 
     @Test
-    void shouldNotUpdateInactiveActives() {
+    void shouldUpdateVisibleActives() {
+        TestActive active = mock();
+        manager.getActives().add(active);
+        when(viewport.isVisible(active)).thenReturn(true);
+
+        manager.update(context);
+
+        verify(active).update(context);
+    }
+
+    @Test
+    void shouldNotUpdateInvisibleActives() {
         TestActive active = mock();
         manager.getActives().add(active);
 
@@ -103,8 +113,17 @@ class ActiveManagerTest {
     void shouldNotUpdateDestroyedActives() {
         TestActive active = mock();
         manager.getActives().add(active);
-        when(active.isActivated()).thenReturn(true);
         when(active.isDestroyed()).thenReturn(true);
+
+        manager.update(context);
+
+        verify(active, never()).update(context);
+    }
+
+    @Test
+    void shouldNotUpdateInvisibleSleepingActives() {
+        SleepingActive active = mock();
+        manager.getActives().add(active);
 
         manager.update(context);
 
@@ -114,23 +133,12 @@ class ActiveManagerTest {
     @Test
     void shouldResolveCollision() {
         ActiveWithPhysics active = mock();
-        when(active.isActivated()).thenReturn(true);
         manager.getActives().add(active);
+        when(viewport.isVisible(active)).thenReturn(true);
 
         manager.update(context);
 
         verify(collision).resolve(active, context);
-    }
-
-    @Test
-    void shouldNotResolveCollisionForInactiveActives() {
-        ActiveWithPhysics active = mock();
-        when(active.isActivated()).thenReturn(false);
-        manager.getActives().add(active);
-
-        manager.update(context);
-
-        verify(collision, never()).resolve(active, context);
     }
 
     @Test
@@ -174,5 +182,9 @@ class ActiveManagerTest {
         private ActiveWithPhysics() {
             super(0, 0, 0, 0);
         }
+    }
+
+    private static abstract class SleepingActive extends TestActive implements Wakeable {
+        private SleepingActive() {}
     }
 }
