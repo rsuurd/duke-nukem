@@ -27,7 +27,11 @@ public class BoltManager {
         while (iterator.hasNext()) {
             Bolt bolt = iterator.next();
 
-            bolt.update(context);
+            if (viewport.isVisible(bolt)) {
+                bolt.update(context);
+            } else {
+                bolt.destroy();
+            }
 
             if (bolt.isDestroyed()) {
                 iterator.remove();

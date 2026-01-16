@@ -44,17 +44,6 @@ class BoltTest {
     }
 
     @Test
-    void shouldDespawnWhenFarAway() {
-        GameplayContext context = GameplayContextFixture.create();
-        Bolt bolt = new Bolt(0, 0, Facing.RIGHT);
-        when(context.getPlayer().getX()).thenReturn(200);
-
-        bolt.update(context);
-
-        assertThat(bolt.isDestroyed()).isTrue();
-    }
-
-    @Test
     void shouldCollideWithSolidTiles() {
         for (int tileId = Level.SOLIDS; tileId < ACTIVE; tileId++) {
             GameplayContext context = GameplayContextFixture.create();

@@ -41,11 +41,23 @@ class BoltManagerTest {
     @Test
     void shouldUpdateBolts() {
         Bolt bolt = mock();
-
         manager.spawn(bolt);
+        when(viewport.isVisible(bolt)).thenReturn(true);
+
         manager.update(context);
 
         verify(bolt).update(context);
+    }
+
+    @Test
+    void shouldDestroyInvisibleBolts() {
+        Bolt bolt = mock();
+        manager.spawn(bolt);
+        when(viewport.isVisible(bolt)).thenReturn(false);
+
+        manager.update(context);
+
+        verify(bolt).destroy();
     }
 
     @Test
@@ -57,7 +69,7 @@ class BoltManagerTest {
 
         manager.update(context);
 
-        verify(bolt).update(context);
+        assertThat(manager.countBolts()).isEqualTo(0);
     }
 
     @Test
@@ -75,7 +87,7 @@ class BoltManagerTest {
     }
 
     @Test
-    void shouldNotRenderInvisbleBolts() {
+    void shouldNotRenderInvisibleBolts() {
         Bolt bolt = mock();
         Renderer renderer = mock();
         when(viewport.isVisible(bolt)).thenReturn(false);

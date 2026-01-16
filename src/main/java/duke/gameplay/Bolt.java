@@ -37,20 +37,8 @@ public class Bolt extends Active implements Updatable, SpriteRenderable {
     @Override
     public void update(GameplayContext context) {
         setX(getX() + getVelocityX());
-
-        if (isFarAway(context.getPlayer())) {
-            destroy();
-        } else {
-            checkCollision(context);
-        }
-
+        checkCollision(context);
         updateAnimation();
-    }
-
-    private boolean isFarAway(Player player) {
-        int distance = Math.abs(player.getX() - getX());
-
-        return distance >= TILE_SIZE * 10;
     }
 
     private void checkCollision(GameplayContext context) {
