@@ -20,6 +20,7 @@ public class ActiveProcessorRegistry {
                 new PlayerStartProcessor(),
                 new DecorationProcessor(),
                 new AcmeProcessor(),
+                new ReactorProcessor(),
                 new SecurityCameraProcessor(),
                 new BoxProcessor(),
                 new ItemProcessor(),
