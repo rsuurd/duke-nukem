@@ -12,14 +12,16 @@ public class GameplayContext implements WorldQuery {
     private ActiveManager activeManager;
     private SoundManager soundManager;
     private ScoreManager scoreManager;
+    private BonusTracker bonusTracker;
 
-    public GameplayContext(Player player, Level level, BoltManager boltManager, ActiveManager activeManager, SoundManager soundManager, ScoreManager scoreManager) {
+    public GameplayContext(Player player, Level level, BoltManager boltManager, ActiveManager activeManager, SoundManager soundManager, ScoreManager scoreManager, BonusTracker bonusTracker) {
         this.player = player;
         this.level = level;
         this.boltManager = boltManager;
         this.activeManager = activeManager;
         this.soundManager = soundManager;
         this.scoreManager = scoreManager;
+        this.bonusTracker = bonusTracker;
     }
 
     public Player getPlayer() {
@@ -44,6 +46,10 @@ public class GameplayContext implements WorldQuery {
 
     public ScoreManager getScoreManager() {
         return scoreManager;
+    }
+
+    public BonusTracker getBonusTracker() {
+        return bonusTracker;
     }
 
     @Override

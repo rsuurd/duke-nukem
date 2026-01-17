@@ -52,10 +52,10 @@ public class BoxProcessor implements ActiveProcessor {
         BOX_DESCRIPTORS.put(0x302d, new BoxDescriptor(BLUE, ItemFactory::createFlag));
         BOX_DESCRIPTORS.put(0x302e, new BoxDescriptor(BLUE, ItemFactory::createRadio));
         BOX_DESCRIPTORS.put(0x3033, new BoxDescriptor(GREY, null)); // access card
-        BOX_DESCRIPTORS.put(0x3037, new BoxDescriptor(GREY, null)); // D
-        BOX_DESCRIPTORS.put(0x3038, new BoxDescriptor(GREY, null)); // U
-        BOX_DESCRIPTORS.put(0x3039, new BoxDescriptor(GREY, null)); // K
-        BOX_DESCRIPTORS.put(0x303a, new BoxDescriptor(GREY, null)); // E
+        BOX_DESCRIPTORS.put(0x3037, new BoxDescriptor(GREY, (x, y) -> ItemFactory.createCharacter(x, y, 'D')));
+        BOX_DESCRIPTORS.put(0x3038, new BoxDescriptor(GREY, (x, y) -> ItemFactory.createCharacter(x, y, 'U')));
+        BOX_DESCRIPTORS.put(0x3039, new BoxDescriptor(GREY, (x, y) -> ItemFactory.createCharacter(x, y, 'K')));
+        BOX_DESCRIPTORS.put(0x303a, new BoxDescriptor(GREY, (x, y) -> ItemFactory.createCharacter(x, y, 'E')));
     }
 
     private record BoxDescriptor(SpriteDescriptor spriteDescriptor,

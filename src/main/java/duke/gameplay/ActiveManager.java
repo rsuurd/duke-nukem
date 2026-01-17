@@ -72,7 +72,7 @@ public class ActiveManager {
     }
 
     private void update(Active active, GameplayContext context, boolean visible) {
-        if (shouldSkipUpdate(active, visible)) return;
+        if (!shouldUpdate(active, visible)) return;
 
         if (active instanceof Updatable updatable) {
             updatable.update(context);
@@ -83,12 +83,12 @@ public class ActiveManager {
         }
     }
 
-    private boolean shouldSkipUpdate(Active active, boolean visible) {
-        if (active.isDestroyed()) return true;
+    private boolean shouldUpdate(Active active, boolean visible) {
+        if (active.isDestroyed()) return false;
         if (active instanceof Wakeable wakeable) {
-            return !wakeable.isAwake();
+            return wakeable.isAwake();
         }
-        return !visible;
+        return visible;
     }
 
     public void spawn(Active active) {

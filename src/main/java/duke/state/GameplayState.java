@@ -34,7 +34,8 @@ public class GameplayState implements GameState {
         BoltManager boltManager = new BoltManager(viewport, spriteRenderer);
         ActiveManager activeManager = new ActiveManager(viewport, collision, spriteRenderer);
         ScoreManager scoreManager = new ScoreManager(activeManager);
-        context = new GameplayContext(new Player(), level, boltManager, activeManager, gameContext.getSoundManager(), scoreManager);
+        BonusTracker bonusTracker = new BonusTracker();
+        context = new GameplayContext(new Player(), level, boltManager, activeManager, gameContext.getSoundManager(), scoreManager, bonusTracker);
     }
 
     GameplayState(Viewport viewport, LevelRenderer levelRenderer, Hud hud, Font font, SpriteRenderer spriteRenderer, Collision collision, GameplayContext context) {

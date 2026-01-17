@@ -64,6 +64,18 @@ public class ItemFactory {
         return new Item(x, y, new AnimatedSpriteRenderable(animationDescriptor), health(MAX_HEALTH, 1000, Sfx.GET_POWER_UP));
     }
 
+    public static Item createCharacter(int x, int y, char c) {
+        int index = switch (Character.toUpperCase(c)) {
+            case 'D' -> 118;
+            case 'U' -> 119;
+            case 'K' -> 120;
+            case 'E' -> 121;
+            default -> throw new IllegalArgumentException("Unsupported char: " + c);
+        };
+
+        return new Item(x, y, new SimpleSpriteRenderable(createItemSpriteDescriptor(index)), new CharacterBehavior(c));
+    }
+
     private static SpriteDescriptor createItemSpriteDescriptor(int index) {
         return createItemSpriteDescriptor(OBJECTS, index);
     }
