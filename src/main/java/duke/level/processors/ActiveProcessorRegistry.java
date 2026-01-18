@@ -29,7 +29,8 @@ public class ActiveProcessorRegistry {
                 new BridgeProcessor(),
                 new DoorProcessor(),
                 new LockProcessor(),
-                new FlamethrowerProcessor()
+                new FlamethrowerProcessor(),
+                new TechbotProcessor()
         ));
     }
 
