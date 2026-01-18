@@ -3,6 +3,7 @@ package duke.gameplay.active.items;
 import duke.gameplay.Bolt;
 import duke.gameplay.GameplayContext;
 import duke.gameplay.Shootable;
+import duke.gameplay.active.items.behavior.ItemBehavior;
 import duke.gfx.SpriteRenderable;
 import duke.sfx.Sfx;
 

@@ -1,6 +1,8 @@
-package duke.gameplay.active.items;
+package duke.gameplay.active.items.behavior;
 
 import duke.gameplay.GameplayContext;
+import duke.gameplay.active.items.Item;
+import duke.gameplay.active.items.Key;
 
 public class KeyBehavior implements ItemBehavior {
     private Key.Type key;

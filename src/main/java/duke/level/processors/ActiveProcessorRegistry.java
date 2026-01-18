@@ -31,7 +31,8 @@ public class ActiveProcessorRegistry {
                 new LockProcessor(),
                 new FlamethrowerProcessor(),
                 new TechbotProcessor(),
-                new WallCrawlerProcessor()
+                new WallCrawlerProcessor(),
+                new BouncingMineProcessor()
         ));
     }
 
@@ -43,6 +44,7 @@ public class ActiveProcessorRegistry {
 
         @Override
         public void process(int index, int tileId, LevelBuilder builder) {
+            System.err.printf("0x%04X is not mapped\n", tileId);
         }
     };
 }

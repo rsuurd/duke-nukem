@@ -1,6 +1,7 @@
-package duke.gameplay.active.items;
+package duke.gameplay.active.items.behavior;
 
 import duke.gameplay.GameplayContext;
+import duke.gameplay.active.items.Item;
 
 public class BonusItemBehavior implements ItemBehavior {
     private int points;

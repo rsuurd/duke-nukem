@@ -1,4 +1,4 @@
-package duke.gameplay.active.enemies;
+package duke.gameplay.active.enemies.behavior;
 
 import duke.gameplay.Active;
 import duke.gameplay.WorldQuery;

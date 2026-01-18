@@ -1,6 +1,8 @@
 package duke.gameplay.active.enemies;
 
 import duke.gameplay.*;
+import duke.gameplay.active.enemies.behavior.EnemyBehavior;
+import duke.gameplay.active.enemies.behavior.PatrolBehavior;
 import duke.gameplay.effects.TechbotDestruction;
 import duke.gfx.Animation;
 import duke.gfx.AnimationDescriptor;

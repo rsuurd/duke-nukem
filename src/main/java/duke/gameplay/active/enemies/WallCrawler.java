@@ -1,6 +1,8 @@
 package duke.gameplay.active.enemies;
 
 import duke.gameplay.*;
+import duke.gameplay.active.enemies.behavior.EnemyBehavior;
+import duke.gameplay.active.enemies.behavior.WallCrawlBehavior;
 import duke.gameplay.effects.EffectsFactory;
 import duke.gfx.Animation;
 import duke.gfx.AnimationDescriptor;
@@ -22,7 +24,7 @@ public class WallCrawler extends Active implements Updatable, Damaging, Shootabl
         super(x, y, TILE_SIZE, TILE_SIZE);
 
         SpriteDescriptor spriteDescriptor = (facing == Facing.RIGHT) ? RIGHT_DESCRIPTOR : LEFT_DESCRIPTOR;
-        AnimationDescriptor animationDescriptor = new AnimationDescriptor(spriteDescriptor, 4 ,2);
+        AnimationDescriptor animationDescriptor = new AnimationDescriptor(spriteDescriptor, 4, 2);
         animation = new Animation(animationDescriptor);
         this.behavior = behavior;
     }
@@ -31,7 +33,6 @@ public class WallCrawler extends Active implements Updatable, Damaging, Shootabl
     public void update(GameplayContext context) {
         behavior.behave(context, this);
 
-        // TODO reverse animation when turning around
         animation.tick();
     }
 

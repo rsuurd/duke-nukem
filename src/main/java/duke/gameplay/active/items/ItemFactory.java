@@ -1,5 +1,6 @@
 package duke.gameplay.active.items;
 
+import duke.gameplay.active.items.behavior.CharacterBehavior;
 import duke.gfx.*;
 import duke.resources.AssetManager;
 import duke.sfx.Sfx;
@@ -7,7 +8,7 @@ import duke.sfx.Sfx;
 import java.util.List;
 import java.util.function.Function;
 
-import static duke.gameplay.active.items.ItemBehaviorFactory.*;
+import static duke.gameplay.active.items.behavior.ItemBehaviorFactory.*;
 import static duke.gameplay.player.Health.MAX_HEALTH;
 import static duke.gfx.SpriteDescriptor.ANIM;
 import static duke.gfx.SpriteDescriptor.OBJECTS;

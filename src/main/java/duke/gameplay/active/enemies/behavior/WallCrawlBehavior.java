@@ -1,8 +1,9 @@
-package duke.gameplay.active.enemies;
+package duke.gameplay.active.enemies.behavior;
 
 import duke.gameplay.Active;
 import duke.gameplay.Facing;
 import duke.gameplay.WorldQuery;
+import duke.gameplay.active.enemies.WallCrawler;
 
 import static duke.level.Level.TILE_SIZE;
 

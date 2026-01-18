@@ -1,5 +1,7 @@
 package duke.gameplay.active.items;
 
+import duke.gameplay.active.items.behavior.ItemBehaviorFactory;
+import duke.gameplay.active.items.behavior.KeyBehavior;
 import duke.gfx.SimpleSpriteRenderable;
 import duke.gfx.SpriteDescriptor;
 import duke.sfx.Sfx;

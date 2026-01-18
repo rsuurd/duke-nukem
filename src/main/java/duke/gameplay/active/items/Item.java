@@ -4,6 +4,7 @@ import duke.gameplay.Active;
 import duke.gameplay.GameplayContext;
 import duke.gameplay.Physics;
 import duke.gameplay.Updatable;
+import duke.gameplay.active.items.behavior.ItemBehavior;
 import duke.gfx.AnimatedSpriteRenderable;
 import duke.gfx.SpriteDescriptor;
 import duke.gfx.SpriteRenderable;

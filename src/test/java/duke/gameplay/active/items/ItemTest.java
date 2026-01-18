@@ -2,6 +2,7 @@ package duke.gameplay.active.items;
 
 import duke.gameplay.GameplayContext;
 import duke.gameplay.GameplayContextFixture;
+import duke.gameplay.active.items.behavior.ItemBehavior;
 import duke.gfx.AnimatedSpriteRenderable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

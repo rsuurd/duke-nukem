@@ -1,7 +1,8 @@
-package duke.gameplay.active.items;
+package duke.gameplay.active.items.behavior;
 
 import duke.gameplay.GameplayContext;
 import duke.gameplay.GameplayContextFixture;
+import duke.gameplay.active.items.Key;
 import duke.gameplay.player.Inventory;
 import org.junit.jupiter.api.Test;
 

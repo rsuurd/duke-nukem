@@ -1,8 +1,9 @@
-package duke.gameplay.active.items;
+package duke.gameplay.active.items.behavior;
 
 import duke.gameplay.GameplayContext;
 import duke.gameplay.GameplayContextFixture;
-import duke.gameplay.active.items.BonusItemBehavior.RandomBonusItemBehavior;
+import duke.gameplay.active.items.Item;
+import duke.gameplay.active.items.behavior.BonusItemBehavior.RandomBonusItemBehavior;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

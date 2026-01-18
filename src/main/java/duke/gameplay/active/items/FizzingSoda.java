@@ -2,6 +2,7 @@ package duke.gameplay.active.items;
 
 import duke.gameplay.Collidable;
 import duke.gameplay.GameplayContext;
+import duke.gameplay.active.items.behavior.ItemBehavior;
 import duke.gameplay.effects.EffectsFactory;
 import duke.gfx.SpriteRenderable;
 import duke.level.Level;

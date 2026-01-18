@@ -1,4 +1,4 @@
-package duke.gameplay.active.enemies;
+package duke.gameplay.active.enemies.behavior;
 
 import duke.gameplay.Active;
 import duke.gameplay.Facing;
@@ -7,7 +7,7 @@ import duke.gameplay.WorldQuery;
 import static duke.level.Level.TILE_SIZE;
 
 public class PatrolBehavior implements EnemyBehavior {
-    private Facing facing; // TODO direction (up / down / left / right)
+    private Facing facing;
     private int tick;
     private int interval;
     private int speed;

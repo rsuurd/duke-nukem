@@ -1,9 +1,10 @@
 package duke.gameplay.active.enemies;
 
+import duke.gameplay.Facing;
 import duke.gameplay.GameplayContext;
 import duke.gameplay.GameplayContextFixture;
 import duke.gameplay.active.enemies.behavior.EnemyBehavior;
-import duke.gameplay.effects.TechbotDestruction;
+import duke.gameplay.effects.Effect;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,37 +14,38 @@ import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-class TechbotTest {
+class WallcrawlerTest {
     private EnemyBehavior behavior;
     private GameplayContext context;
 
-    private Techbot techbot;
+    private WallCrawler wallCrawler;
 
     @BeforeEach
     void create() {
         behavior = mock();
         context = GameplayContextFixture.create();
 
-        techbot = new Techbot(0, 0, behavior);
+        wallCrawler = new WallCrawler(0, 0, Facing.RIGHT, behavior);
     }
 
     @Test
     void shouldBehave() {
-        techbot.update(context);
+        wallCrawler.update(context);
 
-        verify(behavior).behave(context, techbot);
+        verify(behavior).behave(context, wallCrawler);
     }
 
     @Test
     void shouldBeDamaging() {
-        assertThat(techbot.getDamage()).isGreaterThan(0);
+        assertThat(wallCrawler.getDamage()).isGreaterThan(0);
     }
 
     @Test
     void shouldBeShot() {
-        techbot.onShot(context, null);
+        wallCrawler.onShot(context, null);
 
-        assertTrue(techbot.isDestroyed());
-        verify(context.getActiveManager()).spawn(isA(TechbotDestruction.class));
+        assertTrue(wallCrawler.isDestroyed());
+        verify(context.getActiveManager()).spawn(isA(Effect.class));
+        verify(context.getScoreManager()).score(100);
     }
 }

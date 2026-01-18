@@ -3,6 +3,7 @@ package duke.gameplay.active.items;
 import duke.gameplay.Collidable;
 import duke.gameplay.GameplayContext;
 import duke.gameplay.GameplayContextFixture;
+import duke.gameplay.active.items.behavior.BonusItemBehavior;
 import duke.gameplay.effects.PoppedBalloon;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

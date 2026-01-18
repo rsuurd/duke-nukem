@@ -1,4 +1,4 @@
-package duke.gameplay.active.items;
+package duke.gameplay.active.items.behavior;
 
 import duke.gameplay.GameplayContext;
 import duke.gameplay.GameplayContextFixture;

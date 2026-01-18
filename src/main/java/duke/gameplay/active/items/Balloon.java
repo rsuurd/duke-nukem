@@ -5,6 +5,8 @@ import duke.gameplay.Bolt;
 import duke.gameplay.Collidable;
 import duke.gameplay.GameplayContext;
 import duke.gameplay.Shootable;
+import duke.gameplay.active.items.behavior.ItemBehavior;
+import duke.gameplay.active.items.behavior.ItemBehaviorFactory;
 import duke.gameplay.effects.PoppedBalloon;
 import duke.gfx.*;
 import duke.level.Level;
