@@ -6,7 +6,11 @@ public class Animation {
     private int currentFrame;
     private int timer;
 
+    private Direction direction;
+
     public Animation(AnimationDescriptor descriptor) {
+        direction = Direction.FORWARD;
+
         setAnimation(descriptor);
     }
 
@@ -31,24 +35,43 @@ public class Animation {
 
     private void advanceFrame() {
         if (descriptor.getType() == AnimationDescriptor.Type.LOOP) {
-            currentFrame = (currentFrame + 1) % descriptor.getFrames();
+            currentFrame = (currentFrame + direction.step() + descriptor.getFrames()) % descriptor.getFrames();
             timer = 0;
         } else if (currentFrame < lastFrame()) {
-            currentFrame++;
+            currentFrame += direction.step();
             timer = 0;
         }
     }
 
     private int lastFrame() {
-        return descriptor.getFrames() - 1;
+        return (direction == Direction.FORWARD) ? descriptor.getFrames() - 1 : 0;
     }
 
     public void reset() {
-        currentFrame = 0;
         timer = 0;
+        currentFrame = (direction == Direction.FORWARD) ? 0 : descriptor.getFrames() - 1;
     }
 
     public boolean isFinished() {
-        return descriptor.getType() == AnimationDescriptor.Type.ONE_SHOT && currentFrame >= lastFrame() && timer == descriptor.getTicksPerFrame();
+        if (descriptor.getType() != AnimationDescriptor.Type.ONE_SHOT) return false;
+
+        return currentFrame == lastFrame();
+    }
+
+    public void reverse() {
+        direction = direction.reverse();
+    }
+
+    private enum Direction {
+        FORWARD,
+        BACKWARD;
+
+        private Direction reverse() {
+            return this == FORWARD ? BACKWARD : FORWARD;
+        }
+
+        private int step() {
+            return this == FORWARD ? 1 : -1;
+        }
     }
 }

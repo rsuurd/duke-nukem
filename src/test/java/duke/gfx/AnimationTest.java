@@ -71,6 +71,20 @@ class AnimationTest {
         assertThat(animation.getSpriteDescriptor().baseIndex()).isEqualTo(NEXT_FRAME_INDEX);
     }
 
+    @Test
+    void shouldReverseAnimation() {
+        Animation animation = new Animation(ANIMATION_DESCRIPTOR);
+        animation.reverse();
+        animation.reset();
+        assertThat(animation.getSpriteDescriptor().baseIndex()).isEqualTo(BASE_INDEX + 12);
+
+        for (int i = 0; i < TICKS_PER_FRAME; i++) {
+            animation.tick();
+        }
+
+        assertThat(animation.getSpriteDescriptor().baseIndex()).isEqualTo(BASE_INDEX + 8);
+    }
+
     private static final int BASE_INDEX = 20;
     private static final int NEXT_FRAME_INDEX = BASE_INDEX + 4;
     private static final SpriteDescriptor SPRITE_DESCRIPTOR = new SpriteDescriptor(assets -> emptyList(), BASE_INDEX, 0, 0, 2, 2);

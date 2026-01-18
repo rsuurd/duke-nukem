@@ -30,7 +30,8 @@ public class ActiveProcessorRegistry {
                 new DoorProcessor(),
                 new LockProcessor(),
                 new FlamethrowerProcessor(),
-                new TechbotProcessor()
+                new TechbotProcessor(),
+                new WallCrawlerProcessor()
         ));
     }
 

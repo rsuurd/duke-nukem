@@ -6,7 +6,6 @@ import duke.gfx.Animation;
 import duke.gfx.AnimationDescriptor;
 import duke.gfx.SpriteDescriptor;
 import duke.gfx.SpriteRenderable;
-import duke.sfx.Sfx;
 
 import static duke.level.Level.HALF_TILE_SIZE;
 import static duke.level.Level.TILE_SIZE;

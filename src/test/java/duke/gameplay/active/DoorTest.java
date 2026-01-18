@@ -28,11 +28,10 @@ class DoorTest {
         verify(context.getSoundManager()).play(Sfx.OPEN_KEY_DOOR);
 
         for (int i = 0; i < 8; i++) {
-            door.update(mock());
             assertThat(door.isDestroyed()).isFalse();
+            door.update(mock());
         }
 
-        door.update(mock());
         assertThat(door.isDestroyed()).isTrue();
     }
 }

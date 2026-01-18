@@ -7,6 +7,7 @@ import duke.gfx.Renderable;
 import duke.gfx.SpriteDescriptor;
 import duke.gfx.SpriteRenderer;
 import duke.level.Level;
+import duke.sfx.Sfx;
 
 import static duke.gfx.SpriteDescriptor.OBJECTS;
 import static duke.gfx.SpriteDescriptor.TILES;
@@ -30,6 +31,8 @@ public class Elevator extends Active implements Renderable, Solid, Updatable, In
         if (canMoveUp(context.getPlayer(), context)) {
             moveUp();
             push(context.getPlayer());
+
+            context.getSoundManager().play(Sfx.ELEVATOR);
         }
     }
 

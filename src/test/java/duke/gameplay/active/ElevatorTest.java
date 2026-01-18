@@ -3,6 +3,7 @@ package duke.gameplay.active;
 import duke.gameplay.GameplayContext;
 import duke.gameplay.GameplayContextFixture;
 import duke.gameplay.player.Player;
+import duke.sfx.Sfx;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -38,6 +39,7 @@ class ElevatorTest {
         assertThat(elevator.getX()).isEqualTo(160);
         assertThat(elevator.getY()).isEqualTo(144);
         verify(context.getPlayer()).setY(112);
+        verify(context.getSoundManager()).play(Sfx.ELEVATOR);
     }
 
     @Test

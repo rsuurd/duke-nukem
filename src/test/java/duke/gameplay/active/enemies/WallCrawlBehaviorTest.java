@@ -1,22 +1,22 @@
 package duke.gameplay.active.enemies;
 
-import duke.gameplay.Active;
 import duke.gameplay.Facing;
 import duke.gameplay.WorldQuery;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 
-class PatrolBehaviorTest {
-    private PatrolBehavior behavior;
+class WallCrawlBehaviorTest {
+    private WallCrawlBehavior behavior;
 
     private WorldQuery worldQuery;
-    private Active active;
+    private WallCrawler active;
 
     @BeforeEach
     void createBehavior() {
-        behavior = new PatrolBehavior(Facing.RIGHT, 1, 1);
+        behavior = new WallCrawlBehavior(Facing.RIGHT, 1, 1);
 
         worldQuery = mock();
         active = mock();
@@ -28,7 +28,7 @@ class PatrolBehaviorTest {
 
         behavior.behave(worldQuery, active);
 
-        verify(active).setX(1);
+        verify(active).setY(-1);
     }
 
     @Test
@@ -37,7 +37,8 @@ class PatrolBehaviorTest {
 
         behavior.behave(worldQuery, active);
 
-        verify(active).setX(-1);
+        verify(active).setY(1);
+        verify(active).reverse();
     }
 
     @Test
@@ -46,18 +47,7 @@ class PatrolBehaviorTest {
 
         behavior.behave(worldQuery, active);
 
-        verify(active).setX(-1);
-    }
-
-    @Test
-    void shouldBehaveAtInterval() {
-        int interval = 3;
-        behavior = new PatrolBehavior(duke.gameplay.Facing.RIGHT, interval, 1);
-
-        for (int i = 0; i < interval; i++) {
-            behavior.behave(worldQuery, active);
-        }
-
-        verify(active, times(1)).setX(anyInt());
+        verify(active).setY(1);
+        verify(active).reverse();
     }
 }
