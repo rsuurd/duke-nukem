@@ -112,6 +112,11 @@ public class Acme extends Active implements Updatable, SpriteRenderable, Shootab
         destroy(context);
     }
 
+    @Override
+    public int getDamage() {
+        return isFalling() ? 1 : 0;
+    }
+
     private void destroy(GameplayContext context) {
         int effectsX = getX() + 8;
         int effectsY = getY() - 8;

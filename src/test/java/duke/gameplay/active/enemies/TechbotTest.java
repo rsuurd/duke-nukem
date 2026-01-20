@@ -14,16 +14,15 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 class TechbotTest {
-    private EnemyBehavior behavior;
     private GameplayContext context;
+    private EnemyBehavior behavior;
 
     private Techbot techbot;
 
     @BeforeEach
     void create() {
-        behavior = mock();
         context = GameplayContextFixture.create();
-
+        behavior = mock();
         techbot = new Techbot(0, 0, behavior);
     }
 

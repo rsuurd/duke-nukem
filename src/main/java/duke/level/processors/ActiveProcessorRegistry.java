@@ -32,7 +32,8 @@ public class ActiveProcessorRegistry {
                 new FlamethrowerProcessor(),
                 new TechbotProcessor(),
                 new WallCrawlerProcessor(),
-                new BouncingMineProcessor()
+                new BouncingMineProcessor(),
+                new TankbotProcessor()
         ));
     }
 

@@ -3,26 +3,30 @@ package duke.gameplay.active.enemies;
 import duke.gameplay.*;
 import duke.gfx.SpriteDescriptor;
 import duke.gfx.SpriteRenderable;
-import duke.level.Level;import duke.sfx.Sfx;
+import duke.level.Level;
+import duke.sfx.Sfx;
 
 public class BouncingMine extends Active implements Updatable, Physics, Collidable, Damaging, Shootable, SpriteRenderable {
-    private boolean bounce;
+    private boolean bounced;
 
     public BouncingMine(int x, int y) {
         super(x, y, Level.TILE_SIZE, Level.TILE_SIZE);
+
+        bounced = false;
     }
 
     @Override
     public void onCollision(Direction direction) {
-        bounce = direction == Direction.DOWN;
+        setVelocityY(BOUNCE_SPEED);
+
+        bounced = true;
     }
 
     @Override
     public void update(GameplayContext context) {
-        if (bounce) {
+        if (bounced) {
             context.getSoundManager().play(Sfx.MINE_BOUNCE);
-            setVelocityY(BOUNCE_SPEED);
-            bounce = false;
+            bounced = false;
         }
     }
 
@@ -32,7 +36,8 @@ public class BouncingMine extends Active implements Updatable, Physics, Collidab
     }
 
     @Override
-    public void onShot(GameplayContext context, Bolt bolt) {}
+    public void onShot(GameplayContext context, Bolt bolt) {
+    }
 
     @Override
     public SpriteDescriptor getSpriteDescriptor() {

@@ -12,27 +12,24 @@ import duke.sfx.Sfx;
 
 import static duke.level.Level.TILE_SIZE;
 
-public class WallCrawler extends Active implements Updatable, Damaging, Shootable, SpriteRenderable {
+public class WallCrawler extends Enemy implements Updatable, Shootable, SpriteRenderable {
     private Animation animation;
-    private EnemyBehavior behavior;
 
     public WallCrawler(int x, int y, Facing facing) {
         this(x, y, facing, new WallCrawlBehavior(facing, BEHAVE_INTERVAL, 1));
     }
 
     WallCrawler(int x, int y, Facing facing, EnemyBehavior behavior) {
-        super(x, y, TILE_SIZE, TILE_SIZE);
+        super(x, y, TILE_SIZE, TILE_SIZE, facing, behavior);
 
         SpriteDescriptor spriteDescriptor = (facing == Facing.RIGHT) ? RIGHT_DESCRIPTOR : LEFT_DESCRIPTOR;
         AnimationDescriptor animationDescriptor = new AnimationDescriptor(spriteDescriptor, 4, 2);
         animation = new Animation(animationDescriptor);
-        this.behavior = behavior;
     }
 
     @Override
     public void update(GameplayContext context) {
-        behavior.behave(context, this);
-
+        super.update(context);
         animation.tick();
     }
 
@@ -46,12 +43,13 @@ public class WallCrawler extends Active implements Updatable, Damaging, Shootabl
     }
 
     @Override
-    public SpriteDescriptor getSpriteDescriptor() {
-        return animation.getSpriteDescriptor();
-    }
-
     public void reverse() {
         animation.reverse();
+    }
+
+    @Override
+    public SpriteDescriptor getSpriteDescriptor() {
+        return animation.getSpriteDescriptor();
     }
 
     private static final int BEHAVE_INTERVAL = 1;

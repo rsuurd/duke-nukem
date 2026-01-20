@@ -2,6 +2,7 @@ package duke.gameplay;
 
 import duke.Renderer;
 import duke.gameplay.active.Wakeable;
+import duke.gameplay.active.enemies.EnemyFire;
 import duke.gameplay.player.Player;
 import duke.gfx.Renderable;
 import duke.gfx.SpriteRenderer;
@@ -10,6 +11,8 @@ import duke.gfx.Viewport;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
+import static duke.sfx.Sfx.PLAYER_HIT;
 
 public class ActiveManager {
     private Viewport viewport;
@@ -58,6 +61,7 @@ public class ActiveManager {
 
             wakeUpIfNeeded(active, visible);
             update(active, context, visible);
+            checkDamage(active, context);
 
             if (active.isDestroyed()) {
                 iterator.remove();
@@ -89,6 +93,21 @@ public class ActiveManager {
             return wakeable.isAwake();
         }
         return visible;
+    }
+
+    private void checkDamage(Active active, GameplayContext context) {
+        if (active.isDestroyed()) return;
+
+        Player player = context.getPlayer();
+
+        if (player.getHealth().isInvulnerable()) return;
+        if (active instanceof Damaging damaging && damaging.getDamage() > 0 && player.intersects(active)) {
+            player.getHealth().takeDamage(damaging);
+            context.getSoundManager().play(PLAYER_HIT);
+
+            // TODO this despawns on touch, should probably hook into collision system later
+            if (active instanceof EnemyFire enemyFire) enemyFire.destroy();
+        }
     }
 
     public void spawn(Active active) {

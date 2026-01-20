@@ -56,6 +56,16 @@ class AcmeTest {
     }
 
     @Test
+    void shouldBeDamagingWhenFalling() {
+        Acme acme = new Acme(0, 0);
+        assertThat(acme.getDamage()).isEqualTo(0);
+        wakeUp(acme);
+        assertThat(acme.getDamage()).isEqualTo(0);
+        fastForward(acme, Acme.SHAKE_TIME);
+        assertThat(acme.getDamage()).isEqualTo(1);
+    }
+
+    @Test
     void shouldCrash() {
         Acme acme = new Acme(0, 0);
         wakeUp(acme);

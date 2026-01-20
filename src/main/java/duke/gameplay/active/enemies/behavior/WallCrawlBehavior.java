@@ -1,9 +1,8 @@
 package duke.gameplay.active.enemies.behavior;
 
-import duke.gameplay.Active;
 import duke.gameplay.Facing;
 import duke.gameplay.WorldQuery;
-import duke.gameplay.active.enemies.WallCrawler;
+import duke.gameplay.active.enemies.Enemy;
 
 import static duke.level.Level.TILE_SIZE;
 
@@ -20,17 +19,13 @@ public class WallCrawlBehavior implements EnemyBehavior {
     }
 
     @Override
-    public void behave(WorldQuery worldQuery, Active active) {
+    public void behave(WorldQuery worldQuery, Enemy enemy) {
         if (shouldBehave()) {
-            if (isEdgeReached(worldQuery, active)) {
-                turnAround();
-
-                if (active instanceof WallCrawler wallCrawler) {
-                    wallCrawler.reverse();
-                }
+            if (isEdgeReached(worldQuery, enemy)) {
+                reverse(enemy);
             }
 
-            move(active);
+            move(enemy);
         }
 
         tick = (tick + 1) % interval;
@@ -40,17 +35,18 @@ public class WallCrawlBehavior implements EnemyBehavior {
         return tick == 0;
     }
 
-    private void turnAround() {
+    private void reverse(Enemy enemy) {
+        enemy.reverse();
         speed = -speed;
     }
 
-    private void move(Active active) {
-        active.setY(active.getY() + speed);
+    private void move(Enemy enemy) {
+        enemy.setY(enemy.getY() + speed);
     }
 
-    private boolean isEdgeReached(WorldQuery query, Active active) {
-        int row = (active.getY() + (isGoingDown() ? active.getHeight() + 1 : -1)) / TILE_SIZE;
-        int col = active.getCol();
+    private boolean isEdgeReached(WorldQuery query, Enemy enemy) {
+        int row = (enemy.getY() + (isGoingDown() ? enemy.getHeight() + 1 : -1)) / TILE_SIZE;
+        int col = enemy.getCol();
         return query.isSolid(row, col) || !query.isSolid(row, col + gapOffset);
     }
 

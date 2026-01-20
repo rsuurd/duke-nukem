@@ -1,6 +1,8 @@
 package duke.gameplay;
 
 import duke.gameplay.active.Wakeable;
+import duke.gameplay.active.enemies.EnemyFire;
+import duke.gameplay.player.Health;
 import duke.gfx.Viewport;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,9 +27,14 @@ class ActiveManagerTest {
 
     private GameplayContext context;
 
+    @Mock
+    private Health health;
+
     @BeforeEach
     void createContext() {
         context = GameplayContextFixture.create();
+
+        lenient().when(context.getPlayer().getHealth()).thenReturn(health);
     }
 
     @Test
@@ -166,6 +173,64 @@ class ActiveManagerTest {
         assertThat(manager.getSpawns()).isEmpty();
     }
 
+    @Test
+    void shouldNotDamagePlayerWhileInvulnerable() {
+        DamagingActive active = mock();
+        when(health.isInvulnerable()).thenReturn(true);
+        manager.getActives().add(active);
+
+        manager.update(context);
+
+        verify(health, never()).takeDamage(any());
+    }
+
+    @Test
+    void shouldNotDamagePlayerWithZeroDamage() {
+        DamagingActive active = mock();
+        when(active.getDamage()).thenReturn(0);
+        manager.getActives().add(active);
+
+        manager.update(context);
+
+        verify(health, never()).takeDamage(any());
+    }
+
+    @Test
+    void destroyedActiveShouldNotDamagePlayer() {
+        DamagingActive active = mock();
+        when(active.isDestroyed()).thenReturn(true);
+        manager.getActives().add(active);
+
+        manager.update(context);
+
+        verify(health, never()).takeDamage(any());
+    }
+
+    @Test
+    void shouldDamagePlayer() {
+        DamagingActive active = mock();
+        when(active.getDamage()).thenReturn(1);
+        when(context.getPlayer().intersects(active)).thenReturn(true);
+        manager.getActives().add(active);
+
+        manager.update(context);
+
+        verify(health).takeDamage(active);
+    }
+
+    @Test
+    void shouldRemoveEnemyFireOnHit() {
+        EnemyFire enemyFire = mock();
+        when(enemyFire.getDamage()).thenReturn(1);
+        when(context.getPlayer().intersects(enemyFire)).thenReturn(true);
+        manager.getActives().add(enemyFire);
+
+        manager.update(context);
+
+        verify(health).takeDamage(enemyFire);
+        verify(enemyFire).destroy();
+    }
+
     private static abstract class InteractableActive extends Active implements Interactable {
         private InteractableActive() {
             super(0, 0, 0, 0);
@@ -185,6 +250,13 @@ class ActiveManagerTest {
     }
 
     private static abstract class SleepingActive extends TestActive implements Wakeable {
-        private SleepingActive() {}
+        private SleepingActive() {
+        }
+    }
+
+    private static abstract class DamagingActive extends Active implements Damaging {
+        private DamagingActive() {
+            super(0, 0, 1, 1);
+        }
     }
 }

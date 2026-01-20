@@ -30,6 +30,7 @@ class BouncingMineTest {
     @Test
     void shouldBounce() {
         mine.onCollision(Collidable.Direction.DOWN);
+
         mine.update(context);
 
         assertThat(mine.getVelocityY()).isEqualTo(BOUNCE_SPEED);

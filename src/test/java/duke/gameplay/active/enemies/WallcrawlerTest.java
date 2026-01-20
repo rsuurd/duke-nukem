@@ -15,15 +15,14 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 class WallcrawlerTest {
-    private EnemyBehavior behavior;
     private GameplayContext context;
-
+    private EnemyBehavior behavior;
     private WallCrawler wallCrawler;
 
     @BeforeEach
     void create() {
-        behavior = mock();
         context = GameplayContextFixture.create();
+        behavior = mock();
 
         wallCrawler = new WallCrawler(0, 0, Facing.RIGHT, behavior);
     }

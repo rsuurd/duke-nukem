@@ -13,42 +13,42 @@ class WallCrawlBehaviorTest {
     private WallCrawlBehavior behavior;
 
     private WorldQuery worldQuery;
-    private WallCrawler active;
+    private WallCrawler crawler;
 
     @BeforeEach
     void createBehavior() {
         behavior = new WallCrawlBehavior(Facing.RIGHT, 1, 1);
 
         worldQuery = mock();
-        active = mock();
+        crawler = mock();
     }
 
     @Test
     void shouldPatrol() {
         when(worldQuery.isSolid(anyInt(), anyInt())).thenReturn(false, true);
 
-        behavior.behave(worldQuery, active);
+        behavior.behave(worldQuery, crawler);
 
-        verify(active).setY(-1);
+        verify(crawler).setY(-1);
     }
 
     @Test
-    void shouldTurnAroundWhenSolid() {
+    void shouldReverseWhenSolid() {
         when(worldQuery.isSolid(anyInt(), anyInt())).thenReturn(true);
 
-        behavior.behave(worldQuery, active);
+        behavior.behave(worldQuery, crawler);
 
-        verify(active).setY(1);
-        verify(active).reverse();
+        verify(crawler).setY(1);
+        verify(crawler).reverse();
     }
 
     @Test
-    void shouldTurnAroundWhenGapReached() {
+    void shouldReverseWhenGapReached() {
         when(worldQuery.isSolid(anyInt(), anyInt())).thenReturn(false, false);
 
-        behavior.behave(worldQuery, active);
+        behavior.behave(worldQuery, crawler);
 
-        verify(active).setY(1);
-        verify(active).reverse();
+        verify(crawler).setY(1);
+        verify(crawler).reverse();
     }
 }

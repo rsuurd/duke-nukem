@@ -5,7 +5,6 @@ import duke.gameplay.Facing;
 import duke.gameplay.GameplayContext;
 import duke.gameplay.GameplayContextFixture;
 import duke.gameplay.effects.Effect;
-import duke.gameplay.effects.Explosion;
 import duke.ui.KeyHandler;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,8 +12,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.List;
 
 import static duke.gameplay.Physics.GRAVITY;
 import static duke.gameplay.player.Player.JUMP_POWER;
@@ -269,44 +266,6 @@ class PlayerTest {
         player.processInput(new KeyHandler.Input(false, false, false, false, true));
 
         assertThat(player.isUsing()).isTrue();
-    }
-
-    @Test
-    void shouldTakeDamage() {
-        Health health = mock();
-        Player player = new Player(State.STANDING, Facing.LEFT, mock(), health, mock(), mock());
-        GameplayContext context = GameplayContextFixture.create();
-        Explosion explosion = new Explosion(player.getX(), player.getY());
-        when(context.getActiveManager().getActives()).thenReturn(List.of(explosion));
-
-        player.postMovement(context);
-
-        verify(health).takeDamage(explosion);
-    }
-
-    @Test
-    void shouldNotTakeDamageWhileInvulnerable() {
-        Health health = mock();
-        when(health.isInvulnerable()).thenReturn(true);
-        Player player = new Player(State.STANDING, Facing.LEFT, mock(), health, mock(), mock());
-        GameplayContext context = GameplayContextFixture.create();
-
-        player.postMovement(context);
-
-        verify(health, never()).takeDamage(any());
-    }
-
-    @Test
-    void shouldNotTakeDoubleDamage() {
-        Health health = mock();
-        Player player = new Player(State.STANDING, Facing.LEFT, mock(), health, mock(), mock());
-        GameplayContext context = GameplayContextFixture.create();
-        Explosion explosion = new Explosion(player.getX(), player.getY());
-        when(context.getActiveManager().getActives()).thenReturn(List.of(explosion, explosion));
-
-        player.postMovement(context);
-
-        verify(health, times(1)).takeDamage(explosion);
     }
 
     @Test

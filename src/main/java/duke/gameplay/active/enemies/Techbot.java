@@ -12,24 +12,23 @@ import duke.gfx.SpriteRenderable;
 import static duke.level.Level.HALF_TILE_SIZE;
 import static duke.level.Level.TILE_SIZE;
 
-public class Techbot extends Active implements Updatable, Physics, Damaging, Shootable, SpriteRenderable {
+public class Techbot extends Enemy implements Physics, Shootable, SpriteRenderable {
     private Animation animation;
-    private EnemyBehavior behavior;
 
     public Techbot(int x, int y) {
-        this(x, y, new PatrolBehavior(Facing.RIGHT, BEHAVE_INTERVAL, HALF_TILE_SIZE));
+        this(x, y, new PatrolBehavior(BEHAVE_INTERVAL, HALF_TILE_SIZE));
     }
 
     Techbot(int x, int y, EnemyBehavior behavior) {
-        super(x, y, TILE_SIZE, TILE_SIZE);
+        super(x, y, TILE_SIZE, TILE_SIZE, Facing.RIGHT, behavior);
 
         animation = new Animation(DESCRIPTOR);
-        this.behavior = behavior;
     }
 
     @Override
     public void update(GameplayContext context) {
-        behavior.behave(context, this);
+        super.update(context);
+
         animation.tick();
     }
 

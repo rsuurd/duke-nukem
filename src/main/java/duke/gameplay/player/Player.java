@@ -84,8 +84,6 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     }
 
     public void postMovement(GameplayContext context) {
-        checkDamage(context);
-
         weapon.fire(context);
 
         if (jumped) {
@@ -100,18 +98,6 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
         }
 
         animator.animate(this);
-    }
-
-    private void checkDamage(GameplayContext context) {
-        if (health.isInvulnerable()) return;
-
-        for (Active active : context.getActiveManager().getActives()) {
-            if (active instanceof Damaging damaging && intersects(active)) {
-                health.takeDamage(damaging);
-                context.getSoundManager().play(PLAYER_HIT);
-                break;
-            }
-        }
     }
 
     @Override
