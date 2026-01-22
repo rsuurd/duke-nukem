@@ -1,12 +1,9 @@
 package duke.gameplay.player;
 
 import duke.gameplay.*;
-import duke.gameplay.effects.EffectsFactory;
 import duke.gfx.SpriteDescriptor;
 import duke.gfx.SpriteRenderable;
 import duke.ui.KeyHandler;
-
-import static duke.sfx.Sfx.*;
 
 public class Player extends Active implements Movable, Collidable, Physics, Updatable, SpriteRenderable {
     private State state;
@@ -25,12 +22,14 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     private PlayerHealth health;
     private Inventory inventory;
     private PlayerAnimator animator;
+    private PlayerFeedback feedback;
+    ;
 
     public Player() {
-        this(State.STANDING, Facing.RIGHT, new Weapon(), new PlayerHealth(), new Inventory(), new PlayerAnimator());
+        this(State.STANDING, Facing.RIGHT, new Weapon(), new PlayerHealth(), new Inventory(), new PlayerAnimator(), new PlayerFeedback());
     }
 
-    Player(State state, Facing facing, Weapon weapon, PlayerHealth health, Inventory inventory, PlayerAnimator animator) {
+    Player(State state, Facing facing, Weapon weapon, PlayerHealth health, Inventory inventory, PlayerAnimator animator, PlayerFeedback feedback) {
         super(0, 0, WIDTH, HEIGHT);
 
         this.facing = facing;
@@ -42,6 +41,7 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
         this.health = health;
         this.inventory = inventory;
         this.animator = animator;
+        this.feedback = feedback;
 
         reset();
     }
@@ -85,18 +85,7 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
 
     public void postMovement(GameplayContext context) {
         weapon.fire(context);
-
-        if (jumped) {
-            context.getSoundManager().play(PLAYER_JUMP);
-        }
-        if (bumped) {
-            context.getSoundManager().play(HIT_HEAD);
-        }
-        if (landed) {
-            context.getActiveManager().spawn(EffectsFactory.createDust(this));
-            context.getSoundManager().play(PLAYER_LAND);
-        }
-
+        feedback.provideFeedback(context, this, jumped, bumped, landed);
         animator.animate(this);
     }
 
