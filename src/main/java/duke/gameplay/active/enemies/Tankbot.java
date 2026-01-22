@@ -21,18 +21,16 @@ public class Tankbot extends Enemy implements Physics, Shootable, SpriteRenderab
     private Animation animation;
 
     private boolean turnedAround;
-    private int health;
     protected boolean awake;
     private int smoking;
 
     public Tankbot(int x, int y) {
-        this(x, y, Facing.LEFT, new PatrolBehavior(1, 4));
+        this(x, y, Facing.LEFT, new PatrolBehavior(1, 4), new Health(HEALTH));
     }
 
-    Tankbot(int x, int y, Facing facing, EnemyBehavior behavior) {
-        super(x, y, 2 * TILE_SIZE, TILE_SIZE, facing, behavior);
+    Tankbot(int x, int y, Facing facing, EnemyBehavior behavior, Health health) {
+        super(x, y, 2 * TILE_SIZE, TILE_SIZE, facing, behavior, health);
         animation = new Animation(DESCRIPTORS.get(facing));
-        health = HEALTH;
     }
 
     @Override
@@ -53,9 +51,7 @@ public class Tankbot extends Enemy implements Physics, Shootable, SpriteRenderab
 
         animation.tick();
 
-        if (isDamaged()) {
-            smoke(context);
-        }
+        visualizeDamage(context);
     }
 
     private void tryShoot(GameplayContext context) {
@@ -73,28 +69,20 @@ public class Tankbot extends Enemy implements Physics, Shootable, SpriteRenderab
         return horizontalDistance < SHOOTING_RANGE && verticalDistance < SHOOTING_RANGE;
     }
 
-    private boolean isDamaged() {
-        return health < HEALTH;
-    }
-
-    private void smoke(GameplayContext context) {
-        //  TODO extract into it's own component, we need this for the Ed209 as well
-        if (++smoking % 6 == 0) {
+    private void visualizeDamage(GameplayContext context) {
+        if (health.getCurrent() < health.getMax() && ++smoking % 6 == 0) {
             int smokeX = (getFacing() == Facing.LEFT) ? getX() + TILE_SIZE : getX();
             context.getActiveManager().spawn(EffectsFactory.createSmoke(smokeX, getY() - HALF_TILE_SIZE));
         }
     }
 
     @Override
-    public void onShot(GameplayContext context, Bolt bolt) {
-        if (--health <= 0) {
-            context.getSoundManager().play(Sfx.SMALL_DEATH);
-            context.getScoreManager().score(2500);
-            context.getActiveManager().spawn(EffectsFactory.createSparks(getX() + HALF_TILE_SIZE, getY()));
-            context.getActiveManager().spawn(EffectsFactory.createParticles(getX(), getY()));
-            context.getActiveManager().spawn(EffectsFactory.createParticles(getX() + TILE_SIZE, getY()));
-            destroy();
-        }
+    protected void onDestroyed(GameplayContext context) {
+        context.getSoundManager().play(Sfx.SMALL_DEATH);
+        context.getScoreManager().score(2500);
+        context.getActiveManager().spawn(EffectsFactory.createSparks(getX() + HALF_TILE_SIZE, getY()));
+        context.getActiveManager().spawn(EffectsFactory.createParticles(getX(), getY()));
+        context.getActiveManager().spawn(EffectsFactory.createParticles(getX() + TILE_SIZE, getY()));
     }
 
     @Override

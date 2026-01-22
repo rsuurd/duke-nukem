@@ -1,6 +1,9 @@
 package duke.gameplay.active.enemies;
 
-import duke.gameplay.*;
+import duke.gameplay.Facing;
+import duke.gameplay.GameplayContext;
+import duke.gameplay.Physics;
+import duke.gameplay.Shootable;
 import duke.gameplay.active.enemies.behavior.EnemyBehavior;
 import duke.gameplay.active.enemies.behavior.PatrolBehavior;
 import duke.gameplay.effects.TechbotDestruction;
@@ -33,10 +36,9 @@ public class Techbot extends Enemy implements Physics, Shootable, SpriteRenderab
     }
 
     @Override
-    public void onShot(GameplayContext context, Bolt bolt) {
+    protected void onDestroyed(GameplayContext context) {
+        context.getScoreManager().score(100);
         context.getActiveManager().spawn(new TechbotDestruction(getX(), getY()));
-
-        destroy();
     }
 
     @Override

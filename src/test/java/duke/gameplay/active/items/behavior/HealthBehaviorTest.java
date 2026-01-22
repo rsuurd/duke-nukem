@@ -3,7 +3,7 @@ package duke.gameplay.active.items.behavior;
 import duke.gameplay.GameplayContext;
 import duke.gameplay.GameplayContextFixture;
 import duke.gameplay.active.items.Item;
-import duke.gameplay.player.Health;
+import duke.gameplay.player.PlayerHealth;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -21,7 +21,7 @@ class HealthBehaviorTest {
 
     @Test
     void shouldPickUp() {
-        Health health = mock();
+        PlayerHealth health = mock();
         when(context.getPlayer().getHealth()).thenReturn(health);
         ItemBehavior behavior = new HealthBehavior(1);
 

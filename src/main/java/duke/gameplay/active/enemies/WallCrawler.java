@@ -1,6 +1,9 @@
 package duke.gameplay.active.enemies;
 
-import duke.gameplay.*;
+import duke.gameplay.Facing;
+import duke.gameplay.GameplayContext;
+import duke.gameplay.Shootable;
+import duke.gameplay.Updatable;
 import duke.gameplay.active.enemies.behavior.EnemyBehavior;
 import duke.gameplay.active.enemies.behavior.WallCrawlBehavior;
 import duke.gameplay.effects.EffectsFactory;
@@ -34,12 +37,10 @@ public class WallCrawler extends Enemy implements Updatable, Shootable, SpriteRe
     }
 
     @Override
-    public void onShot(GameplayContext context, Bolt bolt) {
+    protected void onDestroyed(GameplayContext context) {
         context.getScoreManager().score(100);
         context.getActiveManager().spawn(EffectsFactory.createSmoke(getX(), getY()));
         context.getSoundManager().play(Sfx.SMALL_DEATH);
-
-        destroy();
     }
 
     @Override

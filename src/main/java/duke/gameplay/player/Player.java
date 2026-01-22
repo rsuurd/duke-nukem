@@ -22,15 +22,15 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     private boolean using;
 
     private Weapon weapon;
-    private Health health;
+    private PlayerHealth health;
     private Inventory inventory;
     private PlayerAnimator animator;
 
     public Player() {
-        this(State.STANDING, Facing.RIGHT, new Weapon(), new Health(), new Inventory(), new PlayerAnimator());
+        this(State.STANDING, Facing.RIGHT, new Weapon(), new PlayerHealth(), new Inventory(), new PlayerAnimator());
     }
 
-    Player(State state, Facing facing, Weapon weapon, Health health, Inventory inventory, PlayerAnimator animator) {
+    Player(State state, Facing facing, Weapon weapon, PlayerHealth health, Inventory inventory, PlayerAnimator animator) {
         super(0, 0, WIDTH, HEIGHT);
 
         this.facing = facing;
@@ -140,7 +140,7 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
         return weapon;
     }
 
-    public Health getHealth() {
+    public PlayerHealth getHealth() {
         return health;
     }
 

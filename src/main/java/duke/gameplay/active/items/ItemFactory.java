@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.function.Function;
 
 import static duke.gameplay.active.items.behavior.ItemBehaviorFactory.*;
-import static duke.gameplay.player.Health.MAX_HEALTH;
+import static duke.gameplay.player.PlayerHealth.MAX_HEALTH;
 import static duke.gfx.SpriteDescriptor.ANIM;
 import static duke.gfx.SpriteDescriptor.OBJECTS;
 

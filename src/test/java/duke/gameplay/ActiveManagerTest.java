@@ -2,7 +2,7 @@ package duke.gameplay;
 
 import duke.gameplay.active.Wakeable;
 import duke.gameplay.active.enemies.EnemyFire;
-import duke.gameplay.player.Health;
+import duke.gameplay.player.PlayerHealth;
 import duke.gfx.Viewport;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,7 +28,7 @@ class ActiveManagerTest {
     private GameplayContext context;
 
     @Mock
-    private Health health;
+    private PlayerHealth health;
 
     @BeforeEach
     void createContext() {
@@ -181,7 +181,7 @@ class ActiveManagerTest {
 
         manager.update(context);
 
-        verify(health, never()).takeDamage(any());
+        verify(health, never()).takeDamage(anyInt());
     }
 
     @Test
@@ -192,7 +192,7 @@ class ActiveManagerTest {
 
         manager.update(context);
 
-        verify(health, never()).takeDamage(any());
+        verify(health, never()).takeDamage(anyInt());
     }
 
     @Test
@@ -203,7 +203,7 @@ class ActiveManagerTest {
 
         manager.update(context);
 
-        verify(health, never()).takeDamage(any());
+        verify(health, never()).takeDamage(anyInt());
     }
 
     @Test
@@ -215,7 +215,7 @@ class ActiveManagerTest {
 
         manager.update(context);
 
-        verify(health).takeDamage(active);
+        verify(health).takeDamage(1);
     }
 
     @Test
@@ -227,7 +227,7 @@ class ActiveManagerTest {
 
         manager.update(context);
 
-        verify(health).takeDamage(enemyFire);
+        verify(health).takeDamage(1);
         verify(enemyFire).destroy();
     }
 

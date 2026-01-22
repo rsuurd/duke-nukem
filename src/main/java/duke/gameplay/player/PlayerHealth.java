@@ -1,25 +1,21 @@
 package duke.gameplay.player;
 
-import duke.gameplay.Damaging;
 import duke.gameplay.GameplayContext;
+import duke.gameplay.Health;
 
-public class Health {
-    private int current;
+public class PlayerHealth extends Health {
     private boolean damageTaken;
     private int invulnerability;
 
-    public Health() {
+    public PlayerHealth() {
         this(MAX_HEALTH, false, 0);
     }
 
-    Health(int current, boolean damageTaken, int invulnerability) {
-        this.current = current;
+    PlayerHealth(int current, boolean damageTaken, int invulnerability) {
+        super(current);
+
         this.damageTaken = damageTaken;
         this.invulnerability = invulnerability;
-    }
-
-    public int getCurrent() {
-        return current;
     }
 
     public boolean isDamageTaken() {
@@ -42,16 +38,13 @@ public class Health {
         damageTaken = false;
     }
 
-    public void takeDamage(Damaging damaging) {
+    public void takeDamage(int amount) {
         if (isInvulnerable()) return;
 
-        current = Math.max(current - damaging.getDamage(), 0);
+        super.takeDamage(amount);
+
         invulnerability = INVULNERABILITY_FRAMES;
         damageTaken = true;
-    }
-
-    public void increaseHealth(int amount) {
-        current = Math.min(current + amount, MAX_HEALTH);
     }
 
     public static final int MAX_HEALTH = 8;

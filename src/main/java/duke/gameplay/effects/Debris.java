@@ -22,5 +22,5 @@ public class Debris extends Effect {
 
     private static final int TTL = 16;
 
-    private static final AnimationDescriptor DESCRIPTOR = new AnimationDescriptor(new SpriteDescriptor(ANIM, 152, 0, 0, 1, 2), 2, 4, AnimationDescriptor.Type.ONE_SHOT);
+    private static final AnimationDescriptor DESCRIPTOR = new AnimationDescriptor(new SpriteDescriptor(ANIM, 152, 0, 0, 1, 2), 4, 4, AnimationDescriptor.Type.ONE_SHOT);
 }

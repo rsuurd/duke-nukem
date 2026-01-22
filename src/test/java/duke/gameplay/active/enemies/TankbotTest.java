@@ -3,6 +3,7 @@ package duke.gameplay.active.enemies;
 import duke.gameplay.Facing;
 import duke.gameplay.GameplayContext;
 import duke.gameplay.GameplayContextFixture;
+import duke.gameplay.Health;
 import duke.gameplay.active.enemies.behavior.EnemyBehavior;
 import duke.gameplay.effects.Effect;
 import duke.sfx.Sfx;
@@ -21,13 +22,16 @@ class TankbotTest {
     @Mock
     private EnemyBehavior behavior;
 
+    @Mock
+    private Health health;
+
     private Tankbot tankbot;
 
     private GameplayContext context;
 
     @BeforeEach
     void createTankbot() {
-        tankbot = new Tankbot(0, 0, Facing.RIGHT, behavior);
+        tankbot = new Tankbot(0, 0, Facing.RIGHT, behavior, health);
 
         context = GameplayContextFixture.create();
     }
@@ -73,8 +77,9 @@ class TankbotTest {
     }
 
     @Test
-    void shouldSmokeWhenDamaged() {
-        tankbot.onShot(context, mock());
+    void shouldVisualizeDamage() {
+        when(health.getMax()).thenReturn(2);
+        when(health.getCurrent()).thenReturn(1);
 
         for (int i = 0; i < 6; i++) {
             tankbot.update(context);
@@ -85,7 +90,8 @@ class TankbotTest {
 
     @Test
     void shouldBeDestroyed() {
-        tankbot.onShot(context, mock());
+        when(health.isDead()).thenReturn(true);
+
         tankbot.onShot(context, mock());
 
         assertThat(tankbot.isDestroyed()).isTrue();

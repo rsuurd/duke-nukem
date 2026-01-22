@@ -33,7 +33,8 @@ public class ActiveProcessorRegistry {
                 new TechbotProcessor(),
                 new WallCrawlerProcessor(),
                 new BouncingMineProcessor(),
-                new TankbotProcessor()
+                new TankbotProcessor(),
+                new Ed209Processor()
         ));
     }
 
