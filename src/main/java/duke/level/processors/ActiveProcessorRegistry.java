@@ -36,7 +36,8 @@ public class ActiveProcessorRegistry {
                 new TankbotProcessor(),
                 new Ed209Processor(),
                 new ExitProcessor(),
-                new NotesProcessor()
+                new NotesProcessor(),
+                new NeedleProcessor()
         ));
     }
 

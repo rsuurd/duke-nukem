@@ -32,6 +32,7 @@ public class LevelManager {
 
     private static final List<LevelDescriptor> SHRAPNEL_CITY = List.of(
             new LevelDescriptor(1, 0),
-            new LevelDescriptor(2, 0, NOTES_HINT)
+            new LevelDescriptor(2, 0, NOTES_HINT),
+            new LevelDescriptor(3, 0)
     );
 }

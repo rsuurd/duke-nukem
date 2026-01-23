@@ -44,7 +44,7 @@ public class Dynamite extends Active implements Updatable, SpriteRenderable {
     static final int TIMER = 16;
     private static final AnimationDescriptor DESCRIPTOR = new AnimationDescriptor(new SpriteDescriptor(ANIM, 116), 2, 1);
 
-    static class ExplosionWave extends Active implements Updatable {
+    static class ExplosionWave extends Active implements Updatable, Wakeable {
         private int timer;
 
         public ExplosionWave(int x, int y, Facing direction) {
@@ -77,6 +77,15 @@ public class Dynamite extends Active implements Updatable, SpriteRenderable {
 
         private boolean isGap(WorldQuery query) {
             return !query.isSolid(getRow() + 1, getCol());
+        }
+
+        @Override
+        public boolean isAwake() {
+            return true;
+        }
+
+        @Override
+        public void wakeUp() {
         }
 
         static final int POWER = 5;
