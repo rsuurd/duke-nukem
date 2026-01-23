@@ -57,4 +57,8 @@ public class BoltManager {
     public int countBolts() {
         return bolts.size();
     }
+
+    public void reset() {
+        bolts.clear();
+    }
 }

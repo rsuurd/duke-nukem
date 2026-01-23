@@ -6,15 +6,16 @@ import duke.gameplay.*;
 import duke.gameplay.player.Player;
 import duke.gfx.*;
 import duke.level.Level;
+import duke.level.LevelManager;
 import duke.resources.AssetManager;
 import duke.ui.KeyHandler;
 
 // TODO refactor for testing
 public class GameplayState implements GameState {
-    private Viewport viewport;
+    private LevelManager levelManager;
     private LevelRenderer levelRenderer;
+    private Viewport viewport;
     private Hud hud;
-    private Font font;
     private SpriteRenderer spriteRenderer;
     private Collision collision;
     private GameplayContext context;
@@ -23,27 +24,31 @@ public class GameplayState implements GameState {
     public GameplayState(GameContext gameContext) {
         AssetManager assets = gameContext.getAssets();
 
-        viewport = new Viewport();
-        Level level = assets.getLevel(1);
+        levelManager = new LevelManager(assets);
+        levelRenderer = new LevelRenderer(assets, null);
 
-        levelRenderer = new LevelRenderer(assets, level);
-        font = new Font(assets);
-        hud = new Hud(assets, font);
+        viewport = new Viewport();
+        hud = new Hud(assets, new Font(assets));
         spriteRenderer = new SpriteRenderer(assets);
         collision = new Collision();
+
+        context = createGameplayContext(gameContext);
+    }
+
+    private GameplayContext createGameplayContext(GameContext gameContext) {
         BoltManager boltManager = new BoltManager(viewport, spriteRenderer);
         ActiveManager activeManager = new ActiveManager(viewport, collision, spriteRenderer);
         ScoreManager scoreManager = new ScoreManager(activeManager);
         BonusTracker bonusTracker = new BonusTracker();
-        context = new GameplayContext(new Player(), level, boltManager, activeManager, gameContext.getSoundManager(), scoreManager, bonusTracker);
+
+        return new GameplayContext(new Player(), null, boltManager, activeManager, gameContext.getSoundManager(), scoreManager, bonusTracker);
     }
 
-    GameplayState(Viewport viewport, LevelRenderer levelRenderer, Hud hud, Font font, SpriteRenderer spriteRenderer, Collision collision, GameplayContext context) {
-        this.viewport = viewport;
-
+    GameplayState(LevelManager levelManager, LevelRenderer levelRenderer, Viewport viewport, Hud hud, SpriteRenderer spriteRenderer, Collision collision, GameplayContext context) {
+        this.levelManager = levelManager;
         this.levelRenderer = levelRenderer;
+        this.viewport = viewport;
         this.hud = hud;
-        this.font = font;
         this.spriteRenderer = spriteRenderer;
         this.collision = collision;
         this.context = context;
@@ -51,16 +56,13 @@ public class GameplayState implements GameState {
 
     @Override
     public void start(GameContext gameContext) {
-        // create new context
-        Player player = context.getPlayer();
-        Level level = context.getLevel();
+        switchLevel(levelManager.getNextLevel(), context);
+    }
 
-        level.getActives().forEach(active -> context.getActiveManager().spawn(active));
-
-        player.setX(level.getPlayerStartX());
-        player.setY(level.getPlayerStartY());
-        player.enableControls();
-        player.getHealth().grantInvulnerability();
+    private void switchLevel(Level level, GameplayContext context) {
+        context.switchLevel(level);
+        levelRenderer.setLevel(level);
+        viewport.update(context.getPlayer().getX(), context.getPlayer().getY(), true);
     }
 
     @Override
@@ -68,6 +70,10 @@ public class GameplayState implements GameState {
         updatePlayer(gameContext.getKeyHandler().getInput());
         context.getBoltManager().update(context);
         context.getActiveManager().update(context);
+
+        if (context.getLevel().isExited()) {
+            switchLevel(levelManager.getNextLevel(), context);
+        }
     }
 
     private void updatePlayer(KeyHandler.Input input) {
@@ -90,8 +96,6 @@ public class GameplayState implements GameState {
         context.getActiveManager().render(renderer, Layer.FOREGROUND);
         context.getBoltManager().render(renderer);
         hud.render(renderer, context.getScoreManager().getScore(), context.getPlayer());
-
-        drawDebugInfo(renderer);
     }
 
     private void drawPlayer(Renderer renderer) {
@@ -101,13 +105,5 @@ public class GameplayState implements GameState {
         int y = viewport.toScreenY(player.getY());
 
         spriteRenderer.render(renderer, player, x, y);
-    }
-
-    private void drawDebugInfo(Renderer renderer) {
-        Player player = context.getPlayer();
-
-        font.drawText(renderer, String.format("position: %d, %d", player.getX(), player.getY()), 16, 16);
-        font.drawText(renderer, String.format("velocity: %d, %d", player.getVelocityX(), player.getVelocityY()), 16, 24);
-        font.drawText(renderer, String.format("%s %s", player.getState(), player.getFacing()), 16, 32);
     }
 }

@@ -26,6 +26,7 @@ public class Hud {
         drawFirePower(renderer, player.getWeapon().getFirepower());
         drawInventory(renderer, player.getInventory());
         drawHelp(renderer);
+        drawDebugInfo(renderer, player);
 
         frame = (frame + 1) % 2;
     }
@@ -116,5 +117,11 @@ public class Hud {
         for (int tile = 26; tile <= 29; tile++) {
             renderer.draw(assets.getBorder().get(tile), screenX += TILE_SIZE, 176);
         }
+    }
+
+    private void drawDebugInfo(Renderer renderer, Player player) {
+        font.drawText(renderer, String.format("position: %d, %d", player.getX(), player.getY()), 16, 16);
+        font.drawText(renderer, String.format("velocity: %d, %d", player.getVelocityX(), player.getVelocityY()), 16, 24);
+        font.drawText(renderer, String.format("%s %s", player.getState(), player.getFacing()), 16, 32);
     }
 }

@@ -20,12 +20,15 @@ class LevelBuilderTest {
     @Mock
     private ActiveProcessorRegistry registry;
 
+    @Mock
+    private LevelDescriptor descriptor;
+
     @Test
     void shouldBuildLevel() {
-        Level level = new LevelBuilder(registry, 1, new int[Level.WIDTH * Level.HEIGHT]).build();
+        Level level = new LevelBuilder(registry, descriptor, new int[Level.WIDTH * Level.HEIGHT]).build();
 
         assertThat(level).isNotNull();
-        assertThat(level.getNumber()).isEqualTo(1);
+        assertThat(level.getDescriptor()).isEqualTo(descriptor);
     }
 
     @Test
@@ -35,7 +38,7 @@ class LevelBuilderTest {
         ActiveProcessor processor = mock(ActiveProcessor.class);
         when(registry.getProcessor(anyInt())).thenReturn(processor);
 
-        LevelBuilder builder = new LevelBuilder(registry, 1, data);
+        LevelBuilder builder = new LevelBuilder(registry, descriptor, data);
         Level level = builder.build();
 
         assertThat(level).isNotNull();
@@ -45,8 +48,9 @@ class LevelBuilderTest {
 
     @Test
     void shouldAddActive() {
-        Active active = new Active(0, 0, 0, 0) {};
-        Level level = new LevelBuilder(registry, 1, new int[Level.WIDTH * Level.HEIGHT]).add(active).build();
+        Active active = new Active(0, 0, 0, 0) {
+        };
+        Level level = new LevelBuilder(registry, descriptor, new int[Level.WIDTH * Level.HEIGHT]).add(active).build();
 
         assertThat(level).isNotNull();
         assertThat(level.getActives()).containsExactly(active);
@@ -62,7 +66,7 @@ class LevelBuilderTest {
 
         data[address + offset] = 0x1;
 
-        Level level = new LevelBuilder(registry, 1, data)
+        Level level = new LevelBuilder(registry, descriptor, data)
                 .replaceTile(address, offset)
                 .build();
 
@@ -74,7 +78,7 @@ class LevelBuilderTest {
         int[] data = new int[Level.WIDTH * Level.HEIGHT];
         Arrays.fill(data, 0x23);
 
-        LevelBuilder builder = new LevelBuilder(registry, 1, data);
+        LevelBuilder builder = new LevelBuilder(registry, descriptor, data);
 
         assertThat(builder.getTileId(10)).isEqualTo(0x23);
     }

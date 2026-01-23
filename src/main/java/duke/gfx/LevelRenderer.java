@@ -13,8 +13,12 @@ public class LevelRenderer {
 
     public LevelRenderer(AssetManager assets, Level level) {
         this.assets = assets;
-        this.level = level;
 
+        setLevel(level);
+    }
+
+    public void setLevel(Level level) {
+        this.level = level;
         flasher = 0;
     }
 
@@ -26,7 +30,7 @@ public class LevelRenderer {
     }
 
     private void drawBackdrop(Renderer renderer) {
-        Sprite background = assets.getBackdrop(level.getBackdrop());
+        Sprite background = assets.getBackdrop(level.getDescriptor().backdrop());
         renderer.draw(background, TILE_SIZE, TILE_SIZE);
     }
 

@@ -3,6 +3,7 @@ package duke.gfx;
 import duke.Renderer;
 import duke.level.Level;
 import duke.resources.AssetManager;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -34,10 +35,15 @@ class LevelRendererTest {
     @InjectMocks
     private LevelRenderer levelRenderer;
 
+    @BeforeEach
+    void setup() {
+        when(level.getDescriptor()).thenReturn(mock());
+    }
+
     @Test
     void shouldDrawBackdrop() {
         Sprite backdrop = new Sprite(0, 0);
-        when(assets.getBackdrop(level.getBackdrop())).thenReturn(backdrop);
+        when(assets.getBackdrop(level.getDescriptor().backdrop())).thenReturn(backdrop);
 
         levelRenderer.render(renderer, viewport);
 

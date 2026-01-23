@@ -143,4 +143,9 @@ public class ActiveManager {
     List<Active> getSpawns() {
         return spawns;
     }
+
+    public void reset() {
+        actives.clear();
+        spawns.clear();
+    }
 }

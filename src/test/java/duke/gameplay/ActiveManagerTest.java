@@ -231,6 +231,17 @@ class ActiveManagerTest {
         verify(enemyFire).destroy();
     }
 
+    @Test
+    void shouldReset() {
+        manager.getActives().add(mock());
+        manager.getSpawns().add(mock());
+
+        manager.reset();
+
+        assertThat(manager.getActives()).isEmpty();
+        assertThat(manager.getSpawns()).isEmpty();
+    }
+
     private static abstract class InteractableActive extends Active implements Interactable {
         private InteractableActive() {
             super(0, 0, 0, 0);

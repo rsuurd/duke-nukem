@@ -3,6 +3,7 @@ package duke.resources;
 import duke.gfx.Sprite;
 import duke.level.Level;
 import duke.level.LevelBuilder;
+import duke.level.LevelDescriptor;
 import duke.level.processors.ActiveProcessorRegistry;
 import duke.sfx.Sound;
 
@@ -92,13 +93,13 @@ public class AssetManager {
         );
     }
 
-    public Level getLevel(int number) {
-        int[] data = resourceLoader.getLevelLoader().readLevel(number);
+    public Level getLevel(LevelDescriptor descriptor) {
+        int[] data = resourceLoader.getLevelLoader().readLevel(descriptor.number());
 
         // TODO grab from context?
         ActiveProcessorRegistry registry = ActiveProcessorRegistry.createDefault();
 
-        return new LevelBuilder(registry, number, data).build();
+        return new LevelBuilder(registry, descriptor, data).build();
     }
 
     public List<Sound> getSounds() {

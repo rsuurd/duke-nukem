@@ -97,4 +97,13 @@ class BoltManagerTest {
 
         verifyNoInteractions(spriteRenderer);
     }
+
+    @Test
+    void shouldReset() {
+        manager.spawn(mock());
+
+        manager.reset();
+
+        assertThat(manager.countBolts()).isEqualTo(0);
+    }
 }

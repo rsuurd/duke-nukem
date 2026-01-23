@@ -16,12 +16,14 @@ public class GameplayContext implements WorldQuery {
 
     public GameplayContext(Player player, Level level, BoltManager boltManager, ActiveManager activeManager, SoundManager soundManager, ScoreManager scoreManager, BonusTracker bonusTracker) {
         this.player = player;
-        this.level = level;
+
         this.boltManager = boltManager;
         this.activeManager = activeManager;
         this.soundManager = soundManager;
         this.scoreManager = scoreManager;
         this.bonusTracker = bonusTracker;
+
+        this.level = level;
     }
 
     public Player getPlayer() {
@@ -68,5 +70,20 @@ public class GameplayContext implements WorldQuery {
         }
 
         return false;
+    }
+
+    public void switchLevel(Level level) {
+        this.level = level;
+
+        activeManager.reset();
+        boltManager.reset();
+//        bonusTracker.reset();
+
+        level.getActives().forEach(active -> activeManager.spawn(active));
+
+        player.setX(level.getPlayerStartX());
+        player.setY(level.getPlayerStartY());
+        player.enableControls();
+        player.getHealth().grantInvulnerability();
     }
 }

@@ -2,6 +2,7 @@ package duke.resources;
 
 import duke.gfx.Sprite;
 import duke.level.Level;
+import duke.level.LevelDescriptor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -97,9 +98,11 @@ class AssetManagerTest {
 
     @Test
     void shouldLoadLevel() {
+        LevelDescriptor descriptor = mock();
+        when(descriptor.number()).thenReturn(1);
         when(levelLoader.readLevel(anyInt())).thenReturn(new int[11520]);
 
-        Level level = assetManager.getLevel(1);
+        Level level = assetManager.getLevel(descriptor);
 
         assertThat(level).isNotNull();
         verify(levelLoader).readLevel(1);

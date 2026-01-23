@@ -14,15 +14,14 @@ public class LevelBuilder {
 
     private ActiveProcessorRegistry registry;
 
-    private int number;
+    private LevelDescriptor descriptor;
     private int[] data;
-    private int backdrop;
     private int playerStart;
     private List<Active> actives;
 
-    public LevelBuilder(ActiveProcessorRegistry registry, int number, int[] data) {
+    public LevelBuilder(ActiveProcessorRegistry registry, LevelDescriptor descriptor, int[] data) {
         this.registry = registry;
-        this.number = number;
+        this.descriptor = descriptor;
         this.data = data;
 
         actives = new ArrayList<>();
@@ -50,8 +49,6 @@ public class LevelBuilder {
     }
 
     public Level build() {
-        determineBackdrop();
-
         for (int i = 0; i < data.length; i++) {
             int tileId = data[i];
 
@@ -61,14 +58,6 @@ public class LevelBuilder {
             }
         }
 
-        // post process: associate door actives with locks so we dont have to search
-
-        return new Level(number, data, backdrop, playerStart, actives);
-    }
-
-    private void determineBackdrop() {
-        // backdrops are hardcoded depending on level number
-
-        this.backdrop = 0;
+        return new Level(descriptor, data, playerStart, actives);
     }
 }

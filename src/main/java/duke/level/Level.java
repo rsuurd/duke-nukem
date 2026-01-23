@@ -17,27 +17,27 @@ public class Level {
     public static final int WIDTH = 128;
     public static final int HEIGHT = 90;
 
-    private int number;
+    private LevelDescriptor descriptor;
     private int[] tiles;
-    private int backdrop;
     private int playerStart;
 
     private List<Active> actives;
 
-    public Level(int number, int[] tiles, int backdrop, int playerStart, List<Active> actives) {
+    private boolean exited;
+
+    public Level(LevelDescriptor descriptor, int[] tiles, int playerStart, List<Active> actives) {
         if (tiles.length != WIDTH * HEIGHT) {
             throw new IllegalArgumentException("Unexpected level size");
         }
 
-        this.number = number;
+        this.descriptor = descriptor;
         this.tiles = tiles;
-        this.backdrop = backdrop;
         this.playerStart = playerStart;
         this.actives = actives;
     }
 
-    public int getNumber() {
-        return number;
+    public LevelDescriptor getDescriptor() {
+        return descriptor;
     }
 
     public int getPlayerStartX() {
@@ -70,10 +70,6 @@ public class Level {
         return row >= 0 && row < HEIGHT && col >= 0 && col < WIDTH;
     }
 
-    public int getBackdrop() {
-        return backdrop;
-    }
-
     public boolean isSolid(int row, int col) {
         int tileId = getTile(row, col);
 
@@ -90,5 +86,13 @@ public class Level {
 
     public static boolean isSolid(int tileId) {
         return (tileId >= SOLIDS) && (tileId < ACTIVE);
+    }
+
+    public void exit() {
+        exited = true;
+    }
+
+    public boolean isExited() {
+        return exited;
     }
 }

@@ -7,9 +7,12 @@ import duke.gameplay.GameplayContext;
 import duke.gameplay.GameplayContextFixture;
 import duke.gameplay.Layer;
 import duke.gameplay.player.Player;
-import duke.gameplay.player.PlayerHealth;
-import duke.gfx.*;
+import duke.gfx.Hud;
+import duke.gfx.LevelRenderer;
+import duke.gfx.SpriteRenderer;
+import duke.gfx.Viewport;
 import duke.level.Level;
+import duke.level.LevelManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,13 +24,13 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class GameplayStateTest {
     @Mock
-    private Viewport viewport;
+    private LevelManager levelManager;
     @Mock
     private LevelRenderer levelRenderer;
     @Mock
-    private Hud hud;
+    private Viewport viewport;
     @Mock
-    private Font font;
+    private Hud hud;
     @Mock
     private SpriteRenderer spriteRenderer;
     @Mock
@@ -38,39 +41,32 @@ class GameplayStateTest {
 
     private GameplayState state;
 
-    private Level level;
-    private Player player;
-
     @BeforeEach
     void setUp() {
         gameContext = GameContextFixture.create();
-        gameplayContext = GameplayContextFixture.create();
+        gameplayContext = spy(GameplayContextFixture.create());
 
-        state = new GameplayState(viewport, levelRenderer, hud, font, spriteRenderer, collision, gameplayContext);
-
-        player = gameplayContext.getPlayer();
-        level = gameplayContext.getLevel();
+        state = new GameplayState(levelManager, levelRenderer, viewport, hud, spriteRenderer, collision, gameplayContext);
     }
 
     @Test
-    void shouldInitializePlayerOnStart() {
-        PlayerHealth health = mock();
-        when(gameplayContext.getPlayer().getHealth()).thenReturn(health);
-        when(level.getPlayerStartX()).thenReturn(16);
-        when(level.getPlayerStartY()).thenReturn(16);
+    void shouldSwitchLevelOnStart() {
+        Level level = mock();
+        when(levelManager.getNextLevel()).thenReturn(level);
+        when(gameplayContext.getPlayer().getHealth()).thenReturn(mock());
 
         state.start(gameContext);
 
-        verify(player).setX(16);
-        verify(player).setY(16);
-        verify(player.getHealth()).grantInvulnerability();
-        verify(player).enableControls();
+        verify(gameplayContext).switchLevel(level);
+        verify(levelRenderer).setLevel(level);
+        verify(viewport).update(anyInt(), anyInt(), eq(true));
     }
 
     @Test
     void shouldUpdatePlayer() {
         state.update(gameContext);
 
+        Player player = gameplayContext.getPlayer();
         verify(player).processInput(gameContext.getKeyHandler().getInput());
         verify(player).update(gameplayContext);
         verify(collision).resolve(player, gameplayContext);
@@ -81,6 +77,7 @@ class GameplayStateTest {
     void shouldUpdateViewport() {
         state.update(gameContext);
 
+        Player player = gameplayContext.getPlayer();
         verify(viewport).update(player.getX(), player.getY(), player.isGrounded());
     }
 
@@ -97,6 +94,7 @@ class GameplayStateTest {
 
         state.render(gameContext);
 
+        Player player = gameplayContext.getPlayer();
         verify(levelRenderer).render(gameContext.getRenderer(), viewport);
         verify(gameplayContext.getActiveManager()).render(gameContext.getRenderer(), Layer.BACKGROUND);
         verify(spriteRenderer).render(gameContext.getRenderer(), player, player.getX(), player.getY());

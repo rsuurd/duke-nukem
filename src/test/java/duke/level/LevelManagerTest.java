@@ -1,0 +1,32 @@
+package duke.level;
+
+import duke.DukeNukemException;
+import duke.resources.AssetManager;
+import org.junit.jupiter.api.Test;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+
+class LevelManagerTest {
+    @Test
+    void shouldGetNextLevel() {
+        AssetManager assetManager = mock();
+        LevelDescriptor level1 = mock();
+        LevelManager manager = new LevelManager(assetManager, List.of(level1));
+
+        manager.getNextLevel();
+
+        verify(assetManager).getLevel(level1);
+    }
+
+    @Test
+    void shouldFailWhenOutOfLevels() {
+        AssetManager assetManager = mock();
+        LevelManager manager = new LevelManager(assetManager, List.of());
+
+        assertThatThrownBy(manager::getNextLevel).isInstanceOf(DukeNukemException.class).hasMessage("No more levels to beat");
+    }
+}

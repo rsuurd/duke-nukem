@@ -8,25 +8,26 @@ import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
 
 class LevelTest {
     @Test
     void shouldRejectIncorrectSize() {
         assertThatThrownBy(() ->
-                new Level(0, new int[0], 0, 0, Collections.emptyList())
+                new Level(mock(), new int[0], 0, Collections.emptyList())
         ).isInstanceOf(IllegalArgumentException.class).hasMessage("Unexpected level size");
     }
 
     @Test
     void shouldResolveTiles() {
-        Level level = new Level(0, new int[Level.WIDTH * Level.HEIGHT], 0, 0, Collections.emptyList());
+        Level level = new Level(mock(), new int[Level.WIDTH * Level.HEIGHT], 0, Collections.emptyList());
 
         assertThat(level.getTile(0, 0)).isEqualTo(0);
     }
 
     @Test
     void shouldResolveDefaultTile() {
-        Level level = new Level(0, new int[Level.WIDTH * Level.HEIGHT], 0, 0, Collections.emptyList());
+        Level level = new Level(mock(), new int[Level.WIDTH * Level.HEIGHT], 0, Collections.emptyList());
 
         assertThat(level.getTile(-1, 0)).isEqualTo(0);
         assertThat(level.getTile(0, -1)).isEqualTo(0);
@@ -36,7 +37,7 @@ class LevelTest {
 
     @Test
     void shouldGetPlayerStartLocation() {
-        Level level = new Level(0, new int[Level.WIDTH * 90], 0, 562, Collections.emptyList());
+        Level level = new Level(mock(), new int[Level.WIDTH * 90], 562, Collections.emptyList());
 
         assertThat(level.getPlayerStartX()).isEqualTo(800);
         assertThat(level.getPlayerStartY()).isEqualTo(64);
@@ -48,7 +49,7 @@ class LevelTest {
         tiles[0] = Level.BACKGROUNDS;
         tiles[1] = Level.SOLIDS;
 
-        Level level = new Level(0, tiles, 0, 562, Collections.emptyList());
+        Level level = new Level(mock(), tiles, 562, Collections.emptyList());
 
         assertThat(level.isSolid(0, 0)).isFalse();
         assertThat(level.isSolid(0, 1)).isTrue();
@@ -56,10 +57,11 @@ class LevelTest {
 
     @Test
     void shouldNotAllowAddingActivesToLevel() {
-        Level level = new Level(0, new int[Level.WIDTH * 90], 0, 0, new ArrayList<>());
+        Level level = new Level(mock(), new int[Level.WIDTH * 90], 0, new ArrayList<>());
 
         assertThatThrownBy(() ->
-                level.getActives().add(new Active(0, 0, 0, 0) {})
+                level.getActives().add(new Active(0, 0, 0, 0) {
+                })
         ).isInstanceOf(UnsupportedOperationException.class);
     }
 
@@ -71,7 +73,7 @@ class LevelTest {
 
     @Test
     void shouldSetTile() {
-        Level level = new Level(0, new int[Level.WIDTH * Level.HEIGHT], 0, 0, Collections.emptyList());
+        Level level = new Level(mock(), new int[Level.WIDTH * Level.HEIGHT], 0, Collections.emptyList());
 
         level.setTile(3, 3, 1);
 
@@ -80,9 +82,20 @@ class LevelTest {
 
     @Test
     void shouldIgnoreInvalidLocationWhenSettingTile() {
-        Level level = new Level(0, new int[Level.WIDTH * Level.HEIGHT], 0, 0, Collections.emptyList());
+        Level level = new Level(mock(), new int[Level.WIDTH * Level.HEIGHT], 0, Collections.emptyList());
 
         level.setTile(-1, -1, 1);
         level.setTile(Level.HEIGHT, Level.WIDTH, 1);
+    }
+
+    @Test
+    void shouldExitLevel() {
+        Level level = new Level(mock(), new int[Level.WIDTH * Level.HEIGHT], 0, Collections.emptyList());
+
+        assertThat(level.isExited()).isFalse();
+
+        level.exit();
+
+        assertThat(level.isExited()).isTrue();
     }
 }
