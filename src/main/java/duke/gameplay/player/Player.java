@@ -13,6 +13,7 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     private boolean bumped;
     private boolean landed;
 
+    private boolean controllable;
     private boolean jumpReady;
     private int hangTimeLeft;
     private boolean moving;
@@ -35,6 +36,7 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
         this.facing = facing;
         this.state = state;
 
+        enableControls();
         jumpReady = true;
 
         this.weapon = weapon;
@@ -47,6 +49,8 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     }
 
     public void processInput(KeyHandler.Input input) {
+        if (!controllable) return;
+
         if (input.left()) {
             move(Facing.LEFT);
         }
@@ -214,6 +218,23 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
 
     public boolean isUsing() {
         return using;
+    }
+
+    public void disableControls() {
+        controllable = false;
+        moving = false;
+        weapon.setTriggered(false);
+        using = false;
+        setVelocityX(0);
+        setVelocityY(0);
+    }
+
+    public void enableControls() {
+        controllable = true;
+    }
+
+    public boolean isControllable() {
+        return controllable;
     }
 
     private static final int WIDTH = 16;

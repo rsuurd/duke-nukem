@@ -34,7 +34,8 @@ public class ActiveProcessorRegistry {
                 new WallCrawlerProcessor(),
                 new BouncingMineProcessor(),
                 new TankbotProcessor(),
-                new Ed209Processor()
+                new Ed209Processor(),
+                new ExitProcessor()
         ));
     }
 

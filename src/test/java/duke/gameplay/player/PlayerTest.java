@@ -19,8 +19,7 @@ import static duke.gameplay.player.Player.SPEED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.same;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class PlayerTest {
@@ -294,6 +293,36 @@ class PlayerTest {
         player.postMovement(context);
 
         verify(feedback).provideFeedback(same(context), same(player), anyBoolean(), anyBoolean(), anyBoolean());
+    }
+
+    @Test
+    void shouldDisableControls() {
+        Player player = create(State.STANDING, Facing.LEFT);
+        player.setVelocityX(4);
+        player.setVelocityY(4);
+
+        player.disableControls();
+        player.processInput(input);
+
+        verifyNoInteractions(input);
+        verify(weapon).setTriggered(false);
+        assertThat(player.getVelocityX()).isEqualTo(0);
+        assertThat(player.getVelocityY()).isEqualTo(0);
+    }
+
+    @Test
+    void shouldEnableControls() {
+        Player player = create(State.STANDING, Facing.LEFT);
+        player.disableControls();
+
+        player.enableControls();
+        player.processInput(input);
+
+        verify(input, atLeastOnce()).left();
+        verify(input, atLeastOnce()).right();
+        verify(input).fire();
+        verify(input).using();
+        verify(input).jump();
     }
 
     private Player create(State state, Facing facing) {

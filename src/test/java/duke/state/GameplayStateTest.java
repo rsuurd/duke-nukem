@@ -7,6 +7,7 @@ import duke.gameplay.GameplayContext;
 import duke.gameplay.GameplayContextFixture;
 import duke.gameplay.Layer;
 import duke.gameplay.player.Player;
+import duke.gameplay.player.PlayerHealth;
 import duke.gfx.*;
 import duke.level.Level;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,8 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class GameplayStateTest {
@@ -53,7 +53,9 @@ class GameplayStateTest {
     }
 
     @Test
-    void shouldMovePlayerToStartPosition() {
+    void shouldInitializePlayerOnStart() {
+        PlayerHealth health = mock();
+        when(gameplayContext.getPlayer().getHealth()).thenReturn(health);
         when(level.getPlayerStartX()).thenReturn(16);
         when(level.getPlayerStartY()).thenReturn(16);
 
@@ -61,6 +63,8 @@ class GameplayStateTest {
 
         verify(player).setX(16);
         verify(player).setY(16);
+        verify(player.getHealth()).grantInvulnerability();
+        verify(player).enableControls();
     }
 
     @Test

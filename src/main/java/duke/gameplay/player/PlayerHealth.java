@@ -43,8 +43,12 @@ public class PlayerHealth extends Health {
 
         super.takeDamage(amount);
 
-        invulnerability = INVULNERABILITY_FRAMES;
+        grantInvulnerability();
         damageTaken = true;
+    }
+
+    public void grantInvulnerability() {
+        invulnerability = INVULNERABILITY_FRAMES;
     }
 
     public static final int MAX_HEALTH = 8;

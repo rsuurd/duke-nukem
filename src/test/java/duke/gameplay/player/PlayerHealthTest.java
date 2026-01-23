@@ -60,4 +60,14 @@ class PlayerHealthTest {
 
         assertThat(invulnerable.isDamageTaken()).isFalse();
     }
+
+    @Test
+    void shouldGrantInvulnerability() {
+        PlayerHealth health = new PlayerHealth();
+
+        health.grantInvulnerability();
+
+        assertThat(health.isInvulnerable()).isTrue();
+        assertThat(health.getInvulnerability()).isEqualTo(INVULNERABILITY_FRAMES);
+    }
 }

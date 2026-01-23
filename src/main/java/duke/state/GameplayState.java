@@ -59,6 +59,8 @@ public class GameplayState implements GameState {
 
         player.setX(level.getPlayerStartX());
         player.setY(level.getPlayerStartY());
+        player.enableControls();
+        player.getHealth().grantInvulnerability();
     }
 
     @Override

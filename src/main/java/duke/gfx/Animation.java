@@ -37,7 +37,7 @@ public class Animation {
         if (descriptor.getType() == AnimationDescriptor.Type.LOOP) {
             currentFrame = (currentFrame + direction.step() + descriptor.getFrames()) % descriptor.getFrames();
             timer = 0;
-        } else if (currentFrame < lastFrame()) {
+        } else if (currentFrame != lastFrame()) {
             currentFrame += direction.step();
             timer = 0;
         }
