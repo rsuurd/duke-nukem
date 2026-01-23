@@ -3,14 +3,19 @@ package duke.gameplay.active;
 import duke.gameplay.GameplayContext;
 import duke.gameplay.GameplayContextFixture;
 import duke.gfx.Animation;
+import duke.level.LevelDescriptor;
 import duke.sfx.Sfx;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.stream.Stream;
 
 import static duke.gameplay.Layer.BACKGROUND;
 import static duke.gameplay.Layer.FOREGROUND;
@@ -59,15 +64,22 @@ class ExitTest {
         assertThat(exit.canInteract(context.getPlayer())).isFalse();
     }
 
-    @Test
-    void shouldOpenOnInteractRequested() {
+    @ParameterizedTest
+    @MethodSource("descriptors")
+    void shouldOpenOnInteractRequested(int level, Sfx expectedSfx) {
+        when(context.getLevel().getDescriptor()).thenReturn(new LevelDescriptor(level, 1, null));
+
         exit = createExit(Exit.State.CLOSED);
 
         exit.interactRequested(context);
 
         assertThat(exit.getState()).isEqualTo(Exit.State.OPENING);
         verify(context.getPlayer()).disableControls();
-        verify(context.getSoundManager()).play(Sfx.LEVEL_DONE);
+        verify(context.getSoundManager()).play(expectedSfx);
+    }
+
+    private static Stream<Arguments> descriptors() {
+        return Stream.of(Arguments.of(1, Sfx.LEVEL_DONE), Arguments.of(2, Sfx.DOOR_SOUND));
     }
 
     @Test

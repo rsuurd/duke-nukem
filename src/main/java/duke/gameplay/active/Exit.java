@@ -32,7 +32,8 @@ public class Exit extends Active implements Updatable, Interactable, SpriteRende
     public void interactRequested(GameplayContext context) {
         state = State.OPENING;
         context.getPlayer().disableControls();
-        context.getSoundManager().play(Sfx.LEVEL_DONE);
+        Sfx sfx = context.getLevel().getDescriptor().isIntermission() ? Sfx.DOOR_SOUND : Sfx.LEVEL_DONE;
+        context.getSoundManager().play(sfx);
     }
 
     @Override

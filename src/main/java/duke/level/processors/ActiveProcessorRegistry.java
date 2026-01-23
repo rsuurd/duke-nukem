@@ -35,7 +35,8 @@ public class ActiveProcessorRegistry {
                 new BouncingMineProcessor(),
                 new TankbotProcessor(),
                 new Ed209Processor(),
-                new ExitProcessor()
+                new ExitProcessor(),
+                new NotesProcessor()
         ));
     }
 
