@@ -89,13 +89,13 @@ class LevelTest {
     }
 
     @Test
-    void shouldExitLevel() {
+    void shouldCompleteLevel() {
         Level level = new Level(mock(), new int[Level.WIDTH * Level.HEIGHT], 0, Collections.emptyList());
 
-        assertThat(level.isExited()).isFalse();
+        assertThat(level.isCompleted()).isFalse();
 
-        level.exit();
+        level.complete();
 
-        assertThat(level.isExited()).isTrue();
+        assertThat(level.isCompleted()).isTrue();
     }
 }

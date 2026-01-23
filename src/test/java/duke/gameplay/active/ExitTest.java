@@ -128,6 +128,6 @@ class ExitTest {
 
         exit.update(context);
 
-        verify(context.getLevel()).exit();
+        verify(context.getLevel()).complete();
     }
 }

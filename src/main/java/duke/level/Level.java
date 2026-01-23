@@ -23,7 +23,7 @@ public class Level {
 
     private List<Active> actives;
 
-    private boolean exited;
+    private boolean completed;
 
     public Level(LevelDescriptor descriptor, int[] tiles, int playerStart, List<Active> actives) {
         if (tiles.length != WIDTH * HEIGHT) {
@@ -88,11 +88,11 @@ public class Level {
         return (tileId >= SOLIDS) && (tileId < ACTIVE);
     }
 
-    public void exit() {
-        exited = true;
+    public void complete() {
+        completed = true;
     }
 
-    public boolean isExited() {
-        return exited;
+    public boolean isCompleted() {
+        return completed;
     }
 }

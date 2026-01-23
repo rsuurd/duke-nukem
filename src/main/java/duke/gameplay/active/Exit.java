@@ -62,7 +62,7 @@ public class Exit extends Active implements Updatable, Interactable, SpriteRende
     }
 
     private void exit(GameplayContext context) {
-        context.getLevel().exit();
+        context.getLevel().complete();
     }
 
     @Override

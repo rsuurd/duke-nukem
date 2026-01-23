@@ -59,7 +59,23 @@ class GameplayStateTest {
 
         verify(gameplayContext).switchLevel(level);
         verify(levelRenderer).setLevel(level);
-        verify(viewport).update(anyInt(), anyInt(), eq(true));
+        verify(viewport).center(anyInt(), anyInt());
+        verify(gameplayContext.getPlayer().getHealth()).grantInvulnerability();
+    }
+
+    @Test
+    void shouldSwitchLevelOnComplete() {
+        Level next = mock();
+        when(gameplayContext.getLevel().isCompleted()).thenReturn(true);
+        when(levelManager.getNextLevel()).thenReturn(next);
+        when(gameplayContext.getPlayer().getHealth()).thenReturn(mock());
+
+        state.update(gameContext);
+
+        verify(gameplayContext).switchLevel(next);
+        verify(levelRenderer).setLevel(next);
+        verify(viewport).center(anyInt(), anyInt());
+        verify(gameplayContext.getPlayer().getHealth()).grantInvulnerability();
     }
 
     @Test

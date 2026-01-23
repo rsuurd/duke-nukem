@@ -62,7 +62,7 @@ public class GameplayState implements GameState {
     private void switchLevel(Level level, GameplayContext context) {
         context.switchLevel(level);
         levelRenderer.setLevel(level);
-        viewport.update(context.getPlayer().getX(), context.getPlayer().getY(), true);
+        viewport.center(context.getPlayer().getX(), context.getPlayer().getY());
     }
 
     @Override
@@ -71,7 +71,7 @@ public class GameplayState implements GameState {
         context.getBoltManager().update(context);
         context.getActiveManager().update(context);
 
-        if (context.getLevel().isExited()) {
+        if (context.getLevel().isCompleted()) {
             switchLevel(levelManager.getNextLevel(), context);
         }
     }

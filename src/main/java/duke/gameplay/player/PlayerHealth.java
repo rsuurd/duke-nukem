@@ -51,6 +51,6 @@ public class PlayerHealth extends Health {
         invulnerability = INVULNERABILITY_FRAMES;
     }
 
-    public static final int MAX_HEALTH = 8;
+    public static final int MAX_HEALTH = 9;
     static final int INVULNERABILITY_FRAMES = 16;
 }

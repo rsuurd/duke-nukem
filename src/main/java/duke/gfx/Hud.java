@@ -64,14 +64,14 @@ public class Hud {
         renderer.draw(assets.getBorder().get(14), 224, 40);
         renderer.draw(assets.getBorder().get(8), 240, 40);
 
-        int healthLabelIndex = ((health == 0) && (frame == 0)) ? 42 : 36;
+        int healthLabelIndex = ((health == 1) && (frame == 0)) ? 42 : 36;
         renderer.draw(assets.getBorder().get(healthLabelIndex), 256, 40);
         renderer.draw(assets.getBorder().get(healthLabelIndex + 1), 272, 40);
 
         renderer.draw(assets.getBorder().get(8), 288, 40);
         renderer.draw(assets.getBorder().get(15), 304, 40);
 
-        for (int i = 0; i < health; i++) {
+        for (int i = 0; i < health - 1; i++) {
             renderer.draw(assets.getObjects().get(61), 240 + (i * 8), 60);
         }
     }
