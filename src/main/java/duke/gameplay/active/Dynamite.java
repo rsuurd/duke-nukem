@@ -11,7 +11,7 @@ import duke.sfx.Sfx;
 
 import static duke.gfx.SpriteDescriptor.ANIM;
 
-public class Dynamite extends Active implements Updatable, SpriteRenderable {
+public class Dynamite extends Active implements Updatable, SpriteRenderable, Wakeable {
     private Animation animation;
 
     private int timer;
@@ -77,15 +77,6 @@ public class Dynamite extends Active implements Updatable, SpriteRenderable {
 
         private boolean isGap(WorldQuery query) {
             return !query.isSolid(getRow() + 1, getCol());
-        }
-
-        @Override
-        public boolean isAwake() {
-            return true;
-        }
-
-        @Override
-        public void wakeUp() {
         }
 
         static final int POWER = 5;

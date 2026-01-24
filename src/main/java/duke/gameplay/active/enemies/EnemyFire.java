@@ -1,6 +1,7 @@
 package duke.gameplay.active.enemies;
 
 import duke.gameplay.*;
+import duke.gameplay.active.Wakeable;
 import duke.gfx.Animation;
 import duke.gfx.AnimationDescriptor;
 import duke.gfx.SpriteDescriptor;
@@ -12,7 +13,7 @@ import java.util.Map;
 import static duke.gfx.SpriteDescriptor.OBJECTS;
 import static duke.level.Level.HALF_TILE_SIZE;
 
-public class EnemyFire extends Active implements Updatable, Physics, Damaging, SpriteRenderable, Collidable {
+public class EnemyFire extends Active implements Updatable, Physics, Damaging, SpriteRenderable, Collidable, Wakeable {
     private Animation animation;
     private SpriteDescriptor descriptor;
 

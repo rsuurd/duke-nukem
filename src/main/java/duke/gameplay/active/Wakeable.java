@@ -1,7 +1,9 @@
 package duke.gameplay.active;
 
 public interface Wakeable {
-    boolean isAwake();
+    default boolean isAwake() {
+        return true;
+    }
 
-    void wakeUp();
+    default void wakeUp() {}
 }

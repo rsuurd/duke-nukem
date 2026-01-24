@@ -9,6 +9,8 @@ import java.util.Map;
 public class Hints {
     private EnumMap<Type, String> hints;
 
+    private boolean enabled;
+
     public Hints() {
         hints = new EnumMap<>(Map.of(
                 Type.NOTES, MESSAGE_TIP,
@@ -19,13 +21,21 @@ public class Hints {
                 Type.SODA, SODA_TIP,
                 Type.TURKEY, TURKEY_TIP
         ));
+
+        enabled = true;
     }
 
-    Hints(EnumMap<Type, String> hints) {
-        this.hints = hints;
+    public void toggle() {
+        enabled = !enabled;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
     }
 
     public void showHint(Type type, GameplayContext context) {
+        if (!enabled) return;
+
         String hint = hints.remove(type);
 
         if (hint != null) {

@@ -31,14 +31,6 @@ public class Effect extends Active implements Updatable, SpriteRenderable, Wakea
     }
 
     @Override
-    public boolean isAwake() {
-        return true;
-    }
-
-    @Override
-    public void wakeUp() {}
-
-    @Override
     public SpriteDescriptor getSpriteDescriptor() {
         return renderable.getSpriteDescriptor();
     }

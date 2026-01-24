@@ -13,6 +13,7 @@ import duke.sfx.Sfx;
 import static duke.level.Level.HALF_TILE_SIZE;
 import static duke.level.Level.TILE_SIZE;
 
+// TODO should probably be Wakeable
 public class Ed209 extends Enemy implements Renderable, Physics, Collidable {
     private boolean grounded;
     private boolean shooting;
