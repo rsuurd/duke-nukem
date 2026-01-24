@@ -26,13 +26,9 @@ public class LevelManager {
     }
 
     // TODO move to properties file later
-    private static final String SECRET_TIP = "Secret tip: ";
-    private static final String PRESS_ENTER = "      Press ENTER:";
-    public static final String NOTES_HINT = SECRET_TIP + "Press the UP\nARROW to read the notes\n\n" + PRESS_ENTER;
-
     private static final List<LevelDescriptor> SHRAPNEL_CITY = List.of(
             new LevelDescriptor(1, 0),
-            new LevelDescriptor(2, 0, NOTES_HINT),
+            new LevelDescriptor(2, 0, "You are entering the\nnext level. Now is a\ngood time to SAVE your\ngame."),
             new LevelDescriptor(3, 0)
     );
 }

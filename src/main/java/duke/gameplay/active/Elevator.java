@@ -1,6 +1,7 @@
 package duke.gameplay.active;
 
 import duke.Renderer;
+import duke.dialog.Hints;
 import duke.gameplay.*;
 import duke.gameplay.player.Player;
 import duke.gfx.Renderable;
@@ -38,7 +39,11 @@ public class Elevator extends Active implements Renderable, Solid, Updatable, In
 
     @Override
     public void update(GameplayContext context) {
-        if (!hasOnTop(context.getPlayer())) {
+        boolean onTop = hasOnTop(context.getPlayer());
+
+        if (onTop) {
+            context.getHints().showHint(Hints.Type.ELEVATOR, context);
+        } else {
             moveDown();
         }
     }

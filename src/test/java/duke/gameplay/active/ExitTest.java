@@ -1,5 +1,6 @@
 package duke.gameplay.active;
 
+import duke.dialog.Hints;
 import duke.gameplay.GameplayContext;
 import duke.gameplay.GameplayContextFixture;
 import duke.gfx.Animation;
@@ -141,5 +142,15 @@ class ExitTest {
         exit.update(context);
 
         verify(context.getLevel()).complete();
+    }
+
+    @Test
+    void shouldShowHint() {
+        exit = createExit(Exit.State.CLOSED);
+        when(context.getPlayer().intersects(exit)).thenReturn(true);
+
+        exit.update(context);
+
+        verify(context.getHints()).showHint(Hints.Type.EXIT, context);
     }
 }

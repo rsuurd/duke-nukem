@@ -35,7 +35,7 @@ public class DialogManager {
         Dialog dialog = dialogs.peek();
 
         renderBox(renderer, dialog.x(), dialog.y(), dialog.rows(), dialog.cols());
-        font.drawText(renderer, dialog.message(), dialog.x() + HALF_TILE_SIZE, dialog.y() + TILE_SIZE);
+        font.drawText(renderer, dialog.message(), dialog.x() + HALF_TILE_SIZE, dialog.y() + HALF_TILE_SIZE);
 
         if (dialog.showCursor()) {
             renderCursor(renderer, dialog.x(), dialog.y(), dialog.rows(), dialog.cols());
@@ -70,7 +70,11 @@ public class DialogManager {
     }
 
     private void renderCursor(Renderer renderer, int x, int y, int rows, int cols) {
-        renderer.draw(assets.getObjects().get(85 + tick), x + cols * TILE_SIZE - TILE_SIZE, y + rows * TILE_SIZE - TILE_SIZE);
+        int cursorY = y + (rows - 1) * TILE_SIZE;
+
+        font.drawText(renderer, PRESS_ENTER, x + 48, cursorY);
+
+        renderer.draw(assets.getObjects().get(85 + tick), x + (cols - 1) * TILE_SIZE, cursorY);
 
         tick = (tick + 1) % 4;
     }
@@ -106,4 +110,6 @@ public class DialogManager {
     private static final int RIGHT_BORDER = 23;
     private static final int TOP_BORDER = 24;
     private static final int BOTTOM_BORDER = 25;
+
+    private static final String PRESS_ENTER = "Press ENTER:";
 }

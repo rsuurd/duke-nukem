@@ -1,5 +1,6 @@
 package duke.gameplay.active.items;
 
+import duke.dialog.Hints;
 import duke.gameplay.active.items.behavior.CharacterBehavior;
 import duke.gfx.*;
 import duke.resources.AssetManager;
@@ -41,7 +42,7 @@ public class ItemFactory {
     public static Item createSoda(int x, int y) {
         AnimationDescriptor itemAnimationDescriptor = new AnimationDescriptor(createItemSpriteDescriptor(ANIM, SODA_SPRITE_INDEX), 4, 4);
 
-        return new Soda(x, y, new AnimatedSpriteRenderable(itemAnimationDescriptor), health(1, 200, Sfx.GET_FOOD_ITEM));
+        return new Soda(x, y, new AnimatedSpriteRenderable(itemAnimationDescriptor), health(1, 200, Sfx.GET_FOOD_ITEM, Hints.Type.SODA));
     }
 
     public static Item createFizzingSoda(int x, int y) {
@@ -51,18 +52,18 @@ public class ItemFactory {
     }
 
     public static Item createTurkeyLeg(int x, int y) {
-        return new TurkeyLeg(x, y, new SimpleSpriteRenderable(createItemSpriteDescriptor(TURKEY_LEG_SPRITE_INDEX)), health(1, 100, Sfx.GET_FOOD_ITEM));
+        return new TurkeyLeg(x, y, new SimpleSpriteRenderable(createItemSpriteDescriptor(TURKEY_LEG_SPRITE_INDEX)), health(1, 100, Sfx.GET_FOOD_ITEM, Hints.Type.TURKEY));
     }
 
     public static Item createTurkey(int x, int y) {
-        return new Item(x, y, new SimpleSpriteRenderable(createItemSpriteDescriptor(TURKEY_SPRITE_INDEX)), health(2, 200, Sfx.GET_FOOD_ITEM));
+        return new Item(x, y, new SimpleSpriteRenderable(createItemSpriteDescriptor(TURKEY_SPRITE_INDEX)), health(2, 200, Sfx.GET_FOOD_ITEM, Hints.Type.TURKEY));
     }
 
     public static Item createNuclearMolecule(int x, int y) {
         SpriteDescriptor spriteDescriptor = createItemSpriteDescriptor(NUCLEAR_MOLECULE_SPRITE_INDEX);
         AnimationDescriptor animationDescriptor = new AnimationDescriptor(spriteDescriptor, 9, 1);
 
-        return new Item(x, y, new AnimatedSpriteRenderable(animationDescriptor), health(MAX_HEALTH, 1000, Sfx.GET_POWER_UP));
+        return new Item(x, y, new AnimatedSpriteRenderable(animationDescriptor), health(MAX_HEALTH, 1000, Sfx.GET_POWER_UP, Hints.Type.NUCLEAR_MOLECULE));
     }
 
     public static Item createCharacter(int x, int y, char c) {

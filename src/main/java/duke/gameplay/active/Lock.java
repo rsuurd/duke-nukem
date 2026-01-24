@@ -1,5 +1,7 @@
 package duke.gameplay.active;
 
+import duke.dialog.Dialog;
+import duke.dialog.Hints;
 import duke.gameplay.*;
 import duke.gameplay.active.items.Key;
 import duke.gameplay.player.Player;
@@ -8,6 +10,7 @@ import duke.gfx.AnimationDescriptor;
 import duke.gfx.SpriteDescriptor;
 import duke.gfx.SpriteRenderable;
 import duke.level.Level;
+import duke.sfx.Sfx;
 
 import java.util.List;
 
@@ -32,7 +35,7 @@ public class Lock extends Active implements Updatable, SpriteRenderable, Interac
 
     @Override
     public boolean canInteract(Player player) {
-        return locked && player.intersects(this) && player.getInventory().hasKey(requiredKey);
+        return locked && player.intersects(this);
     }
 
     @Override
@@ -45,11 +48,18 @@ public class Lock extends Active implements Updatable, SpriteRenderable, Interac
                     door.open(context);
                 }
             }
+        } else {
+            context.getSoundManager().play(Sfx.CHEAT_MODE); // TODO verify
+            context.getDialogManager().open(Dialog.hint("Secret tip: You need the\ncorrect key before\nyou can use this lock."));
         }
     }
 
     @Override
     public void update(GameplayContext context) {
+        if (context.getPlayer().intersects(this)) {
+            context.getHints().showHint(Hints.Type.LOCK, context);
+        }
+
         if (locked) {
             animation.tick();
         }

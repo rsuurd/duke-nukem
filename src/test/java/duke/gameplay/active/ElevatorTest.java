@@ -1,5 +1,6 @@
 package duke.gameplay.active;
 
+import duke.dialog.Hints;
 import duke.gameplay.GameplayContext;
 import duke.gameplay.GameplayContextFixture;
 import duke.gameplay.player.Player;
@@ -65,6 +66,15 @@ class ElevatorTest {
         elevator.update(context);
 
         assertThat(elevator.getY()).isEqualTo(160);
+    }
+
+    @Test
+    void shouldShowHint() {
+        setupPlayer(160);
+
+        elevator.update(context);
+
+        verify(context.getHints()).showHint(Hints.Type.ELEVATOR, context);
     }
 
     private void setupPlayer(int x) {

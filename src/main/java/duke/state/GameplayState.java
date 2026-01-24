@@ -2,6 +2,7 @@ package duke.state;
 
 import duke.GameContext;
 import duke.Renderer;
+import duke.dialog.Hints;
 import duke.gameplay.*;
 import duke.gameplay.player.Player;
 import duke.gfx.*;
@@ -41,7 +42,7 @@ public class GameplayState implements GameState {
         ScoreManager scoreManager = new ScoreManager(activeManager);
         BonusTracker bonusTracker = new BonusTracker();
 
-        return new GameplayContext(new Player(), null, boltManager, activeManager, gameContext.getSoundManager(), scoreManager, bonusTracker, gameContext.getDialogManager());
+        return new GameplayContext(new Player(), null, boltManager, activeManager, gameContext.getSoundManager(), scoreManager, bonusTracker, gameContext.getDialogManager(), new Hints());
     }
 
     GameplayState(LevelManager levelManager, LevelRenderer levelRenderer, Viewport viewport, Hud hud, SpriteRenderer spriteRenderer, Collision collision, GameplayContext context) {
@@ -56,7 +57,7 @@ public class GameplayState implements GameState {
 
     @Override
     public void start(GameContext gameContext) {
-        levelManager.getNextLevel();
+//        levelManager.getNextLevel();
         switchLevel(levelManager.getNextLevel(), context);
     }
 

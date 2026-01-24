@@ -1,6 +1,7 @@
 package duke.gameplay.active;
 
 import duke.dialog.Dialog;
+import duke.dialog.Hints;
 import duke.gameplay.GameplayContext;
 import duke.gameplay.GameplayContextFixture;
 import duke.level.LevelDescriptor;
@@ -9,7 +10,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -41,6 +41,16 @@ class NotesTest {
         notes.interactRequested(context);
 
         verify(context.getSoundManager()).play(Sfx.READ_NOTE);
-        verify(context.getDialogManager()).open(Dialog.create("Top secret", true));
+        verify(context.getDialogManager()).open(Dialog.notes("Top secret"));
+    }
+
+    @Test
+    void shouldShowHint() {
+        Notes notes = new Notes(0, 0);
+        when(context.getPlayer().intersects(notes)).thenReturn(true);
+
+        notes.update(context);
+
+        verify(context.getHints()).showHint(Hints.Type.NOTES, context);
     }
 }

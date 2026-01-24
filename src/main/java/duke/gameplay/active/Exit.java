@@ -1,5 +1,6 @@
 package duke.gameplay.active;
 
+import duke.dialog.Hints;
 import duke.gameplay.*;
 import duke.gameplay.player.Player;
 import duke.gfx.Animation;
@@ -38,6 +39,10 @@ public class Exit extends Active implements Updatable, Interactable, SpriteRende
 
     @Override
     public void update(GameplayContext context) {
+        if (canInteract(context.getPlayer())) {
+            context.getHints().showHint(Hints.Type.EXIT, context);
+        }
+
         switch (state) {
             case OPENING -> open();
             case CLOSING -> close();
