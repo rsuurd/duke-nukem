@@ -1,9 +1,11 @@
 package duke.gameplay.active;
 
+import duke.dialog.Dialog;
 import duke.gameplay.GameplayContext;
 import duke.gameplay.Interactable;
 import duke.gameplay.player.Player;
 import duke.gfx.SpriteDescriptor;
+import duke.sfx.Sfx;
 
 import static duke.gfx.SpriteDescriptor.OBJECTS;
 
@@ -19,7 +21,8 @@ public class Notes extends Decoration implements Interactable {
 
     @Override
     public void interactRequested(GameplayContext context) {
-        // show message with text
+        context.getSoundManager().play(Sfx.READ_NOTE);
+        context.getDialogManager().open(Dialog.create(context.getLevel().getDescriptor().hint(), true));
     }
 
     private static final SpriteDescriptor DESCRIPTOR = new SpriteDescriptor(OBJECTS, 123);

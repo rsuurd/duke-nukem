@@ -117,4 +117,15 @@ class GameplayStateTest {
         verify(gameplayContext.getActiveManager()).render(gameContext.getRenderer(), Layer.FOREGROUND);
         verify(hud).render(gameContext.getRenderer(), 2430, player);
     }
+
+    @Test
+    void shouldPauseWhenDialogIsOpen() {
+        when(gameContext.getDialogManager().hasDialog()).thenReturn(true);
+
+        state.update(gameContext);
+
+        verify(gameContext.getDialogManager()).update(gameContext);
+
+        verifyNoInteractions(gameplayContext.getPlayer(), gameplayContext.getActiveManager(), gameplayContext.getBoltManager(), collision, viewport);
+    }
 }

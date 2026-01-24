@@ -41,7 +41,7 @@ public class GameplayState implements GameState {
         ScoreManager scoreManager = new ScoreManager(activeManager);
         BonusTracker bonusTracker = new BonusTracker();
 
-        return new GameplayContext(new Player(), null, boltManager, activeManager, gameContext.getSoundManager(), scoreManager, bonusTracker);
+        return new GameplayContext(new Player(), null, boltManager, activeManager, gameContext.getSoundManager(), scoreManager, bonusTracker, gameContext.getDialogManager());
     }
 
     GameplayState(LevelManager levelManager, LevelRenderer levelRenderer, Viewport viewport, Hud hud, SpriteRenderer spriteRenderer, Collision collision, GameplayContext context) {
@@ -56,6 +56,7 @@ public class GameplayState implements GameState {
 
     @Override
     public void start(GameContext gameContext) {
+        levelManager.getNextLevel();
         switchLevel(levelManager.getNextLevel(), context);
     }
 
@@ -67,6 +68,11 @@ public class GameplayState implements GameState {
 
     @Override
     public void update(GameContext gameContext) {
+        if (gameContext.getDialogManager().hasDialog()) {
+            gameContext.getDialogManager().update(gameContext);
+            return;
+        }
+
         updatePlayer(gameContext.getKeyHandler().getInput());
         context.getBoltManager().update(context);
         context.getActiveManager().update(context);
@@ -96,6 +102,7 @@ public class GameplayState implements GameState {
         context.getActiveManager().render(renderer, Layer.FOREGROUND);
         context.getBoltManager().render(renderer);
         hud.render(renderer, context.getScoreManager().getScore(), context.getPlayer());
+        context.getDialogManager().render(renderer);
     }
 
     private void drawPlayer(Renderer renderer) {

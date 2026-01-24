@@ -1,5 +1,6 @@
 package duke;
 
+import duke.dialog.DialogManager;
 import duke.gfx.EgaPalette;
 import duke.resources.AssetManager;
 import duke.sfx.SoundManager;
@@ -11,13 +12,15 @@ public class GameContext {
     private EgaPalette palette; // maybe combine renderer/palette in Gfx abstraction
     private KeyHandler keyHandler;
     private SoundManager soundManager;
+    private DialogManager dialogManager;
 
-    public GameContext(AssetManager assets, Renderer renderer, EgaPalette palette, KeyHandler keyHandler, SoundManager soundManager) {
+    public GameContext(AssetManager assets, Renderer renderer, EgaPalette palette, KeyHandler keyHandler, SoundManager soundManager, DialogManager dialogManager) {
         this.assets = assets;
         this.renderer = renderer;
         this.palette = palette;
         this.keyHandler = keyHandler;
         this.soundManager = soundManager;
+        this.dialogManager = dialogManager;
     }
 
     public AssetManager getAssets() {
@@ -38,5 +41,9 @@ public class GameContext {
 
     public SoundManager getSoundManager() {
         return soundManager;
+    }
+
+    public DialogManager getDialogManager() {
+        return dialogManager;
     }
 }

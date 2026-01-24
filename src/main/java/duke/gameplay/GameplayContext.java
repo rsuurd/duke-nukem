@@ -1,5 +1,6 @@
 package duke.gameplay;
 
+import duke.dialog.DialogManager;
 import duke.gameplay.player.Player;
 import duke.level.Level;
 import duke.sfx.SoundManager;
@@ -13,8 +14,10 @@ public class GameplayContext implements WorldQuery {
     private SoundManager soundManager;
     private ScoreManager scoreManager;
     private BonusTracker bonusTracker;
+    private DialogManager dialogManager;
 
-    public GameplayContext(Player player, Level level, BoltManager boltManager, ActiveManager activeManager, SoundManager soundManager, ScoreManager scoreManager, BonusTracker bonusTracker) {
+    public GameplayContext(Player player, Level level, BoltManager boltManager, ActiveManager activeManager,
+                           SoundManager soundManager, ScoreManager scoreManager, BonusTracker bonusTracker, DialogManager dialogManager) {
         this.player = player;
 
         this.boltManager = boltManager;
@@ -22,6 +25,7 @@ public class GameplayContext implements WorldQuery {
         this.soundManager = soundManager;
         this.scoreManager = scoreManager;
         this.bonusTracker = bonusTracker;
+        this.dialogManager = dialogManager;
 
         this.level = level;
     }
@@ -52,6 +56,10 @@ public class GameplayContext implements WorldQuery {
 
     public BonusTracker getBonusTracker() {
         return bonusTracker;
+    }
+
+    public DialogManager getDialogManager() {
+        return dialogManager;
     }
 
     @Override

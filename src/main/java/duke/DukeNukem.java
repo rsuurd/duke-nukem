@@ -1,11 +1,15 @@
 package duke;
 
+import duke.dialog.DialogManager;
 import duke.gfx.EgaPalette;
+import duke.gfx.Font;
 import duke.resources.AssetManager;
 import duke.resources.ResourceLoader;
 import duke.sfx.PcSpeaker;
 import duke.sfx.SoundManager;
+import duke.state.GameState;
 import duke.state.GameplayState;
+import duke.state.MainMenu;
 import duke.state.StateManager;
 import duke.ui.CanvasRenderer;
 import duke.ui.DukeNukemFrame;
@@ -55,11 +59,13 @@ public class DukeNukem {
         PcSpeaker pcSpeaker = new PcSpeaker();
         SoundManager sounds = new SoundManager(assets, pcSpeaker);
         pcSpeaker.init();
+        DialogManager dialogManager = new DialogManager(assets, new Font(assets));
 
         CanvasRenderer renderer = new CanvasRenderer(palette);
-        GameContext context = new GameContext(assets, renderer, palette, keyHandler, sounds);
+        GameContext context = new GameContext(assets, renderer, palette, keyHandler, sounds, dialogManager);
         DukeNukemFrame frame = new DukeNukemFrame(renderer, keyHandler);
         GameplayState state = new GameplayState(context);
+//        GameState state = new MainMenu();
         StateManager manager = new StateManager(context, state);
         GameLoop gameLoop = new GameLoop(context, manager);
 

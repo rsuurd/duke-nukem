@@ -28,7 +28,7 @@ public class LevelManager {
     // TODO move to properties file later
     private static final String SECRET_TIP = "Secret tip: ";
     private static final String PRESS_ENTER = "      Press ENTER:";
-    private static final String NOTES_HINT = SECRET_TIP + "Press the UP\nARROW to read the notes\n\n" + PRESS_ENTER;
+    public static final String NOTES_HINT = SECRET_TIP + "Press the UP\nARROW to read the notes\n\n" + PRESS_ENTER;
 
     private static final List<LevelDescriptor> SHRAPNEL_CITY = List.of(
             new LevelDescriptor(1, 0),
