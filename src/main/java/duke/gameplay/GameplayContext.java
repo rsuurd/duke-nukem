@@ -92,7 +92,6 @@ public class GameplayContext implements WorldQuery {
 
         activeManager.reset();
         boltManager.reset();
-//        bonusTracker.reset();
 
         level.getActives().forEach(active -> activeManager.spawn(active));
 
@@ -100,5 +99,11 @@ public class GameplayContext implements WorldQuery {
         player.setY(level.getPlayerStartY());
         player.enableControls();
         player.getHealth().grantInvulnerability();
+
+        if (level.getDescriptor().isHallway()) {
+            bonusTracker.reward(this);
+        } else {
+            bonusTracker.reset(level);
+        }
     }
 }

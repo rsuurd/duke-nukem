@@ -1,5 +1,6 @@
 package duke.gameplay.active;
 
+import duke.gameplay.BonusTracker;
 import duke.gameplay.GameplayContext;
 import duke.gameplay.GameplayContextFixture;
 import duke.gameplay.Rectangle;
@@ -77,6 +78,7 @@ class AcmeTest {
         assertThat(acme.isDestroyed()).isTrue();
         verify(context.getActiveManager()).spawn(any(Effect.class));
         verify(context.getActiveManager()).spawn(any(Effect.class));
+        verify(context.getBonusTracker()).trackDestroyed(BonusTracker.Type.ACME);
     }
 
     @Test
@@ -88,6 +90,7 @@ class AcmeTest {
         assertThat(acme.isDestroyed()).isTrue();
         verify(context.getScoreManager()).score(500, 8, 0);
         verify(context.getActiveManager(), times(2)).spawn(any(Effect.class));
+        verify(context.getBonusTracker()).trackDestroyed(BonusTracker.Type.ACME);
     }
 
     private void wakeUp(Acme acme) {

@@ -5,7 +5,7 @@ public record LevelDescriptor(int number, int backdrop, String message) {
         this(number, backdrop, null);
     }
 
-    public boolean isIntermission() {
+    public boolean isHallway() {
         return number == 2;
     }
 }

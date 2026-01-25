@@ -123,6 +123,7 @@ public class Acme extends Active implements Updatable, SpriteRenderable, Shootab
 
         context.getActiveManager().spawn(EffectsFactory.createSmoke(effectsX, effectsY));
         context.getActiveManager().spawn(EffectsFactory.createParticles(effectsX, effectsY));
+        context.getBonusTracker().trackDestroyed(BonusTracker.Type.ACME);
 
         destroy();
     }

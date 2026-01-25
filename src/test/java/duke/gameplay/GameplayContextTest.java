@@ -1,6 +1,7 @@
 package duke.gameplay;
 
 import duke.level.Level;
+import duke.level.LevelDescriptor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -35,6 +36,7 @@ class GameplayContextTest {
     void shouldSwitchLevel() {
         when(context.getPlayer().getHealth()).thenReturn(mock());
         Level newLevel = mock();
+        when(newLevel.getDescriptor()).thenReturn(new LevelDescriptor(1, 0, null));
         when(newLevel.getActives()).thenReturn(List.of(mock(Active.class)));
 
         context.switchLevel(newLevel);
@@ -47,6 +49,19 @@ class GameplayContextTest {
         verify(context.getPlayer()).setY(0);
         verify(context.getPlayer()).enableControls();
         verify(context.getPlayer().getHealth()).grantInvulnerability();
+        verify(context.getBonusTracker()).reset(newLevel);
+    }
+
+    @Test
+    void shouldRewardBonusInHallways() {
+        when(context.getPlayer().getHealth()).thenReturn(mock());
+        Level hallway = mock();
+        when(hallway.getDescriptor()).thenReturn(new LevelDescriptor(2, 0, null));
+        when(hallway.getActives()).thenReturn(List.of(mock(Active.class)));
+
+        context.switchLevel(hallway);
+
+        verify(context.getBonusTracker()).reward(context);
     }
 
     private static class SolidActive extends Active implements Solid {

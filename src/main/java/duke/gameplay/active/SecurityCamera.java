@@ -26,6 +26,15 @@ public class SecurityCamera extends Active implements Movable, Updatable, Sprite
     }
 
     @Override
+    public void onShot(GameplayContext context, Bolt bolt) {
+        context.getScoreManager().score(100, getX(), getY());
+        context.getActiveManager().spawn(EffectsFactory.createSparks(getX(), getY()));
+        context.getSoundManager().play(Sfx.SMALL_DEATH);
+        context.getBonusTracker().trackDestroyed(BonusTracker.Type.CAMERAS);
+        destroy();
+    }
+
+    @Override
     public SpriteDescriptor getSpriteDescriptor() {
         return DESCRIPTORS.get(index);
     }
@@ -41,14 +50,5 @@ public class SecurityCamera extends Active implements Movable, Updatable, Sprite
         SpriteDescriptor descriptor = new SpriteDescriptor(ANIM, 208);
 
         DESCRIPTORS = List.of(descriptor, descriptor.withBaseIndex(209), descriptor.withBaseIndex(210));
-    }
-
-    @Override
-    public void onShot(GameplayContext context, Bolt bolt) {
-        context.getScoreManager().score(100, getX(), getY());
-        context.getActiveManager().spawn(EffectsFactory.createSparks(getX(), getY()));
-        context.getSoundManager().play(Sfx.SMALL_DEATH);
-
-        destroy();
     }
 }

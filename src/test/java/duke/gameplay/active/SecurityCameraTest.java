@@ -1,5 +1,6 @@
 package duke.gameplay.active;
 
+import duke.gameplay.BonusTracker;
 import duke.gameplay.GameplayContext;
 import duke.gameplay.GameplayContextFixture;
 import duke.gameplay.effects.Effect;
@@ -39,6 +40,7 @@ class SecurityCameraTest {
         assertThat(securityCamera.isDestroyed()).isTrue();
         verify(context.getScoreManager()).score(100, 16, 0);
         verify(context.getSoundManager()).play(Sfx.SMALL_DEATH);
+        verify(context.getBonusTracker()).trackDestroyed(BonusTracker.Type.CAMERAS);
     }
 
     static Stream<Arguments> playerCol() {

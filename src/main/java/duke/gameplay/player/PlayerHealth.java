@@ -35,6 +35,10 @@ public class PlayerHealth extends Health {
             invulnerability--;
         }
 
+        if (damageTaken) {
+            context.getBonusTracker().damageTaken();
+        }
+
         damageTaken = false;
     }
 

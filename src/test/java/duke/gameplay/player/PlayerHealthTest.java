@@ -1,11 +1,13 @@
 package duke.gameplay.player;
 
+import duke.gameplay.GameplayContext;
 import duke.gameplay.GameplayContextFixture;
 import org.junit.jupiter.api.Test;
 
 import static duke.gameplay.player.PlayerHealth.INVULNERABILITY_FRAMES;
 import static duke.gameplay.player.PlayerHealth.MAX_HEALTH;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
 
 class PlayerHealthTest {
     @Test
@@ -53,12 +55,13 @@ class PlayerHealthTest {
     }
 
     @Test
-    void shouldResetDamageTaken() {
+    void shouldHandleDamageTaken() {
         PlayerHealth invulnerable = new PlayerHealth(9, true, INVULNERABILITY_FRAMES);
-
-        invulnerable.update(GameplayContextFixture.create());
+        GameplayContext context = GameplayContextFixture.create();
+        invulnerable.update(context);
 
         assertThat(invulnerable.isDamageTaken()).isFalse();
+        verify(context.getBonusTracker()).damageTaken();
     }
 
     @Test
