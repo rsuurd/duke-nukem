@@ -1,10 +1,16 @@
 package duke.gfx;
 
 import duke.gameplay.Movable;
+import duke.level.Level;
+
+import static duke.level.Level.TILE_SIZE;
 
 public class Viewport {
     private static final int WIDTH = 224;
     private static final int HEIGHT = 176;
+
+    static final int LEFT_CAP = -TILE_SIZE; // not 0 because the hud obscures one column of tiles
+    static final int RIGHT_CAP = Level.WIDTH * TILE_SIZE - WIDTH;
 
     static final int LEFT_BOUND = 88;
     static final int RIGHT_BOUND = 136;
@@ -16,6 +22,15 @@ public class Viewport {
 
     private int x;
     private int y;
+
+    public Viewport() {
+        this(0, 0);
+    }
+
+    Viewport(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
 
     public void update(int targetX, int targetY, boolean shouldCenter) {
         if (shouldCenter) {
@@ -42,9 +57,9 @@ public class Viewport {
         int screenX = toScreenX(targetX);
 
         if (screenX < LEFT_BOUND) {
-            x = targetX - LEFT_BOUND;
+            x = Math.max(targetX - LEFT_BOUND, LEFT_CAP);
         } else if (screenX > RIGHT_BOUND) {
-            x = targetX - RIGHT_BOUND;
+            x = Math.min(targetX - RIGHT_BOUND, RIGHT_CAP);
         }
     }
 

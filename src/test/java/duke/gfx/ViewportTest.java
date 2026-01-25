@@ -20,11 +20,22 @@ class ViewportTest {
 
     @Test
     void shouldMoveLeft() {
+        Viewport viewport = new Viewport(192, 0);
+        viewport.update(116, 0, false);
+
+        assertThat(viewport.getX()).isEqualTo(116 - LEFT_BOUND);
+    }
+
+    @Test
+    void shouldNotGoOutOfLevelBounds() {
         Viewport viewport = new Viewport();
+        viewport.update(0, 0, false);
 
-        viewport.update(16, 0, false);
+        assertThat(viewport.getX()).isEqualTo(LEFT_CAP);
 
-        assertThat(viewport.getX()).isEqualTo(16 - LEFT_BOUND);
+        viewport.update(2048, 0, false);
+
+        assertThat(viewport.getX()).isEqualTo(RIGHT_CAP);
     }
 
     @Test
