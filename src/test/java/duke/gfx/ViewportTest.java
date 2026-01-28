@@ -31,7 +31,7 @@ class ViewportTest {
         Viewport viewport = new Viewport();
         viewport.update(0, 0, false);
 
-        assertThat(viewport.getX()).isEqualTo(LEFT_CAP);
+        assertThat(viewport.getX()).isEqualTo(0);
 
         viewport.update(2048, 0, false);
 
@@ -101,12 +101,12 @@ class ViewportTest {
     void shouldDetermineScreenCoordinates() {
         Viewport viewport = new Viewport();
 
-        assertThat(viewport.toScreenX(0)).isEqualTo(0);
-        assertThat(viewport.toScreenY(0)).isEqualTo(0);
+        assertThat(viewport.toScreenX(0)).isEqualTo(16);
+        assertThat(viewport.toScreenY(0)).isEqualTo(16);
 
         viewport.update(100, 50, true);
-        assertThat(viewport.toScreenX(100)).isEqualTo(100 - viewport.getX());
-        assertThat(viewport.toScreenY(50)).isEqualTo(50 - viewport.getY());
+        assertThat(viewport.toScreenX(100)).isEqualTo(116 - viewport.getX());
+        assertThat(viewport.toScreenY(50)).isEqualTo(66 - viewport.getY());
     }
 
     @Test

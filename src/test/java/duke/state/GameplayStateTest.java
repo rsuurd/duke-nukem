@@ -12,6 +12,7 @@ import duke.gfx.LevelRenderer;
 import duke.gfx.SpriteRenderer;
 import duke.gfx.Viewport;
 import duke.level.Level;
+import duke.level.LevelDescriptor;
 import duke.level.LevelManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -53,6 +54,7 @@ class GameplayStateTest {
     void shouldSwitchLevelOnStart() {
         Level level = mock();
         when(levelManager.getNextLevel()).thenReturn(level);
+        when(level.getDescriptor()).thenReturn(new LevelDescriptor(1, 0, null));
         when(gameplayContext.getPlayer().getHealth()).thenReturn(mock());
 
         state.start(gameContext);
@@ -66,6 +68,7 @@ class GameplayStateTest {
     @Test
     void shouldSwitchLevelOnComplete() {
         Level next = mock();
+        when(next.getDescriptor()).thenReturn(new LevelDescriptor(2, 0, null));
         when(gameplayContext.getLevel().isCompleted()).thenReturn(true);
         when(levelManager.getNextLevel()).thenReturn(next);
         when(gameplayContext.getPlayer().getHealth()).thenReturn(mock());

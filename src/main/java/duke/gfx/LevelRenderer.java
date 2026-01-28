@@ -38,8 +38,8 @@ public class LevelRenderer {
         int gridX = viewport.getX() / TILE_SIZE;
         int gridY = viewport.getY() / TILE_SIZE;
 
-        for (int row = gridY; row < (gridY + 12); row++) {
-            for (int col = gridX; col < (gridX + 15); col++) {
+        for (int row = gridY; row < (gridY + 11); row++) {
+            for (int col = gridX; col < (gridX + 14); col++) {
                 int tileId = level.getTile(row, col);
 
                 Sprite sprite = resolve(assets, tileId);

@@ -37,6 +37,26 @@ class SpriteRendererTest {
     }
 
     @Test
+    void shouldRenderPartiallyObscuredQuadSprite() {
+        Sprite sprite = new Sprite(16, 16);
+        SpriteDescriptor spriteDescriptor = new SpriteDescriptor(assets -> List.of(sprite, sprite, sprite, sprite), 0, 0, 0, 2, 2);
+
+        SpriteRenderable renderable = mock();
+        when(renderable.isVisible()).thenReturn(true);
+        when(renderable.getSpriteDescriptor()).thenReturn(spriteDescriptor);
+
+        int x = Viewport.WIDTH - sprite.getWidth();
+        int y = Viewport.HEIGHT - sprite.getHeight();
+
+        spriteRenderer.render(renderer, renderable, x, y);
+
+        verify(renderer).draw(sprite, x, y);
+        verify(renderer, never()).draw(sprite, x + sprite.getWidth(), y);
+        verify(renderer, never()).draw(sprite, x, y + sprite.getHeight());
+        verify(renderer, never()).draw(sprite, x + sprite.getWidth(), y + sprite.getHeight());
+    }
+
+    @Test
     void shouldSkipInvisibleRenderables() {
         SpriteRenderable renderable = mock();
         when(renderable.isVisible()).thenReturn(false);

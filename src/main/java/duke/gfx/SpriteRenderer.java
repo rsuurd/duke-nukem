@@ -50,7 +50,7 @@ public class SpriteRenderer {
     // TODO should probably be a viewport method? Or at least the constants extracted somewhere
     // for now this is fine though
     private boolean isOnScreen(Sprite sprite, int screenX, int screenY) {
-        return screenX + sprite.getWidth() > 16 && screenX < 240 &&
-                screenY + sprite.getHeight() > 16 && screenY < 192;
+        return screenX + sprite.getWidth() > 16 && screenX < Viewport.WIDTH &&
+                screenY + sprite.getHeight() > 16 && screenY < Viewport.HEIGHT;
     }
 }

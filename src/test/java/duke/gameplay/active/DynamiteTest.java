@@ -42,6 +42,7 @@ class DynamiteTest {
         when(context.isSolid(anyInt(), anyInt())).thenReturn(false, true, false, true, false, true, false, true, false, true);
 
         Dynamite.ExplosionWave wave = new Dynamite.ExplosionWave(0, 0, duke.gameplay.Facing.RIGHT);
+        assertThat(wave.isAwake()).isTrue();
 
         int expectedX = wave.getX();
         for (int i = Dynamite.ExplosionWave.POWER * Dynamite.ExplosionWave.DELAY; i > 0; i--) {

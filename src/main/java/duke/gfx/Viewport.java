@@ -6,18 +6,17 @@ import duke.level.Level;
 import static duke.level.Level.TILE_SIZE;
 
 public class Viewport {
-    private static final int WIDTH = 224;
-    private static final int HEIGHT = 176;
+    public static final int WIDTH = 224;
+    public static final int HEIGHT = 176;
 
-    static final int LEFT_CAP = -TILE_SIZE; // not 0 because the hud obscures one column of tiles
     static final int RIGHT_CAP = Level.WIDTH * TILE_SIZE - WIDTH;
 
-    static final int LEFT_BOUND = 88;
-    static final int RIGHT_BOUND = 136;
-    static final int UPPER_BOUND = 48;
-    static final int LOWER_BOUND = 112;
+    static final int LEFT_BOUND = 80;
+    static final int RIGHT_BOUND = 120;
+    static final int UPPER_BOUND = 32;
+    static final int LOWER_BOUND = 128;
     static final int HORIZONTAL_CENTER = 112;
-    static final int VERTICAL_CENTER = 96;
+    static final int VERTICAL_CENTER = 80;
     private static final int CENTERING_SPEED = 16;
 
     private int x;
@@ -47,38 +46,41 @@ public class Viewport {
     }
 
     private void centerVertically(int targetY) {
-        int distance = toScreenY(targetY) - VERTICAL_CENTER;
-        int scrollY = Math.min(Math.abs(distance), CENTERING_SPEED);
+        int cameraY = targetY - VERTICAL_CENTER;
+        int distance = cameraY - y;
 
-        y += (scrollY * Integer.signum(distance));
+        int scroll = Math.min(Math.abs(distance), CENTERING_SPEED);
+        y += scroll * Integer.signum(distance);
     }
 
     private void trackHorizontally(int targetX) {
-        int screenX = toScreenX(targetX);
+        int left = x + LEFT_BOUND;
+        int right = x + RIGHT_BOUND;
 
-        if (screenX < LEFT_BOUND) {
-            x = Math.max(targetX - LEFT_BOUND, LEFT_CAP);
-        } else if (screenX > RIGHT_BOUND) {
+        if (targetX < left) {
+            x = Math.max(targetX - LEFT_BOUND, 0);
+        } else if (targetX > right) {
             x = Math.min(targetX - RIGHT_BOUND, RIGHT_CAP);
         }
     }
 
     private void trackVertically(int targetY) {
-        int screenY = toScreenY(targetY);
+        int top = y + UPPER_BOUND;
+        int bottom = y + LOWER_BOUND;
 
-        if (screenY < UPPER_BOUND) {
+        if (targetY < top) {
             y = targetY - UPPER_BOUND;
-        } else if (screenY > LOWER_BOUND) {
+        } else if (targetY > bottom) {
             y = targetY - LOWER_BOUND;
         }
     }
 
     public int toScreenX(int worldX) {
-        return worldX - x;
+        return TILE_SIZE + worldX - x;
     }
 
     public int toScreenY(int worldY) {
-        return worldY - y;
+        return TILE_SIZE + worldY - y;
     }
 
     public int getX() {

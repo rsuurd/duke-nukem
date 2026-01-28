@@ -58,7 +58,7 @@ class LevelRendererTest {
 
         levelRenderer.render(renderer, viewport);
 
-        verify(renderer, times(180)).draw(eq(tile), anyInt(), anyInt());
+        verify(renderer, times(154)).draw(eq(tile), anyInt(), anyInt());
     }
 
     @Test
