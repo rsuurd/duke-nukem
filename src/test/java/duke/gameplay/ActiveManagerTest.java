@@ -7,6 +7,8 @@ import duke.gfx.Viewport;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -71,6 +73,18 @@ class ActiveManagerTest {
 
         verify(active, never()).canInteract(context.getPlayer());
         verify(active, never()).interactRequested(context);
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = {true, false})
+    void shouldSetVisibilityForVisibilityAwareActives(boolean visible) {
+        VisibilityAwareActive active = mock(VisibilityAwareActive.class);
+        manager.getActives().add(active);
+        when(viewport.isVisible(active)).thenReturn(visible);
+
+        manager.update(context);
+
+        verify(active).setVisible(visible);
     }
 
     @Test
@@ -250,6 +264,12 @@ class ActiveManagerTest {
 
     private static abstract class TestActive extends Active implements Updatable {
         private TestActive() {
+            super(0, 0, 0, 0);
+        }
+    }
+
+    private static abstract class VisibilityAwareActive extends Active implements Visibility {
+        private VisibilityAwareActive() {
             super(0, 0, 0, 0);
         }
     }

@@ -19,14 +19,14 @@ public class Hud {
         this.font = font;
     }
 
-    public void render(Renderer renderer, int score, Player player) {
+    public void render(Renderer renderer, int score, Player player, String debug) {
         drawBorders(renderer);
         drawScore(renderer, score);
         drawHealth(renderer, player.getHealth().getCurrent());
         drawFirePower(renderer, player.getWeapon().getFirepower());
         drawInventory(renderer, player.getInventory());
         drawHelp(renderer);
-        drawDebugInfo(renderer, player);
+        drawDebugInfo(renderer, debug);
 
         frame = (frame + 1) % 2;
     }
@@ -119,9 +119,9 @@ public class Hud {
         }
     }
 
-    private void drawDebugInfo(Renderer renderer, Player player) {
-        font.drawText(renderer, String.format("position: %d, %d", player.getX(), player.getY()), 16, 16);
-        font.drawText(renderer, String.format("velocity: %d, %d", player.getVelocityX(), player.getVelocityY()), 16, 24);
-        font.drawText(renderer, String.format("%s %s", player.getState(), player.getFacing()), 16, 32);
+    private void drawDebugInfo(Renderer renderer, String debug) {
+        if (debug == null || debug.isEmpty()) return;
+
+        font.drawText(renderer, debug, 16, 16);
     }
 }

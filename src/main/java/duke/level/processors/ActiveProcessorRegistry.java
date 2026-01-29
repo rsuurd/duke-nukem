@@ -37,7 +37,8 @@ public class ActiveProcessorRegistry {
                 new Ed209Processor(),
                 new ExitProcessor(),
                 new NotesProcessor(),
-                new NeedleProcessor()
+                new NeedleProcessor(),
+                new MonitorProcessor()
         ));
     }
 

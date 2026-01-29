@@ -57,10 +57,7 @@ public class ActiveManager {
         while (iterator.hasNext()) {
             Active active = iterator.next();
 
-            boolean visible = viewport.isVisible(active);
-
-            wakeUpIfNeeded(active, visible);
-            update(active, context, visible);
+            update(active, context);
             checkDamage(active, context);
 
             if (active.isDestroyed()) {
@@ -69,13 +66,17 @@ public class ActiveManager {
         }
     }
 
-    private void wakeUpIfNeeded(Active active, boolean visible) {
+    private void update(Active active, GameplayContext context) {
+        boolean visible = viewport.isVisible(active);
+
+        if (active instanceof Visibility visibility) {
+            visibility.setVisible(visible);
+        }
+
         if (visible && active instanceof Wakeable wakeable && !wakeable.isAwake()) {
             wakeable.wakeUp();
         }
-    }
 
-    private void update(Active active, GameplayContext context, boolean visible) {
         if (!shouldUpdate(active, visible)) return;
 
         if (active instanceof Updatable updatable) {

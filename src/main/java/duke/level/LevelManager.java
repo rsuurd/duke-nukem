@@ -29,6 +29,6 @@ public class LevelManager {
     private static final List<LevelDescriptor> SHRAPNEL_CITY = List.of(
             new LevelDescriptor(1, 0),
             new LevelDescriptor(2, 0, "You are entering the\nnext level. Now is a\ngood time to SAVE your\ngame."),
-            new LevelDescriptor(3, 0)
+            new LevelDescriptor(3, 0, "Surprise Duke, I'll be\ntracking your every move\nwith my security camera\nsystem!")
     );
 }

@@ -48,6 +48,8 @@ public class Lock extends Active implements Updatable, SpriteRenderable, Interac
                     door.open(context);
                 }
             }
+
+            animation.reset();
         } else {
             context.getSoundManager().play(Sfx.CHEAT_MODE); // TODO verify
             context.getDialogManager().open(Dialog.hint("Secret tip: You need the\ncorrect key before\nyou can use this lock."));

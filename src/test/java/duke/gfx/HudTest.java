@@ -49,7 +49,7 @@ class HudTest {
         when(player.getHealth()).thenReturn(mock());
         when(player.getInventory()).thenReturn(mock());
 
-        hud.render(renderer, 0, player);
+        hud.render(renderer, 0, player, "");
 
         verify(font).drawText(renderer, "00000000", 240, 24);
     }
@@ -63,7 +63,7 @@ class HudTest {
         when(player.getInventory()).thenReturn(mock());
         when(weapon.getFirepower()).thenReturn(4);
 
-        hud.render(renderer, 0, player);
+        hud.render(renderer, 0, player, "");
 
         for (int i = 0; i < 4; i++) {
             verify(assets.getObjects()).get(6 + i);

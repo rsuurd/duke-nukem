@@ -101,8 +101,18 @@ public class GameplayState implements GameState {
         drawPlayer(renderer);
         context.getActiveManager().render(renderer, Layer.FOREGROUND);
         context.getBoltManager().render(renderer);
-        hud.render(renderer, context.getScoreManager().getScore(), context.getPlayer());
+
+        hud.render(renderer, context.getScoreManager().getScore(), context.getPlayer(), getDebugString(context));
         context.getDialogManager().render(renderer);
+    }
+
+    private String getDebugString(GameplayContext gameContext) {
+        Player player = gameContext.getPlayer();
+        return """
+                position: %d, %d
+                velocity: %d, %d
+                %s %s
+                """.formatted(player.getX(), player.getY(), player.getVelocityX(), player.getVelocityY(), player.getState(), player.getFacing());
     }
 
     private void drawPlayer(Renderer renderer) {
