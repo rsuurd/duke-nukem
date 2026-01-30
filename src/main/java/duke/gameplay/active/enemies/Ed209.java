@@ -43,11 +43,11 @@ public class Ed209 extends Enemy implements Renderable, Physics, Collidable {
         context.getScoreManager().score(2000);
 
         ActiveManager manager = context.getActiveManager();
+        // TODO do these positions depend on facing?
         manager.spawn(EffectsFactory.createDebris(getX(), getY()));
         manager.spawn(EffectsFactory.createParticles(getX(), getY()));
         manager.spawn(EffectsFactory.createParticles(getX() + HALF_TILE_SIZE, getY() - TILE_SIZE));
         manager.spawn(EffectsFactory.createParticles(getX() + TILE_SIZE, getY() + TILE_SIZE));
-
         manager.spawn(EffectsFactory.createSparks(getX() + HALF_TILE_SIZE, getY()));
         manager.spawn(EffectsFactory.createSparks(getX() + TILE_SIZE, getY()));
         manager.spawn(EffectsFactory.createSparks(getX() + TILE_SIZE, getY() + HALF_TILE_SIZE));

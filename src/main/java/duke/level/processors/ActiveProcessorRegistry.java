@@ -38,7 +38,8 @@ public class ActiveProcessorRegistry {
                 new ExitProcessor(),
                 new NotesProcessor(),
                 new NeedleProcessor(),
-                new MonitorProcessor()
+                new MonitorProcessor(),
+                new FlameWheelBotProcessor()
         ));
     }
 

@@ -58,7 +58,7 @@ public abstract class Enemy extends Active implements Updatable, Damaging, Shoot
     }
 
     @Override
-    public final void onShot(GameplayContext context, Bolt bolt) {
+    public void onShot(GameplayContext context, Bolt bolt) {
         health.takeDamage(1);
 
         if (health.isDead()) {

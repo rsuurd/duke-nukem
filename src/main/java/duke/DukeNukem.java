@@ -40,6 +40,8 @@ public class DukeNukem {
                 gameLoop.tick();
             } catch (Exception e) {
                 e.printStackTrace(System.err);
+
+                System.exit(-1);
             }
         }, 0L, 10L, MILLISECONDS);
     }
