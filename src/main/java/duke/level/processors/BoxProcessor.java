@@ -5,6 +5,7 @@ import duke.gameplay.active.Box;
 import duke.gameplay.active.Dynamite;
 import duke.gameplay.active.items.Balloon;
 import duke.gameplay.active.items.ItemFactory;
+import duke.gameplay.player.Inventory;
 import duke.gfx.SpriteDescriptor;
 import duke.level.Level;
 import duke.level.LevelBuilder;
@@ -37,8 +38,8 @@ public class BoxProcessor implements ActiveProcessor {
 
     static {
         BOX_DESCRIPTORS.put(0x3000, new BoxDescriptor(GREY, null));
-        BOX_DESCRIPTORS.put(0x3006, new BoxDescriptor(GREY, null)); // shoes
-        BOX_DESCRIPTORS.put(0x3008, new BoxDescriptor(GREY, null)); // grappling hook
+        BOX_DESCRIPTORS.put(0x3006, new BoxDescriptor(GREY, (x, y) -> ItemFactory.createEquipment(x, y, Inventory.Equipment.BOOTS)));
+        BOX_DESCRIPTORS.put(0x3008, new BoxDescriptor(GREY, (x, y) -> ItemFactory.createEquipment(x, y, Inventory.Equipment.GRAPPLING_HOOKS)));
         BOX_DESCRIPTORS.put(0x300f, new BoxDescriptor(GREY, null)); // gun upgrade
         BOX_DESCRIPTORS.put(0x3012, new BoxDescriptor(GREY, Dynamite::new));
         BOX_DESCRIPTORS.put(0x3015, new BoxDescriptor(RED, ItemFactory::createSoda));
@@ -46,12 +47,12 @@ public class BoxProcessor implements ActiveProcessor {
         BOX_DESCRIPTORS.put(0x301d, new BoxDescriptor(BLUE, ItemFactory::createFootball));
         BOX_DESCRIPTORS.put(0x301e, new BoxDescriptor(BLUE, ItemFactory::createJoystick));
         BOX_DESCRIPTORS.put(0x301f, new BoxDescriptor(BLUE, ItemFactory::createFloppy));
-        BOX_DESCRIPTORS.put(0x3020, new BoxDescriptor(GREY, null)); // robohand
+        BOX_DESCRIPTORS.put(0x3020, new BoxDescriptor(GREY, (x, y) -> ItemFactory.createEquipment(x, y, Inventory.Equipment.ROBOHAND)));
         BOX_DESCRIPTORS.put(0x3023, new BoxDescriptor(BLUE, (x, y) -> new Balloon(x, y - Level.TILE_SIZE)));
         BOX_DESCRIPTORS.put(0x3029, new BoxDescriptor(GREY, ItemFactory::createNuclearMolecule));
         BOX_DESCRIPTORS.put(0x302d, new BoxDescriptor(BLUE, ItemFactory::createFlag));
         BOX_DESCRIPTORS.put(0x302e, new BoxDescriptor(BLUE, ItemFactory::createRadio));
-        BOX_DESCRIPTORS.put(0x3033, new BoxDescriptor(GREY, null)); // access card
+        BOX_DESCRIPTORS.put(0x3033, new BoxDescriptor(GREY, (x, y) -> ItemFactory.createEquipment(x, y, Inventory.Equipment.ACCESS_CARD)));
         BOX_DESCRIPTORS.put(0x3037, new BoxDescriptor(GREY, (x, y) -> ItemFactory.createCharacter(x, y, 'D')));
         BOX_DESCRIPTORS.put(0x3038, new BoxDescriptor(GREY, (x, y) -> ItemFactory.createCharacter(x, y, 'U')));
         BOX_DESCRIPTORS.put(0x3039, new BoxDescriptor(GREY, (x, y) -> ItemFactory.createCharacter(x, y, 'K')));

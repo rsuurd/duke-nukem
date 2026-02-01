@@ -8,6 +8,7 @@ import java.util.List;
 
 public class LevelManager {
     private AssetManager assets;
+    private List<LevelDescriptor> levels;
     private Iterator<LevelDescriptor> levelIterator;
 
     public LevelManager(AssetManager assetManager) {
@@ -16,6 +17,8 @@ public class LevelManager {
 
     LevelManager(AssetManager assetManager, List<LevelDescriptor> levels) {
         this.assets = assetManager;
+        this.levels = levels;
+
         levelIterator = levels.iterator();
     }
 
@@ -26,7 +29,7 @@ public class LevelManager {
     }
 
     public Level warpTo(int number) {
-        levelIterator = SHRAPNEL_CITY.stream().skip(number - 1).iterator();
+        levelIterator = levels.stream().skip(number - 1).iterator();
 
         return assets.getLevel(levelIterator.next());
     }

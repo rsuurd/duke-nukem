@@ -1,6 +1,8 @@
 package duke.gfx;
 
 import duke.Renderer;
+import duke.gameplay.active.items.Key;
+import duke.gameplay.player.Inventory;
 import duke.gameplay.player.Player;
 import duke.gameplay.player.Weapon;
 import duke.resources.AssetManager;
@@ -68,6 +70,29 @@ class HudTest {
         for (int i = 0; i < 4; i++) {
             verify(assets.getObjects()).get(6 + i);
             verify(renderer).draw(any(), eq(240 + (i * TILE_SIZE)), eq(106));
+        }
+    }
+
+    @Test
+    void shouldDrawInventory() {
+        Player player = mock();
+        Inventory inventory = mock();
+        when(player.getWeapon()).thenReturn(mock());
+        when(player.getHealth()).thenReturn(mock());
+        when(player.getInventory()).thenReturn(inventory);
+        when(inventory.hasKey(any())).thenReturn(true);
+        when(inventory.isEquippedWith(any())).thenReturn(true);
+
+        hud.render(renderer, 0, player, "");
+
+        for (Key.Type key : Key.Type.values()) {
+            verify(assets.getObjects()).get(124 + key.ordinal());
+            verify(renderer).draw(any(), eq(240 + (key.ordinal() * TILE_SIZE)), eq(144));
+        }
+
+        for (Inventory.Equipment equipment : Inventory.Equipment.values()) {
+            verify(assets.getObjects(), atLeastOnce()).get(anyInt());
+            verify(renderer, atLeastOnce()).draw(any(), anyInt(), eq(160));
         }
     }
 }

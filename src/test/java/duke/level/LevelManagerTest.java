@@ -29,4 +29,15 @@ class LevelManagerTest {
 
         assertThatThrownBy(manager::getNextLevel).isInstanceOf(DukeNukemException.class).hasMessage("No more levels to beat");
     }
+
+    @Test
+    void shouldWarpToLevel() {
+        AssetManager assetManager = mock();
+        LevelDescriptor level2 = mock();
+        LevelManager manager = new LevelManager(assetManager, List.of(mock(), level2, mock()));
+
+        manager.warpTo(2);
+
+        verify(assetManager).getLevel(level2);
+    }
 }

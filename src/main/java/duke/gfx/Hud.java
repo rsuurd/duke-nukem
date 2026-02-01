@@ -109,6 +109,19 @@ public class Hud {
                 renderer.draw(assets.getObjects().get(124 + key.ordinal()), 240 + (key.ordinal() * TILE_SIZE), 144);
             }
         }
+
+        for (Inventory.Equipment equipment : Inventory.Equipment.values()) {
+            if (inventory.isEquippedWith(equipment)) {
+                int index = switch (equipment) {
+                    case BOOTS -> SHOES_SPRITE_INDEX;
+                    case ROBOHAND -> ROBOHAND_CARD_SPRITE_INDEX;
+                    case GRAPPLING_HOOKS -> GRAPPLING_HOOKS_SPRITE_INDEX;
+                    case ACCESS_CARD -> ACCESS_CARD_SPRITE_INDEX;
+                };
+
+                renderer.draw(assets.getObjects().get(index), 240 + (equipment.ordinal() * TILE_SIZE), 160);
+            }
+        }
     }
 
     private void drawHelp(Renderer renderer) {
@@ -124,4 +137,9 @@ public class Hud {
 
         font.drawText(renderer, debug, 16, 16);
     }
+
+    private static final int SHOES_SPRITE_INDEX = 10;
+    private static final int ROBOHAND_CARD_SPRITE_INDEX = 63;
+    private static final int GRAPPLING_HOOKS_SPRITE_INDEX = 18;
+    private static final int ACCESS_CARD_SPRITE_INDEX = 64;
 }

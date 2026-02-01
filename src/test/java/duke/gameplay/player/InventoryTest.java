@@ -39,4 +39,16 @@ class InventoryTest {
         assertThat(inventory.hasKey(key)).isFalse();
         assertThat(inventory.useKey(key)).isFalse();
     }
+
+    @ParameterizedTest
+    @EnumSource(Inventory.Equipment.class)
+    void shouldAddEquipment(Inventory.Equipment equipment) {
+        Inventory inventory = new Inventory();
+
+        assertThat(inventory.isEquippedWith(equipment)).isFalse();
+        inventory.addEquipment(equipment);
+        assertThat(inventory.isEquippedWith(equipment)).isTrue();
+        assertThat(inventory.removeEquipment(equipment)).isTrue();
+        assertThat(inventory.isEquippedWith(equipment)).isFalse();
+    }
 }
