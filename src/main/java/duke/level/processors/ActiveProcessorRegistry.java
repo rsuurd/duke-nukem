@@ -41,7 +41,8 @@ public class ActiveProcessorRegistry {
                 new MonitorProcessor(),
                 new FlameWheelBotProcessor(),
                 new FlyingBotProcessor(),
-                new BombProcessor()
+                new BombProcessor(),
+                new TransporterProcessor()
         ));
     }
 

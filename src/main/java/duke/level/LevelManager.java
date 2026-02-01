@@ -40,6 +40,6 @@ public class LevelManager {
             new LevelDescriptor(2, 0, "You are entering the\nnext level. Now is a\ngood time to SAVE your\ngame."),
             new LevelDescriptor(3, 0, "Surprise Duke, I'll be\ntracking your every move\nwith my security camera\nsystem!"),
             new LevelDescriptor(2, 0, "On the next level you'll\nneed to find a special\naccess card that looks\nlike a computer board."),
-            new LevelDescriptor(4, 0)
+            new LevelDescriptor(4, 7)
     );
 }

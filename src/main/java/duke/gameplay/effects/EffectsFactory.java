@@ -61,6 +61,10 @@ public class EffectsFactory {
         return effects;
     }
 
+    public static Effect createTransporterActiveEffect(int x, int y, int ttl) {
+        return new BlinkingEffect(x, y, TRANSPORT_ACTIVE, ttl);
+    }
+
     public static Effect createFlash(int x, int y) {
         return new Effect(x, y, FLASH);
     }
@@ -90,4 +94,6 @@ public class EffectsFactory {
     private static final SpriteDescriptor REACTOR_HIT = new SpriteDescriptor(SpriteDescriptor.ANIM, 265);
     private static final SpriteDescriptor IGNITION_RIGHT = new SpriteDescriptor(OBJECTS, GFX_IGNITE_RIGHT_INDEX);
     private static final SpriteDescriptor IGNITION_LEFT = IGNITION_RIGHT.withBaseIndex(GFX_IGNITE_LEFT_INDEX);
+
+    private static final AnimationDescriptor TRANSPORT_ACTIVE = new AnimationDescriptor(new SpriteDescriptor(ANIM, 229), 2, 2);
 }
