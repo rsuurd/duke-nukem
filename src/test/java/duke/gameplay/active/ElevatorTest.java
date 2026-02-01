@@ -74,7 +74,7 @@ class ElevatorTest {
 
         elevator.update(context);
 
-        verify(context.getHints()).showHint(Hints.Type.ELEVATOR, context);
+        verify(context.getHints()).showHint(Hints.Hint.ELEVATOR, context);
     }
 
     private void setupPlayer(int x) {

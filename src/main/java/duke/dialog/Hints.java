@@ -3,24 +3,16 @@ package duke.dialog;
 import duke.gameplay.GameplayContext;
 import duke.sfx.Sfx;
 
-import java.util.EnumMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Hints {
-    private EnumMap<Type, String> hints;
+    private Set<Hint> hints;
 
     private boolean enabled;
 
     public Hints() {
-        hints = new EnumMap<>(Map.of(
-                Type.NOTES, MESSAGE_TIP,
-                Type.ELEVATOR, ELEVATOR_TIP,
-                Type.EXIT, EXIT_TIP,
-                Type.LOCK, LOCK_TIP,
-                Type.NUCLEAR_MOLECULE, NUCLEAR_MOLECULE_TIP,
-                Type.SODA, SODA_TIP,
-                Type.TURKEY, TURKEY_TIP
-        ));
+        hints = new HashSet<>(Set.of(Hint.values()));
 
         enabled = true;
     }
@@ -33,26 +25,31 @@ public class Hints {
         return enabled;
     }
 
-    public void showHint(Type type, GameplayContext context) {
+    public void showHint(Hint hint, GameplayContext context) {
         if (!enabled) return;
 
-        String hint = hints.remove(type);
-
-        if (hint != null) {
+        if (hints.remove(hint)) {
             context.getSoundManager().play(Sfx.CHEAT_MODE);
-            context.getDialogManager().open(Dialog.hint(SECRET_TIP + hint));
+            context.getDialogManager().open(Dialog.hint(SECRET_TIP + hint.text));
         }
     }
 
-    public enum Type {
-        NOTES,
-        ELEVATOR,
-        EXIT,
-        LOCK,
-        KEY,
-        NUCLEAR_MOLECULE,
-        SODA,
-        TURKEY
+    public enum Hint {
+        NOTES(MESSAGE_TIP),
+        ELEVATOR(ELEVATOR_TIP),
+        EXIT(EXIT_TIP),
+        LOCK(LOCK_TIP),
+        KEY(LOCK_TIP),
+        NUCLEAR_MOLECULE(NUCLEAR_MOLECULE_TIP),
+        SODA(SODA_TIP),
+        TURKEY(TURKEY_TIP),
+        TRANSPORTER(TRANSPORTER_TIP);
+
+        private String text;
+
+        private Hint(String text) {
+            this.text = text;
+        }
     }
 
     private static final String SECRET_TIP = "Secret tip: ";
@@ -63,4 +60,5 @@ public class Hints {
     private static final String NUCLEAR_MOLECULE_TIP = "The nuclear\nmolecule increases\nyour health to maximum!";
     private static final String SODA_TIP = "Drink soda\nto increase your health!\n";
     private static final String TURKEY_TIP = "Eat turkey\nto increase your health!\n";
+    private static final String TRANSPORTER_TIP = "Press the UP\nARROW to activate the\ntransporter.";
 }

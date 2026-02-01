@@ -5,14 +5,14 @@ import duke.gameplay.GameplayContext;
 import duke.gameplay.active.items.Item;
 
 public class SecretTipBehavior implements ItemBehavior {
-    private Hints.Type type;
+    private Hints.Hint hint;
 
-    public SecretTipBehavior(Hints.Type type) {
-        this.type = type;
+    public SecretTipBehavior(Hints.Hint hint) {
+        this.hint = hint;
     }
 
     @Override
     public void pickedUp(GameplayContext context, Item item) {
-        context.getHints().showHint(type, context);
+        context.getHints().showHint(hint, context);
     }
 }

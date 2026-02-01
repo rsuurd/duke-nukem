@@ -42,7 +42,7 @@ public class Elevator extends Active implements Renderable, Solid, Updatable, In
         boolean onTop = hasOnTop(context.getPlayer());
 
         if (onTop) {
-            context.getHints().showHint(Hints.Type.ELEVATOR, context);
+            context.getHints().showHint(Hints.Hint.ELEVATOR, context);
         } else {
             moveDown();
         }

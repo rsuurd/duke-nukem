@@ -30,7 +30,7 @@ public class Notes extends Decoration implements Interactable, Updatable {
     @Override
     public void update(GameplayContext context) {
         if (canInteract(context.getPlayer())) {
-            context.getHints().showHint(Hints.Type.NOTES, context);
+            context.getHints().showHint(Hints.Hint.NOTES, context);
         }
     }
 

@@ -11,8 +11,8 @@ import static org.mockito.Mockito.verify;
 
 class SecretTipBehaviorTest {
     @ParameterizedTest
-    @EnumSource(value = Hints.Type.class, names = {"NUCLEAR_MOLECULE", "SODA", "TURKEY"})
-    void shouldShowHint(Hints.Type type) {
+    @EnumSource(value = Hints.Hint.class, names = {"NUCLEAR_MOLECULE", "SODA", "TURKEY"})
+    void shouldShowHint(Hints.Hint type) {
         GameplayContext context = GameplayContextFixture.create();
         ItemBehavior behavior = new SecretTipBehavior(type);
 

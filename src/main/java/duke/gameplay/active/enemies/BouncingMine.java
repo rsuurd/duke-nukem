@@ -46,5 +46,5 @@ public class BouncingMine extends Active implements Updatable, Physics, Collidab
 
     static final int BOUNCE_SPEED = -15;
 
-    private static final SpriteDescriptor DESCRIPTOR = new SpriteDescriptor(SpriteDescriptor.ANIM, 231, 0, 0, 1, 1);
+    private static final SpriteDescriptor DESCRIPTOR = new SpriteDescriptor(SpriteDescriptor.ANIM, 231);
 }

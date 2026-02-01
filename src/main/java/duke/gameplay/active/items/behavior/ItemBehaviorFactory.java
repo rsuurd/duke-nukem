@@ -12,8 +12,8 @@ public class ItemBehaviorFactory {
         return of(new BonusItemBehavior.RandomBonusItemBehavior(), new SoundBehavior(Sfx.GET_BONUS_OBJECT));
     }
 
-    public static ItemBehavior health(int hp, int points, Sfx sfx, Hints.Type hintType) {
-        return of(new HealthBehavior(hp), bonus(points, sfx), new SecretTipBehavior(hintType));
+    public static ItemBehavior health(int hp, int points, Sfx sfx, Hints.Hint hint) {
+        return of(new HealthBehavior(hp), bonus(points, sfx), new SecretTipBehavior(hint));
     }
 
     public static ItemBehavior of(ItemBehavior... behaviors) {

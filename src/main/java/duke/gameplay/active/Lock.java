@@ -59,7 +59,7 @@ public class Lock extends Active implements Updatable, SpriteRenderable, Interac
     @Override
     public void update(GameplayContext context) {
         if (context.getPlayer().intersects(this)) {
-            context.getHints().showHint(Hints.Type.LOCK, context);
+            context.getHints().showHint(Hints.Hint.LOCK, context);
         }
 
         if (locked) {

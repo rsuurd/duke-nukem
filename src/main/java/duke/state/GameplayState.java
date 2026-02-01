@@ -57,7 +57,8 @@ public class GameplayState implements GameState {
 
     @Override
     public void start(GameContext gameContext) {
-        switchLevel(levelManager.getNextLevel(), context);
+        Level level = levelManager.warpTo(5);
+        switchLevel(level, context);
     }
 
     private void switchLevel(Level level, GameplayContext context) {

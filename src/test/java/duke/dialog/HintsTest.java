@@ -25,15 +25,15 @@ class HintsTest {
     void shouldShowHint() {
         assertThat(hints.isEnabled()).isTrue();
 
-        hints.showHint(Hints.Type.SODA, context);
+        hints.showHint(Hints.Hint.SODA, context);
 
         verify(context.getDialogManager()).open(any());
     }
 
     @Test
     void shouldNotShowHintTwice() {
-        hints.showHint(Hints.Type.SODA, context);
-        hints.showHint(Hints.Type.SODA, context);
+        hints.showHint(Hints.Hint.SODA, context);
+        hints.showHint(Hints.Hint.SODA, context);
 
         verify(context.getDialogManager(), times(1)).open(any());
     }
@@ -43,7 +43,7 @@ class HintsTest {
         hints.toggle();
         assertThat(hints.isEnabled()).isFalse();
 
-        hints.showHint(Hints.Type.SODA, context);
+        hints.showHint(Hints.Hint.SODA, context);
 
         verifyNoInteractions(context.getDialogManager());
     }

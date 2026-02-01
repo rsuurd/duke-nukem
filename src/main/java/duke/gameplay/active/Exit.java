@@ -40,7 +40,7 @@ public class Exit extends Active implements Updatable, Interactable, SpriteRende
     @Override
     public void update(GameplayContext context) {
         if (canInteract(context.getPlayer())) {
-            context.getHints().showHint(Hints.Type.EXIT, context);
+            context.getHints().showHint(Hints.Hint.EXIT, context);
         }
 
         switch (state) {

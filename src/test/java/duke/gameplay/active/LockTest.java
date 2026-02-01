@@ -92,7 +92,7 @@ class LockTest {
 
         lock.update(context);
 
-        verify(context.getHints()).showHint(Hints.Type.LOCK, context);
+        verify(context.getHints()).showHint(Hints.Hint.LOCK, context);
     }
 
     @Test

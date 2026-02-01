@@ -151,6 +151,6 @@ class ExitTest {
 
         exit.update(context);
 
-        verify(context.getHints()).showHint(Hints.Type.EXIT, context);
+        verify(context.getHints()).showHint(Hints.Hint.EXIT, context);
     }
 }

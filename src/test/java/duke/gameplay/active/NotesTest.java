@@ -51,6 +51,6 @@ class NotesTest {
 
         notes.update(context);
 
-        verify(context.getHints()).showHint(Hints.Type.NOTES, context);
+        verify(context.getHints()).showHint(Hints.Hint.NOTES, context);
     }
 }
