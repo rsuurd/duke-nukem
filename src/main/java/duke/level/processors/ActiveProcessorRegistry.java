@@ -42,7 +42,9 @@ public class ActiveProcessorRegistry {
                 new FlameWheelBotProcessor(),
                 new FlyingBotProcessor(),
                 new BombProcessor(),
-                new TransporterProcessor()
+                new TransporterProcessor(),
+                new ForceFieldProcessor(),
+                new AccessCardActivationPointProcessor()
         ));
     }
 

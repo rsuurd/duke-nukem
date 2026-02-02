@@ -43,7 +43,8 @@ public class Hints {
         NUCLEAR_MOLECULE(NUCLEAR_MOLECULE_TIP),
         SODA(SODA_TIP),
         TURKEY(TURKEY_TIP),
-        TRANSPORTER(TRANSPORTER_TIP);
+        TRANSPORTER(TRANSPORTER_TIP),
+        ACCESS_CARD(ACCESS_CARD_TIP);
 
         private String text;
 
@@ -61,4 +62,5 @@ public class Hints {
     private static final String SODA_TIP = "Drink soda\nto increase your health!\n";
     private static final String TURKEY_TIP = "Eat turkey\nto increase your health!\n";
     private static final String TRANSPORTER_TIP = "Press the UP\nARROW to activate the\ntransporter.";
+    private static final String ACCESS_CARD_TIP = "Find the\nACCESS CARD and press\nthe UP ARROW here.";
 }
