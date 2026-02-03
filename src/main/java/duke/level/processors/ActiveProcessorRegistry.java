@@ -44,7 +44,8 @@ public class ActiveProcessorRegistry {
                 new BombProcessor(),
                 new TransporterProcessor(),
                 new ForceFieldProcessor(),
-                new AccessCardActivationPointProcessor()
+                new AccessCardActivationPointProcessor(),
+                new KillerBunnyProcessor()
         ));
     }
 

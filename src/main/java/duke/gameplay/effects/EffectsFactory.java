@@ -5,7 +5,6 @@ import duke.gameplay.Facing;
 import duke.gfx.AnimationDescriptor;
 import duke.gfx.Sprite;
 import duke.gfx.SpriteDescriptor;
-import duke.level.Level;
 import duke.resources.AssetManager;
 
 import java.util.ArrayList;
@@ -16,6 +15,8 @@ import java.util.function.Function;
 
 import static duke.gfx.SpriteDescriptor.ANIM;
 import static duke.gfx.SpriteDescriptor.OBJECTS;
+import static duke.level.Level.HALF_TILE_SIZE;
+import static duke.level.Level.TILE_SIZE;
 
 public class EffectsFactory {
     public static Effect createSparks(int x, int y) {
@@ -54,7 +55,7 @@ public class EffectsFactory {
     public static List<Effect> createReactorHitEffect(int x, int y, int height) {
         List<Effect> effects = new ArrayList<>();
 
-        for (int effectY = y; effectY < y + height; effectY += Level.TILE_SIZE) {
+        for (int effectY = y; effectY < y + height; effectY += TILE_SIZE) {
             effects.add(new Effect(x, effectY, REACTOR_HIT, 1));
         }
 
@@ -71,6 +72,17 @@ public class EffectsFactory {
 
     public static Effect createDebris(int x, int y) {
         return new Debris(x, y);
+    }
+
+    public static List<Effect> createKillerBunnySmoke(int x, int y) {
+        return List.of(
+                createSmoke(x + HALF_TILE_SIZE, y - 2),
+                createSmoke(x + 4, y + 4),
+                createSmoke(x - 4, y + HALF_TILE_SIZE),
+                createSmoke(x + HALF_TILE_SIZE, y + HALF_TILE_SIZE),
+                createSmoke(x - 4, y + TILE_SIZE),
+                createSmoke(x + 4, y + TILE_SIZE)
+        );
     }
 
     private static final int GFX_DUST_INDEX = 19;

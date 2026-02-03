@@ -20,6 +20,7 @@ class PatrolBehaviorTest {
 
         worldQuery = mock();
         active = mock();
+        when(active.isAbleToMove()).thenReturn(true);
     }
 
     @Test
@@ -60,5 +61,16 @@ class PatrolBehaviorTest {
         }
 
         verify(active, times(1)).setX(anyInt());
+    }
+
+    @Test
+    void shouldNotMoveIfNotAbleTo() {
+        when(active.getFacing()).thenReturn(Facing.RIGHT);
+        when(active.isAbleToMove()).thenReturn(false);
+        when(worldQuery.isSolid(anyInt(), anyInt())).thenReturn(false, true);
+
+        behavior.behave(worldQuery, active);
+
+        verify(active, never()).setX(anyInt());
     }
 }

@@ -25,6 +25,10 @@ public abstract class Enemy extends Active implements Updatable, Damaging, Shoot
         behavior.behave(context, this);
     }
 
+    public boolean isAbleToMove() {
+        return true;
+    }
+
     public final void turnAround() {
         setFacing(facing == Facing.LEFT ? Facing.RIGHT : Facing.LEFT);
     }
@@ -66,6 +70,10 @@ public abstract class Enemy extends Active implements Updatable, Damaging, Shoot
 
             onDestroyed(context);
         }
+    }
+
+    public int getHealth() {
+        return health.getCurrent();
     }
 
     protected abstract void onDestroyed(GameplayContext context);

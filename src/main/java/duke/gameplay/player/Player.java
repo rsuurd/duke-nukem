@@ -24,7 +24,6 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     private Inventory inventory;
     private PlayerAnimator animator;
     private PlayerFeedback feedback;
-    ;
 
     public Player() {
         this(State.STANDING, Facing.RIGHT, new Weapon(), new PlayerHealth(), new Inventory(), new PlayerAnimator(), new PlayerFeedback());

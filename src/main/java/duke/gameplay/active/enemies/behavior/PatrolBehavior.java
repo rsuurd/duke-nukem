@@ -38,6 +38,8 @@ public class PatrolBehavior implements EnemyBehavior {
     }
 
     private void move(Enemy enemy) {
+        if (!enemy.isAbleToMove()) return;
+
         int deltaX = (enemy.getFacing() == Facing.RIGHT) ? speed : -speed;
 
         enemy.setX(enemy.getX() + deltaX);
