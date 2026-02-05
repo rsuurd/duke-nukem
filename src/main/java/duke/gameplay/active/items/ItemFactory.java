@@ -3,6 +3,7 @@ package duke.gameplay.active.items;
 import duke.dialog.Hints;
 import duke.gameplay.active.items.behavior.CharacterBehavior;
 import duke.gameplay.active.items.behavior.EquipmentBehavior;
+import duke.gameplay.active.items.behavior.FirepowerUpgradeBehavior;
 import duke.gameplay.player.Inventory;
 import duke.gfx.*;
 import duke.resources.AssetManager;
@@ -91,6 +92,10 @@ public class ItemFactory {
         SpriteDescriptor spriteDescriptor = createItemSpriteDescriptor(OBJECTS, index);
 
         return new Item(x, y, new SimpleSpriteRenderable(spriteDescriptor), new EquipmentBehavior(equipment));
+    }
+
+    public static Item createFirepowerUpgrade(int x, int y) {
+        return new Item(x, y, new SimpleSpriteRenderable(createItemSpriteDescriptor(OBJECTS, 43)), new FirepowerUpgradeBehavior());
     }
 
     private static SpriteDescriptor createItemSpriteDescriptor(int index) {

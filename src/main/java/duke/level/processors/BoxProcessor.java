@@ -40,7 +40,7 @@ public class BoxProcessor implements ActiveProcessor {
         BOX_DESCRIPTORS.put(0x3000, new BoxDescriptor(GREY, null));
         BOX_DESCRIPTORS.put(0x3006, new BoxDescriptor(GREY, (x, y) -> ItemFactory.createEquipment(x, y, Inventory.Equipment.BOOTS)));
         BOX_DESCRIPTORS.put(0x3008, new BoxDescriptor(GREY, (x, y) -> ItemFactory.createEquipment(x, y, Inventory.Equipment.GRAPPLING_HOOKS)));
-        BOX_DESCRIPTORS.put(0x300f, new BoxDescriptor(GREY, null)); // gun upgrade
+        BOX_DESCRIPTORS.put(0x300f, new BoxDescriptor(GREY, ItemFactory::createFirepowerUpgrade));
         BOX_DESCRIPTORS.put(0x3012, new BoxDescriptor(GREY, Dynamite::new));
         BOX_DESCRIPTORS.put(0x3015, new BoxDescriptor(RED, ItemFactory::createSoda));
         BOX_DESCRIPTORS.put(0x3018, new BoxDescriptor(RED, ItemFactory::createTurkeyLeg));
