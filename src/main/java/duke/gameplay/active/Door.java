@@ -1,26 +1,24 @@
 package duke.gameplay.active;
 
+import duke.Renderer;
 import duke.gameplay.Active;
 import duke.gameplay.GameplayContext;
 import duke.gameplay.Solid;
 import duke.gameplay.Updatable;
 import duke.gameplay.active.items.Key;
-import duke.gfx.Animation;
-import duke.gfx.AnimationDescriptor;
-import duke.gfx.SpriteDescriptor;
-import duke.gfx.SpriteRenderable;
-import duke.level.Level;
+import duke.gfx.*;
 import duke.sfx.Sfx;
 
 import static duke.gfx.SpriteDescriptor.OBJECTS;
+import static duke.level.Level.TILE_SIZE;
 
-public class Door extends Active implements Solid, SpriteRenderable, Updatable {
+public class Door extends Active implements Solid, Renderable, Updatable {
     private boolean closed;
     private Key.Type requiredKey;
     private Animation animation;
 
-    public Door(int x, int y, Key.Type requiredKey) {
-        super(x, y, Level.TILE_SIZE, Level.TILE_SIZE);
+    public Door(int x, int y, int height, Key.Type requiredKey) {
+        super(x, y, TILE_SIZE, height);
 
         this.requiredKey = requiredKey;
         animation = new Animation(DESCRIPTOR);
@@ -47,8 +45,10 @@ public class Door extends Active implements Solid, SpriteRenderable, Updatable {
     }
 
     @Override
-    public SpriteDescriptor getSpriteDescriptor() {
-        return animation.getSpriteDescriptor();
+    public void render(Renderer renderer, SpriteRenderer spriteRenderer, int screenX, int screenY) {
+        for (int offsetY = 0; offsetY < getHeight(); offsetY += TILE_SIZE) {
+            spriteRenderer.render(renderer, animation.getSpriteDescriptor(), screenX, screenY + offsetY);
+        }
     }
 
     private static final AnimationDescriptor DESCRIPTOR =

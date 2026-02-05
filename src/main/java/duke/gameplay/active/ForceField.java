@@ -1,22 +1,21 @@
 package duke.gameplay.active;
 
+import duke.Renderer;
 import duke.gameplay.Active;
 import duke.gameplay.GameplayContext;
 import duke.gameplay.Solid;
 import duke.gameplay.Updatable;
-import duke.gfx.Animation;
-import duke.gfx.AnimationDescriptor;
-import duke.gfx.SpriteDescriptor;
-import duke.gfx.SpriteRenderable;
-import duke.level.Level;
+import duke.gfx.*;
 import duke.sfx.Sfx;
 
-public class ForceField extends Active implements SpriteRenderable, Updatable, Solid {
+import static duke.level.Level.TILE_SIZE;
+
+public class ForceField extends Active implements Renderable, Updatable, Solid {
     private Animation animation;
     private int sound;
 
-    public ForceField(int x, int y) {
-        super(x, y, Level.TILE_SIZE, Level.TILE_SIZE);
+    public ForceField(int x, int y, int height) {
+        super(x, y, TILE_SIZE, height);
 
         this.animation = new Animation(DESCRIPTOR);
 
@@ -35,8 +34,10 @@ public class ForceField extends Active implements SpriteRenderable, Updatable, S
     }
 
     @Override
-    public SpriteDescriptor getSpriteDescriptor() {
-        return animation.getSpriteDescriptor();
+    public void render(Renderer renderer, SpriteRenderer spriteRenderer, int screenX, int screenY) {
+        for (int offsetY = 0; offsetY < getHeight(); offsetY += TILE_SIZE) {
+            spriteRenderer.render(renderer, animation.getSpriteDescriptor(), screenX, screenY + offsetY);
+        }
     }
 
     private static final AnimationDescriptor DESCRIPTOR = new AnimationDescriptor(new SpriteDescriptor(SpriteDescriptor.OBJECTS, 65), 4, 1);

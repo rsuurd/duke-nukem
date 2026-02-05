@@ -55,13 +55,13 @@ public class LevelRenderer {
     }
 
     private Sprite resolve(AssetManager assets, int tileId) {
-        if (tileId == 0x0 || tileId >= ACTIVE) {
+        if (tileId < FLASHERS || tileId >= ACTIVE) {
             return null;
         }
 
         int spriteIndex = tileId / 32;
 
-        if (tileId >= FLASHERS && tileId < BACKGROUNDS) {
+        if (tileId < BACKGROUNDS) {
             spriteIndex += flasher;
         }
 

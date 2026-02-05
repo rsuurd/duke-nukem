@@ -15,9 +15,16 @@ public class Animation {
     }
 
     public void setAnimation(AnimationDescriptor descriptor) {
+        setAnimation(descriptor, true);
+    }
+
+    public void setAnimation(AnimationDescriptor descriptor, boolean reset) {
         if (this.descriptor != descriptor) {
             this.descriptor = descriptor;
-            reset();
+
+            if (reset) {
+                reset();
+            }
         }
     }
 

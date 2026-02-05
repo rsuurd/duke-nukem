@@ -6,6 +6,7 @@ import duke.gameplay.active.items.Key;
 import duke.sfx.Sfx;
 import org.junit.jupiter.api.Test;
 
+import static duke.level.Level.TILE_SIZE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -13,7 +14,7 @@ import static org.mockito.Mockito.verify;
 class DoorTest {
     @Test
     void shouldBeSolid() {
-        Door door = new Door(0, 0, Key.Type.BLUE);
+        Door door = new Door(0, 0, TILE_SIZE, Key.Type.BLUE);
 
         assertThat(door.isSolid()).isTrue();
     }
@@ -21,7 +22,7 @@ class DoorTest {
     @Test
     void shouldOpen() {
         GameplayContext context = GameplayContextFixture.create();
-        Door door = new Door(0, 0, Key.Type.BLUE);
+        Door door = new Door(0, 0, TILE_SIZE, Key.Type.BLUE);
 
         door.open(context);
 

@@ -47,7 +47,8 @@ public class ActiveProcessorRegistry {
                 new AccessCardActivationPointProcessor(),
                 new KillerBunnyProcessor(),
                 new HelicopterProcessor(),
-                new FanProcessor()
+                new FanProcessor(),
+                new ArcProcessor()
         ));
     }
 

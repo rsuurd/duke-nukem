@@ -42,6 +42,8 @@ public class LevelManager {
             new LevelDescriptor(2, 0, "On the next level you'll\nneed to find a special\naccess card that looks\nlike a computer board."),
             new LevelDescriptor(4, 7),
             new LevelDescriptor(2, 0, "If you find the boots on\nthe next level you'll be\nable to jump higher!\nSAVE your game now."),
-            new LevelDescriptor(5, 7)
+            new LevelDescriptor(5, 5, "I see you're still\ntrying Duke. Never mind,\nmy robot drones will\nsoon be the end of you!"),
+            new LevelDescriptor(2, 0, "The next level is very\ntough--but there's also\na secret shortcut!\nDon't forget to SAVE.")
+
     );
 }

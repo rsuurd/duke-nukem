@@ -7,6 +7,9 @@ import duke.level.LevelBuilder;
 
 import java.util.Map;
 
+import static duke.level.Level.TILE_SIZE;
+import static duke.level.LevelBuilder.LEFT;
+
 public class DoorProcessor implements ActiveProcessor {
     @Override
     public boolean canProcess(int tileId) {
@@ -15,7 +18,17 @@ public class DoorProcessor implements ActiveProcessor {
 
     @Override
     public void process(int index, int tileId, LevelBuilder builder) {
-        builder.add(new Door(Level.toX(index), Level.toY(index), DOOR_TILE_IDS.get(tileId))).replaceTile(index, LevelBuilder.LEFT);
+        int x = Level.toX(index);
+        int y = Level.toY(index);
+
+        int rows = 0; // TODO duplicate with forcefield; maybe move this to LevelBuilder
+        while (canProcess(builder.getTileId(index + (rows * Level.WIDTH)))) {
+            builder.replaceTile(index + (rows * Level.WIDTH), LEFT);
+
+            rows++;
+        }
+
+        builder.add(new Door(x, y, (rows * TILE_SIZE), DOOR_TILE_IDS.get(tileId)));
     }
 
     static final Map<Integer, Key.Type> DOOR_TILE_IDS = Map.of(

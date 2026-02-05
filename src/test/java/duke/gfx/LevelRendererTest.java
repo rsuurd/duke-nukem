@@ -52,9 +52,11 @@ class LevelRendererTest {
 
     @Test
     void shouldDrawTiles() {
+        List<Sprite> tiles = mock();
         Sprite tile = new Sprite(0, 0);
-        when(level.getTile(anyInt(), anyInt())).thenReturn(32);
-        when(assets.getTiles()).thenReturn(List.of(tile, tile));
+        when(level.getTile(anyInt(), anyInt())).thenReturn(0x80);
+        when(assets.getTiles()).thenReturn(tiles);
+        when(tiles.get(anyInt())).thenReturn(tile);
 
         levelRenderer.render(renderer, viewport);
 
