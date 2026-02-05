@@ -62,7 +62,10 @@ class AccessCardActivationPointTest {
         accessCardActivationPoint.interactRequested(context);
 
         assertThat(accessCardActivationPoint.isForceFieldDeactivated()).isTrue();
+        verify(context.getSoundManager()).play(Sfx.OPEN_KEY_DOOR);
         assertThat(context.getActiveManager().getActives()).doesNotHaveAnyElementsOfTypes(ForceField.class);
+
+        assertThat(accessCardActivationPoint.canInteract(context.getPlayer())).isFalse();
     }
 
     @Test

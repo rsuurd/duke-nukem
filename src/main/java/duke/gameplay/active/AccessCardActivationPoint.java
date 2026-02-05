@@ -27,12 +27,13 @@ public class AccessCardActivationPoint extends Active implements Updatable, Spri
 
     @Override
     public boolean canInteract(Player player) {
-        return player.intersects(this);
+        return !forceFieldDeactivated && player.intersects(this);
     }
 
     @Override
     public void interactRequested(GameplayContext context) {
         if (context.getPlayer().getInventory().removeEquipment(Inventory.Equipment.ACCESS_CARD)) {
+            context.getSoundManager().play(Sfx.OPEN_KEY_DOOR);
             context.getActiveManager().getActives().removeIf(active -> active instanceof ForceField);
             forceFieldDeactivated = true;
         } else {
@@ -66,6 +67,6 @@ public class AccessCardActivationPoint extends Active implements Updatable, Spri
         return forceFieldDeactivated;
     }
 
-    private static final AnimationDescriptor DESCRIPTOR = new AnimationDescriptor(new SpriteDescriptor(SpriteDescriptor.OBJECTS, 105), 8, 1);
     private static final SpriteDescriptor ACCESS_CARD_INSERTED = new SpriteDescriptor(SpriteDescriptor.OBJECTS, 113);
+    private static final AnimationDescriptor DESCRIPTOR = new AnimationDescriptor(ACCESS_CARD_INSERTED.withBaseIndex(105), 8, 1);
 }
