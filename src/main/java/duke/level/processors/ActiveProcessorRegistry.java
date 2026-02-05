@@ -46,7 +46,8 @@ public class ActiveProcessorRegistry {
                 new ForceFieldProcessor(),
                 new AccessCardActivationPointProcessor(),
                 new KillerBunnyProcessor(),
-                new HelicopterProcessor()
+                new HelicopterProcessor(),
+                new FanProcessor()
         ));
     }
 
