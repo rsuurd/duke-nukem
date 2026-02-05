@@ -69,4 +69,9 @@ class EnemyTest {
 
         assertThat(enemy.isDestroyed()).isTrue();
     }
+
+    @Test
+    void shouldExposeHealth() {
+        assertThat(enemy.getHealth()).isSameAs(health);
+    }
 }

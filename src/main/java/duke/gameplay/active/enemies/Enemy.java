@@ -72,8 +72,8 @@ public abstract class Enemy extends Active implements Updatable, Damaging, Shoot
         }
     }
 
-    public int getHealth() {
-        return health.getCurrent();
+    public Health getHealth() {
+        return health;
     }
 
     protected abstract void onDestroyed(GameplayContext context);
