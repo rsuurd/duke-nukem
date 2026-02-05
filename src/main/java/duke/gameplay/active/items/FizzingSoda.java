@@ -2,12 +2,13 @@ package duke.gameplay.active.items;
 
 import duke.gameplay.Collidable;
 import duke.gameplay.GameplayContext;
+import duke.gameplay.active.Wakeable;
 import duke.gameplay.active.items.behavior.ItemBehavior;
 import duke.gameplay.effects.EffectsFactory;
 import duke.gfx.SpriteRenderable;
 import duke.level.Level;
 
-public class FizzingSoda extends Item implements Collidable {
+public class FizzingSoda extends Item implements Collidable, Wakeable {
     private boolean bumped;
 
     public FizzingSoda(int x, int y, SpriteRenderable renderable, ItemBehavior behavior) {

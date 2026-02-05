@@ -34,12 +34,14 @@ public class LevelManager {
         return assets.getLevel(levelIterator.next());
     }
 
-    // TODO move to properties file later
+    // TODO move to properties file or EpisodeDescriptor later
     private static final List<LevelDescriptor> SHRAPNEL_CITY = List.of(
             new LevelDescriptor(1, 0),
             new LevelDescriptor(2, 0, "You are entering the\nnext level. Now is a\ngood time to SAVE your\ngame."),
             new LevelDescriptor(3, 0, "Surprise Duke, I'll be\ntracking your every move\nwith my security camera\nsystem!"),
             new LevelDescriptor(2, 0, "On the next level you'll\nneed to find a special\naccess card that looks\nlike a computer board."),
-            new LevelDescriptor(4, 7)
+            new LevelDescriptor(4, 7),
+            new LevelDescriptor(2, 0, "If you find the boots on\nthe next level you'll be\nable to jump higher!\nSAVE your game now."),
+            new LevelDescriptor(5, 7)
     );
 }
