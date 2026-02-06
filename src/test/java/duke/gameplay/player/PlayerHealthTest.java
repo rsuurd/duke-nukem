@@ -55,12 +55,12 @@ class PlayerHealthTest {
     }
 
     @Test
-    void shouldHandleDamageTaken() {
+    void shouldTrackDamageTaken() {
         PlayerHealth invulnerable = new PlayerHealth(9, true, INVULNERABILITY_FRAMES);
         GameplayContext context = GameplayContextFixture.create();
+
         invulnerable.update(context);
 
-        assertThat(invulnerable.isDamageTaken()).isFalse();
         verify(context.getBonusTracker()).damageTaken();
     }
 
@@ -72,5 +72,14 @@ class PlayerHealthTest {
 
         assertThat(health.isInvulnerable()).isTrue();
         assertThat(health.getInvulnerability()).isEqualTo(INVULNERABILITY_FRAMES);
+    }
+
+    @Test
+    void shouldReset() {
+        PlayerHealth health = new PlayerHealth(4, true, 4);
+
+        health.resetDamageTaken();
+
+        assertThat(health.isDamageTaken()).isFalse();
     }
 }

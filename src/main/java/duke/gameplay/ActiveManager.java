@@ -104,7 +104,6 @@ public class ActiveManager {
         if (player.getHealth().isInvulnerable()) return;
         if (active instanceof Damaging damaging && damaging.getDamage() > 0 && player.intersects(active)) {
             player.getHealth().takeDamage(damaging.getDamage());
-            context.getSoundManager().play(PLAYER_HIT);
 
             // TODO this despawns on touch, should probably hook into collision system later
             if (active instanceof EnemyFire enemyFire) enemyFire.destroy();

@@ -38,8 +38,6 @@ public class PlayerHealth extends Health {
         if (damageTaken) {
             context.getBonusTracker().damageTaken();
         }
-
-        damageTaken = false;
     }
 
     public void takeDamage(int amount) {
@@ -53,6 +51,10 @@ public class PlayerHealth extends Health {
 
     public void grantInvulnerability() {
         invulnerability = INVULNERABILITY_FRAMES;
+    }
+
+    public void resetDamageTaken() {
+        damageTaken = false;
     }
 
     public static final int MAX_HEALTH = 9;

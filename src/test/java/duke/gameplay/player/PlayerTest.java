@@ -288,7 +288,7 @@ class PlayerTest {
 
         player.postMovement(context);
 
-        verify(feedback).provideFeedback(same(context), same(player), anyBoolean(), anyBoolean(), anyBoolean());
+        verify(feedback).provideFeedback(same(context), same(player), anyBoolean(), anyBoolean(), anyBoolean(), anyBoolean());
     }
 
     @Test

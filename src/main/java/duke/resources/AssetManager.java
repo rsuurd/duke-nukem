@@ -108,7 +108,7 @@ public class AssetManager {
 
     private enum Category {
         TILES(true, 48, "BACK0", "BACK1", "BACK2", "BACK3", "SOLID0", "SOLID1", "SOLID2", "SOLID3"),
-        MAN("MAN0", "MAN1", "MAN2", "MAN3"),
+        MAN(false, 48, "MAN0", "MAN1", "MAN2", "MAN3"),
         FONT("FONT1", "FONT2"),
         ANIM("ANIM0", "ANIM1", "ANIM2", "ANIM3", "ANIM4", "ANIM5"),
         OBJECTS("OBJECT0", "OBJECT1", "OBJECT2"),

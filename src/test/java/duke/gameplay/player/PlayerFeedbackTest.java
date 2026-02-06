@@ -30,21 +30,21 @@ class PlayerFeedbackTest {
 
     @Test
     void shouldPlaySoundWhenJumped() {
-        feedback.provideFeedback(context, player, true, false, false);
+        feedback.provideFeedback(context, player, true, false, false, false);
 
         verify(context.getSoundManager()).play(Sfx.PLAYER_JUMP);
     }
 
     @Test
     void shouldPlaySoundWhenBumped() {
-        feedback.provideFeedback(context, player, false, true, false);
+        feedback.provideFeedback(context, player, false, true, false, false);
 
         verify(context.getSoundManager()).play(Sfx.HIT_HEAD);
     }
 
     @Test
     void shouldPlaySoundAndSpawnDustWhenLanded() {
-        feedback.provideFeedback(context, player, false, false, true);
+        feedback.provideFeedback(context, player, false, false, true, false);
 
         verify(context.getSoundManager()).play(Sfx.PLAYER_LAND);
         verify(context.getActiveManager()).spawn(isA(Effect.class));
@@ -55,9 +55,16 @@ class PlayerFeedbackTest {
         when(player.getState()).thenReturn(State.WALKING);
 
         for (int i = 0; i < 4; i++) {
-            feedback.provideFeedback(context, player, false, false, false);
+            feedback.provideFeedback(context, player, false, false, false, false);
         }
 
         verify(context.getSoundManager(), times(2)).play(Sfx.WALKING);
+    }
+
+    @Test
+    void shouldPlaySoundWhenDamageTaken() {
+        feedback.provideFeedback(context, player, false, false, false, true);
+
+        verify(context.getSoundManager()).play(Sfx.PLAYER_HIT);
     }
 }

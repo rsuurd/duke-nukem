@@ -75,8 +75,6 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
 
     @Override
     public void update(GameplayContext context) {
-        reset();
-
         applyFriction();
 
         // TODO unify these two in a separate component
@@ -90,17 +88,21 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
         jumped = false;
         landed = false;
         bumped = false;
+
+        health.resetDamageTaken();
     }
 
     public void postMovement(GameplayContext context) {
         weapon.fire(context);
-        feedback.provideFeedback(context, this, jumped, bumped, landed);
+        feedback.provideFeedback(context, this, jumped, bumped, landed, health.isDamageTaken());
         animator.animate(this);
+
+        reset();
     }
 
     @Override
     public boolean isVisible() {
-        return !health.isInvulnerable() || health.getInvulnerability() % 2 == 0;
+        return !health.isInvulnerable() || health.getInvulnerability() % 2 == 1;
     }
 
     private void updateJump() {
@@ -120,6 +122,7 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
 
     private void applyFriction() {
         if (!moving) {
+            // TODO -8 / + 8 instead of hard 0
             setVelocityX(0);
 
             if (state == State.WALKING) {
@@ -166,7 +169,6 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
 
     private void jump() {
         if (jumpReady && isGrounded()) {
-            System.err.println("jump: " + inventory.isEquippedWith(Inventory.Equipment.BOOTS));
             setVelocityY(inventory.isEquippedWith(Inventory.Equipment.BOOTS) ? HIGH_JUMP_POWER : JUMP_POWER);
             state = State.JUMPING;
             jumpReady = false;
@@ -284,7 +286,7 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     private static final int HEIGHT = 32;
 
     static final int JUMP_POWER = -15;
-    static final int HIGH_JUMP_POWER = JUMP_POWER -2;
+    static final int HIGH_JUMP_POWER = JUMP_POWER - 2;
     static final int JUMP_TICKS = 9;
 
     static final int SLOW_FALL_TICKS = 8;
