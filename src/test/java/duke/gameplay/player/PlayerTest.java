@@ -13,9 +13,7 @@ import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static duke.gameplay.Physics.GRAVITY;
-import static duke.gameplay.player.Player.JUMP_POWER;
-import static duke.gameplay.player.Player.SPEED;
+import static duke.gameplay.player.Player.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.same;
@@ -119,15 +117,13 @@ class PlayerTest {
 
     @ParameterizedTest
     @EnumSource(value = State.class, names = {"WALKING"}, mode = EnumSource.Mode.EXCLUDE)
-    void shouldStop(State state) {
+    void shouldApplyFriction(State state) {
         Player player = create(state, Facing.RIGHT);
         player.setVelocityX(SPEED);
-        player.setVelocityY(JUMP_POWER);
 
         player.processInput(input);
         player.update(context);
 
-        assertThat(player.getState()).isEqualTo(state);
         assertThat(player.getVelocityX()).isEqualTo(0);
     }
 
@@ -226,23 +222,23 @@ class PlayerTest {
     }
 
     @Test
-    void shouldHaveGravityWhileJumping() {
-        Player player = create(State.JUMPING, Facing.LEFT);
+    void shouldJump() {
+        Player player = create(State.STANDING, Facing.LEFT);
+        player.processInput(new KeyHandler.Input(false, false, true, false, false));
 
-        assertThat(player.getVerticalAcceleration()).isEqualTo(GRAVITY);
+        assertThat(player.getState()).isEqualTo(State.JUMPING);
+        assertThat(player.getVelocityY()).isEqualTo(JUMP_POWER);
     }
 
     @Test
-    void shouldFloatWhileHanging() {
+    void shouldJumpHigherWithBoots() {
         Player player = create(State.STANDING, Facing.LEFT);
-        player.processInput(new KeyHandler.Input(false, false, true, false, false));
-        player.setVelocityY(0);
+        when(player.getInventory().isEquippedWith(Inventory.Equipment.BOOTS)).thenReturn(true);
 
-        for (int frame = 1; frame < Player.HANG_TIME; frame++) {
-            player.update(context);
-            int verticalAcceleration = player.getVerticalAcceleration();
-            assertThat(verticalAcceleration).isEqualTo(0);
-        }
+        player.processInput(new KeyHandler.Input(false, false, true, false, false));
+
+        assertThat(player.getState()).isEqualTo(State.JUMPING);
+        assertThat(player.getVelocityY()).isEqualTo(HIGH_JUMP_POWER);
     }
 
     @Test

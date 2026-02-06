@@ -5,6 +5,8 @@ import duke.gfx.SpriteDescriptor;
 import duke.gfx.SpriteRenderable;
 import duke.ui.KeyHandler;
 
+import static duke.level.Level.TILE_SIZE;
+
 public class Player extends Active implements Movable, Collidable, Physics, Updatable, SpriteRenderable {
     private State state;
     private Facing facing;
@@ -15,7 +17,8 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
 
     private boolean controllable;
     private boolean jumpReady;
-    private int hangTimeLeft;
+    private int jumpTicks;
+    private int fallTicks;
     private boolean moving;
     private boolean using;
 
@@ -75,7 +78,10 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
         reset();
 
         applyFriction();
+
+        // TODO unify these two in a separate component
         updateJump();
+        updateFall();
 
         health.update(context);
     }
@@ -98,14 +104,16 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     }
 
     private void updateJump() {
-        jumped = getVelocityY() == JUMP_POWER;
-        if (getVelocityY() < 0) return;
+        // TODO check health.damagetaken and cancel the jump
 
         if (state == State.JUMPING) {
-            if (--hangTimeLeft > 0) {
-                setVelocityY(0);
+            jumped = jumpTicks == JUMP_TICKS;
+
+            if (jumpTicks > 0) {
+                jumpTicks--;
             } else {
                 state = State.FALLING;
+                fallTicks = SLOW_FALL_TICKS;
             }
         }
     }
@@ -158,10 +166,12 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
 
     private void jump() {
         if (jumpReady && isGrounded()) {
-            setVelocityY(JUMP_POWER);
+            System.err.println("jump: " + inventory.isEquippedWith(Inventory.Equipment.BOOTS));
+            setVelocityY(inventory.isEquippedWith(Inventory.Equipment.BOOTS) ? HIGH_JUMP_POWER : JUMP_POWER);
             state = State.JUMPING;
             jumpReady = false;
-            hangTimeLeft = HANG_TIME;
+            jumpTicks = JUMP_TICKS;
+            jumped = true;
         }
     }
 
@@ -182,18 +192,28 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
             landed = true;
         }
         state = moving ? State.WALKING : State.STANDING;
-        hangTimeLeft = 0;
+        jumpTicks = 0;
+        fallTicks = 0;
     }
 
     private void bump() {
         setVelocityY(0);
-        hangTimeLeft = 0;
+        jumpTicks = 0;
+        fallTicks = 0;
         bumped = true;
     }
 
     public void fall() {
-        if (state != State.JUMPING) {
+        if (state != State.JUMPING && state != State.FALLING) {
             state = State.FALLING;
+            // TODO should probably double check if we're not already falling
+            fallTicks = FALL_TICKS;
+        }
+    }
+
+    private void updateFall() {
+        if (state == State.FALLING && fallTicks > 0) {
+            fallTicks--;
         }
     }
 
@@ -201,13 +221,28 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     public int getVerticalAcceleration() {
         return switch (state) {
             case STANDING, WALKING -> 0;
-            case JUMPING -> isHanging() ? 0 : GRAVITY;
+            case JUMPING -> getVerticalAccelerationWhileJumping();
             case FALLING -> SPEED;
         };
     }
 
-    private boolean isHanging() {
-        return state == State.JUMPING && hangTimeLeft > 0 && getVelocityY() == 0;
+    private int getVerticalAccelerationWhileJumping() {
+        if (jumpTicks <= 0 || getVelocityY() >= 0) {
+            return 0;
+        }
+
+        boolean hasBoots = inventory.isEquippedWith(Inventory.Equipment.BOOTS);
+        if (!hasBoots && getVelocityY() >= -3) {
+            return -getVelocityY();
+        }
+
+        // normal rising gravity (clamped so it never goes past 0)
+        return Math.min(GRAVITY, -getVelocityY());
+    }
+
+    @Override
+    public int getTerminalVelocity() {
+        return fallTicks > 0 ? SPEED : TILE_SIZE;
     }
 
     @Override
@@ -236,10 +271,24 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
         return controllable;
     }
 
+    public String debug() {
+        return """
+                position: %d, %d
+                velocity: %d, %d
+                %s %s
+                jmp: %d, fall: %d, vAcc: %d
+                """.formatted(getX(), getY(), getVelocityX(), getVelocityY(), getState(), getFacing(), jumpTicks, fallTicks, getVerticalAcceleration());
+    }
+
     private static final int WIDTH = 16;
     private static final int HEIGHT = 32;
 
-    static final int JUMP_POWER = -15; // TODO influenced by boots
-    static final int HANG_TIME = 4;
+    static final int JUMP_POWER = -15;
+    static final int HIGH_JUMP_POWER = JUMP_POWER -2;
+    static final int JUMP_TICKS = 9;
+
+    static final int SLOW_FALL_TICKS = 8;
+    static final int FALL_TICKS = 2;
+
     static final int SPEED = 8;
 }
