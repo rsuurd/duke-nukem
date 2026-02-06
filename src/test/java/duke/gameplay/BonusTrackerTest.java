@@ -2,6 +2,8 @@ package duke.gameplay;
 
 import duke.gameplay.active.Acme;
 import duke.gameplay.active.SecurityCamera;
+import duke.gameplay.active.enemies.KillerBunny;
+import duke.gameplay.active.enemies.SnakeBot;
 import duke.level.Level;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -82,7 +84,9 @@ class BonusTrackerTest {
     static Stream<Arguments> destructionTypes() {
         return Stream.of(
                 Arguments.of(BonusTracker.Type.CAMERAS, SecurityCamera.class),
-                Arguments.of(BonusTracker.Type.ACME, Acme.class)
+                Arguments.of(BonusTracker.Type.ACME, Acme.class),
+                Arguments.of(BonusTracker.Type.BUNNY, KillerBunny.class),
+                Arguments.of(BonusTracker.Type.SNAKE, SnakeBot.class)
         );
     }
 }

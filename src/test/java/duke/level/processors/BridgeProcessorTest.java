@@ -30,13 +30,13 @@ class BridgeProcessorTest {
     @Test
     void shouldProcess() {
         assertThat(processor.canProcess(TILE_ID)).isTrue();
-        when(builder.getTileId(anyInt()))
-                .thenReturn(TILE_ID, Level.BACKGROUNDS, Level.BACKGROUNDS, Level.BACKGROUNDS, Level.SOLIDS);
+        when(builder.getTileId(anyInt())).thenReturn(TILE_ID, Level.BACKGROUNDS, Level.BACKGROUNDS, Level.BACKGROUNDS, Level.SOLIDS);
         when(builder.add(any())).thenReturn(builder);
 
         processor.process(20, TILE_ID, builder);
 
         verify(builder).add(captor.capture());
+        verify(builder).replaceTile(20, LevelBuilder.TOP);
 
         Bridge bridge = captor.getValue();
         assertThat(bridge.getWidth()).isEqualTo(64);

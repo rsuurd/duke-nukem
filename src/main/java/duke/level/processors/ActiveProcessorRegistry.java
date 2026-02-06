@@ -48,7 +48,8 @@ public class ActiveProcessorRegistry {
                 new KillerBunnyProcessor(),
                 new HelicopterProcessor(),
                 new FanProcessor(),
-                new ArcProcessor()
+                new ArcProcessor(),
+                new SnakeBotProcessor()
         ));
     }
 

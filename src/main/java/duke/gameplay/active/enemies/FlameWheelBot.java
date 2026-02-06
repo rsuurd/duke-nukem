@@ -14,7 +14,7 @@ import duke.sfx.Sfx;
 import static duke.level.Level.HALF_TILE_SIZE;
 import static duke.level.Level.TILE_SIZE;
 
-public class FlameWheelBot extends Enemy implements Wakeable, SpriteRenderable {
+public class FlameWheelBot extends Enemy implements Wakeable, SpriteRenderable, Physics {
     private boolean patrolling;
     private boolean flameOn;
     private Animation animation;

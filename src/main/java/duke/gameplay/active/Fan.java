@@ -30,7 +30,7 @@ public class Fan extends Active implements Updatable, SpriteRenderable, Shootabl
         this.animation = animation;
 
         destroyed = false;
-        reach = new Rectangle(x + ((facing == Facing.RIGHT) ? getWidth() : 0), y, REACH, getHeight());
+        reach = new Rectangle(x + ((facing == Facing.RIGHT) ? getWidth() : -REACH), y, REACH, getHeight());
     }
 
     @Override

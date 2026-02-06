@@ -45,7 +45,7 @@ public class Level {
     }
 
     public int getPlayerStartY() {
-        return toY(playerStart);
+        return toY(playerStart) - TILE_SIZE;
     }
 
     public List<Active> getActives() {

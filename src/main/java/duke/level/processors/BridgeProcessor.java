@@ -20,7 +20,7 @@ public class BridgeProcessor implements ActiveProcessor {
             width++;
         }
 
-        builder.add(new Bridge(x, y, width * Level.TILE_SIZE));
+        builder.add(new Bridge(x, y, width * Level.TILE_SIZE)).replaceTile(index, LevelBuilder.TOP);
     }
 
     static final int TILE_ID = 0x3019;

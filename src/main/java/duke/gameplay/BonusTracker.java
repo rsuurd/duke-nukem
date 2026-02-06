@@ -3,6 +3,8 @@ package duke.gameplay;
 import duke.DukeNukemException;
 import duke.gameplay.active.Acme;
 import duke.gameplay.active.SecurityCamera;
+import duke.gameplay.active.enemies.KillerBunny;
+import duke.gameplay.active.enemies.SnakeBot;
 import duke.gameplay.effects.Bonus;
 import duke.gameplay.player.Player;
 import duke.level.Level;
@@ -27,8 +29,11 @@ public class BonusTracker {
         damageTaken = false;
         characters.delete(0, characters.length());
         destructionCounters.clear();
+
         destructionCounters.put(Type.CAMERAS, new DestructionCounter(count(level, SecurityCamera.class)));
         destructionCounters.put(Type.ACME, new DestructionCounter(count(level, Acme.class)));
+        destructionCounters.put(Type.BUNNY, new DestructionCounter(count(level, KillerBunny.class)));
+        destructionCounters.put(Type.SNAKE, new DestructionCounter(count(level, SnakeBot.class)));
     }
 
     private int count(Level level, Class<? extends Active> clazz) {

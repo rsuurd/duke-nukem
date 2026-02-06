@@ -43,7 +43,8 @@ public class LevelManager {
             new LevelDescriptor(4, 7),
             new LevelDescriptor(2, 0, "If you find the boots on\nthe next level you'll be\nable to jump higher!\nSAVE your game now."),
             new LevelDescriptor(5, 5, "I see you're still\ntrying Duke. Never mind,\nmy robot drones will\nsoon be the end of you!"),
-            new LevelDescriptor(2, 0, "The next level is very\ntough--but there's also\na secret shortcut!\nDon't forget to SAVE.")
-
+            new LevelDescriptor(2, 0, "The next level is very\ntough--but there's also\na secret shortcut!\nDon't forget to SAVE."),
+            new LevelDescriptor(6, 0, "Hmmm... I see you've\nsurvived my Maze of\nMadness. I might have\nunderestimated you."),
+            new LevelDescriptor(2, 0, "You are doing quite well\nso far...Let's see if\nyou can keep it up. Also\nremember to SAVE.")
     );
 }

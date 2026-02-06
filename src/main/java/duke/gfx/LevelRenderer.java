@@ -23,7 +23,7 @@ public class LevelRenderer {
     }
 
     public void render(Renderer renderer, Viewport viewport) {
-        drawBackdrop(renderer);
+        drawBackdrop(renderer); // TODO optional
         drawTiles(renderer, viewport);
 
         flasher = (flasher + 1) % 4;

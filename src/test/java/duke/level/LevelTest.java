@@ -40,7 +40,7 @@ class LevelTest {
         Level level = new Level(mock(), new int[Level.WIDTH * 90], 562, Collections.emptyList());
 
         assertThat(level.getPlayerStartX()).isEqualTo(800);
-        assertThat(level.getPlayerStartY()).isEqualTo(64);
+        assertThat(level.getPlayerStartY()).isEqualTo(48);
     }
 
     @Test
