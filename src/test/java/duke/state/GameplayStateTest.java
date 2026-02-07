@@ -2,10 +2,7 @@ package duke.state;
 
 import duke.GameContext;
 import duke.GameContextFixture;
-import duke.gameplay.Collision;
-import duke.gameplay.GameplayContext;
-import duke.gameplay.GameplayContextFixture;
-import duke.gameplay.Layer;
+import duke.gameplay.*;
 import duke.gameplay.player.Player;
 import duke.gfx.Hud;
 import duke.gfx.LevelRenderer;
@@ -40,6 +37,9 @@ class GameplayStateTest {
     private GameContext gameContext;
     private GameplayContext gameplayContext;
 
+    @Mock
+    private Cheats cheats;
+
     private GameplayState state;
 
     @BeforeEach
@@ -47,7 +47,7 @@ class GameplayStateTest {
         gameContext = GameContextFixture.create();
         gameplayContext = spy(GameplayContextFixture.create());
 
-        state = new GameplayState(levelManager, levelRenderer, viewport, hud, spriteRenderer, collision, gameplayContext);
+        state = new GameplayState(levelManager, levelRenderer, viewport, hud, spriteRenderer, collision, gameplayContext, cheats);
     }
 
     @Test
@@ -130,5 +130,12 @@ class GameplayStateTest {
         verify(gameContext.getDialogManager()).update(gameContext);
 
         verifyNoInteractions(gameplayContext.getPlayer(), gameplayContext.getActiveManager(), gameplayContext.getBoltManager(), collision, viewport);
+    }
+
+    @Test
+    void shouldCheckForCheats() {
+        state.update(gameContext);
+
+        verify(cheats).processInput(gameContext.getKeyHandler(), gameplayContext);
     }
 }

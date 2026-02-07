@@ -20,9 +20,10 @@ public class GameplayState implements GameState {
     private SpriteRenderer spriteRenderer;
     private Collision collision;
     private GameplayContext context;
+    private Cheats cheats;
 
     // TODO fix construction
-    public GameplayState(GameContext gameContext) {
+    public GameplayState(GameContext gameContext, Cheats cheats) {
         AssetManager assets = gameContext.getAssets();
 
         levelManager = new LevelManager(assets);
@@ -34,6 +35,8 @@ public class GameplayState implements GameState {
         collision = new Collision();
 
         context = createGameplayContext(gameContext);
+
+        this.cheats = cheats;
     }
 
     private GameplayContext createGameplayContext(GameContext gameContext) {
@@ -45,7 +48,7 @@ public class GameplayState implements GameState {
         return new GameplayContext(new Player(), null, boltManager, activeManager, gameContext.getSoundManager(), scoreManager, bonusTracker, gameContext.getDialogManager(), new Hints());
     }
 
-    GameplayState(LevelManager levelManager, LevelRenderer levelRenderer, Viewport viewport, Hud hud, SpriteRenderer spriteRenderer, Collision collision, GameplayContext context) {
+    GameplayState(LevelManager levelManager, LevelRenderer levelRenderer, Viewport viewport, Hud hud, SpriteRenderer spriteRenderer, Collision collision, GameplayContext context, Cheats cheats) {
         this.levelManager = levelManager;
         this.levelRenderer = levelRenderer;
         this.viewport = viewport;
@@ -53,11 +56,12 @@ public class GameplayState implements GameState {
         this.spriteRenderer = spriteRenderer;
         this.collision = collision;
         this.context = context;
+        this.cheats = cheats;
     }
 
     @Override
     public void start(GameContext gameContext) {
-//        Level level = levelManager.warpTo(8);
+//        Level level = levelManager.warpTo(11);
         Level level = levelManager.getNextLevel();
         switchLevel(level, context);
     }
@@ -82,6 +86,8 @@ public class GameplayState implements GameState {
         if (context.getLevel().isCompleted()) {
             switchLevel(levelManager.getNextLevel(), context);
         }
+
+        cheats.processInput(gameContext.getKeyHandler(), context);
     }
 
     private void updatePlayer(KeyHandler.Input input) {

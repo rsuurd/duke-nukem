@@ -1,6 +1,7 @@
 package duke;
 
 import duke.dialog.DialogManager;
+import duke.gameplay.Cheats;
 import duke.gfx.EgaPalette;
 import duke.gfx.Font;
 import duke.resources.AssetManager;
@@ -49,6 +50,8 @@ public class DukeNukem {
     }
 
     public static void main(String... parameters) {
+        GameParameters gameParameters = GameParameters.parse(parameters);
+
         Path basePath = Paths.get(".dn1"); // TODO read from config or parameters
         ResourceLoader resourceLoader = new ResourceLoader(basePath);
         AssetManager assets = new AssetManager(resourceLoader);
@@ -64,7 +67,7 @@ public class DukeNukem {
         CanvasRenderer renderer = new CanvasRenderer(palette);
         GameContext context = new GameContext(assets, renderer, palette, keyHandler, sounds, dialogManager);
         DukeNukemFrame frame = new DukeNukemFrame(renderer, keyHandler);
-        GameplayState state = new GameplayState(context);
+        GameplayState state = new GameplayState(context, new Cheats(gameParameters.asp()));
 //        GameState state = new MainMenu();
         StateManager manager = new StateManager(context, state);
         GameLoop gameLoop = new GameLoop(context, manager);
