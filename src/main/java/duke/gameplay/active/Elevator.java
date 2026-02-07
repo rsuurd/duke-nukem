@@ -13,7 +13,7 @@ import duke.sfx.Sfx;
 import static duke.gfx.SpriteDescriptor.OBJECTS;
 import static duke.gfx.SpriteDescriptor.TILES;
 
-public class Elevator extends Active implements Renderable, Solid, Updatable, Interactable {
+public class Elevator extends Active implements Renderable, Solid, Updatable, Interactable, Wakeable {
     private int elevation;
 
     public Elevator(int x, int y) {
