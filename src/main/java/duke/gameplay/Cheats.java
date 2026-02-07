@@ -6,6 +6,8 @@ import duke.ui.KeyHandler;
 
 import java.awt.event.KeyEvent;
 
+import static duke.gameplay.player.PlayerHealth.MAX_HEALTH;
+
 public class Cheats {
     private boolean enabled;
 
@@ -37,6 +39,8 @@ public class Cheats {
 
     private void addAllItems(GameplayContext context) {
         if (godUsed) return;
+
+        context.getPlayer().getHealth().increaseHealth(MAX_HEALTH);
 
         for (int i = 0; i < 3; i++) {
             context.getPlayer().getWeapon().increaseFirepower();

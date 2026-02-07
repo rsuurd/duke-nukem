@@ -2,6 +2,7 @@ package duke.gameplay;
 
 import duke.gameplay.active.items.Key;
 import duke.gameplay.player.Inventory;
+import duke.gameplay.player.PlayerHealth;
 import duke.gameplay.player.Weapon;
 import duke.ui.KeyHandler;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static duke.gameplay.Cheats.GOD;
 import static duke.gameplay.Cheats.GOW;
+import static duke.gameplay.player.PlayerHealth.MAX_HEALTH;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -37,8 +39,10 @@ class CheatsTest {
 
     @Test
     void shouldMaxOutFirePowerAndAddAllItems() {
+        PlayerHealth health = mock();
         Weapon weapon = mock();
         Inventory inventory = mock();
+        when(context.getPlayer().getHealth()).thenReturn(health);
         when(context.getPlayer().getWeapon()).thenReturn(weapon);
         when(context.getPlayer().getInventory()).thenReturn(inventory);
 
@@ -46,6 +50,7 @@ class CheatsTest {
 
         cheats.processInput(keyHandler, context);
 
+        verify(health).increaseHealth(MAX_HEALTH);
         verify(weapon, times(3)).increaseFirepower();
 
         for (Key.Type keyType : Key.Type.values()) {
