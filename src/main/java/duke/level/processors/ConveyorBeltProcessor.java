@@ -7,6 +7,9 @@ import duke.level.LevelBuilder;
 
 import java.util.List;
 
+import static duke.gameplay.active.ConveyorBelt.SOLID_LEFT_CONVEYOR_TILE_ID;
+import static duke.gameplay.active.ConveyorBelt.SOLID_RIGHT_CONVEYOR_TILE_ID;
+
 public class ConveyorBeltProcessor implements ActiveProcessor {
     @Override
     public boolean canProcess(int tileId) {
@@ -19,14 +22,16 @@ public class ConveyorBeltProcessor implements ActiveProcessor {
         if (tileId == LEFT_END_TILE_ID || tileId == RIGHT_END_TILE_ID) return;
 
         Facing direction = getDirection(tileId);
-        int width = calculateConveyorBeltLength(index, direction, builder);
+        int cols = calculateConveyorBeltColumns(index, direction, builder);
+        int width = (cols + 1) * Level.TILE_SIZE;
 
-        builder.add(new ConveyorBelt(Level.toX(index), Level.toY(index), width, direction));
-
-        builder.playerStart(index - Level.WIDTH - Level.WIDTH);
+        builder
+                .setTile(index, SOLID_LEFT_CONVEYOR_TILE_ID)
+                .setTile(index + cols, SOLID_RIGHT_CONVEYOR_TILE_ID)
+                .add(new ConveyorBelt(Level.toX(index), Level.toY(index), width, direction));
     }
 
-    private int calculateConveyorBeltLength(int index, Facing direction, LevelBuilder builder) {
+    private int calculateConveyorBeltColumns(int index, Facing direction, LevelBuilder builder) {
         int endTileId = (direction == Facing.LEFT) ? LEFT_END_TILE_ID : RIGHT_END_TILE_ID;
         int cols = 1;
         boolean found = false;
@@ -34,10 +39,12 @@ public class ConveyorBeltProcessor implements ActiveProcessor {
         while (!found && cols < Level.WIDTH) {
             found = builder.getTileId(index + cols) == endTileId;
 
-            cols++;
+            if (!found) {
+                cols++;
+            }
         }
 
-        return cols * Level.TILE_SIZE;
+        return cols;
     }
 
     private Facing getDirection(int tileId) {

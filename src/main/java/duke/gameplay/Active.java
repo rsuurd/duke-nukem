@@ -40,8 +40,18 @@ public abstract class Active implements Movable {
     }
 
     @Override
+    public void setWidth(int width) {
+        bounds.setWidth(width);
+    }
+
+    @Override
     public int getHeight() {
         return bounds.getHeight();
+    }
+
+    @Override
+    public void setHeight(int height) {
+        bounds.setHeight(height);
     }
 
     @Override

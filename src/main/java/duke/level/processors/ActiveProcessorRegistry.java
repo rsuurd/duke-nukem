@@ -45,6 +45,8 @@ public class ActiveProcessorRegistry {
                 new TransporterProcessor(),
                 new ForceFieldProcessor(),
                 new AccessCardActivationPointProcessor(),
+                new RobohandActivationPointProcessor(),
+                new GirderTileProcessor(),
                 new KillerBunnyProcessor(),
                 new HelicopterProcessor(),
                 new FanProcessor(),

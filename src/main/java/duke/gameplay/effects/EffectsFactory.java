@@ -100,7 +100,7 @@ public class EffectsFactory {
     private static final AnimationDescriptor SMOKE = create(OBJECTS, GFX_SMOKE_INDEX, 5);
     private static final AnimationDescriptor SPARKS = create(ANIM, GFX_SPARKS_INDEX, 6);
     private static final AnimationDescriptor FLASH = new AnimationDescriptor(List.of(
-            new SpriteDescriptor(ANIM, 215, 0, 0, 1, 1),
+            new SpriteDescriptor(ANIM, 215),
             new SpriteDescriptor(ANIM, 216, -8, -8, 2, 2)
     ), 1, AnimationDescriptor.Type.ONE_SHOT);
     private static final SpriteDescriptor REACTOR_HIT = new SpriteDescriptor(SpriteDescriptor.ANIM, 265);

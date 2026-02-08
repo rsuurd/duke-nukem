@@ -26,14 +26,19 @@ public class SpriteRenderer {
 
         for (int row = 0; row < spriteDescriptor.rows(); row++) {
             for (int col = 0; col < spriteDescriptor.cols(); col++) {
-                int spriteIndex = spriteDescriptor.baseIndex() + (row * spriteDescriptor.cols()) + col;
-                Sprite sprite = sprites.get(spriteIndex);
+                try {
+                    int spriteIndex = spriteDescriptor.baseIndex() + (row * spriteDescriptor.cols()) + col;
+                    Sprite sprite = sprites.get(spriteIndex);
 
-                int screenX = x + spriteDescriptor.offsetX() + (col * sprite.getWidth());
-                int screenY = y + spriteDescriptor.offsetY() + (row * sprite.getHeight());
+                    int screenX = x + spriteDescriptor.offsetX() + (col * sprite.getWidth());
+                    int screenY = y + spriteDescriptor.offsetY() + (row * sprite.getHeight());
 
-                if (isOnScreen(sprite, screenX, screenY)) {
-                    renderer.draw(sprite, screenX, screenY);
+                    if (isOnScreen(sprite, screenX, screenY)) {
+                        renderer.draw(sprite, screenX, screenY);
+                    }
+                } catch (Exception e) {
+                    // spriteDescriptor.baseIndex() + (row * spriteDescriptor.cols()) + col;
+                    System.err.format("Failed rendering base idx %d + (%d * %d) + %d\n", spriteDescriptor.baseIndex(), row, spriteDescriptor.cols(), col);
                 }
             }
         }

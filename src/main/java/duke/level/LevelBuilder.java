@@ -33,10 +33,17 @@ public class LevelBuilder {
     }
 
     public LevelBuilder replaceTile(int index, int offset) {
-        data[index] = data[index + offset];
+        setTile(index, data[index + offset]);
 
         return this;
     }
+
+    public LevelBuilder setTile(int index, int tileId) {
+        data[index] = tileId;
+
+        return this;
+    }
+
 
     public int getTileId(int index) {
         return data[index];

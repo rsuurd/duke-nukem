@@ -44,11 +44,12 @@ public class Hints {
         SODA(SODA_TIP),
         TURKEY(TURKEY_TIP),
         TRANSPORTER(TRANSPORTER_TIP),
-        ACCESS_CARD(ACCESS_CARD_TIP);
+        ACCESS_CARD(ACCESS_CARD_TIP),
+        ROBOHAND(ROBOHAND_TIP);
 
         private String text;
 
-        private Hint(String text) {
+        Hint(String text) {
             this.text = text;
         }
     }
@@ -63,4 +64,5 @@ public class Hints {
     private static final String TURKEY_TIP = "Eat turkey\nto increase your health!\n";
     private static final String TRANSPORTER_TIP = "Press the UP\nARROW to activate the\ntransporter.";
     private static final String ACCESS_CARD_TIP = "Find the\nACCESS CARD and press\nthe UP ARROW here.";
+    private static final String ROBOHAND_TIP = "Press the UP\nARROW here after you\nhave found the ROBOHAND.";
 }

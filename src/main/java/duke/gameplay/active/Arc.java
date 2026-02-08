@@ -51,6 +51,8 @@ public class Arc extends Active implements Renderable, Damaging, Updatable {
 
     private void playSound(SoundManager soundManager) {
         if (sound == 0) {
+            // it would be better if this one was played centralized, because many arcs can be active at the same time, sounding weird.
+            // maybe soundManager can make an exception for this one.
             soundManager.play(Sfx.FORCE_FIELD);
         }
 

@@ -4,12 +4,10 @@ import duke.gameplay.Facing;
 import duke.gameplay.GameplayContext;
 import duke.gameplay.GameplayContextFixture;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
 import static duke.level.Level.TILE_SIZE;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -19,13 +17,6 @@ class ConveyorBeltTest {
     @BeforeEach
     void create() {
         context = GameplayContextFixture.create();
-    }
-
-    @Test
-    void shouldBeSolid() {
-        ConveyorBelt conveyorBelt = new ConveyorBelt(0, 0, 64, Facing.RIGHT);
-
-        assertThat(conveyorBelt.isSolid()).isTrue();
     }
 
     @ParameterizedTest

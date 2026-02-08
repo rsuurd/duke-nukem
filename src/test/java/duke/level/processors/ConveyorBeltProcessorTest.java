@@ -16,12 +16,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static duke.gameplay.active.ConveyorBelt.SOLID_LEFT_CONVEYOR_TILE_ID;
+import static duke.gameplay.active.ConveyorBelt.SOLID_RIGHT_CONVEYOR_TILE_ID;
 import static duke.level.Level.TILE_SIZE;
 import static duke.level.processors.ConveyorBeltProcessor.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ConveyorBeltProcessorTest {
@@ -38,9 +39,12 @@ class ConveyorBeltProcessorTest {
 
         Iterator<Integer> iterator = nextTiles.iterator();
         doAnswer(invocationOnMock -> iterator.next()).when(builder).getTileId(anyInt());
+        when(builder.setTile(anyInt(), anyInt())).thenReturn(builder);
 
         processor.process(0, tileId, builder);
 
+        verify(builder).setTile(0, SOLID_LEFT_CONVEYOR_TILE_ID);
+        verify(builder).setTile(nextTiles.size(), SOLID_RIGHT_CONVEYOR_TILE_ID);
         verify(builder).add(captor.capture());
 
         ConveyorBelt conveyorBelt = captor.getValue();

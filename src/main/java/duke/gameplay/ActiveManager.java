@@ -12,8 +12,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import static duke.sfx.Sfx.PLAYER_HIT;
-
 public class ActiveManager {
     private Viewport viewport;
     private Collision collision;
