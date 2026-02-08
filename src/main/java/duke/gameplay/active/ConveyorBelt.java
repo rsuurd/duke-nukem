@@ -1,10 +1,7 @@
 package duke.gameplay.active;
 
 import duke.Renderer;
-import duke.gameplay.Active;
-import duke.gameplay.Facing;
-import duke.gameplay.GameplayContext;
-import duke.gameplay.Updatable;
+import duke.gameplay.*;
 import duke.gameplay.player.Player;
 import duke.gfx.*;
 
@@ -41,7 +38,7 @@ public class ConveyorBelt extends Active implements Updatable, Renderable {
 
     @Override
     public void update(GameplayContext context) {
-        pushPlayer(context.getPlayer());
+        pushPlayer(context);
 
         updateAnimation();
     }
@@ -52,15 +49,28 @@ public class ConveyorBelt extends Active implements Updatable, Renderable {
         }
     }
 
-    private void pushPlayer(Player player) {
-        if (hasOnTop(player)) {
-            // TODO we should push by adding to the player's velocity.
-            // However that requires rework of the player's input and friction code. Will do that later
+    // TODO we should push by adding to the player's velocity.
+    // However that requires rework of the player's input and friction code. Will do that later
+    private void pushPlayer(WorldQuery query) {
+        Player player = query.getPlayer();
 
-            int pushX = (direction == Facing.RIGHT) ? SPEED : -SPEED;
-            player.setX(player.getX() + pushX);
+        // TODO add  || isGrappledOn(player) to support grappling
+        if (hasOnTop(player)) {
+            int deltaX = (direction == Facing.RIGHT) ? SPEED : -SPEED;
+
+            if (canPush(query, deltaX)) {
+                player.setX(player.getX() + deltaX);
+            }
         }
-        // TODO what about gappling on the underside? We'll cross that bridge when we get there.
+    }
+
+    // this check can be removed if we just increase the player's velocity
+    private boolean canPush(WorldQuery query, int deltaX) {
+        Player player = query.getPlayer();
+        int row = query.getPlayer().getRow();
+        // the destination col, taking onto account the player's size (see Elevator)
+        int col = (player.getX() + (deltaX > 0 ? player.getWidth() - 1 : 0) + deltaX) / TILE_SIZE;
+        return !query.isSolid(row, col);
     }
 
     @Override

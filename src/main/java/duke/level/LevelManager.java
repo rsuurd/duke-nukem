@@ -47,6 +47,7 @@ public class LevelManager {
             new LevelDescriptor(6, 0, "Hmmm... I see you've\nsurvived my Maze of\nMadness. I might have\nunderestimated you."),
             new LevelDescriptor(2, 0, "You are doing quite well\nso far...Let's see if\nyou can keep it up. Also\nremember to SAVE."),
             new LevelDescriptor(7, 2, "Duke, in spite of your\npersistance, my plan to\nrule earth will not be\nstopped. Ah, ha, ha!"), // sic
-            new LevelDescriptor(2, 0, "Find the GRAPPLING HOOKS\nto beat the next level.\nUse them to grab on to\nspecial grated ceilings.")
+            new LevelDescriptor(2, 0, "Find the GRAPPLING HOOKS\nto beat the next level.\nUse them to grab on to\nspecial grated ceilings."),
+            new LevelDescriptor(8, 1, "Why bother Duke? Not\neven Commander Keen\ncould survive the perils\nof my mercury mines!")
     );
 }
