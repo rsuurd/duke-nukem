@@ -70,6 +70,10 @@ public class EffectsFactory {
         return new Effect(x, y, FLASH);
     }
 
+    public static Effect createSlowFlash(int x, int y) {
+        return new BlinkingEffect(x, y, SLOW_FLASH, SLOW_FLASH.getFrames() * SLOW_FLASH.getTicksPerFrame());
+    }
+
     public static Effect createDebris(int x, int y) {
         return new Debris(x, y);
     }
@@ -83,6 +87,14 @@ public class EffectsFactory {
                 createSmoke(x - 4, y + TILE_SIZE),
                 createSmoke(x + 4, y + TILE_SIZE)
         );
+    }
+
+    public static Effect createRocketIgnition(int x, int y, int ttl) {
+        return new BlinkingEffect(x, y, ROCKET_IGNITION, ttl);
+    }
+
+    public static Effect createRocketBurn(int x, int y, int ttl) {
+        return new BlinkingEffect(x, y, ROCKET_BURN, ttl);
     }
 
     private static final int GFX_DUST_INDEX = 19;
@@ -103,9 +115,14 @@ public class EffectsFactory {
             new SpriteDescriptor(ANIM, 215),
             new SpriteDescriptor(ANIM, 216, -8, -8, 2, 2)
     ), 1, AnimationDescriptor.Type.ONE_SHOT);
+
+    private static final AnimationDescriptor SLOW_FLASH = FLASH.withTicksPerFrame(2);
+
     private static final SpriteDescriptor REACTOR_HIT = new SpriteDescriptor(SpriteDescriptor.ANIM, 265);
     private static final SpriteDescriptor IGNITION_RIGHT = new SpriteDescriptor(OBJECTS, GFX_IGNITE_RIGHT_INDEX);
     private static final SpriteDescriptor IGNITION_LEFT = IGNITION_RIGHT.withBaseIndex(GFX_IGNITE_LEFT_INDEX);
+    private static final SpriteDescriptor ROCKET_IGNITION = new SpriteDescriptor(OBJECTS, 17);
+    private static final SpriteDescriptor ROCKET_BURN = new SpriteDescriptor(OBJECTS, 16, 0, 0, 2, 1);
 
     private static final AnimationDescriptor TRANSPORT_ACTIVE = new AnimationDescriptor(new SpriteDescriptor(ANIM, 229), 2, 2);
 }

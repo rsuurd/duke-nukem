@@ -56,6 +56,10 @@ public class AnimationDescriptor {
         return type;
     }
 
+    public AnimationDescriptor withTicksPerFrame(int ticksPerFrame) {
+        return new AnimationDescriptor(descriptors, ticksPerFrame, type);
+    }
+
     public enum Type {
         LOOP,
         ONE_SHOT

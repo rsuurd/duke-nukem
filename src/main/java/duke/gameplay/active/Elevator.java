@@ -44,6 +44,7 @@ public class Elevator extends Active implements Renderable, Solid, Updatable, In
         if (onTop) {
             context.getHints().showHint(Hints.Hint.ELEVATOR, context);
         } else {
+            // TODO flag for retraction so it fully retracts before allowing the player to step on again
             moveDown();
         }
     }

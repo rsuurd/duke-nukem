@@ -29,7 +29,7 @@ public class Girder extends Active implements Updatable {
             if (canExtendFurther(context.getLevel().getTile(row, col))) {
                 setWidth(getWidth() + TILE_SIZE);
                 context.getLevel().setTile(getRow(), col, GIRDER_BLOCK_TILE_ID);
-                context.getActiveManager().spawn(EffectsFactory.createFlash(col * TILE_SIZE, getY()));
+                context.getActiveManager().spawn(EffectsFactory.createSlowFlash(col * TILE_SIZE, getY()));
             } else {
                 fullyExtended = true;
             }

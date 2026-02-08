@@ -38,7 +38,7 @@ public class SnakeBot extends Enemy implements SpriteRenderable, Wakeable {
 
     @Override
     protected void onDestroyed(GameplayContext context) {
-        context.getActiveManager().spawn(EffectsFactory.createFlash(getX(), getY()));
+        context.getActiveManager().spawn(EffectsFactory.createSlowFlash(getX(), getY()));
         context.getActiveManager().spawn(EffectsFactory.createParticles(getX(), getY()));
         context.getScoreManager().score(1000);
         context.getSoundManager().play(Sfx.BOX_EXPLODE);

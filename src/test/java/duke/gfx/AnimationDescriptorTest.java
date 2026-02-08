@@ -37,4 +37,13 @@ class AnimationDescriptorTest {
                 new AnimationDescriptor(SPRITE_DESCRIPTOR, 1, 0)
         ).isInstanceOf(IllegalArgumentException.class).hasMessageContaining("ticksPerFrame must be at least 1");
     }
+
+    @Test
+    void shouldAdjustTicksPerFrame() {
+        AnimationDescriptor descriptor = new AnimationDescriptor(SPRITE_DESCRIPTOR, 4, 2).withTicksPerFrame(5);
+
+        assertThat(descriptor).isNotNull();
+        assertThat(descriptor.getFrames()).isEqualTo(4);
+        assertThat(descriptor.getTicksPerFrame()).isEqualTo(5);
+    }
 }

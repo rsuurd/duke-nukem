@@ -11,7 +11,7 @@ import duke.sfx.Sfx;
 
 import static duke.gfx.SpriteDescriptor.ANIM;
 
-public class Dynamite extends Active implements Updatable, SpriteRenderable, Wakeable {
+public class Dynamite extends Active implements Updatable, SpriteRenderable, Wakeable, Physics {
     private Animation animation;
 
     private int timer;
