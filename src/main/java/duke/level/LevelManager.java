@@ -48,6 +48,12 @@ public class LevelManager {
             new LevelDescriptor(2, 0, "You are doing quite well\nso far...Let's see if\nyou can keep it up. Also\nremember to SAVE."),
             new LevelDescriptor(7, 2, "Duke, in spite of your\npersistance, my plan to\nrule earth will not be\nstopped. Ah, ha, ha!"), // sic
             new LevelDescriptor(2, 0, "Find the GRAPPLING HOOKS\nto beat the next level.\nUse them to grab on to\nspecial grated ceilings."),
-            new LevelDescriptor(8, 1, "Why bother Duke? Not\neven Commander Keen\ncould survive the perils\nof my mercury mines!")
+            new LevelDescriptor(8, 1, "Why bother Duke? Not\neven Commander Keen\ncould survive the perils\nof my mercury mines!"),
+            new LevelDescriptor(2, 0, "There are several secret\nbonuses you can earn on\neach level! Register to\nget the complete list."),
+            new LevelDescriptor(9, 3, "I hate heroes! Your luck\nis about to run out.\nPerhaps now would be a\ngood time to flee, Duke!"),
+            new LevelDescriptor(2, 0, "Secret Bonus Hint:\nCollect the letters\nD, U, K, E in order to\nearn bonus number five."),
+            new LevelDescriptor(10, 5, "Duke, join me now and\nlive, or continue this\nfoolishness and I'll\nsquash you myself!"),
+            new LevelDescriptor(2, 0, "You are about to enter\nthe secret Bubble City\nfortress of Dr. Proton.\nThere's no turning back!"),
+            new LevelDescriptor(11, 0, "I'm coming down to crush\nyou, Duke. It's just\nyou and me now.")
     );
 }

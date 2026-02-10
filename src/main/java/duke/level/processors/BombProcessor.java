@@ -17,6 +17,8 @@ public class BombProcessor implements ActiveProcessor {
         int x = Level.toX(index);
         int y = Level.toY(index);
 
+        // TODO on the final level this copies a tile from above but it looks off.
+        // That one falls down. Maybe that needs to grab the tile from the left?
         builder.add(new Bomb(x, y)).replaceTile(index, TOP);
     }
 
