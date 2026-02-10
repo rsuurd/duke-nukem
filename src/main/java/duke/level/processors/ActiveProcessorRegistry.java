@@ -53,7 +53,9 @@ public class ActiveProcessorRegistry {
                 new ArcProcessor(),
                 new SnakeBotProcessor(),
                 new ConveyorBeltProcessor(),
-                new MissileProcessor()
+                new MissileProcessor(),
+                new WaterProcessor(),
+                new FlameElementalProcessor()
         ));
     }
 
