@@ -55,7 +55,8 @@ public class ActiveProcessorRegistry {
                 new ConveyorBeltProcessor(),
                 new MissileProcessor(),
                 new WaterProcessor(),
-                new FlameElementalProcessor()
+                new FlameElementalProcessor(),
+                new DrProtonProcessor()
         ));
     }
 

@@ -54,6 +54,7 @@ public class LevelManager {
             new LevelDescriptor(2, 0, "Secret Bonus Hint:\nCollect the letters\nD, U, K, E in order to\nearn bonus number five."),
             new LevelDescriptor(10, 5, "Duke, join me now and\nlive, or continue this\nfoolishness and I'll\nsquash you myself!"),
             new LevelDescriptor(2, 0, "You are about to enter\nthe secret Bubble City\nfortress of Dr. Proton.\nThere's no turning back!"),
+            // TODO level 11 switches to backdrop 11 for the boss escape, 0 for the rest of the level.
             new LevelDescriptor(11, 0, "I'm coming down to crush\nyou, Duke. It's just\nyou and me now.")
     );
 }
