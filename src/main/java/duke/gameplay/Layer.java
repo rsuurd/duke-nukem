@@ -1,5 +1,5 @@
 package duke.gameplay;
 
 public enum Layer {
-    BACKGROUND, FOREGROUND
+    BACKGROUND, FOREGROUND, POST_PROCESS
 }

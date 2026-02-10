@@ -40,6 +40,15 @@ class SpriteTest {
     }
 
     @Test
+    void shouldSetPixels() {
+        Sprite sprite = new Sprite(1, 1);
+
+        sprite.setPixel(0, 0, (byte) 1);
+
+        assertThat(sprite.getPixel(0, 0)).isEqualTo((byte) 1);
+    }
+
+    @Test
     void shouldOverlay() {
         Sprite sprite = new Sprite(1, 1, new byte[]{1});
         Sprite overlay = new Sprite(1, 1, new byte[]{3});

@@ -7,5 +7,7 @@ public interface Renderer {
 
     void draw(Sprite sprite, int x, int y);
 
+    void copy(int sourceX, int sourceY, int destinationX, int destinationY);
+
     void flip();
 }

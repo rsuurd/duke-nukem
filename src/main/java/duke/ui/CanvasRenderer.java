@@ -40,6 +40,12 @@ public class CanvasRenderer extends Canvas implements Renderer {
         buffer.draw(sprite, x, y);
     }
 
+    public void copy(int sourceX, int sourceY, int destinationX, int destinationY) {
+        byte source = buffer.getPixel(sourceX, sourceY);
+
+        buffer.setPixel(destinationX, destinationY, source);
+    }
+
     @Override
     public void flip() {
         BufferStrategy strategy = getBufferStrategy();

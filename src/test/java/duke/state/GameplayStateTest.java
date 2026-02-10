@@ -118,6 +118,7 @@ class GameplayStateTest {
         verify(gameplayContext.getActiveManager()).render(gameContext.getRenderer(), Layer.BACKGROUND);
         verify(spriteRenderer).render(gameContext.getRenderer(), player, player.getX(), player.getY());
         verify(gameplayContext.getActiveManager()).render(gameContext.getRenderer(), Layer.FOREGROUND);
+        verify(gameplayContext.getActiveManager()).render(gameContext.getRenderer(), Layer.POST_PROCESS);
         verify(hud).render(same(gameContext.getRenderer()), eq(2430), same(player), anyString());
     }
 

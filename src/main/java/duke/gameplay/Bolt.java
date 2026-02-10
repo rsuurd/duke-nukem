@@ -86,14 +86,14 @@ public class Bolt extends Active implements Updatable, SpriteRenderable {
                 if (active instanceof Solid solid && solid.isSolid()) {
                     spawnSparks(context);
                     destroy();
+                    return;
                 }
 
                 if (active instanceof Shootable shootable) {
                     shootable.onShot(context, this);
                     destroy();
+                    return;
                 }
-
-                return;
             }
         }
     }

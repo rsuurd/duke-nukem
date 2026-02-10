@@ -33,6 +33,10 @@ public class Sprite {
         return pixels[y * width + x];
     }
 
+    public void setPixel(int x, int y, byte pixel) {
+        pixels[y * width + x] = pixel;
+    }
+
     public byte[] getPixels() {
         return pixels;
     }

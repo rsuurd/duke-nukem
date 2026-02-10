@@ -61,7 +61,7 @@ public class GameplayState implements GameState {
 
     @Override
     public void start(GameContext gameContext) {
-//        Level level = levelManager.warpTo(11);
+//        Level level = levelManager.warpTo(13);
         Level level = levelManager.getNextLevel();
         switchLevel(level, context);
     }
@@ -109,6 +109,7 @@ public class GameplayState implements GameState {
         drawPlayer(renderer);
         context.getActiveManager().render(renderer, Layer.FOREGROUND);
         context.getBoltManager().render(renderer);
+        context.getActiveManager().render(renderer, Layer.POST_PROCESS);
 
         hud.render(renderer, context.getScoreManager().getScore(), context.getPlayer(), getDebugString(context));
         context.getDialogManager().render(renderer);
