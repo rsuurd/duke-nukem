@@ -5,6 +5,7 @@ import duke.gameplay.Bolt;
 import duke.gameplay.Collidable;
 import duke.gameplay.GameplayContext;
 import duke.gameplay.Shootable;
+import duke.gameplay.active.Wakeable;
 import duke.gameplay.active.items.behavior.ItemBehavior;
 import duke.gameplay.active.items.behavior.ItemBehaviorFactory;
 import duke.gameplay.effects.PoppedBalloon;
@@ -14,7 +15,7 @@ import duke.sfx.Sfx;
 
 import static duke.gfx.SpriteDescriptor.OBJECTS;
 
-public class Balloon extends Item implements Collidable, Renderable, Shootable {
+public class Balloon extends Item implements Collidable, Renderable, Shootable, Wakeable {
     private Animation animation;
     private boolean popped;
 

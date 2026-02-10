@@ -85,4 +85,11 @@ class Ed209Test {
         verify(context.getActiveManager(), times(3)).spawn(anyList());
         verify(context.getSoundManager()).play(Sfx.HIT_A_BREAKER);
     }
+
+    @Test
+    void shouldBeWokenUp() {
+        ed209.wakeUp();
+
+        assertThat(ed209.isAwake()).isTrue();
+    }
 }

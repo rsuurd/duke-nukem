@@ -231,6 +231,17 @@ class PlayerTest {
     }
 
     @Test
+    void shouldFallWhenDamageTakenMidJump() {
+        Player player = create(State.JUMPING, Facing.LEFT);
+        player.processInput(new KeyHandler.Input(false, false, true, false, false));
+        player.getHealth().takeDamage(1);
+
+        player.update(context);
+
+        assertThat(player.getState()).isEqualTo(State.FALLING);
+    }
+
+    @Test
     void shouldJumpHigherWithBoots() {
         Player player = create(State.STANDING, Facing.LEFT);
         when(player.getInventory().isEquippedWith(Inventory.Equipment.BOOTS)).thenReturn(true);

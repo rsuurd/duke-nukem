@@ -79,6 +79,8 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
 
         // TODO unify these two in a separate component
         updateJump();
+
+        // this insta ticks down fall frames, might be one too soon.
         updateFall();
 
         health.update(context);
@@ -106,12 +108,13 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     }
 
     private void updateJump() {
-        // TODO check health.damagetaken and cancel the jump
-
         if (state == State.JUMPING) {
             jumped = jumpTicks == JUMP_TICKS;
 
-            if (jumpTicks > 0) {
+            if (health.isDamageTaken()) {
+                state = State.FALLING;
+                jumpTicks = FALL_TICKS;
+            } else if (jumpTicks > 0) {
                 jumpTicks--;
             } else {
                 state = State.FALLING;

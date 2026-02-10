@@ -2,6 +2,7 @@ package duke.gameplay.active.enemies;
 
 import duke.Renderer;
 import duke.gameplay.*;
+import duke.gameplay.active.Wakeable;
 import duke.gameplay.active.enemies.behavior.Ed209Behavior;
 import duke.gameplay.active.enemies.behavior.EnemyBehavior;
 import duke.gameplay.effects.EffectsFactory;
@@ -14,7 +15,8 @@ import static duke.level.Level.HALF_TILE_SIZE;
 import static duke.level.Level.TILE_SIZE;
 
 // TODO should probably be Wakeable
-public class Ed209 extends Enemy implements Renderable, Physics, Collidable {
+public class Ed209 extends Enemy implements Renderable, Physics, Collidable, Wakeable {
+    private boolean awake;
     private boolean grounded;
     private boolean shooting;
 
@@ -133,6 +135,16 @@ public class Ed209 extends Enemy implements Renderable, Physics, Collidable {
         } else {
             spriteRenderer.render(renderer, facingLeft ? JUMPING_LEFT : JUMPING_RIGHT, screenX, screenY);
         }
+    }
+
+    @Override
+    public boolean isAwake() {
+        return awake;
+    }
+
+    @Override
+    public void wakeUp() {
+        awake = true;
     }
 
     static final int JUMP_STRENGTH = -18;
