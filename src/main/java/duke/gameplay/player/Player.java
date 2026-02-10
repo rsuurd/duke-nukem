@@ -78,10 +78,8 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
         applyFriction();
 
         // TODO unify these two in a separate component
-        updateJump();
-
-        // this insta ticks down fall frames, might be one too soon.
         updateFall();
+        updateJump();
 
         health.update(context);
     }
@@ -113,7 +111,7 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
 
             if (health.isDamageTaken()) {
                 state = State.FALLING;
-                jumpTicks = FALL_TICKS;
+                fallTicks = FALL_TICKS;
             } else if (jumpTicks > 0) {
                 jumpTicks--;
             } else {
@@ -204,7 +202,10 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     private void bump() {
         setVelocityY(0);
         jumpTicks = 0;
-        fallTicks = 0;
+        // +1 because fall is updated separately and we will be off by 1
+        // we can fix this by unifying jump and fall into a single update call
+        fallTicks = FALL_TICKS + 1;
+        state = State.FALLING;
         bumped = true;
     }
 
