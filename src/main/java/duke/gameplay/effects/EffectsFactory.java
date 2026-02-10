@@ -2,6 +2,7 @@ package duke.gameplay.effects;
 
 import duke.gameplay.Active;
 import duke.gameplay.Facing;
+import duke.gameplay.Layer;
 import duke.gfx.AnimationDescriptor;
 import duke.gfx.Sprite;
 import duke.gfx.SpriteDescriptor;
@@ -31,7 +32,7 @@ public class EffectsFactory {
     }
 
     public static Effect createSmoke(int x, int y) {
-        return new Effect(x, y, SMOKE);
+        return new Effect(x, y, SMOKE).withLayer(Layer.BACKGROUND);
     }
 
     public static List<Effect> createParticles(int x, int y) {

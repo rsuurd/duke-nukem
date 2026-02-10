@@ -1,5 +1,6 @@
 package duke.gameplay.effects;
 
+import duke.gameplay.Layer;
 import duke.gfx.AnimationDescriptor;
 import duke.gfx.SpriteDescriptor;
 import org.junit.jupiter.api.Test;
@@ -32,5 +33,12 @@ class EffectTest {
         effect.update(mock());
         assertThat(effect.isAwake()).isTrue();
         assertThat(effect.isDestroyed()).isTrue();
+    }
+
+    @Test
+    void shouldSetLayer() {
+        Effect effect = new Effect(0, 0, mock(SpriteDescriptor.class), 1).withLayer(Layer.BACKGROUND);
+
+        assertThat(effect.getLayer()).isEqualTo(Layer.BACKGROUND);
     }
 }

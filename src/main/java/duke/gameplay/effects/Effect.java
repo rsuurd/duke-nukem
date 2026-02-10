@@ -2,6 +2,7 @@ package duke.gameplay.effects;
 
 import duke.gameplay.Active;
 import duke.gameplay.GameplayContext;
+import duke.gameplay.Layer;
 import duke.gameplay.Updatable;
 import duke.gameplay.active.Wakeable;
 import duke.gfx.*;
@@ -9,6 +10,8 @@ import duke.level.Level;
 
 public class Effect extends Active implements Updatable, SpriteRenderable, Wakeable {
     private SpriteRenderable renderable;
+    private Layer layer;
+
     protected int ttl;
 
     protected Effect(int x, int y, SpriteDescriptor spriteDescriptor, int ttl) {
@@ -28,6 +31,7 @@ public class Effect extends Active implements Updatable, SpriteRenderable, Wakea
 
         this.renderable = renderable;
         this.ttl = ttl;
+        this.layer = Layer.FOREGROUND;
     }
 
     @Override
@@ -52,5 +56,16 @@ public class Effect extends Active implements Updatable, SpriteRenderable, Wakea
         if (--ttl <= 0) {
             destroy();
         }
+    }
+
+    @Override
+    public Layer getLayer() {
+        return layer;
+    }
+
+    public Effect withLayer(Layer layer) {
+        this.layer = layer;
+
+        return this;
     }
 }
