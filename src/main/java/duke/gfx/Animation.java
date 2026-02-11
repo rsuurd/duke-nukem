@@ -1,12 +1,11 @@
 package duke.gfx;
 
 public class Animation {
-    private AnimationDescriptor descriptor;
-
-    private int currentFrame;
-    private int timer;
-
     private Direction direction;
+    private AnimationDescriptor descriptor;
+    private int totalTicks;
+
+    private int ticks;
 
     public Animation(AnimationDescriptor descriptor) {
         direction = Direction.FORWARD;
@@ -21,6 +20,7 @@ public class Animation {
     public void setAnimation(AnimationDescriptor descriptor, boolean reset) {
         if (this.descriptor != descriptor) {
             this.descriptor = descriptor;
+            this.totalTicks = descriptor.getFrames() * descriptor.getTicksPerFrame();
 
             if (reset) {
                 reset();
@@ -29,40 +29,49 @@ public class Animation {
     }
 
     public SpriteDescriptor getSpriteDescriptor() {
-        return descriptor.getDescriptors().get(currentFrame);
+        return descriptor.getDescriptors().get(getCurrentFrameIndex());
+    }
+
+    int getCurrentFrameIndex() {
+        return ticks / descriptor.getTicksPerFrame();
     }
 
     public void tick() {
-        if (isFinished() || descriptor.getFrames() <= 1 || descriptor.getTicksPerFrame() <= 0) return;
+        if (isFinished()) return;
 
-        if (++timer >= descriptor.getTicksPerFrame()) {
-            advanceFrame();
+        this.ticks = ticks + direction.step();
+
+        if (descriptor.getType() == AnimationDescriptor.Type.ONE_SHOT) {
+            ticks = Math.max(0, Math.min(ticks, totalTicks - 1));
+        } else {
+            ticks = (ticks + totalTicks) % totalTicks;
         }
-    }
-
-    private void advanceFrame() {
-        if (descriptor.getType() == AnimationDescriptor.Type.LOOP) {
-            currentFrame = (currentFrame + direction.step() + descriptor.getFrames()) % descriptor.getFrames();
-            timer = 0;
-        } else if (currentFrame != lastFrame()) {
-            currentFrame += direction.step();
-            timer = 0;
-        }
-    }
-
-    private int lastFrame() {
-        return (direction == Direction.FORWARD) ? descriptor.getFrames() - 1 : 0;
     }
 
     public void reset() {
-        timer = 0;
-        currentFrame = (direction == Direction.FORWARD) ? 0 : descriptor.getFrames() - 1;
+        if (direction == Direction.FORWARD) {
+            ticks = 0;
+        } else {
+            ticks = totalTicks - 1;
+        }
     }
 
     public boolean isFinished() {
         if (descriptor.getType() != AnimationDescriptor.Type.ONE_SHOT) return false;
 
-        return currentFrame == lastFrame();
+        if (direction == Direction.FORWARD) {
+            return ticks >= totalTicks - 1;
+        } else {
+            return ticks <= 0;
+        }
+    }
+
+    public boolean isReset() {
+        if (direction == Direction.FORWARD) {
+            return ticks == 0;
+        } else {
+            return ticks == totalTicks - 1;
+        }
     }
 
     public void reverse() {

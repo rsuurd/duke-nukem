@@ -10,11 +10,13 @@ import static duke.gfx.SpriteDescriptor.MAN;
 
 public class PlayerAnimator implements SpriteRenderable {
     private Animation walkAnimation;
+    private Animation flipAnimation;
 
     private SpriteDescriptor currentDescriptor;
 
     public PlayerAnimator() {
         walkAnimation = new Animation(WALKING_RIGHT);
+        flipAnimation = new Animation(FLIPPING_RIGHT);
     }
 
     public void animate(Player player) {
@@ -28,9 +30,13 @@ public class PlayerAnimator implements SpriteRenderable {
 
         switch (state) {
             case STANDING -> animateStationary(player, facing);
-            case JUMPING -> animateJump(facing);
-            case FALLING -> animateFall(facing);
+            case JUMPING -> animateJump(facing, player.isFlipping());
+            case FALLING -> animateFall(facing, player.isFlipping());
             case WALKING -> animateWalk(facing);
+        }
+
+        if (player.isGrounded()) {
+            flipAnimation.reset();
         }
     }
 
@@ -46,22 +52,35 @@ public class PlayerAnimator implements SpriteRenderable {
         }
     }
 
-    private void animateJump(Facing facing) {
-        // if shoes and non zero X velocity, randomly decide to flip or not
-
-        currentDescriptor = (facing == Facing.LEFT) ? JUMPING_LEFT : JUMPING_RIGHT;
+    private void animateJump(Facing facing, boolean flipping) {
+        if (flipping) {
+            animateFlip(facing);
+        } else {
+            currentDescriptor = (facing == Facing.LEFT) ? JUMPING_LEFT : JUMPING_RIGHT;
+        }
     }
 
-    private void animateFall(Facing facing) {
-        // if flipping, just continue that animation until finished
+    private void animateFall(Facing facing, boolean flipping) {
+        if (flipping && !flipAnimation.isFinished()) {
+            animateFlip(facing);
+        } else {
+            currentDescriptor = (facing == Facing.LEFT) ? FALLING_LEFT : FALLING_RIGHT;
+        }
+    }
 
-        currentDescriptor = (facing == Facing.LEFT) ? FALLING_LEFT : FALLING_RIGHT;
+    private void animateFlip(Facing facing) {
+        if (flipAnimation.isReset()) { // start of the flip, determine facing
+            flipAnimation.setAnimation(facing == Facing.LEFT ? FLIPPING_LEFT : FLIPPING_RIGHT);
+        }
+
+        currentDescriptor = flipAnimation.getSpriteDescriptor();
+        flipAnimation.tick();
     }
 
     private void animateWalk(Facing facing) {
-        walkAnimation.tick();
         walkAnimation.setAnimation(facing == Facing.LEFT ? WALKING_LEFT : WALKING_RIGHT);
         currentDescriptor = walkAnimation.getSpriteDescriptor();
+        walkAnimation.tick();
     }
 
     @Override
@@ -76,8 +95,8 @@ public class PlayerAnimator implements SpriteRenderable {
     private static final AnimationDescriptor WALKING_RIGHT = new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(16), 4, 2);
     private static final SpriteDescriptor JUMPING_LEFT = BASE_DESCRIPTOR.withBaseIndex(32);
     private static final SpriteDescriptor JUMPING_RIGHT = BASE_DESCRIPTOR.withBaseIndex(36);
-    private static final AnimationDescriptor FLIPPING_LEFT = new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(56), 7, 2, AnimationDescriptor.Type.ONE_SHOT);
-    private static final AnimationDescriptor FLIPPING_RIGHT = new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(84), 7, 2, AnimationDescriptor.Type.ONE_SHOT);
+    private static final AnimationDescriptor FLIPPING_LEFT = new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(56), 8, 2, AnimationDescriptor.Type.ONE_SHOT);
+    private static final AnimationDescriptor FLIPPING_RIGHT = new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(84), 8, 2, AnimationDescriptor.Type.ONE_SHOT);
     private static final SpriteDescriptor FALLING_LEFT = BASE_DESCRIPTOR.withBaseIndex(40);
     private static final SpriteDescriptor FALLING_RIGHT = BASE_DESCRIPTOR.withBaseIndex(44);
     private static final SpriteDescriptor SHOOT_LEFT = BASE_DESCRIPTOR.withBaseIndex(12);

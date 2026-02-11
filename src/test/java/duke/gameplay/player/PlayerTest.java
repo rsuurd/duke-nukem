@@ -13,6 +13,8 @@ import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Random;
+
 import static duke.gameplay.player.Player.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyBoolean;
@@ -23,6 +25,8 @@ import static org.mockito.Mockito.*;
 class PlayerTest {
     @Mock
     private KeyHandler.Input input;
+    @Mock
+    private Random random;
     @Mock
     private Weapon weapon;
     @Mock
@@ -224,7 +228,9 @@ class PlayerTest {
     @Test
     void shouldJump() {
         Player player = create(State.STANDING, Facing.LEFT);
-        player.processInput(new KeyHandler.Input(false, false, true, false, false));
+        when(input.jump()).thenReturn(true);
+
+        player.processInput(input);
 
         assertThat(player.getState()).isEqualTo(State.JUMPING);
         assertThat(player.getVelocityY()).isEqualTo(JUMP_POWER);
@@ -233,9 +239,10 @@ class PlayerTest {
     @Test
     void shouldFallWhenDamageTakenMidJump() {
         Player player = create(State.JUMPING, Facing.LEFT);
-        player.processInput(new KeyHandler.Input(false, false, true, false, false));
-        player.getHealth().takeDamage(1);
+        when(input.jump()).thenReturn(true);
 
+        player.processInput(input);
+        player.getHealth().takeDamage(1);
         player.update(context);
 
         assertThat(player.getState()).isEqualTo(State.FALLING);
@@ -244,9 +251,10 @@ class PlayerTest {
     @Test
     void shouldJumpHigherWithBoots() {
         Player player = create(State.STANDING, Facing.LEFT);
+        when(input.jump()).thenReturn(true);
         when(player.getInventory().isEquippedWith(Inventory.Equipment.BOOTS)).thenReturn(true);
 
-        player.processInput(new KeyHandler.Input(false, false, true, false, false));
+        player.processInput(input);
 
         assertThat(player.getState()).isEqualTo(State.JUMPING);
         assertThat(player.getVelocityY()).isEqualTo(HIGH_JUMP_POWER);
@@ -275,8 +283,9 @@ class PlayerTest {
     @Test
     void shouldIndicateUsing() {
         Player player = create(State.STANDING, Facing.RIGHT);
+        when(input.using()).thenReturn(true);
 
-        player.processInput(new KeyHandler.Input(false, false, false, false, true));
+        player.processInput(input);
 
         assertThat(player.isUsing()).isTrue();
     }
@@ -332,7 +341,20 @@ class PlayerTest {
         verify(input).jump();
     }
 
+    @Test
+    void shouldFlip() {
+        Player player = create(State.STANDING, Facing.LEFT);
+        when(inventory.isEquippedWith(Inventory.Equipment.BOOTS)).thenReturn(true);
+        when(input.left()).thenReturn(true);
+        when(input.jump()).thenReturn(true);
+        when(random.nextBoolean()).thenReturn(true);
+
+        player.processInput(input);
+
+        assertThat(player.isFlipping()).isTrue();
+    }
+
     private Player create(State state, Facing facing) {
-        return new Player(state, facing, weapon, health, inventory, animator, feedback);
+        return new Player(state, facing, random, weapon, health, inventory, animator, feedback);
     }
 }

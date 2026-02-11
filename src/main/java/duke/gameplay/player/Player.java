@@ -5,6 +5,8 @@ import duke.gfx.SpriteDescriptor;
 import duke.gfx.SpriteRenderable;
 import duke.ui.KeyHandler;
 
+import java.util.Random;
+
 import static duke.level.Level.TILE_SIZE;
 
 public class Player extends Active implements Movable, Collidable, Physics, Updatable, SpriteRenderable {
@@ -21,7 +23,9 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     private int fallTicks;
     private boolean moving;
     private boolean using;
+    private boolean flipping;
 
+    private Random random;
     private Weapon weapon;
     private PlayerHealth health;
     private Inventory inventory;
@@ -29,10 +33,10 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     private PlayerFeedback feedback;
 
     public Player() {
-        this(State.STANDING, Facing.RIGHT, new Weapon(), new PlayerHealth(), new Inventory(), new PlayerAnimator(), new PlayerFeedback());
+        this(State.STANDING, Facing.RIGHT, new Random(), new Weapon(), new PlayerHealth(), new Inventory(), new PlayerAnimator(), new PlayerFeedback());
     }
 
-    Player(State state, Facing facing, Weapon weapon, PlayerHealth health, Inventory inventory, PlayerAnimator animator, PlayerFeedback feedback) {
+    Player(State state, Facing facing, Random random, Weapon weapon, PlayerHealth health, Inventory inventory, PlayerAnimator animator, PlayerFeedback feedback) {
         super(0, 0, WIDTH, HEIGHT);
 
         this.facing = facing;
@@ -41,6 +45,7 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
         enableControls();
         jumpReady = true;
 
+        this.random = random;
         this.weapon = weapon;
         this.health = health;
         this.inventory = inventory;
@@ -170,11 +175,14 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
 
     private void jump() {
         if (jumpReady && isGrounded()) {
-            setVelocityY(inventory.isEquippedWith(Inventory.Equipment.BOOTS) ? HIGH_JUMP_POWER : JUMP_POWER);
+            boolean hasBoots = inventory.isEquippedWith(Inventory.Equipment.BOOTS);
+
+            setVelocityY(hasBoots ? HIGH_JUMP_POWER : JUMP_POWER);
             state = State.JUMPING;
             jumpReady = false;
             jumpTicks = JUMP_TICKS;
             jumped = true;
+            flipping = hasBoots && getVelocityX() != 0 && random.nextBoolean();
         }
     }
 
@@ -197,6 +205,7 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
         state = moving ? State.WALKING : State.STANDING;
         jumpTicks = 0;
         fallTicks = 0;
+        flipping = false;
     }
 
     private void bump() {
@@ -258,6 +267,10 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
 
     public boolean isUsing() {
         return using;
+    }
+
+    public boolean isFlipping() {
+        return flipping;
     }
 
     public void disableControls() {
