@@ -2,6 +2,7 @@ package duke.gameplay.player;
 
 import duke.gameplay.WorldQuery;
 import duke.level.Flags;
+import duke.ui.KeyHandler;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -21,6 +22,12 @@ class ClingHandlerTest {
 
     @Mock
     private WorldQuery worldQuery;
+
+    @Mock
+    private PlayerHealth health;
+
+    @Mock
+    private KeyHandler.Input input;
 
     @Test
     void shouldClingWhenBumpingClingableTileAndIsEquippedWithGrapplingHooks() {
@@ -56,20 +63,25 @@ class ClingHandlerTest {
     void shouldReleaseWhenTileAboveIsNotClingable() {
         when(worldQuery.getPlayer()).thenReturn(player);
         when(player.getState()).thenReturn(State.CLINGING);
+        when(player.getHealth()).thenReturn(health);
+
         when(worldQuery.getTileFlags(anyInt(), anyInt())).thenReturn(0);
 
-        clingHandler.update(worldQuery);
+        clingHandler.update(worldQuery, input);
 
         verify(player).releaseCling();
     }
 
     @Test
-    void shouldNotReleaseWhileTileAboveIsClingable() {
+    void shouldKeepClinged() {
         when(worldQuery.getPlayer()).thenReturn(player);
         when(player.getState()).thenReturn(State.CLINGING);
+        when(input.down()).thenReturn(false);
+        when(player.getHealth()).thenReturn(health);
+        when(health.isDamageTaken()).thenReturn(false);
         when(worldQuery.getTileFlags(anyInt(), anyInt())).thenReturn(Flags.CLINGABLE.bit());
 
-        clingHandler.update(worldQuery);
+        clingHandler.update(worldQuery, input);
 
         verify(player, never()).releaseCling();
     }
@@ -79,10 +91,34 @@ class ClingHandlerTest {
         when(worldQuery.getPlayer()).thenReturn(player);
         when(player.getState()).thenReturn(State.WALKING);
 
-        clingHandler.update(worldQuery);
+        clingHandler.update(worldQuery, input);
 
         verify(worldQuery, never()).getTileFlags(anyInt(), anyInt());
 
         verify(player, never()).releaseCling();
+    }
+
+    @Test
+    void shouldReleaseWhenDownIsPressed() {
+        when(worldQuery.getPlayer()).thenReturn(player);
+        when(player.getState()).thenReturn(State.CLINGING);
+        when(input.down()).thenReturn(true);
+
+        clingHandler.update(worldQuery, input);
+
+        verify(player).releaseCling();
+    }
+
+    @Test
+    void shouldReleaseWhenDamageTaken() {
+        when(worldQuery.getPlayer()).thenReturn(player);
+        when(player.getState()).thenReturn(State.CLINGING);
+        when(input.down()).thenReturn(false);
+        when(player.getHealth()).thenReturn(health);
+        when(health.isDamageTaken()).thenReturn(true);
+
+        clingHandler.update(worldQuery, input);
+
+        verify(player).releaseCling();
     }
 }

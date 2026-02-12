@@ -38,11 +38,12 @@ class KeyHandlerTest {
 
     static Stream<Arguments> keys() {
         return Stream.of(
+                Arguments.of(KeyEvent.VK_UP, (Function<KeyHandler, Boolean>) handler -> handler.getInput().up()),
+                Arguments.of(KeyEvent.VK_DOWN, (Function<KeyHandler, Boolean>) handler -> handler.getInput().down()),
                 Arguments.of(KeyEvent.VK_LEFT, (Function<KeyHandler, Boolean>) handler -> handler.getInput().left()),
                 Arguments.of(KeyEvent.VK_RIGHT, (Function<KeyHandler, Boolean>) handler -> handler.getInput().right()),
-                Arguments.of(KeyEvent.VK_UP, (Function<KeyHandler, Boolean>) handler -> handler.getInput().using()),
-                Arguments.of(KeyEvent.VK_ALT, (Function<KeyHandler, Boolean>) handler -> handler.getInput().jump()),
-                Arguments.of(KeyEvent.VK_CONTROL, (Function<KeyHandler, Boolean>) handler -> handler.getInput().fire()),
+                Arguments.of(KeyEvent.VK_ALT, (Function<KeyHandler, Boolean>) handler -> handler.getInput().fire()),
+                Arguments.of(KeyEvent.VK_CONTROL, (Function<KeyHandler, Boolean>) handler -> handler.getInput().jump()),
                 Arguments.of(KeyEvent.VK_SPACE, (Function<KeyHandler, Boolean>) KeyHandler::isAnyKeyPressed)
         );
     }

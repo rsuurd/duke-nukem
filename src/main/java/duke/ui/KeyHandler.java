@@ -32,7 +32,7 @@ public class KeyHandler extends KeyAdapter {
     }
 
     public Input getInput() {
-        return new Input(isPressed(VK_LEFT), isPressed(VK_RIGHT), isPressed(VK_ALT), isPressed(VK_CONTROL), isPressed(VK_UP));
+        return new Input(isPressed(VK_UP), isPressed(VK_DOWN), isPressed(VK_LEFT), isPressed(VK_RIGHT), isPressed(VK_ALT), isPressed(VK_CONTROL));
     }
 
     public void clear() {
@@ -58,6 +58,6 @@ public class KeyHandler extends KeyAdapter {
         return pressedKey;
     }
 
-    public record Input(boolean left, boolean right, boolean jump, boolean fire, boolean using) {
+    public record Input(boolean up, boolean down, boolean left, boolean right, boolean fire, boolean jump) {
     }
 }

@@ -13,6 +13,7 @@ import static duke.level.Level.TILE_SIZE;
 public class Player extends Active implements Movable, Collidable, Physics, Updatable, SpriteRenderable {
     private State state;
     private Facing facing;
+    private KeyHandler.Input input;
 
     private boolean jumped;
     private boolean bumped;
@@ -23,7 +24,6 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     private int jumpTicks;
     private int fallTicks;
     private boolean moving;
-    private boolean using;
     private boolean flipping;
 
     private Random random;
@@ -63,6 +63,8 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     public void processInput(KeyHandler.Input input) {
         if (!controllable) return;
 
+        this.input = input;
+
         if (input.left()) {
             move(Facing.LEFT);
         }
@@ -74,7 +76,6 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
         moving = input.left() || input.right();
 
         weapon.setTriggered(input.fire());
-        using = input.using();
 
         if (input.jump()) {
             jump();
@@ -92,7 +93,7 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
         updateJump();
 
         health.update(context);
-        clingHandler.update(context); // maybe check if state == clinging?
+        clingHandler.update(context, input); // maybe check if state == clinging?
     }
 
     private void reset() {
@@ -288,7 +289,7 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     }
 
     public boolean isUsing() {
-        return using;
+        return input.up();
     }
 
     public boolean isFlipping() {
@@ -299,7 +300,6 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
         controllable = false;
         moving = false;
         weapon.setTriggered(false);
-        using = false;
         setVelocityX(0);
         setVelocityY(0);
     }

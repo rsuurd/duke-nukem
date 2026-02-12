@@ -287,7 +287,7 @@ class PlayerTest {
     @Test
     void shouldIndicateUsing() {
         Player player = create(State.STANDING, Facing.RIGHT);
-        when(input.using()).thenReturn(true);
+        when(input.up()).thenReturn(true);
 
         player.processInput(input);
 
@@ -341,7 +341,6 @@ class PlayerTest {
         verify(input, atLeastOnce()).left();
         verify(input, atLeastOnce()).right();
         verify(input).fire();
-        verify(input).using();
         verify(input).jump();
     }
 
@@ -362,9 +361,10 @@ class PlayerTest {
     void shouldDelegateToClingHandler() {
         Player player = create(State.STANDING, Facing.LEFT);
 
+        player.processInput(input);
         player.update(context);
 
-        verify(clingHandler).update(context);
+        verify(clingHandler).update(context, input);
     }
 
     @Test
