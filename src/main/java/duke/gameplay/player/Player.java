@@ -11,9 +11,10 @@ import java.util.Random;
 import static duke.level.Level.TILE_SIZE;
 
 public class Player extends Active implements Movable, Collidable, Physics, Updatable, SpriteRenderable {
+    private KeyHandler.Input input;
+
     private State state;
     private Facing facing;
-    private KeyHandler.Input input;
 
     private boolean jumped;
     private boolean bumped;
@@ -37,12 +38,13 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     private ClingHandler clingHandler;
 
     public Player() {
-        this(State.STANDING, Facing.RIGHT, new Random(), new Weapon(), new PlayerHealth(), new Inventory(), new PlayerAnimator(), new PlayerFeedback(), new ClingHandler());
+        this(NONE, State.STANDING, Facing.RIGHT, new Random(), new Weapon(), new PlayerHealth(), new Inventory(), new PlayerAnimator(), new PlayerFeedback(), new ClingHandler());
     }
 
-    Player(State state, Facing facing, Random random, Weapon weapon, PlayerHealth health, Inventory inventory, PlayerAnimator animator, PlayerFeedback feedback, ClingHandler clingHandler) {
+    Player(KeyHandler.Input input, State state, Facing facing, Random random, Weapon weapon, PlayerHealth health, Inventory inventory, PlayerAnimator animator, PlayerFeedback feedback, ClingHandler clingHandler) {
         super(0, 0, WIDTH, HEIGHT);
 
+        this.input = input;
         this.facing = facing;
         this.state = state;
 
@@ -228,6 +230,12 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
         fall();
     }
 
+    void pullUp() {
+        // teleport for now
+        setY(getY() - TILE_SIZE - getHeight());
+        state = State.STANDING;
+    }
+
     private void bump() {
         setVelocityY(0);
         jumpTicks = 0;
@@ -332,4 +340,6 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     static final int FALL_TICKS = 2;
 
     static final int SPEED = 8;
+
+    private static final KeyHandler.Input NONE = new KeyHandler.Input(false, false, false, false, false, false);
 }

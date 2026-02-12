@@ -117,11 +117,11 @@ public class Collision {
 
         for (int row = top; row <= bottom; row++) {
             for (int col = left; col <= right; col++) {
-                // TODO we still do query.isSolid because we want to consider solid actives as well
-                // maybe we can also use the SOLID flag for tiles occupied by solid actives. For now double check is ok
                 if (query.isSolid(row, col)) {
-                    // exit early (maybe too early?)
-                    return query.getTileFlags(row, col);
+                    // isSolid might have found a solid active, meaning tile flags might be 0.
+                    flags |= Flags.SOLID.bit() | query.getTileFlags(row, col);
+
+                    return flags;
                 }
             }
         }

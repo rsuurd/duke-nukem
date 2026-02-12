@@ -361,7 +361,6 @@ class PlayerTest {
     void shouldDelegateToClingHandler() {
         Player player = create(State.STANDING, Facing.LEFT);
 
-        player.processInput(input);
         player.update(context);
 
         verify(clingHandler).update(context, input);
@@ -397,6 +396,6 @@ class PlayerTest {
     }
 
     private Player create(State state, Facing facing) {
-        return new Player(state, facing, random, weapon, health, inventory, animator, feedback, clingHandler);
+        return new Player(input, state, facing, random, weapon, health, inventory, animator, feedback, clingHandler);
     }
 }
