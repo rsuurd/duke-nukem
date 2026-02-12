@@ -2,6 +2,7 @@ package duke.gameplay.player;
 
 import duke.gameplay.GameplayContext;
 import duke.gameplay.effects.EffectsFactory;
+import duke.sfx.Sfx;
 import duke.sfx.SoundManager;
 
 import static duke.sfx.Sfx.*;
@@ -29,14 +30,21 @@ public class PlayerFeedback {
             sounds.play(PLAYER_HIT);
         }
 
-        if (player.getState() == State.WALKING) {
-            if (timer == 0) {
-                sounds.play(WALKING);
+        if (player.isMoving()) {
+            switch (player.getState()) {
+                case WALKING -> playTimedSound(sounds, WALKING);
+                case CLINGING -> playTimedSound(sounds, CLING_HOOKS);
+                default -> timer = 0;
             }
-
-            timer = (timer + 1) % 2;
-        } else {
-            timer = 0;
         }
     }
+
+    private void playTimedSound(SoundManager sounds, Sfx sfx) {
+        if (timer == 0) {
+            sounds.play(sfx);
+        }
+
+        timer = (timer + 1) % 2;
+    }
+
 }

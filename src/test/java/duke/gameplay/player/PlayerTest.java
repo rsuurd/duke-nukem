@@ -4,6 +4,7 @@ import duke.gameplay.Collidable;
 import duke.gameplay.Facing;
 import duke.gameplay.GameplayContext;
 import duke.gameplay.GameplayContextFixture;
+import duke.level.Flags;
 import duke.ui.KeyHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,6 +39,8 @@ class PlayerTest {
     private PlayerAnimator animator;
     @Mock
     private PlayerFeedback feedback;
+    @Mock
+    private ClingHandler clingHandler;
 
     private GameplayContext context;
 
@@ -355,7 +358,45 @@ class PlayerTest {
         assertThat(player.isFlipping()).isTrue();
     }
 
+    @Test
+    void shouldDelegateToClingHandler() {
+        Player player = create(State.STANDING, Facing.LEFT);
+
+        player.update(context);
+
+        verify(clingHandler).update(context);
+    }
+
+    @Test
+    void shouldCheckIfShouldCling() {
+        Player player = create(State.JUMPING, Facing.LEFT);
+
+        player.onCollision(Direction.UP, Flags.CLINGABLE.bit());
+
+        verify(clingHandler).onBump(player, Flags.CLINGABLE.bit());
+    }
+
+    @Test
+    void shouldUpdateStateWhenClinging() {
+        Player player = create(State.JUMPING, Facing.LEFT);
+
+        player.cling();
+
+        assertThat(player.getVelocityY()).isEqualTo(0);
+        assertThat(player.getState()).isEqualTo(State.CLINGING);
+        assertThat(player.isFlipping()).isFalse();
+    }
+
+    @Test
+    void shouldFallWhenClingReleased() {
+        Player player = create(State.CLINGING, Facing.LEFT);
+
+        player.releaseCling();
+
+        assertThat(player.getState()).isEqualTo(State.FALLING);
+    }
+
     private Player create(State state, Facing facing) {
-        return new Player(state, facing, random, weapon, health, inventory, animator, feedback);
+        return new Player(state, facing, random, weapon, health, inventory, animator, feedback, clingHandler);
     }
 }

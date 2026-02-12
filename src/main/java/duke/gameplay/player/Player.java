@@ -3,6 +3,7 @@ package duke.gameplay.player;
 import duke.gameplay.*;
 import duke.gfx.SpriteDescriptor;
 import duke.gfx.SpriteRenderable;
+import duke.level.Flags;
 import duke.ui.KeyHandler;
 
 import java.util.Random;
@@ -32,11 +33,14 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     private PlayerAnimator animator;
     private PlayerFeedback feedback;
 
+    // Jump / Fall / Walk / Stand handlers?
+    private ClingHandler clingHandler;
+
     public Player() {
-        this(State.STANDING, Facing.RIGHT, new Random(), new Weapon(), new PlayerHealth(), new Inventory(), new PlayerAnimator(), new PlayerFeedback());
+        this(State.STANDING, Facing.RIGHT, new Random(), new Weapon(), new PlayerHealth(), new Inventory(), new PlayerAnimator(), new PlayerFeedback(), new ClingHandler());
     }
 
-    Player(State state, Facing facing, Random random, Weapon weapon, PlayerHealth health, Inventory inventory, PlayerAnimator animator, PlayerFeedback feedback) {
+    Player(State state, Facing facing, Random random, Weapon weapon, PlayerHealth health, Inventory inventory, PlayerAnimator animator, PlayerFeedback feedback, ClingHandler clingHandler) {
         super(0, 0, WIDTH, HEIGHT);
 
         this.facing = facing;
@@ -51,6 +55,7 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
         this.inventory = inventory;
         this.animator = animator;
         this.feedback = feedback;
+        this.clingHandler = clingHandler;
 
         reset();
     }
@@ -87,6 +92,7 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
         updateJump();
 
         health.update(context);
+        clingHandler.update(context); // maybe check if state == clinging?
     }
 
     private void reset() {
@@ -191,22 +197,34 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
         if (direction == Direction.DOWN) {
             land();
         } else if (direction == Direction.UP) {
-            //if (Flags.CLINGABLE.isSet(flags)) -> hang from the ceiling
             bump();
+            clingHandler.onBump(this, flags);
         } else {
             setVelocityX(0);
         }
     }
 
     private void land() {
+        if (!(state == State.FALLING || state == State.JUMPING)) return;
+
         setVelocityY(0);
-        if (state == State.FALLING || state == State.JUMPING) {
-            landed = true;
-        }
+        landed = true;
         state = moving ? State.WALKING : State.STANDING;
         jumpTicks = 0;
         fallTicks = 0;
         flipping = false;
+    }
+
+    void cling() {
+        setVelocityY(0);
+        jumpTicks = 0;
+        state = State.CLINGING;
+        flipping = false;
+    }
+
+    void releaseCling() {
+        state = State.STANDING;
+        fall();
     }
 
     private void bump() {
@@ -220,9 +238,8 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     }
 
     public void fall() {
-        if (state != State.JUMPING && state != State.FALLING) {
+        if (state != State.JUMPING && state != State.FALLING && state != State.CLINGING) {
             state = State.FALLING;
-            // TODO should probably double check if we're not already falling
             fallTicks = FALL_TICKS;
         }
     }
@@ -236,7 +253,7 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     @Override
     public int getVerticalAcceleration() {
         return switch (state) {
-            case STANDING, WALKING -> 0;
+            case STANDING, WALKING, CLINGING -> 0;
             case JUMPING -> getVerticalAccelerationWhileJumping();
             case FALLING -> SPEED;
         };
@@ -264,6 +281,10 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     @Override
     public SpriteDescriptor getSpriteDescriptor() {
         return animator.getSpriteDescriptor();
+    }
+
+    public boolean isMoving() {
+        return moving;
     }
 
     public boolean isUsing() {

@@ -20,19 +20,17 @@ public class PlayerAnimator implements SpriteRenderable {
     }
 
     public void animate(Player player) {
-        State state = player.getState();
-        Facing facing = player.getFacing();
-
         if (player.getHealth().isDamageTaken()) {
-            animateHit(facing);
+            animateHit(player.getFacing());
             return;
         }
 
-        switch (state) {
-            case STANDING -> animateStationary(player, facing);
-            case JUMPING -> animateJump(facing, player.isFlipping());
-            case FALLING -> animateFall(facing, player.isFlipping());
-            case WALKING -> animateWalk(facing);
+        switch (player.getState()) {
+            case STANDING -> animateStationary(player);
+            case JUMPING -> animateJump(player);
+            case FALLING -> animateFall(player);
+            case WALKING -> animateWalk(player);
+            case CLINGING -> animateClinging(player);
         }
 
         if (player.isGrounded()) {
@@ -44,28 +42,27 @@ public class PlayerAnimator implements SpriteRenderable {
         currentDescriptor = (facing == Facing.LEFT) ? XRAY_LEFT : XRAY_RIGHT;
     }
 
-    private void animateStationary(Player player, Facing facing) {
+    private void animateStationary(Player player) {
         if (player.getWeapon().isTriggered()) {
-            // TODO check grappling status
-            currentDescriptor = facing == Facing.LEFT ? SHOOT_LEFT : SHOOT_RIGHT;
+            currentDescriptor = (player.getFacing() == Facing.LEFT) ? SHOOT_LEFT : SHOOT_RIGHT;
         } else {
-            currentDescriptor = (facing == Facing.LEFT) ? STANDING_LEFT : STANDING_RIGHT;
+            currentDescriptor = (player.getFacing() == Facing.LEFT) ? STANDING_LEFT : STANDING_RIGHT;
         }
     }
 
-    private void animateJump(Facing facing, boolean flipping) {
-        if (flipping) {
-            animateFlip(facing);
+    private void animateJump(Player player) {
+        if (player.isFlipping()) {
+            animateFlip(player.getFacing());
         } else {
-            currentDescriptor = (facing == Facing.LEFT) ? JUMPING_LEFT : JUMPING_RIGHT;
+            currentDescriptor = (player.getFacing() == Facing.LEFT) ? JUMPING_LEFT : JUMPING_RIGHT;
         }
     }
 
-    private void animateFall(Facing facing, boolean flipping) {
-        if (flipping && !flipAnimation.isFinished()) {
-            animateFlip(facing);
+    private void animateFall(Player player) {
+        if (player.isFlipping() && !flipAnimation.isFinished()) {
+            animateFlip(player.getFacing());
         } else {
-            currentDescriptor = (facing == Facing.LEFT) ? FALLING_LEFT : FALLING_RIGHT;
+            currentDescriptor = (player.getFacing() == Facing.LEFT) ? FALLING_LEFT : FALLING_RIGHT;
         }
     }
 
@@ -78,10 +75,25 @@ public class PlayerAnimator implements SpriteRenderable {
         flipAnimation.tick();
     }
 
-    private void animateWalk(Facing facing) {
-        walkAnimation.setAnimation(facing == Facing.LEFT ? WALKING_LEFT : WALKING_RIGHT);
+    private void animateWalk(Player player) {
+        walkAnimation.setAnimation((player.getFacing() == Facing.LEFT) ? WALKING_LEFT : WALKING_RIGHT);
         currentDescriptor = walkAnimation.getSpriteDescriptor();
         walkAnimation.tick();
+    }
+
+    private void animateClinging(Player player) {
+        if (!player.isMoving() && (currentDescriptor == CLINGING_SHOOT_LEFT || currentDescriptor == CLINGING_SHOOT_RIGHT)) return;
+
+        if (player.getWeapon().isTriggered()) {
+            currentDescriptor = (player.getFacing() == Facing.LEFT) ? CLINGING_SHOOT_LEFT : CLINGING_SHOOT_RIGHT;
+        } else {
+            walkAnimation.setAnimation((player.getFacing() == Facing.LEFT) ? CLINGING_LEFT : CLINGING_RIGHT);
+            currentDescriptor = walkAnimation.getSpriteDescriptor();
+
+            if (player.isMoving()) {
+                walkAnimation.tick();
+            }
+        }
     }
 
     @Override
@@ -104,9 +116,8 @@ public class PlayerAnimator implements SpriteRenderable {
     private static final SpriteDescriptor SHOOT_RIGHT = BASE_DESCRIPTOR.withBaseIndex(28);
     private static final SpriteDescriptor XRAY_LEFT = BASE_DESCRIPTOR.withBaseIndex(176);
     private static final SpriteDescriptor XRAY_RIGHT = BASE_DESCRIPTOR.withBaseIndex(180);
-    private static final AnimationDescriptor GRAPPLING_LEFT = new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(112), 4, 2);
-    private static final AnimationDescriptor GRAPPLING_RIGHT = new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(128), 4, 2);
-    private static final SpriteDescriptor GRAPPLING_SHOOT_LEFT = BASE_DESCRIPTOR.withBaseIndex(144);
-    private static final SpriteDescriptor GRAPPLING_SHOOT_RIGHT = BASE_DESCRIPTOR.withBaseIndex(148);
-
+    private static final AnimationDescriptor CLINGING_LEFT = new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(112), 4, 2);
+    private static final AnimationDescriptor CLINGING_RIGHT = new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(128), 4, 2);
+    private static final SpriteDescriptor CLINGING_SHOOT_LEFT = BASE_DESCRIPTOR.withBaseIndex(144);
+    private static final SpriteDescriptor CLINGING_SHOOT_RIGHT = BASE_DESCRIPTOR.withBaseIndex(148);
 }
