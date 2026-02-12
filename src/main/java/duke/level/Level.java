@@ -88,12 +88,6 @@ public class Level {
         return row >= 0 && row < HEIGHT && col >= 0 && col < WIDTH;
     }
 
-    public boolean isSolid(int row, int col) {
-        int tileId = getTile(row, col);
-
-        return isSolid(tileId);
-    }
-
     public static int toX(int address) {
         return (address % WIDTH) * TILE_SIZE;
     }

@@ -3,11 +3,13 @@ package duke.gameplay.active;
 import duke.gameplay.Facing;
 import duke.gameplay.GameplayContext;
 import duke.gameplay.GameplayContextFixture;
+import duke.level.Flags;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
+import static duke.gameplay.GameplayContextFixture.SOLID_TILE_FLAG;
 import static duke.level.Level.TILE_SIZE;
 import static org.mockito.Mockito.*;
 
@@ -34,7 +36,8 @@ class ConveyorBeltTest {
     @Test
     void shouldNotPushPlayerIntoSolid() {
         setupPlayerPosition(32, -32);
-        when(context.getLevel().isSolid(-2, 3)).thenReturn(true);
+        when(context.getLevel().getTileFlags(anyInt(), anyInt())).thenReturn(SOLID_TILE_FLAG);
+
         ConveyorBelt conveyorBelt = new ConveyorBelt(0, 0, 64, Facing.RIGHT);
 
         conveyorBelt.update(context);

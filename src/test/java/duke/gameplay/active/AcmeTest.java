@@ -8,6 +8,7 @@ import duke.gameplay.effects.Effect;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static duke.gameplay.GameplayContextFixture.SOLID_TILE_FLAG;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -71,7 +72,7 @@ class AcmeTest {
         Acme acme = new Acme(0, 0);
         wakeUp(acme);
         fastForward(acme, Acme.SHAKE_TIME);
-        when(context.getLevel().isSolid(anyInt(), anyInt())).thenReturn(true);
+        when(context.getLevel().getTileFlags(anyInt(), anyInt())).thenReturn(SOLID_TILE_FLAG);
 
         acme.update(context);
 

@@ -3,11 +3,13 @@ package duke.gameplay.active.enemies.behavior;
 import duke.gameplay.GameplayContext;
 import duke.gameplay.GameplayContextFixture;
 import duke.gameplay.active.enemies.Helicopter;
+import duke.level.Flags;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import static duke.gameplay.GameplayContextFixture.SOLID_TILE_FLAG;
 import static duke.gameplay.active.enemies.behavior.HelicopterBehavior.*;
 import static org.mockito.Mockito.*;
 
@@ -58,7 +60,7 @@ class HelicopterBehaviorTest {
 
     @Test
     void shouldAscendFromGround() {
-        when(context.getLevel().isSolid(anyInt(), anyInt())).thenReturn(true);
+        when(context.getLevel().getTileFlags(anyInt(), anyInt())).thenReturn(SOLID_TILE_FLAG);
 
         behavior.behave(context, helicopter);
 

@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static duke.gameplay.GameplayContextFixture.SOLID_TILE_FLAG;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -20,7 +21,7 @@ class GameplayContextTest {
 
     @Test
     void shouldIndicateSolidTile() {
-        when(context.getLevel().isSolid(0, 0)).thenReturn(true);
+        when(context.getLevel().getTileFlags(0, 0)).thenReturn(SOLID_TILE_FLAG);
 
         assertThat(context.isSolid(0, 0)).isTrue();
     }
@@ -30,6 +31,13 @@ class GameplayContextTest {
         when(context.getActiveManager().getActives()).thenReturn(List.of(new SolidActive()));
 
         assertThat(context.isSolid(0, 0)).isTrue();
+    }
+
+    @Test
+    void shouldGetTileFlags() {
+        context.getTileFlags(0, 0);
+
+        verify(context.getLevel()).getTileFlags(0, 0);
     }
 
     @Test

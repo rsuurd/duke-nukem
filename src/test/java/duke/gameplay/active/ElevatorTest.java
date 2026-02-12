@@ -8,6 +8,7 @@ import duke.sfx.Sfx;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static duke.gameplay.GameplayContextFixture.SOLID_TILE_FLAG;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -32,7 +33,8 @@ class ElevatorTest {
 
     @Test
     void shouldMoveUpWhenInteracting() {
-        when(context.getLevel().isSolid(anyInt(), anyInt())).thenReturn(false);
+        when(context.getLevel().getTileFlags(anyInt(), anyInt())).thenReturn(0);
+
         setupPlayer(160);
 
         elevator.interactRequested(context);
@@ -45,7 +47,8 @@ class ElevatorTest {
 
     @Test
     void shouldNotMoveUpWhenRiderCollides() {
-        when(context.getLevel().isSolid(anyInt(), anyInt())).thenReturn(true);
+        when(context.getLevel().getTileFlags(anyInt(), anyInt())).thenReturn(SOLID_TILE_FLAG);
+
         setupPlayer(160);
 
         elevator.interactRequested(context);
@@ -57,7 +60,7 @@ class ElevatorTest {
 
     @Test
     void shouldMoveDownWhenLeaving() {
-        when(context.getLevel().isSolid(anyInt(), anyInt())).thenReturn(false);
+        when(context.getLevel().getTileFlags(anyInt(), anyInt())).thenReturn(0);
 
         setupPlayer(160);
         elevator.interactRequested(context);

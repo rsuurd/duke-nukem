@@ -49,18 +49,6 @@ class LevelTest {
     }
 
     @Test
-    void shouldIndicateTileIsSolid() {
-        int[] tiles = new int[Level.WIDTH * 90];
-        tiles[0] = Level.BACKGROUNDS;
-        tiles[1] = Level.SOLIDS;
-
-        Level level = new Level(mock(), tiles, 562, Collections.emptyList());
-
-        assertThat(level.isSolid(0, 0)).isFalse();
-        assertThat(level.isSolid(0, 1)).isTrue();
-    }
-
-    @Test
     void shouldNotAllowAddingActivesToLevel() {
         Level level = new Level(mock(), new int[Level.WIDTH * 90], 0, new ArrayList<>());
 

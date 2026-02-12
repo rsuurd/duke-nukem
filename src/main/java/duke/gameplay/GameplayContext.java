@@ -3,6 +3,7 @@ package duke.gameplay;
 import duke.dialog.DialogManager;
 import duke.dialog.Hints;
 import duke.gameplay.player.Player;
+import duke.level.Flags;
 import duke.level.Level;
 import duke.sfx.SoundManager;
 
@@ -71,7 +72,12 @@ public class GameplayContext implements WorldQuery {
 
     @Override
     public boolean isSolid(int row, int col) {
-        return level.isSolid(row, col) || occupiedBySolid(row, col);
+        return Flags.isSet(getTileFlags(row, col), Flags.SOLID) || occupiedBySolid(row, col);
+    }
+
+    @Override
+    public int getTileFlags(int row, int col) {
+        return level.getTileFlags(row, col);
     }
 
     private boolean occupiedBySolid(int row, int col) {

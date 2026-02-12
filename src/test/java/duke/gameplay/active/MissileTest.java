@@ -3,10 +3,12 @@ package duke.gameplay.active;
 import duke.gameplay.GameplayContext;
 import duke.gameplay.GameplayContextFixture;
 import duke.gameplay.effects.Effect;
+import duke.level.Flags;
 import duke.sfx.Sfx;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static duke.gameplay.GameplayContextFixture.SOLID_TILE_FLAG;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.*;
@@ -61,7 +63,7 @@ class MissileTest {
 
     @Test
     void shouldDestroyTileOnImpact() {
-        when(context.getLevel().isSolid(anyInt(), anyInt())).thenReturn(true);
+        when(context.getLevel().getTileFlags(anyInt(), anyInt())).thenReturn(SOLID_TILE_FLAG);
         when(context.getLevel().getTile(anyInt(), anyInt())).thenReturn(64);
 
         completeIgnition();
