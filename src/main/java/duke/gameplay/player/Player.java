@@ -187,10 +187,11 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     }
 
     @Override
-    public void onCollision(Direction direction) {
+    public void onCollision(Direction direction, int flags) {
         if (direction == Direction.DOWN) {
             land();
         } else if (direction == Direction.UP) {
+            //if (Flags.CLINGABLE.isSet(flags)) -> hang from the ceiling
             bump();
         } else {
             setVelocityX(0);

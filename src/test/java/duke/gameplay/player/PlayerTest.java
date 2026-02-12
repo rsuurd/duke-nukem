@@ -15,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Random;
 
+import static duke.gameplay.GameplayContextFixture.SOLID_TILE_FLAG;
 import static duke.gameplay.player.Player.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyBoolean;
@@ -172,7 +173,7 @@ class PlayerTest {
 
         player.setVelocityY(16);
 
-        player.onCollision(Collidable.Direction.DOWN);
+        player.onCollision(Collidable.Direction.DOWN, SOLID_TILE_FLAG);
 
         assertThat(player.getVelocityY()).isEqualTo(0);
         assertThat(player.getState()).isEqualTo(State.STANDING);
@@ -183,7 +184,7 @@ class PlayerTest {
         Player player = create(State.JUMPING, Facing.LEFT);
         player.setVelocityY(-8);
 
-        player.onCollision(Collidable.Direction.UP);
+        player.onCollision(Collidable.Direction.UP, SOLID_TILE_FLAG);
 
         assertThat(player.getVelocityY()).isEqualTo(0);
     }

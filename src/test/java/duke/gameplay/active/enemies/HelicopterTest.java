@@ -13,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static duke.gameplay.GameplayContextFixture.SOLID_TILE_FLAG;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -59,7 +60,7 @@ class HelicopterTest {
 
     @Test
     void shouldNotCrashIfNotDead() {
-        helicopter.onCollision(Collidable.Direction.DOWN);
+        helicopter.onCollision(Collidable.Direction.DOWN, SOLID_TILE_FLAG);
 
         helicopter.update(context);
 
@@ -69,7 +70,7 @@ class HelicopterTest {
     @Test
     void shouldCrashIfDead() {
         when(health.isDead()).thenReturn(true);
-        helicopter.onCollision(Collidable.Direction.DOWN);
+        helicopter.onCollision(Collidable.Direction.DOWN, SOLID_TILE_FLAG);
 
         helicopter.update(context);
 

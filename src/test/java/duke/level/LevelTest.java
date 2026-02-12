@@ -102,9 +102,9 @@ class LevelTest {
 
         Level level = new Level(mock(), tiles, 0, Collections.emptyList());
 
-        assertThat(Flags.isSet(level.getTileFlags(0, 1), Flags.SOLID)).isTrue();
-        assertThat(Flags.isSet(level.getTileFlags(0, 2), Flags.SOLID)).isTrue();
-        assertThat(Flags.isSet(level.getTileFlags(0, 2), Flags.CLINGABLE)).isTrue();
+        assertThat(Flags.SOLID.isSet(level.getTileFlags(0, 1))).isTrue();
+        assertThat(Flags.SOLID.isSet(level.getTileFlags(0, 2))).isTrue();
+        assertThat(Flags.CLINGABLE.isSet(level.getTileFlags(0, 2))).isTrue();
     }
 
     static Stream<Arguments> gratedTileIds() {

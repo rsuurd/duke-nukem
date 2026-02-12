@@ -29,7 +29,7 @@ public class FlyingBotCrash extends Active implements Updatable, Physics, Collid
     }
 
     @Override
-    public void onCollision(Direction direction) {
+    public void onCollision(Direction direction, int flags) {
         crashed = true;
     }
 

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static duke.gameplay.GameplayContextFixture.SOLID_TILE_FLAG;
 import static duke.gameplay.Physics.GRAVITY;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
@@ -34,45 +35,49 @@ class CollisionTest {
     void shouldCollideLeft() {
         Player player = createTestPlayer(16, 0, -8, 0);
         when(query.isSolid(anyInt(), anyInt())).thenReturn(true);
+        when(query.getTileFlags(anyInt(), anyInt())).thenReturn(SOLID_TILE_FLAG);
 
         collision.resolve(player, query);
 
         verify(player).setX(16);
-        verify(player).onCollision(Collidable.Direction.LEFT);
+        verify(player).onCollision(Collidable.Direction.LEFT, SOLID_TILE_FLAG);
     }
 
     @Test
     void shouldCollideRight() {
         Player player = createTestPlayer(16, 0, 8, 0);
         when(query.isSolid(anyInt(), anyInt())).thenReturn(true);
+        when(query.getTileFlags(anyInt(), anyInt())).thenReturn(SOLID_TILE_FLAG);
 
         collision.resolve(player, query);
 
         verify(player).setX(16);
-        verify(player).onCollision(Collidable.Direction.RIGHT);
+        verify(player).onCollision(Collidable.Direction.RIGHT, SOLID_TILE_FLAG);
     }
 
     @Test
     void shouldCollideUp() {
         Player player = createTestPlayer(0, 16, 0, -15);
         when(query.isSolid(anyInt(), anyInt())).thenReturn(true);
+        when(query.getTileFlags(anyInt(), anyInt())).thenReturn(SOLID_TILE_FLAG);
 
         collision.resolve(player, query);
 
         verify(player).setY(16);
-        verify(player).onCollision(Collidable.Direction.UP);
+        verify(player).onCollision(Collidable.Direction.UP, SOLID_TILE_FLAG);
     }
 
     @Test
     void shouldCollideDown() {
         Player player = createTestPlayer(0, 16, 0, 8);
         when(query.isSolid(anyInt(), anyInt())).thenReturn(true);
+        when(query.getTileFlags(anyInt(), anyInt())).thenReturn(SOLID_TILE_FLAG);
 
         collision.resolve(player, query);
 
         verify(player).setY(16);
         // gravity also collides down, should fix this
-        verify(player, atLeast(1)).onCollision(Collidable.Direction.DOWN);
+        verify(player, atLeast(1)).onCollision(Collidable.Direction.DOWN, SOLID_TILE_FLAG);
     }
 
     @Test
@@ -84,7 +89,8 @@ class CollisionTest {
         collision.resolve(player, query);
 
         verify(player).setVelocityY(-8);
-        verify(player, never()).onCollision(any());
+        verify(player, never()).onCollision(any(), anyInt());
+        verify(query, never()).getTileFlags(anyInt(), anyInt());
     }
 
     @Test
@@ -98,7 +104,8 @@ class CollisionTest {
         verify(player).setVelocityY(8);
         verify(player).fall();
 
-        verify(player, never()).onCollision(any());
+        verify(player, never()).onCollision(any(), anyInt());
+        verify(query, never()).getTileFlags(anyInt(), anyInt());
     }
 
     @Test
@@ -112,6 +119,7 @@ class CollisionTest {
         verify(player).setVelocityY(16);
         verify(player).fall();
 
-        verify(player, never()).onCollision(any());
+        verify(player, never()).onCollision(any(), anyInt());
+        verify(query, never()).getTileFlags(anyInt(), anyInt());
     }
 }

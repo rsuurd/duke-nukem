@@ -32,7 +32,7 @@ public class Balloon extends Item implements Collidable, Renderable, Shootable, 
     }
 
     @Override
-    public void onCollision(Direction direction) {
+    public void onCollision(Direction direction, int flags) {
         popped = direction == Direction.UP;
     }
 

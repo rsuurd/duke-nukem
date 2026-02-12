@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static duke.gameplay.GameplayContextFixture.SOLID_TILE_FLAG;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.*;
@@ -54,7 +55,7 @@ class Ed209Test {
 
     @Test
     void shouldLand() {
-        ed209.onCollision(Collidable.Direction.DOWN);
+        ed209.onCollision(Collidable.Direction.DOWN, SOLID_TILE_FLAG);
 
         assertThat(ed209.isGrounded()).isTrue();
         assertThat(ed209.getVelocityY()).isEqualTo(0);

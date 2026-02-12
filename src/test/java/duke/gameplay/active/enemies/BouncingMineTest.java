@@ -7,6 +7,7 @@ import duke.sfx.Sfx;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static duke.gameplay.GameplayContextFixture.SOLID_TILE_FLAG;
 import static duke.gameplay.active.enemies.BouncingMine.BOUNCE_SPEED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
@@ -29,7 +30,7 @@ class BouncingMineTest {
 
     @Test
     void shouldBounce() {
-        mine.onCollision(Collidable.Direction.DOWN);
+        mine.onCollision(Collidable.Direction.DOWN, SOLID_TILE_FLAG);
 
         mine.update(context);
 

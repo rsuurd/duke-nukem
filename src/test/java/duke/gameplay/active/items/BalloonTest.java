@@ -8,6 +8,7 @@ import duke.gameplay.effects.PoppedBalloon;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static duke.gameplay.GameplayContextFixture.SOLID_TILE_FLAG;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.*;
@@ -31,7 +32,7 @@ class BalloonTest {
     void shouldPopOnCollision() {
         Balloon balloon = new Balloon(0, 0);
 
-        balloon.onCollision(Collidable.Direction.UP);
+        balloon.onCollision(Collidable.Direction.UP, SOLID_TILE_FLAG);
         balloon.update(context);
 
         assertThat(balloon.isDestroyed()).isTrue();
@@ -55,7 +56,7 @@ class BalloonTest {
         Balloon balloon = new Balloon(0, 0, behavior);
         when(context.getPlayer().intersects(balloon)).thenReturn(true);
 
-        balloon.onCollision(Collidable.Direction.UP);
+        balloon.onCollision(Collidable.Direction.UP, SOLID_TILE_FLAG);
         balloon.update(context);
 
         verifyNoInteractions(behavior);

@@ -109,7 +109,7 @@ public class Helicopter extends Enemy implements Renderable, Physics, Collidable
     }
 
     @Override
-    public void onCollision(Direction direction) {
+    public void onCollision(Direction direction, int flags) {
         if (getHealth().isDead() && direction == Direction.DOWN) {
             crashed = true;
         }

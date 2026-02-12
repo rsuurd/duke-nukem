@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
+import static duke.gameplay.GameplayContextFixture.SOLID_TILE_FLAG;
 import static duke.gameplay.Physics.GRAVITY;
 import static duke.level.Level.TILE_SIZE;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -42,7 +43,7 @@ class FlyingBotCrashTest {
     void shouldExplodeOnCollision(Collidable.Direction direction) {
         FlyingBotCrash crash = new FlyingBotCrash(100, 200, duke.gameplay.Facing.LEFT, -50);
 
-        crash.onCollision(direction);
+        crash.onCollision(direction, SOLID_TILE_FLAG);
         crash.update(context);
 
         verify(context.getSoundManager()).play(duke.sfx.Sfx.BOX_EXPLODE);

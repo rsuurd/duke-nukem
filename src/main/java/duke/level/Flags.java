@@ -8,7 +8,5 @@ public enum Flags {
         return 1 << ordinal();
     }
 
-    public static boolean isSet(int flags, Flags flag) {
-        return (flags & flag.bit()) != 0;
-    }
+    public boolean isSet(int flags) { return (flags & bit()) != 0; }
 }

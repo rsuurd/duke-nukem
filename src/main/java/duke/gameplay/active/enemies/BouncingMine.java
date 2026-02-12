@@ -16,7 +16,9 @@ public class BouncingMine extends Active implements Updatable, Physics, Collidab
     }
 
     @Override
-    public void onCollision(Direction direction) {
+    public void onCollision(Direction direction, int flags) {
+        if (direction != Direction.DOWN) return;
+
         setVelocityY(BOUNCE_SPEED);
 
         bounced = true;

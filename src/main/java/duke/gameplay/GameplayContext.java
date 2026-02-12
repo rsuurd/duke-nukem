@@ -72,7 +72,7 @@ public class GameplayContext implements WorldQuery {
 
     @Override
     public boolean isSolid(int row, int col) {
-        return Flags.isSet(getTileFlags(row, col), Flags.SOLID) || occupiedBySolid(row, col);
+        return Flags.SOLID.isSet(getTileFlags(row, col)) || occupiedBySolid(row, col);
     }
 
     @Override

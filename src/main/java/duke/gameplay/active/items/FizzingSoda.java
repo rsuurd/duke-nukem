@@ -18,7 +18,7 @@ public class FizzingSoda extends Item implements Collidable, Wakeable {
     }
 
     @Override
-    public void onCollision(Direction direction) {
+    public void onCollision(Direction direction, int flags) {
         bumped = direction == Direction.UP;
     }
 

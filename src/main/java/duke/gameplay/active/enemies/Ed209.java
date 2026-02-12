@@ -85,7 +85,7 @@ public class Ed209 extends Enemy implements Renderable, Physics, Collidable, Wak
     }
 
     @Override
-    public void onCollision(Direction direction) {
+    public void onCollision(Direction direction, int flags) {
         grounded = direction == Direction.DOWN;
 
         if (grounded) {

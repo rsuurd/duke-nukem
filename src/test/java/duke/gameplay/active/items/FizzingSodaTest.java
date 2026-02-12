@@ -7,6 +7,7 @@ import duke.gameplay.effects.Effect;
 import duke.level.Level;
 import org.junit.jupiter.api.Test;
 
+import static duke.gameplay.GameplayContextFixture.SOLID_TILE_FLAG;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.mock;
@@ -26,7 +27,7 @@ class FizzingSodaTest {
         GameplayContext context = GameplayContextFixture.create();
         FizzingSoda item = new FizzingSoda(0, 0, mock(), mock());
 
-        item.onCollision(Collidable.Direction.UP);
+        item.onCollision(Collidable.Direction.UP, SOLID_TILE_FLAG);
         item.update(context);
 
         assertThat(item.isDestroyed()).isTrue();

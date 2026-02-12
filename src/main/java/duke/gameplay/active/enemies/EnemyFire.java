@@ -33,7 +33,7 @@ public class EnemyFire extends Active implements Updatable, Physics, Damaging, S
     }
 
     @Override
-    public void onCollision(Direction direction) {
+    public void onCollision(Direction direction, int flags) {
         destroy();
     }
 
