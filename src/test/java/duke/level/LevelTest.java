@@ -2,9 +2,14 @@ package duke.level;
 
 import duke.gameplay.Active;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -97,5 +102,27 @@ class LevelTest {
         level.complete();
 
         assertThat(level.isCompleted()).isTrue();
+    }
+
+    @ParameterizedTest
+    @MethodSource("gratedTileIds")
+    void shouldGetTileFlags(int tileId) {
+        int[] tiles = new int[Level.WIDTH * 90];
+
+        tiles[1] = Level.SOLIDS;
+        tiles[2] = tileId;
+
+        Level level = new Level(mock(), tiles, 0, Collections.emptyList());
+
+        assertThat(Flags.isSet(level.getTileFlags(0, 1), Flags.SOLID)).isTrue();
+        assertThat(Flags.isSet(level.getTileFlags(0, 2), Flags.SOLID)).isTrue();
+        assertThat(Flags.isSet(level.getTileFlags(0, 2), Flags.CLINGABLE)).isTrue();
+    }
+
+    static Stream<Arguments> gratedTileIds() {
+        return Stream.concat(
+                IntStream.iterate(Level.CONVEYOR, tileId -> tileId <= Level.CONVEYOR_END, tileId -> tileId + 32).boxed(),
+                IntStream.iterate(Level.CLINGABLE, tileId -> tileId < Level.ACTIVE, tileId -> tileId + 32).boxed()
+        ).map(Arguments::of);
     }
 }

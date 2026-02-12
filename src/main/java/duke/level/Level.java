@@ -11,6 +11,9 @@ public class Level {
     public static final int FLASHERS = 0x80;
     public static final int BACKGROUNDS = 0x600;
     public static final int SOLIDS = 0x1800;
+    public static final int CONVEYOR = 0x1b80;
+    public static final int CONVEYOR_END = 0x1ca0;
+    public static final int CLINGABLE = 0x2ee0;
     public static final int ACTIVE = 0x3000;
     public static final int HACKS = 0x306A;
 
@@ -60,6 +63,21 @@ public class Level {
         }
     }
 
+    public int getTileFlags(int row, int col) {
+        int flags = 0;
+        int tileId = getTile(row, col);
+
+        if (isSolid(tileId)) {
+            flags |= Flags.SOLID.bit();
+        }
+
+        if (isClingable(tileId)) {
+            flags |= Flags.CLINGABLE.bit();
+        }
+
+        return flags;
+    }
+
     public void setTile(int row, int col, int tileId) {
         if (isInBounds(row, col)) {
             tiles[row * WIDTH + col] = tileId;
@@ -86,6 +104,10 @@ public class Level {
 
     public static boolean isSolid(int tileId) {
         return (tileId >= SOLIDS) && (tileId < ACTIVE);
+    }
+
+    private static boolean isClingable(int tileId) {
+        return (tileId >= CONVEYOR && tileId <= CONVEYOR_END) || (tileId >= CLINGABLE && tileId < ACTIVE);
     }
 
     public void complete() {
