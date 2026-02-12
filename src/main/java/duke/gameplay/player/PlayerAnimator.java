@@ -46,6 +46,7 @@ public class PlayerAnimator implements SpriteRenderable {
 
     private void animateStationary(Player player, Facing facing) {
         if (player.getWeapon().isTriggered()) {
+            // TODO check grappling status
             currentDescriptor = facing == Facing.LEFT ? SHOOT_LEFT : SHOOT_RIGHT;
         } else {
             currentDescriptor = (facing == Facing.LEFT) ? STANDING_LEFT : STANDING_RIGHT;
@@ -95,12 +96,17 @@ public class PlayerAnimator implements SpriteRenderable {
     private static final AnimationDescriptor WALKING_RIGHT = new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(16), 4, 2);
     private static final SpriteDescriptor JUMPING_LEFT = BASE_DESCRIPTOR.withBaseIndex(32);
     private static final SpriteDescriptor JUMPING_RIGHT = BASE_DESCRIPTOR.withBaseIndex(36);
-    private static final AnimationDescriptor FLIPPING_LEFT = new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(56), 8, 2, AnimationDescriptor.Type.ONE_SHOT);
-    private static final AnimationDescriptor FLIPPING_RIGHT = new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(84), 8, 2, AnimationDescriptor.Type.ONE_SHOT);
+    private static final AnimationDescriptor FLIPPING_LEFT = new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(56), 7, 2, AnimationDescriptor.Type.ONE_SHOT);
+    private static final AnimationDescriptor FLIPPING_RIGHT = new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(84), 7, 2, AnimationDescriptor.Type.ONE_SHOT);
     private static final SpriteDescriptor FALLING_LEFT = BASE_DESCRIPTOR.withBaseIndex(40);
     private static final SpriteDescriptor FALLING_RIGHT = BASE_DESCRIPTOR.withBaseIndex(44);
     private static final SpriteDescriptor SHOOT_LEFT = BASE_DESCRIPTOR.withBaseIndex(12);
     private static final SpriteDescriptor SHOOT_RIGHT = BASE_DESCRIPTOR.withBaseIndex(28);
     private static final SpriteDescriptor XRAY_LEFT = BASE_DESCRIPTOR.withBaseIndex(176);
     private static final SpriteDescriptor XRAY_RIGHT = BASE_DESCRIPTOR.withBaseIndex(180);
+    private static final AnimationDescriptor GRAPPLING_LEFT = new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(112), 4, 2);
+    private static final AnimationDescriptor GRAPPLING_RIGHT = new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(128), 4, 2);
+    private static final SpriteDescriptor GRAPPLING_SHOOT_LEFT = BASE_DESCRIPTOR.withBaseIndex(144);
+    private static final SpriteDescriptor GRAPPLING_SHOOT_RIGHT = BASE_DESCRIPTOR.withBaseIndex(148);
+
 }

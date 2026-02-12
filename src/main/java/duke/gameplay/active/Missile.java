@@ -69,7 +69,7 @@ public class Missile extends Active implements Updatable, Shootable, Renderable,
         int row = getRow() + 3;
         int col = getCol();
 
-        if (level.isSolid(row, col)) {
+        if (context.isSolid(row, col)) {
             destroy();
             level.setTile(row, col, level.getTile(row - 1, col));
             // TODO the box above won't drop because it's out of view, we should wake it up
