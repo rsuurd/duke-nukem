@@ -28,8 +28,6 @@ class PlayerTest {
     @Mock
     private KeyHandler.Input input;
     @Mock
-    private Random random;
-    @Mock
     private Weapon weapon;
     @Mock
     private PlayerHealth health;
@@ -39,6 +37,8 @@ class PlayerTest {
     private PlayerAnimator animator;
     @Mock
     private PlayerFeedback feedback;
+    @Mock
+    private JumpHandler jumpHandler;
     @Mock
     private ClingHandler clingHandler;
     @Mock
@@ -146,32 +146,6 @@ class PlayerTest {
         });
     }
 
-    @ParameterizedTest
-    @EnumSource(value = State.class, names = {"STANDING", "WALKING"})
-    void shouldJumpWhenStandingOrWalking(State state) {
-        Player player = create(state, Facing.RIGHT);
-
-        when(input.jump()).thenReturn(true);
-
-        player.processInput(input);
-
-        assertThat(player.getVelocityY()).isEqualTo(-15);
-        assertThat(player.getState()).isEqualTo(State.JUMPING);
-    }
-
-    @ParameterizedTest
-    @EnumSource(value = State.class, names = {"STANDING", "WALKING"}, mode = EnumSource.Mode.EXCLUDE)
-    void shouldNotJumpWhenNotStandingOrWalking(State state) {
-        Player player = create(state, Facing.RIGHT);
-
-        when(input.jump()).thenReturn(true);
-
-        player.processInput(input);
-
-        assertThat(player.getVelocityY()).isEqualTo(0);
-        assertThat(player.getState()).isEqualTo(state);
-    }
-
     @Test
     void shouldLand() {
         Player player = create(State.FALLING, Facing.LEFT);
@@ -229,41 +203,6 @@ class PlayerTest {
         Player player = create(state, Facing.LEFT);
 
         assertThat(player.getVerticalAcceleration()).isEqualTo(0);
-    }
-
-    @Test
-    void shouldJump() {
-        Player player = create(State.STANDING, Facing.LEFT);
-        when(input.jump()).thenReturn(true);
-
-        player.processInput(input);
-
-        assertThat(player.getState()).isEqualTo(State.JUMPING);
-        assertThat(player.getVelocityY()).isEqualTo(JUMP_POWER);
-    }
-
-    @Test
-    void shouldFallWhenDamageTakenMidJump() {
-        Player player = create(State.JUMPING, Facing.LEFT);
-        when(input.jump()).thenReturn(true);
-
-        player.processInput(input);
-        player.getHealth().takeDamage(1);
-        player.update(context);
-
-        assertThat(player.getState()).isEqualTo(State.FALLING);
-    }
-
-    @Test
-    void shouldJumpHigherWithBoots() {
-        Player player = create(State.STANDING, Facing.LEFT);
-        when(input.jump()).thenReturn(true);
-        when(player.getInventory().isEquippedWith(Inventory.Equipment.BOOTS)).thenReturn(true);
-
-        player.processInput(input);
-
-        assertThat(player.getState()).isEqualTo(State.JUMPING);
-        assertThat(player.getVelocityY()).isEqualTo(HIGH_JUMP_POWER);
     }
 
     @Test
@@ -326,7 +265,7 @@ class PlayerTest {
         player.disableControls();
         player.processInput(input);
 
-        verifyNoInteractions(input);
+        verifyNoInteractions(input, jumpHandler);
         verify(weapon).setTriggered(false);
         assertThat(player.getVelocityX()).isEqualTo(0);
         assertThat(player.getVelocityY()).isEqualTo(0);
@@ -343,20 +282,7 @@ class PlayerTest {
         verify(input, atLeastOnce()).left();
         verify(input, atLeastOnce()).right();
         verify(input).fire();
-        verify(input).jump();
-    }
-
-    @Test
-    void shouldFlip() {
-        Player player = create(State.STANDING, Facing.LEFT);
-        when(inventory.isEquippedWith(Inventory.Equipment.BOOTS)).thenReturn(true);
-        when(input.left()).thenReturn(true);
-        when(input.jump()).thenReturn(true);
-        when(random.nextBoolean()).thenReturn(true);
-
-        player.processInput(input);
-
-        assertThat(player.isFlipping()).isTrue();
+        verify(jumpHandler).handleInput(player, input);
     }
 
     @Test
@@ -430,6 +356,6 @@ class PlayerTest {
     }
 
     private Player create(State state, Facing facing) {
-        return new Player(input, state, facing, random, weapon, health, inventory, animator, feedback, clingHandler, pullUpHandler);
+        return new Player(input, state, facing, weapon, health, inventory, animator, feedback, jumpHandler, clingHandler, pullUpHandler);
     }
 }

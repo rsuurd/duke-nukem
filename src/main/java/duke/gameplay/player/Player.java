@@ -20,28 +20,26 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     private boolean landed;
 
     private boolean controllable;
-    private boolean jumpReady;
-    private int jumpTicks;
     private int fallTicks;
     private boolean moving;
     private boolean flipping;
 
-    private Random random;
     private Weapon weapon;
     private PlayerHealth health;
     private Inventory inventory;
     private PlayerAnimator animator;
     private PlayerFeedback feedback;
 
-    // Jump / Fall / Walk / Stand handlers?
+    // Jump / Fall handlers?
+    private JumpHandler jumpHandler;
     private ClingHandler clingHandler;
     private PullUpHandler pullUpHandler;
 
     public Player() {
-        this(NONE, State.STANDING, Facing.RIGHT, new Random(), new Weapon(), new PlayerHealth(), new Inventory(), new PlayerAnimator(), new PlayerFeedback(), new ClingHandler(), new PullUpHandler());
+        this(NONE, State.STANDING, Facing.RIGHT, new Weapon(), new PlayerHealth(), new Inventory(), new PlayerAnimator(), new PlayerFeedback(), new JumpHandler(new Random()), new ClingHandler(), new PullUpHandler());
     }
 
-    Player(KeyHandler.Input input, State state, Facing facing, Random random, Weapon weapon, PlayerHealth health, Inventory inventory, PlayerAnimator animator, PlayerFeedback feedback, ClingHandler clingHandler, PullUpHandler pullUpHandler) {
+    Player(KeyHandler.Input input, State state, Facing facing, Weapon weapon, PlayerHealth health, Inventory inventory, PlayerAnimator animator, PlayerFeedback feedback, JumpHandler jumpHandler, ClingHandler clingHandler, PullUpHandler pullUpHandler) {
         super(0, 0, WIDTH, HEIGHT);
 
         this.input = input;
@@ -49,14 +47,14 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
         this.state = state;
 
         enableControls();
-        jumpReady = true;
 
-        this.random = random;
         this.weapon = weapon;
         this.health = health;
         this.inventory = inventory;
         this.animator = animator;
         this.feedback = feedback;
+
+        this.jumpHandler = jumpHandler;
         this.clingHandler = clingHandler;
         this.pullUpHandler = pullUpHandler;
 
@@ -77,25 +75,18 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
         }
 
         moving = input.left() || input.right();
-
         weapon.setTriggered(input.fire());
-
-        if (input.jump()) {
-            jump();
-        } else {
-            jumpReady = isGrounded();
-        }
+        jumpHandler.handleInput(this, input);
     }
 
     @Override
     public void update(GameplayContext context) {
         applyFriction();
 
-        // TODO unify these two in a separate component
         updateFall();
-        updateJump();
 
         health.update(context);
+        jumpHandler.update(this);
         clingHandler.update(context, input);
         pullUpHandler.update(this);
     }
@@ -119,22 +110,6 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     @Override
     public boolean isVisible() {
         return !health.isInvulnerable() || health.getInvulnerability() % 2 == 1;
-    }
-
-    private void updateJump() {
-        if (state == State.JUMPING) {
-            jumped = jumpTicks == JUMP_TICKS;
-
-            if (health.isDamageTaken()) {
-                state = State.FALLING;
-                fallTicks = FALL_TICKS;
-            } else if (jumpTicks > 0) {
-                jumpTicks--;
-            } else {
-                state = State.FALLING;
-                fallTicks = SLOW_FALL_TICKS;
-            }
-        }
     }
 
     private void applyFriction() {
@@ -184,19 +159,6 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
         return state == State.STANDING || state == State.WALKING;
     }
 
-    private void jump() {
-        if (jumpReady && isGrounded()) {
-            boolean hasBoots = inventory.isEquippedWith(Inventory.Equipment.BOOTS);
-
-            setVelocityY(hasBoots ? HIGH_JUMP_POWER : JUMP_POWER);
-            state = State.JUMPING;
-            jumpReady = false;
-            jumpTicks = JUMP_TICKS;
-            jumped = true;
-            flipping = hasBoots && getVelocityX() != 0 && random.nextBoolean();
-        }
-    }
-
     @Override
     public void onCollision(Direction direction, int flags) {
         if (direction == Direction.DOWN) {
@@ -209,20 +171,37 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
         }
     }
 
+    void jump(boolean flipping) {
+        jumped = true;
+        state = State.JUMPING;
+        this.flipping = flipping;
+    }
+
+    void fastFall() {
+        fall(FALL_TICKS);
+    }
+
+    void slowFall() {
+        fall(SLOW_FALL_TICKS);
+    }
+
+    private void fall(int ticks) {
+        state = State.FALLING;
+        fallTicks = ticks;
+    }
+
     private void land() {
         if (!(state == State.FALLING || state == State.JUMPING)) return;
 
         setVelocityY(0);
         landed = true;
         state = moving ? State.WALKING : State.STANDING;
-        jumpTicks = 0;
         fallTicks = 0;
         flipping = false;
     }
 
     void cling() {
         setVelocityY(0);
-        jumpTicks = 0;
         state = State.CLINGING;
         flipping = false;
     }
@@ -245,11 +224,9 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
 
     private void bump() {
         setVelocityY(0);
-        jumpTicks = 0;
         // +1 because fall is updated separately and we will be off by 1
         // we can fix this by unifying jump and fall into a single update call
-        fallTicks = FALL_TICKS + 1;
-        state = State.FALLING;
+        fall(FALL_TICKS + 1);
         bumped = true;
     }
 
@@ -270,23 +247,9 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     public int getVerticalAcceleration() {
         return switch (state) {
             case STANDING, WALKING, CLINGING, PULLING_UP -> 0;
-            case JUMPING -> getVerticalAccelerationWhileJumping();
+            case JUMPING -> jumpHandler.getVerticalAcceleration(this);
             case FALLING -> SPEED;
         };
-    }
-
-    private int getVerticalAccelerationWhileJumping() {
-        if (jumpTicks <= 0 || getVelocityY() >= 0) {
-            return 0;
-        }
-
-        boolean hasBoots = inventory.isEquippedWith(Inventory.Equipment.BOOTS);
-        if (!hasBoots && getVelocityY() >= -3) {
-            return -getVelocityY();
-        }
-
-        // normal rising gravity (clamped so it never goes past 0)
-        return Math.min(GRAVITY, -getVelocityY());
     }
 
     @Override
@@ -332,21 +295,8 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
         return controllable;
     }
 
-    public String debug() {
-        return """
-                position: %d, %d
-                velocity: %d, %d
-                %s %s
-                jmp: %d, fall: %d, vAcc: %d
-                """.formatted(getX(), getY(), getVelocityX(), getVelocityY(), getState(), getFacing(), jumpTicks, fallTicks, getVerticalAcceleration());
-    }
-
     private static final int WIDTH = 16;
     private static final int HEIGHT = 32;
-
-    static final int JUMP_POWER = -15;
-    static final int HIGH_JUMP_POWER = JUMP_POWER - 2;
-    static final int JUMP_TICKS = 9;
 
     static final int SLOW_FALL_TICKS = 8;
     static final int FALL_TICKS = 2;
