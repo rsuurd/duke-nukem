@@ -121,4 +121,42 @@ class ClingHandlerTest {
 
         verify(player).releaseCling();
     }
+
+    @Test
+    void shouldPullUpWhenUpIsPressedAndCanPullUp() {
+        when(worldQuery.getPlayer()).thenReturn(player);
+        when(player.getState()).thenReturn(State.CLINGING);
+        when(input.up()).thenReturn(true);
+        when(player.getHealth()).thenReturn(health);
+        when(worldQuery.isSolid(anyInt(), anyInt())).thenReturn(false);
+
+        clingHandler.update(worldQuery, input);
+
+        verify(player).pullUp();
+    }
+
+    @Test
+    void shouldNotPullUpWhenUpIsPressedAndCanNotPullUp() {
+        when(worldQuery.getPlayer()).thenReturn(player);
+        when(player.getState()).thenReturn(State.CLINGING);
+        when(input.up()).thenReturn(true);
+        when(player.getHealth()).thenReturn(health);
+        when(worldQuery.isSolid(anyInt(), anyInt())).thenReturn(true);
+
+        clingHandler.update(worldQuery, input);
+
+        verify(player, never()).pullUp();
+    }
+
+    @Test
+    void shouldNotPullUpWhenUpIsNotPressed() {
+        when(worldQuery.getPlayer()).thenReturn(player);
+        when(player.getState()).thenReturn(State.CLINGING);
+        when(input.up()).thenReturn(false);
+        when(player.getHealth()).thenReturn(health);
+
+        clingHandler.update(worldQuery, input);
+
+        verify(player, never()).pullUp();
+    }
 }

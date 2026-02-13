@@ -41,6 +41,8 @@ class PlayerTest {
     private PlayerFeedback feedback;
     @Mock
     private ClingHandler clingHandler;
+    @Mock
+    private PullUpHandler pullUpHandler;
 
     private GameplayContext context;
 
@@ -395,7 +397,37 @@ class PlayerTest {
         assertThat(player.getState()).isEqualTo(State.FALLING);
     }
 
+    @Test
+    void shouldPullUp() {
+        Player player = create(State.CLINGING, Facing.LEFT);
+
+        player.pullUp();
+
+        assertThat(player.getState()).isEqualTo(State.PULLING_UP);
+        assertThat(player.isControllable()).isFalse();
+        verify(pullUpHandler).beginPullUp();
+    }
+
+    @Test
+    void shouldDelegateToPullUpHandler() {
+        Player player = create(State.PULLING_UP, Facing.LEFT);
+
+        player.update(context);
+
+        verify(pullUpHandler).update(player);
+    }
+
+    @Test
+    void shouldCompletePullUp() {
+        Player player = create(State.PULLING_UP, Facing.LEFT);
+
+        player.pullUpComplete();
+
+        assertThat(player.isControllable()).isTrue();
+        assertThat(player.getState()).isEqualTo(State.STANDING);
+    }
+
     private Player create(State state, Facing facing) {
-        return new Player(input, state, facing, random, weapon, health, inventory, animator, feedback, clingHandler);
+        return new Player(input, state, facing, random, weapon, health, inventory, animator, feedback, clingHandler, pullUpHandler);
     }
 }

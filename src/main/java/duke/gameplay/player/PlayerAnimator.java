@@ -9,13 +9,13 @@ import duke.gfx.SpriteRenderable;
 import static duke.gfx.SpriteDescriptor.MAN;
 
 public class PlayerAnimator implements SpriteRenderable {
-    private Animation walkAnimation;
+    private Animation animation;
     private Animation flipAnimation;
 
     private SpriteDescriptor currentDescriptor;
 
     public PlayerAnimator() {
-        walkAnimation = new Animation(WALKING_RIGHT);
+        animation = new Animation(WALKING_RIGHT);
         flipAnimation = new Animation(FLIPPING_RIGHT);
     }
 
@@ -31,6 +31,7 @@ public class PlayerAnimator implements SpriteRenderable {
             case FALLING -> animateFall(player);
             case WALKING -> animateWalk(player);
             case CLINGING -> animateClinging(player);
+            case PULLING_UP -> animatePullUp(player);
         }
 
         if (player.isGrounded()) {
@@ -76,24 +77,31 @@ public class PlayerAnimator implements SpriteRenderable {
     }
 
     private void animateWalk(Player player) {
-        walkAnimation.setAnimation((player.getFacing() == Facing.LEFT) ? WALKING_LEFT : WALKING_RIGHT);
-        currentDescriptor = walkAnimation.getSpriteDescriptor();
-        walkAnimation.tick();
+        animation.setAnimation((player.getFacing() == Facing.LEFT) ? WALKING_LEFT : WALKING_RIGHT);
+        currentDescriptor = animation.getSpriteDescriptor();
+        animation.tick();
     }
 
     private void animateClinging(Player player) {
-        if (!player.isMoving() && (currentDescriptor == CLINGING_SHOOT_LEFT || currentDescriptor == CLINGING_SHOOT_RIGHT)) return;
+        if (!player.isMoving() && (currentDescriptor == CLINGING_SHOOT_LEFT || currentDescriptor == CLINGING_SHOOT_RIGHT))
+            return;
 
         if (player.getWeapon().isTriggered()) {
             currentDescriptor = (player.getFacing() == Facing.LEFT) ? CLINGING_SHOOT_LEFT : CLINGING_SHOOT_RIGHT;
         } else {
-            walkAnimation.setAnimation((player.getFacing() == Facing.LEFT) ? CLINGING_LEFT : CLINGING_RIGHT);
-            currentDescriptor = walkAnimation.getSpriteDescriptor();
+            animation.setAnimation((player.getFacing() == Facing.LEFT) ? CLINGING_LEFT : CLINGING_RIGHT);
+            currentDescriptor = animation.getSpriteDescriptor();
 
             if (player.isMoving()) {
-                walkAnimation.tick();
+                animation.tick();
             }
         }
+    }
+
+    private void animatePullUp(Player player) {
+        animation.setAnimation((player.getFacing() == Facing.LEFT) ? PULLING_UP_LEFT : PULLING_UP_RIGHT);
+        currentDescriptor = animation.getSpriteDescriptor();
+        animation.tick();
     }
 
     @Override
@@ -120,4 +128,6 @@ public class PlayerAnimator implements SpriteRenderable {
     private static final AnimationDescriptor CLINGING_RIGHT = new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(128), 4, 2);
     private static final SpriteDescriptor CLINGING_SHOOT_LEFT = BASE_DESCRIPTOR.withBaseIndex(144);
     private static final SpriteDescriptor CLINGING_SHOOT_RIGHT = BASE_DESCRIPTOR.withBaseIndex(148);
+    private static final AnimationDescriptor PULLING_UP_LEFT = new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(152), 3, 1);
+    private static final AnimationDescriptor PULLING_UP_RIGHT = new AnimationDescriptor(BASE_DESCRIPTOR.withBaseIndex(164), 3, 1);
 }

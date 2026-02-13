@@ -5,6 +5,7 @@ import duke.Renderer;
 import duke.dialog.Hints;
 import duke.gameplay.*;
 import duke.gameplay.player.Player;
+import duke.gameplay.player.State;
 import duke.gfx.*;
 import duke.level.Level;
 import duke.level.LevelManager;
@@ -95,7 +96,11 @@ public class GameplayState implements GameState {
 
         player.processInput(input);
         player.update(context);
-        collision.resolve(player, context);
+
+        if (player.getState() != State.PULLING_UP) { // TODO add boolean to Physics whether or not to apply collision
+            collision.resolve(player, context);
+        }
+
         player.postMovement(context);
 
         viewport.update(player.getX(), player.getY(), player.isGrounded());

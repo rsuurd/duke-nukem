@@ -3,7 +3,6 @@ package duke.gameplay.player;
 import duke.gameplay.*;
 import duke.gfx.SpriteDescriptor;
 import duke.gfx.SpriteRenderable;
-import duke.level.Flags;
 import duke.ui.KeyHandler;
 
 import java.util.Random;
@@ -36,12 +35,13 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
 
     // Jump / Fall / Walk / Stand handlers?
     private ClingHandler clingHandler;
+    private PullUpHandler pullUpHandler;
 
     public Player() {
-        this(NONE, State.STANDING, Facing.RIGHT, new Random(), new Weapon(), new PlayerHealth(), new Inventory(), new PlayerAnimator(), new PlayerFeedback(), new ClingHandler());
+        this(NONE, State.STANDING, Facing.RIGHT, new Random(), new Weapon(), new PlayerHealth(), new Inventory(), new PlayerAnimator(), new PlayerFeedback(), new ClingHandler(), new PullUpHandler());
     }
 
-    Player(KeyHandler.Input input, State state, Facing facing, Random random, Weapon weapon, PlayerHealth health, Inventory inventory, PlayerAnimator animator, PlayerFeedback feedback, ClingHandler clingHandler) {
+    Player(KeyHandler.Input input, State state, Facing facing, Random random, Weapon weapon, PlayerHealth health, Inventory inventory, PlayerAnimator animator, PlayerFeedback feedback, ClingHandler clingHandler, PullUpHandler pullUpHandler) {
         super(0, 0, WIDTH, HEIGHT);
 
         this.input = input;
@@ -58,6 +58,7 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
         this.animator = animator;
         this.feedback = feedback;
         this.clingHandler = clingHandler;
+        this.pullUpHandler = pullUpHandler;
 
         reset();
     }
@@ -95,7 +96,8 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
         updateJump();
 
         health.update(context);
-        clingHandler.update(context, input); // maybe check if state == clinging?
+        clingHandler.update(context, input);
+        pullUpHandler.update(this);
     }
 
     private void reset() {
@@ -231,9 +233,14 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     }
 
     void pullUp() {
-        // teleport for now
-        setY(getY() - TILE_SIZE - getHeight());
+        disableControls();
+        pullUpHandler.beginPullUp();
+        state = State.PULLING_UP;
+    }
+
+    void pullUpComplete() {
         state = State.STANDING;
+        enableControls();
     }
 
     private void bump() {
@@ -262,7 +269,7 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     @Override
     public int getVerticalAcceleration() {
         return switch (state) {
-            case STANDING, WALKING, CLINGING -> 0;
+            case STANDING, WALKING, CLINGING, PULLING_UP -> 0;
             case JUMPING -> getVerticalAccelerationWhileJumping();
             case FALLING -> SPEED;
         };

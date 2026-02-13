@@ -5,5 +5,6 @@ public enum State {
     WALKING,
     JUMPING,
     CLINGING,
+    PULLING_UP,
     FALLING
 }
