@@ -7,6 +7,7 @@ import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static duke.gameplay.player.PullUpHandler.PULL_UP_DURATION;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -31,12 +32,11 @@ class PullUpHandlerTest {
     void shouldUpdateWhenPullingUp() {
         when(player.getState()).thenReturn(State.PULLING_UP);
 
-        for (int offset : PullUpHandler.PULL_UP_OFFSETS) {
+        for (int i = 0; i <= PULL_UP_DURATION; i++) {
             handler.update(player);
-
-            verify(player).setY(-offset);
         }
 
+        verify(player, times(PULL_UP_DURATION)).setY(-PullUpHandler.PULL_UP_OFFSET);
         verify(player).pullUpComplete();
     }
 }

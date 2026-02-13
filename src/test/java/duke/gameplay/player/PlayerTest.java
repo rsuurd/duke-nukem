@@ -405,6 +405,7 @@ class PlayerTest {
 
         assertThat(player.getState()).isEqualTo(State.PULLING_UP);
         assertThat(player.isControllable()).isFalse();
+        assertThat(player.isCollisionEnabled()).isFalse();
         verify(pullUpHandler).beginPullUp();
     }
 
@@ -424,6 +425,7 @@ class PlayerTest {
         player.pullUpComplete();
 
         assertThat(player.isControllable()).isTrue();
+        assertThat(player.isCollisionEnabled()).isTrue();
         assertThat(player.getState()).isEqualTo(State.STANDING);
     }
 

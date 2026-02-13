@@ -4,7 +4,6 @@ import duke.GameContext;
 import duke.GameContextFixture;
 import duke.gameplay.*;
 import duke.gameplay.player.Player;
-import duke.gameplay.player.State;
 import duke.gfx.Hud;
 import duke.gfx.LevelRenderer;
 import duke.gfx.SpriteRenderer;
@@ -139,14 +138,5 @@ class GameplayStateTest {
         state.update(gameContext);
 
         verify(cheats).processInput(gameContext.getKeyHandler(), gameplayContext);
-    }
-
-    @Test
-    void shouldNotResolvePlayerCollisionWhilePullingUp() {
-        when(gameplayContext.getPlayer().getState()).thenReturn(State.PULLING_UP);
-
-        state.update(gameContext);
-
-        verify(collision, never()).resolve(gameplayContext.getPlayer(), gameplayContext);
     }
 }

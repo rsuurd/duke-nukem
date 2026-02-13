@@ -6,6 +6,8 @@ import static duke.level.Level.TILE_SIZE;
 
 public class Collision {
     public void resolve(Physics body, WorldQuery query) {
+        if (!body.isCollisionEnabled()) return;
+
         resolveXAxis(body, query);
         applyGravity(body, query);
         resolveYAxis(body, query);

@@ -96,11 +96,7 @@ public class GameplayState implements GameState {
 
         player.processInput(input);
         player.update(context);
-
-        if (player.getState() != State.PULLING_UP) { // TODO add boolean to Physics whether or not to apply collision
-            collision.resolve(player, context);
-        }
-
+        collision.resolve(player, context);
         player.postMovement(context);
 
         viewport.update(player.getX(), player.getY(), player.isGrounded());

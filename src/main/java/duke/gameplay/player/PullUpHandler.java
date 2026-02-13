@@ -1,5 +1,7 @@
 package duke.gameplay.player;
 
+import duke.level.Level;
+
 public class PullUpHandler {
     private int timer;
 
@@ -10,12 +12,13 @@ public class PullUpHandler {
     public void update(Player player) {
         if (player.getState() != State.PULLING_UP) return;
 
-        player.setY(player.getY() - PULL_UP_OFFSETS[timer++]);
-
-        if (timer >= PULL_UP_OFFSETS.length) {
+        if (timer++ < PULL_UP_DURATION) {
+            player.setY(player.getY() - PULL_UP_OFFSET);
+        } else {
             player.pullUpComplete();
         }
     }
 
-    static final int[] PULL_UP_OFFSETS = {16, 8, 24};
+    static final int PULL_UP_OFFSET = Level.TILE_SIZE;
+    static final int PULL_UP_DURATION = 3;
 }

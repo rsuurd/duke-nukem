@@ -15,4 +15,8 @@ public interface Physics extends Movable {
 
     default void fall() {
     }
+
+    default boolean isCollisionEnabled() {
+        return true;
+    }
 }

@@ -295,6 +295,11 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     }
 
     @Override
+    public boolean isCollisionEnabled() {
+        return state != State.PULLING_UP;
+    }
+
+    @Override
     public SpriteDescriptor getSpriteDescriptor() {
         return animator.getSpriteDescriptor();
     }

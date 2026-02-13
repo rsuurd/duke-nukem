@@ -27,6 +27,7 @@ class CollisionTest {
         when(player.getY()).thenReturn(y);
         when(player.getVelocityX()).thenReturn(velocityX);
         when(player.getVelocityY()).thenReturn(velocityY);
+        when(player.isCollisionEnabled()).thenReturn(true);
 
         return player;
     }
@@ -121,5 +122,17 @@ class CollisionTest {
 
         verify(player, never()).onCollision(any(), anyInt());
         verify(query, never()).getTileFlags(anyInt(), anyInt());
+    }
+
+    @Test
+    void shouldNotCollideWhenDisabled() {
+        Physics physics = mock();
+        when(physics.isCollisionEnabled()).thenReturn(false);
+
+        collision.resolve(physics, query);
+
+        verify(physics).isCollisionEnabled();
+        verifyNoMoreInteractions(physics);
+        verifyNoInteractions(query);
     }
 }
