@@ -25,6 +25,7 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     private PlayerHealth health;
     private Inventory inventory;
 
+    private MovementHandler movementHandler;
     private JumpHandler jumpHandler;
     private FallHandler fallHandler;
     private ClingHandler clingHandler;
@@ -34,10 +35,10 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     private PlayerFeedback feedback;
 
     public Player() {
-        this(NONE, State.STANDING, Facing.RIGHT, new Weapon(), new PlayerHealth(), new Inventory(), new JumpHandler(new Random()), new FallHandler(), new ClingHandler(), new PullUpHandler(), new PlayerAnimator(), new PlayerFeedback());
+        this(NONE, State.STANDING, Facing.RIGHT, new Weapon(), new PlayerHealth(), new Inventory(), new MovementHandler(), new JumpHandler(new Random()), new FallHandler(), new ClingHandler(), new PullUpHandler(), new PlayerAnimator(), new PlayerFeedback());
     }
 
-    Player(KeyHandler.Input input, State state, Facing facing, Weapon weapon, PlayerHealth health, Inventory inventory, JumpHandler jumpHandler, FallHandler fallHandler, ClingHandler clingHandler, PullUpHandler pullUpHandler, PlayerAnimator animator, PlayerFeedback feedback) {
+    Player(KeyHandler.Input input, State state, Facing facing, Weapon weapon, PlayerHealth health, Inventory inventory, MovementHandler movementHandler, JumpHandler jumpHandler, FallHandler fallHandler, ClingHandler clingHandler, PullUpHandler pullUpHandler, PlayerAnimator animator, PlayerFeedback feedback) {
         super(0, 0, WIDTH, HEIGHT);
 
         this.input = input;
@@ -50,6 +51,7 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
         this.health = health;
         this.inventory = inventory;
 
+        this.movementHandler = movementHandler;
         this.jumpHandler = jumpHandler;
         this.fallHandler = fallHandler;
         this.clingHandler = clingHandler;
@@ -65,24 +67,15 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
         if (!controllable) return;
 
         this.input = input;
-
-        if (input.left()) {
-            move(Facing.LEFT);
-        }
-
-        if (input.right()) {
-            move(Facing.RIGHT);
-        }
-
         moving = input.left() || input.right();
+
+        movementHandler.handleInput(this, input);
         weapon.setTriggered(input.fire());
         jumpHandler.handleInput(this, input);
     }
 
     @Override
     public void update(GameplayContext context) {
-        applyFriction();
-
         health.update(context);
         fallHandler.update(this);
         jumpHandler.update(this);
@@ -111,23 +104,16 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
         return !health.isInvulnerable() || health.getInvulnerability() % 2 == 1;
     }
 
-    private void applyFriction() {
-        if (!moving) {
-            // TODO -8 / + 8 instead of hard 0
-            setVelocityX(0);
-
-            if (state == State.WALKING) {
-                state = State.STANDING;
-            }
-        }
-    }
-
     public State getState() {
         return state;
     }
 
     public Facing getFacing() {
         return facing;
+    }
+
+    public void setFacing(Facing facing) {
+        this.facing = facing;
     }
 
     public Weapon getWeapon() {
@@ -140,18 +126,6 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
 
     public Inventory getInventory() {
         return inventory;
-    }
-
-    private void move(Facing facing) {
-        if (this.facing == facing) {
-            setVelocityX((facing == Facing.LEFT) ? -SPEED : SPEED);
-
-            if (state == State.STANDING) {
-                state = State.WALKING;
-            }
-        } else {
-            this.facing = facing;
-        }
     }
 
     public boolean isGrounded() {
@@ -168,6 +142,16 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
         } else {
             setVelocityX(0);
         }
+    }
+
+    void walk() {
+        if (state == State.STANDING) {
+            state = State.WALKING;
+        }
+    }
+
+    void stand() {
+        state = State.STANDING;
     }
 
     void jump(boolean flipping) {
@@ -286,6 +270,7 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     private static final int HEIGHT = 32;
 
     static final int SPEED = 8;
+    static final int MAX_SPEED = 8;
 
     private static final KeyHandler.Input NONE = new KeyHandler.Input(false, false, false, false, false, false);
 }

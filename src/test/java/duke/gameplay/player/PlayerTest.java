@@ -32,10 +32,11 @@ class PlayerTest {
     private PlayerHealth health;
     @Mock
     private Inventory inventory;
+
     @Mock
-    private PlayerAnimator animator;
+    private MovementHandler movementHandler;
     @Mock
-    private PlayerFeedback feedback;
+    private GameplayContext gameplayContext;
     @Mock
     private JumpHandler jumpHandler;
     @Mock
@@ -45,11 +46,27 @@ class PlayerTest {
     @Mock
     private PullUpHandler pullUpHandler;
 
+    @Mock
+    private PlayerAnimator animator;
+    @Mock
+    private PlayerFeedback feedback;
+
     private GameplayContext context;
 
     @BeforeEach
     void createContext() {
         context = GameplayContextFixture.create();
+    }
+
+    @Test
+    void shouldProcessInput() {
+        Player player = create(State.STANDING, Facing.LEFT);
+
+        player.processInput(input);
+
+        verify(movementHandler).handleInput(player, input);
+        verify(weapon).setTriggered(input.fire());
+        verify(jumpHandler).handleInput(player, input);
     }
 
     @Test
@@ -63,81 +80,6 @@ class PlayerTest {
         assertThat(player.getY()).isEqualTo(12);
     }
 
-    @Test
-    void shouldWalkLeftWhenStanding() {
-        Player player = create(State.STANDING, Facing.LEFT);
-
-        when(input.left()).thenReturn(true);
-
-        player.processInput(input);
-
-        assertThat(player.getState()).isEqualTo(State.WALKING);
-        assertThat(player.getFacing()).isEqualTo(Facing.LEFT);
-        assertThat(player.getVelocityX()).isEqualTo(-SPEED);
-    }
-
-    @ParameterizedTest
-    @EnumSource(value = State.class, names = {"STANDING"}, mode = EnumSource.Mode.EXCLUDE)
-    void shouldMoveLeft(State state) {
-        Player player = create(state, Facing.LEFT);
-
-        when(input.left()).thenReturn(true);
-
-        player.processInput(input);
-
-        assertThat(player.getState()).isEqualTo(state);
-        assertThat(player.getVelocityX()).isEqualTo(-SPEED);
-    }
-
-    @Test
-    void shouldWalkRight() {
-        Player player = create(State.STANDING, Facing.RIGHT);
-
-        when(input.right()).thenReturn(true);
-
-        player.processInput(input);
-
-        assertThat(player.getVelocityX()).isEqualTo(SPEED);
-    }
-
-    @ParameterizedTest
-    @EnumSource(value = State.class, names = {"STANDING"}, mode = EnumSource.Mode.EXCLUDE)
-    void shouldMoveRight(State state) {
-        Player player = create(state, Facing.LEFT);
-
-        when(input.left()).thenReturn(true);
-
-        player.processInput(input);
-
-        assertThat(player.getState()).isEqualTo(state);
-        assertThat(player.getVelocityX()).isEqualTo(-SPEED);
-    }
-
-    @Test
-    void shouldStandWhenWalkingStops() {
-        Player player = create(State.WALKING, Facing.LEFT);
-
-        player.setVelocityX(-SPEED);
-
-        player.processInput(input);
-        player.update(context);
-
-        assertThat(player.getState()).isEqualTo(State.STANDING);
-        assertThat(player.getVelocityX()).isEqualTo(0);
-    }
-
-    @ParameterizedTest
-    @EnumSource(value = State.class, names = {"WALKING"}, mode = EnumSource.Mode.EXCLUDE)
-    void shouldApplyFriction(State state) {
-        Player player = create(state, Facing.RIGHT);
-        player.setVelocityX(SPEED);
-
-        player.processInput(input);
-        player.update(context);
-
-        assertThat(player.getVelocityX()).isEqualTo(0);
-    }
-
     @ParameterizedTest
     @EnumSource(State.class)
     void shouldIndicateIfGrounded(State state) {
@@ -145,6 +87,34 @@ class PlayerTest {
             case STANDING, WALKING -> true;
             default -> false;
         });
+    }
+
+    @Test
+    void shouldWalk() {
+        Player player = create(State.STANDING, Facing.LEFT);
+
+        player.walk();
+
+        assertThat(player.getState()).isEqualTo(State.WALKING);
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = State.class, names = {"STANDING"}, mode = EnumSource.Mode.EXCLUDE)
+    void shouldNotWalkIfNotStanding(State state) {
+        Player player = create(state, Facing.LEFT);
+
+        player.walk();
+
+        assertThat(player.getState()).isEqualTo(state);
+    }
+
+    @Test
+    void shouldStand() {
+        Player player = create(State.WALKING, Facing.LEFT);
+
+        player.stand();
+
+        assertThat(player.getState()).isEqualTo(State.STANDING);
     }
 
     @Test
@@ -337,6 +307,7 @@ class PlayerTest {
         verify(input, atLeastOnce()).left();
         verify(input, atLeastOnce()).right();
         verify(input).fire();
+        verify(movementHandler).handleInput(player, input);
         verify(jumpHandler).handleInput(player, input);
     }
 
@@ -431,6 +402,6 @@ class PlayerTest {
     }
 
     private Player create(State state, Facing facing) {
-        return new Player(input, state, facing, weapon, health, inventory, jumpHandler, fallHandler, clingHandler, pullUpHandler, animator, feedback);
+        return new Player(input, state, facing, weapon, health, inventory, movementHandler, jumpHandler, fallHandler, clingHandler, pullUpHandler, animator, feedback);
     }
 }
