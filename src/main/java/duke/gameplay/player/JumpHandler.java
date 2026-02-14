@@ -72,7 +72,7 @@ public class JumpHandler {
         return Math.min(GRAVITY, -player.getVelocityY());
     }
 
-    static final int JUMP_POWER = -15;
+    static final int JUMP_POWER = -13;
     static final int HIGH_JUMP_POWER = JUMP_POWER - 2;
     static final int JUMP_TICKS = 9;
 }

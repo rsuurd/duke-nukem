@@ -14,10 +14,9 @@ import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Random;
-
 import static duke.gameplay.GameplayContextFixture.SOLID_TILE_FLAG;
 import static duke.gameplay.player.Player.*;
+import static duke.gameplay.player.PlayerHealth.INVULNERABILITY_FRAMES;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.same;
@@ -39,6 +38,8 @@ class PlayerTest {
     private PlayerFeedback feedback;
     @Mock
     private JumpHandler jumpHandler;
+    @Mock
+    private FallHandler fallHandler;
     @Mock
     private ClingHandler clingHandler;
     @Mock
@@ -147,6 +148,36 @@ class PlayerTest {
     }
 
     @Test
+    void shouldJump() {
+        Player player = create(State.STANDING, Facing.LEFT);
+
+        player.jump(false);
+
+        assertThat(player.getState()).isEqualTo(State.JUMPING);
+        assertThat(player.isFlipping()).isFalse();
+    }
+
+    @Test
+    void shouldSlowFall() {
+        Player player = create(State.JUMPING, Facing.LEFT);
+
+        player.slowFall();
+
+        assertThat(player.getState()).isEqualTo(State.FALLING);
+        verify(fallHandler).slowFall();
+    }
+
+    @Test
+    void shouldFastFall() {
+        Player player = create(State.JUMPING, Facing.LEFT);
+
+        player.fastFall();
+
+        assertThat(player.getState()).isEqualTo(State.FALLING);
+        verify(fallHandler).fall();
+    }
+
+    @Test
     void shouldLand() {
         Player player = create(State.FALLING, Facing.LEFT);
 
@@ -207,9 +238,33 @@ class PlayerTest {
 
     @Test
     void shouldAccelerateWhileFalling() {
+        when(fallHandler.getVerticalAcceleration()).thenReturn(SPEED);
+
         Player player = create(State.FALLING, Facing.LEFT);
 
         assertThat(player.getVerticalAcceleration()).isEqualTo(SPEED);
+
+        verify(fallHandler).getVerticalAcceleration();
+    }
+
+    @Test
+    void shouldDetermineTerminalVelocity() {
+        Player player = create(State.FALLING, Facing.LEFT);
+
+        player.getTerminalVelocity();
+
+        verify(fallHandler).getTerminalVelocity();
+    }
+
+    @Test
+    void shouldAccelerateWhileJumping() {
+        when(jumpHandler.getVerticalAcceleration(any())).thenReturn(GRAVITY);
+
+        Player player = create(State.JUMPING, Facing.LEFT);
+
+        assertThat(player.getVerticalAcceleration()).isEqualTo(GRAVITY);
+
+        verify(jumpHandler).getVerticalAcceleration(player);
     }
 
     @Test
@@ -355,7 +410,27 @@ class PlayerTest {
         assertThat(player.getState()).isEqualTo(State.STANDING);
     }
 
+    @Test
+    void shouldNotBlinkWhenNotInvulnerable() {
+        Player player = create(State.STANDING, Facing.LEFT);
+        when(health.isInvulnerable()).thenReturn(false);
+
+        assertThat(player.isVisible()).isTrue();
+    }
+
+    @Test
+    void shouldBlinkWhenInvulnerable() {
+        Player player = create(State.STANDING, Facing.LEFT);
+        when(health.isInvulnerable()).thenReturn(true);
+
+        for (int i = 0; i < INVULNERABILITY_FRAMES; i++) {
+            when(health.getInvulnerability()).thenReturn(i);
+
+            assertThat(player.isVisible()).isEqualTo(i % 2 == 1);
+        }
+    }
+
     private Player create(State state, Facing facing) {
-        return new Player(input, state, facing, weapon, health, inventory, animator, feedback, jumpHandler, clingHandler, pullUpHandler);
+        return new Player(input, state, facing, weapon, health, inventory, jumpHandler, fallHandler, clingHandler, pullUpHandler, animator, feedback);
     }
 }

@@ -9,8 +9,8 @@ public class Collision {
         if (!body.isCollisionEnabled()) return;
 
         resolveXAxis(body, query);
-        applyGravity(body, query);
         resolveYAxis(body, query);
+        applyGravity(body, query);
     }
 
     private void applyGravity(Physics body, WorldQuery query) {

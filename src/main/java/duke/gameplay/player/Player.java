@@ -7,8 +7,6 @@ import duke.ui.KeyHandler;
 
 import java.util.Random;
 
-import static duke.level.Level.TILE_SIZE;
-
 public class Player extends Active implements Movable, Collidable, Physics, Updatable, SpriteRenderable {
     private KeyHandler.Input input;
 
@@ -20,26 +18,26 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     private boolean landed;
 
     private boolean controllable;
-    private int fallTicks;
     private boolean moving;
     private boolean flipping;
 
     private Weapon weapon;
     private PlayerHealth health;
     private Inventory inventory;
-    private PlayerAnimator animator;
-    private PlayerFeedback feedback;
 
-    // Jump / Fall handlers?
     private JumpHandler jumpHandler;
+    private FallHandler fallHandler;
     private ClingHandler clingHandler;
     private PullUpHandler pullUpHandler;
 
+    private PlayerAnimator animator;
+    private PlayerFeedback feedback;
+
     public Player() {
-        this(NONE, State.STANDING, Facing.RIGHT, new Weapon(), new PlayerHealth(), new Inventory(), new PlayerAnimator(), new PlayerFeedback(), new JumpHandler(new Random()), new ClingHandler(), new PullUpHandler());
+        this(NONE, State.STANDING, Facing.RIGHT, new Weapon(), new PlayerHealth(), new Inventory(), new JumpHandler(new Random()), new FallHandler(), new ClingHandler(), new PullUpHandler(), new PlayerAnimator(), new PlayerFeedback());
     }
 
-    Player(KeyHandler.Input input, State state, Facing facing, Weapon weapon, PlayerHealth health, Inventory inventory, PlayerAnimator animator, PlayerFeedback feedback, JumpHandler jumpHandler, ClingHandler clingHandler, PullUpHandler pullUpHandler) {
+    Player(KeyHandler.Input input, State state, Facing facing, Weapon weapon, PlayerHealth health, Inventory inventory, JumpHandler jumpHandler, FallHandler fallHandler, ClingHandler clingHandler, PullUpHandler pullUpHandler, PlayerAnimator animator, PlayerFeedback feedback) {
         super(0, 0, WIDTH, HEIGHT);
 
         this.input = input;
@@ -51,12 +49,14 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
         this.weapon = weapon;
         this.health = health;
         this.inventory = inventory;
-        this.animator = animator;
-        this.feedback = feedback;
 
         this.jumpHandler = jumpHandler;
+        this.fallHandler = fallHandler;
         this.clingHandler = clingHandler;
         this.pullUpHandler = pullUpHandler;
+
+        this.animator = animator;
+        this.feedback = feedback;
 
         reset();
     }
@@ -83,9 +83,8 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     public void update(GameplayContext context) {
         applyFriction();
 
-        updateFall();
-
         health.update(context);
+        fallHandler.update(this);
         jumpHandler.update(this);
         clingHandler.update(context, input);
         pullUpHandler.update(this);
@@ -178,16 +177,13 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     }
 
     void fastFall() {
-        fall(FALL_TICKS);
+        state = State.FALLING;
+        fallHandler.fall();
     }
 
     void slowFall() {
-        fall(SLOW_FALL_TICKS);
-    }
-
-    private void fall(int ticks) {
         state = State.FALLING;
-        fallTicks = ticks;
+        fallHandler.slowFall();
     }
 
     private void land() {
@@ -196,7 +192,6 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
         setVelocityY(0);
         landed = true;
         state = moving ? State.WALKING : State.STANDING;
-        fallTicks = 0;
         flipping = false;
     }
 
@@ -208,7 +203,7 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
 
     void releaseCling() {
         state = State.STANDING;
-        fall();
+        fastFall();
     }
 
     void pullUp() {
@@ -224,37 +219,29 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
 
     private void bump() {
         setVelocityY(0);
-        // +1 because fall is updated separately and we will be off by 1
-        // we can fix this by unifying jump and fall into a single update call
-        fall(FALL_TICKS + 1);
+        fastFall();
         bumped = true;
     }
 
-    public void fall() {
-        if (state != State.JUMPING && state != State.FALLING && state != State.CLINGING) {
-            state = State.FALLING;
-            fallTicks = FALL_TICKS;
-        }
-    }
-
-    private void updateFall() {
-        if (state == State.FALLING && fallTicks > 0) {
-            fallTicks--;
+    @Override
+    public void fall() { // called by collision system when no ground below
+        if (state == State.STANDING || state == State.WALKING) {
+            fastFall();
         }
     }
 
     @Override
     public int getVerticalAcceleration() {
         return switch (state) {
-            case STANDING, WALKING, CLINGING, PULLING_UP -> 0;
             case JUMPING -> jumpHandler.getVerticalAcceleration(this);
-            case FALLING -> SPEED;
+            case FALLING -> fallHandler.getVerticalAcceleration();
+            default -> 0;
         };
     }
 
     @Override
     public int getTerminalVelocity() {
-        return fallTicks > 0 ? SPEED : TILE_SIZE;
+        return fallHandler.getTerminalVelocity();
     }
 
     @Override
@@ -297,9 +284,6 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
 
     private static final int WIDTH = 16;
     private static final int HEIGHT = 32;
-
-    static final int SLOW_FALL_TICKS = 8;
-    static final int FALL_TICKS = 2;
 
     static final int SPEED = 8;
 
