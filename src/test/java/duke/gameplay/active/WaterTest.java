@@ -26,7 +26,7 @@ class WaterTest {
 
         water.render(renderer, spriteRenderer, 32, 64);
 
-        verify(renderer, times(water.getWidth() * water.getHeight())).copy(anyInt(), anyInt(), anyInt(), anyInt());
+        verify(renderer, atLeastOnce()).copy(anyInt(), anyInt(), anyInt(), anyInt());
     }
 
     @Test

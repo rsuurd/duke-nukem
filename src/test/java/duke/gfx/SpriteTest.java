@@ -69,4 +69,24 @@ class SpriteTest {
         assertThat(sprite.getPixel(0, 0)).isEqualTo((byte) 1);
         assertThat(sprite.getPixel(1, 0)).isEqualTo((byte) 2);
     }
+
+    @Test
+    void shouldSafelyGetPixelsOutOfBounds() {
+        Sprite sprite = new Sprite(1, 1);
+
+        assertThat(sprite.getPixel(-1, 0)).isEqualTo((byte) 0);
+        assertThat(sprite.getPixel(0, -1)).isEqualTo((byte) 0);
+        assertThat(sprite.getPixel(1, 0)).isEqualTo((byte) 0);
+        assertThat(sprite.getPixel(0, 1)).isEqualTo((byte) 0);
+    }
+
+    @Test
+    void shouldNotSetPixelsOutOfBounds() {
+        Sprite sprite = new Sprite(1, 1);
+
+        sprite.setPixel(-1, 0, (byte) 1);
+        sprite.setPixel(0, -1, (byte) 1);
+        sprite.setPixel(1, 0, (byte) 1);
+        sprite.setPixel(0, 1, (byte) 1);
+    }
 }

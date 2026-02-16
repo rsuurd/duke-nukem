@@ -30,10 +30,16 @@ public class Sprite {
     }
 
     public byte getPixel(int x, int y) {
+        if (x < 0 || x >= width || y < 0 || y >= height) {
+            return 0;
+        }
+
         return pixels[y * width + x];
     }
 
     public void setPixel(int x, int y, byte pixel) {
+        if (x < 0 || x >= width || y < 0 || y >= height) return;
+
         pixels[y * width + x] = pixel;
     }
 

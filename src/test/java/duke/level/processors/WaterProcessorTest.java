@@ -29,6 +29,6 @@ class WaterProcessorTest {
         processor.process(0, WaterProcessor.TILE_ID, builder);
 
         verify(builder).add(isA(Water.class));
-        verify(builder).replaceTile(0, LevelBuilder.BOTTOM);
+        verify(builder).replaceTile(0, LevelBuilder.LEFT);
     }
 }

@@ -5,6 +5,7 @@ import duke.level.Level;
 import duke.level.LevelBuilder;
 
 import static duke.level.LevelBuilder.BOTTOM;
+import static duke.level.LevelBuilder.LEFT;
 
 public class WaterProcessor implements ActiveProcessor {
     static final int TILE_ID = 0x3014;
@@ -19,6 +20,6 @@ public class WaterProcessor implements ActiveProcessor {
         int x = Level.toX(index);
         int y = Level.toY(index);
 
-        builder.add(new Water(x, y)).replaceTile(index, BOTTOM);
+        builder.add(new Water(x, y)).replaceTile(index, LEFT);
     }
 }

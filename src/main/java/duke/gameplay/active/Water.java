@@ -33,12 +33,13 @@ public class Water extends Active implements Updatable, Renderable {
         if (screenX >= Viewport.WIDTH || screenY >= Viewport.HEIGHT) return;
 
         int destHeight = getHeight();
-        int sourceHeight = (getHeight() * 3) / 2; // the water reflects 3 tiles in 2 tiles for a squeezed effect
+        int sourceHeight = 2 * getHeight();
 
         int sourceY = 0;
         int remaining = 0;
 
-        for (int y = 0; y < destHeight; y++) {
+        // skip the first 2 lines of pixels to let  the top of the underlying tile show through
+        for (int y = 2; y < destHeight; y++) {
             int sampleY = screenY - (1 + tick + sourceY);
 
             if (sampleY < 0) return;
