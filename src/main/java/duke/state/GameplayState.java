@@ -44,8 +44,10 @@ public class GameplayState implements GameState {
         ActiveManager activeManager = new ActiveManager(viewport, collision, spriteRenderer);
         ScoreManager scoreManager = new ScoreManager(activeManager);
         BonusTracker bonusTracker = new BonusTracker();
+        Player player = new Player();
+        ViewportManager viewportManager = new ViewportManager(player, true);
 
-        return new GameplayContext(new Player(), null, boltManager, activeManager, gameContext.getSoundManager(), scoreManager, bonusTracker, gameContext.getDialogManager(), new Hints());
+        return new GameplayContext(player, null, boltManager, activeManager, gameContext.getSoundManager(), scoreManager, bonusTracker, gameContext.getDialogManager(), new Hints(), viewportManager);
     }
 
     GameplayState(LevelManager levelManager, LevelRenderer levelRenderer, Viewport viewport, Hud hud, SpriteRenderer spriteRenderer, Collision collision, GameplayContext context, Cheats cheats) {
@@ -69,7 +71,7 @@ public class GameplayState implements GameState {
     private void switchLevel(Level level, GameplayContext context) {
         context.switchLevel(level);
         levelRenderer.setLevel(level);
-        viewport.center(context.getPlayer().getX(), context.getPlayer().getY());
+        viewport.center(context.getViewportManager().getTarget());
     }
 
     @Override
@@ -80,6 +82,13 @@ public class GameplayState implements GameState {
         }
 
         updatePlayer(gameContext.getKeyHandler().getInput());
+
+        if (context.getViewportManager().pollSnapToCenter()) {
+            viewport.center(context.getViewportManager().getTarget());
+        } else {
+            viewport.update(context.getViewportManager().getTarget());
+        }
+
         context.getBoltManager().update(context);
         context.getActiveManager().update(context);
 
@@ -97,8 +106,6 @@ public class GameplayState implements GameState {
         player.update(context);
         collision.resolve(player, context);
         player.postMovement(context);
-
-        viewport.update(player.getX(), player.getY(), player.isGrounded());
     }
 
     @Override

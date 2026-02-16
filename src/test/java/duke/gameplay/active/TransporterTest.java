@@ -67,5 +67,6 @@ class TransporterTest {
         verify(context.getPlayer()).setY(100);
         verify(context.getSoundManager()).play(Sfx.TELEPORT);
         verify(context.getActiveManager(), times(2)).spawn(isA(BlinkingEffect.class));
+        verify(context.getViewportManager()).snapToCenter();
     }
 }

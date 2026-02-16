@@ -52,33 +52,39 @@ class GameplayStateTest {
 
     @Test
     void shouldSwitchLevelOnStart() {
+        Player player = gameplayContext.getPlayer();
+
         Level level = mock();
         when(levelManager.getNextLevel()).thenReturn(level);
         when(level.getDescriptor()).thenReturn(new LevelDescriptor(1, 0, null));
-        when(gameplayContext.getPlayer().getHealth()).thenReturn(mock());
+        when(player.getHealth()).thenReturn(mock());
+        when(gameplayContext.getViewportManager().getTarget()).thenReturn(player);
 
         state.start(gameContext);
 
         verify(gameplayContext).switchLevel(level);
         verify(levelRenderer).setLevel(level);
-        verify(viewport).center(anyInt(), anyInt());
-        verify(gameplayContext.getPlayer().getHealth()).grantInvulnerability();
+        verify(viewport).center(player);
+        verify(player.getHealth()).grantInvulnerability();
     }
 
     @Test
     void shouldSwitchLevelOnComplete() {
+        Player player = gameplayContext.getPlayer();
+
         Level next = mock();
         when(next.getDescriptor()).thenReturn(new LevelDescriptor(2, 0, null));
         when(gameplayContext.getLevel().isCompleted()).thenReturn(true);
         when(levelManager.getNextLevel()).thenReturn(next);
-        when(gameplayContext.getPlayer().getHealth()).thenReturn(mock());
+        when(player.getHealth()).thenReturn(mock());
+        when(gameplayContext.getViewportManager().getTarget()).thenReturn(player);
 
         state.update(gameContext);
 
         verify(gameplayContext).switchLevel(next);
         verify(levelRenderer).setLevel(next);
-        verify(viewport).center(anyInt(), anyInt());
-        verify(gameplayContext.getPlayer().getHealth()).grantInvulnerability();
+        verify(viewport).center(player);
+        verify(player.getHealth()).grantInvulnerability();
     }
 
     @Test
@@ -94,10 +100,23 @@ class GameplayStateTest {
 
     @Test
     void shouldUpdateViewport() {
+        Player player = gameplayContext.getPlayer();
+        when(gameplayContext.getViewportManager().getTarget()).thenReturn(player);
+
         state.update(gameContext);
 
+        verify(viewport).update(player);
+    }
+
+    @Test
+    void shouldSnapViewportToCenter() {
         Player player = gameplayContext.getPlayer();
-        verify(viewport).update(player.getX(), player.getY(), player.isGrounded());
+        when(gameplayContext.getViewportManager().pollSnapToCenter()).thenReturn(true);
+        when(gameplayContext.getViewportManager().getTarget()).thenReturn(player);
+
+        state.update(gameContext);
+
+        verify(viewport).center(player);
     }
 
     @Test

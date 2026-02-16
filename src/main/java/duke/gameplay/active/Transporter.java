@@ -41,10 +41,11 @@ public class Transporter extends Active implements Updatable, Renderable, Intera
                 transport(context);
                 transporter.transport(context);
 
-                // TODO center camera directly
                 context.getPlayer().setX(active.getX());
                 context.getPlayer().setY(active.getY());
                 context.getSoundManager().play(Sfx.TELEPORT);
+                context.getViewportManager().snapToCenter();
+
                 break;
             }
         }

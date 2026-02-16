@@ -3,6 +3,7 @@ package duke.gameplay;
 import duke.dialog.DialogManager;
 import duke.dialog.Hints;
 import duke.gameplay.player.Player;
+import duke.gfx.Viewport;
 import duke.level.Flags;
 import duke.level.Level;
 import duke.sfx.SoundManager;
@@ -18,10 +19,12 @@ public class GameplayContext implements WorldQuery {
     private BonusTracker bonusTracker;
     private DialogManager dialogManager;
     private Hints hints;
+    private ViewportManager viewportManager;
 
-    public GameplayContext(Player player, Level level, BoltManager boltManager, ActiveManager activeManager,
-                           SoundManager soundManager, ScoreManager scoreManager, BonusTracker bonusTracker, DialogManager dialogManager, Hints hints) {
+    public GameplayContext(Player player, Level level, BoltManager boltManager, ActiveManager activeManager, SoundManager soundManager,
+                           ScoreManager scoreManager, BonusTracker bonusTracker, DialogManager dialogManager, Hints hints, ViewportManager viewportManager) {
         this.player = player;
+        this.level = level;
 
         this.boltManager = boltManager;
         this.activeManager = activeManager;
@@ -30,8 +33,7 @@ public class GameplayContext implements WorldQuery {
         this.bonusTracker = bonusTracker;
         this.dialogManager = dialogManager;
         this.hints = hints;
-
-        this.level = level;
+        this.viewportManager = viewportManager;
     }
 
     public Player getPlayer() {
@@ -68,6 +70,10 @@ public class GameplayContext implements WorldQuery {
 
     public Hints getHints() {
         return hints;
+    }
+
+    public ViewportManager getViewportManager() {
+        return viewportManager;
     }
 
     @Override
