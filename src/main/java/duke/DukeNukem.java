@@ -16,8 +16,6 @@ import duke.ui.KeyHandler;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -52,8 +50,7 @@ public class DukeNukem {
     public static void main(String... parameters) {
         GameParameters gameParameters = GameParameters.parse(parameters);
 
-        Path basePath = Paths.get(".dn1"); // TODO read from config or parameters
-        ResourceLoader resourceLoader = new ResourceLoader(basePath);
+        ResourceLoader resourceLoader = new ResourceLoader(gameParameters.path());
         AssetManager assets = new AssetManager(resourceLoader);
         assets.load();
 
