@@ -99,8 +99,10 @@ public class Bolt extends Active implements Updatable, SpriteRenderable {
     }
 
     private void spawnSparks(GameplayContext context) {
-        // TODO offset X position based on facing
-        context.getActiveManager().spawn(EffectsFactory.createSparks(getX(), getY()));
+        int x = getX() + (facing == LEFT ? Level.HALF_TILE_SIZE : -Level.HALF_TILE_SIZE);
+        int y = getY() - Level.HALF_TILE_SIZE;
+
+        context.getActiveManager().spawn(EffectsFactory.createSparks(x, y));
     }
 
     private void updateAnimation() {
