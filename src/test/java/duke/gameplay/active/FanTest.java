@@ -39,7 +39,7 @@ class FanTest {
 
         fan.update(context);
 
-        verify(context.getPlayer()).setX(anyInt());
+        verify(context.getPlayer()).addExternalVelocityX(anyInt());
     }
 
     @Test
@@ -58,7 +58,7 @@ class FanTest {
         fan.onShot(context, null);
         fan.update(context);
 
-        verify(context.getPlayer(), never()).setX(anyInt());
+        verify(context.getPlayer(), never()).addExternalVelocityX(anyInt());
     }
 
     @Test
@@ -67,7 +67,7 @@ class FanTest {
 
         fan.update(context);
 
-        verify(context.getPlayer(), never()).setX(anyInt());
+        verify(context.getPlayer(), never()).addExternalVelocityX(anyInt());
     }
 
     @Test

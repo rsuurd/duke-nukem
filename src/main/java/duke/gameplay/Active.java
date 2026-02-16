@@ -6,6 +6,8 @@ public abstract class Active implements Movable {
     private Rectangle bounds;
 
     private int velocityX, velocityY;
+    private int additionalVelocityX, additionalVelocityY;
+
     private boolean destroyed;
 
     protected Active(int x, int y, int width, int height) {
@@ -62,6 +64,27 @@ public abstract class Active implements Movable {
     @Override
     public void setVelocityX(int velocityX) {
         this.velocityX = velocityX;
+    }
+
+    public int getExternalVelocityX() {
+        return additionalVelocityX;
+    }
+
+    public void addExternalVelocityX(int velocityX) {
+        this.additionalVelocityX += velocityX;
+    }
+
+    public int getExternalVelocityY() {
+        return additionalVelocityY;
+    }
+
+    public void addExternalVelocityY(int velocityY) {
+        this.additionalVelocityY += velocityY;
+    }
+
+    public void resetExternalVelocity() {
+        additionalVelocityX = 0;
+        additionalVelocityY = 0;
     }
 
     @Override

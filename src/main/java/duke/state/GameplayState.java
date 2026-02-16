@@ -5,7 +5,6 @@ import duke.Renderer;
 import duke.dialog.Hints;
 import duke.gameplay.*;
 import duke.gameplay.player.Player;
-import duke.gameplay.player.State;
 import duke.gfx.*;
 import duke.level.Level;
 import duke.level.LevelManager;

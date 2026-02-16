@@ -11,6 +11,8 @@ public class Collision {
         resolveXAxis(body, query);
         resolveYAxis(body, query);
         applyGravity(body, query);
+
+        body.resetExternalVelocity();
     }
 
     private void applyGravity(Physics body, WorldQuery query) {
@@ -30,7 +32,7 @@ public class Collision {
     }
 
     private void resolveXAxis(Physics body, WorldQuery query) {
-        int velocityX = body.getVelocityX();
+        int velocityX = body.getVelocityX() + body.getExternalVelocityX();
         if (velocityX == 0) return;
 
         int newX = body.getX() + velocityX;
@@ -67,7 +69,7 @@ public class Collision {
     }
 
     private void resolveYAxis(Physics body, WorldQuery query) {
-        int velocityY = body.getVelocityY();
+        int velocityY = body.getVelocityY() + body.getExternalVelocityY();
         if (velocityY == 0) return;
 
         int newY = body.getY() + velocityY;

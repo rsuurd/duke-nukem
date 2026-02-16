@@ -28,17 +28,17 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
     private MovementHandler movementHandler;
     private JumpHandler jumpHandler;
     private FallHandler fallHandler;
-    private ClingHandler clingHandler;
+    private GrapplingHooks grapplingHooks;
     private PullUpHandler pullUpHandler;
 
     private PlayerAnimator animator;
     private PlayerFeedback feedback;
 
     public Player() {
-        this(NONE, State.STANDING, Facing.RIGHT, new Weapon(), new PlayerHealth(), new Inventory(), new MovementHandler(), new JumpHandler(new Random()), new FallHandler(), new ClingHandler(), new PullUpHandler(), new PlayerAnimator(), new PlayerFeedback());
+        this(NONE, State.STANDING, Facing.RIGHT, new Weapon(), new PlayerHealth(), new Inventory(), new MovementHandler(), new JumpHandler(new Random()), new FallHandler(), new GrapplingHooks(), new PullUpHandler(), new PlayerAnimator(), new PlayerFeedback());
     }
 
-    Player(KeyHandler.Input input, State state, Facing facing, Weapon weapon, PlayerHealth health, Inventory inventory, MovementHandler movementHandler, JumpHandler jumpHandler, FallHandler fallHandler, ClingHandler clingHandler, PullUpHandler pullUpHandler, PlayerAnimator animator, PlayerFeedback feedback) {
+    Player(KeyHandler.Input input, State state, Facing facing, Weapon weapon, PlayerHealth health, Inventory inventory, MovementHandler movementHandler, JumpHandler jumpHandler, FallHandler fallHandler, GrapplingHooks grapplingHooks, PullUpHandler pullUpHandler, PlayerAnimator animator, PlayerFeedback feedback) {
         super(0, 0, WIDTH, HEIGHT);
 
         this.input = input;
@@ -54,7 +54,7 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
         this.movementHandler = movementHandler;
         this.jumpHandler = jumpHandler;
         this.fallHandler = fallHandler;
-        this.clingHandler = clingHandler;
+        this.grapplingHooks = grapplingHooks;
         this.pullUpHandler = pullUpHandler;
 
         this.animator = animator;
@@ -79,7 +79,6 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
         health.update(context);
         fallHandler.update(this);
         jumpHandler.update(this);
-        clingHandler.update(context, input);
         pullUpHandler.update(this);
     }
 
@@ -93,6 +92,7 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
 
     public void postMovement(GameplayContext context) {
         weapon.fire(context);
+        grapplingHooks.update(context, input);
         feedback.provideFeedback(context, this, jumped, bumped, landed, health.isDamageTaken());
         animator.animate(this);
 
@@ -138,7 +138,6 @@ public class Player extends Active implements Movable, Collidable, Physics, Upda
             land();
         } else if (direction == Direction.UP) {
             bump();
-            clingHandler.onBump(this, flags);
         } else {
             setVelocityX(0);
         }

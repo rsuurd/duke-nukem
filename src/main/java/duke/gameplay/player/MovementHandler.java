@@ -24,6 +24,7 @@ public class MovementHandler {
             player.setFacing(facing);
         }
 
+        // maybe rename to move, update moving boolean in player?
         player.walk();
     }
 
@@ -41,6 +42,7 @@ public class MovementHandler {
         player.setVelocityX(newVelocityX);
 
         if (newVelocityX == 0 && player.getState() == State.WALKING) {
+            // maybe rename to stop? Let it check current state and decide whether to stand or not?
             player.stand();
         }
     }

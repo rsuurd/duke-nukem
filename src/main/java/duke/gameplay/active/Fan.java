@@ -46,9 +46,7 @@ public class Fan extends Active implements Updatable, SpriteRenderable, Shootabl
         if (player.intersects(reach)) {
             int pushX = (facing == Facing.RIGHT) ? STRENGTH : -STRENGTH;
 
-            // TODO we should push by adding to the player's velocity.
-            // However that requires rework of the player's input and friction code. Will do that later
-            player.setX(player.getX() + pushX);
+            player.addExternalVelocityX(pushX);
         }
     }
 

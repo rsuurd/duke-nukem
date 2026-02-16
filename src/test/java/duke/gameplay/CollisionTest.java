@@ -135,4 +135,20 @@ class CollisionTest {
         verifyNoMoreInteractions(physics);
         verifyNoInteractions(query);
     }
+
+    @Test
+    void shouldAddExternalVelocity() {
+        Player player = createTestPlayer(0, 0, 0, 0);
+        when(player.getExternalVelocityX()).thenReturn(8);
+        when(player.getExternalVelocityY()).thenReturn(4);
+
+        when(query.isSolid(anyInt(), anyInt())).thenReturn(false);
+
+        collision.resolve(player, query);
+
+        verify(player).setX(8);
+        verify(player).setY(4);
+
+        verify(player).resetExternalVelocity();
+    }
 }

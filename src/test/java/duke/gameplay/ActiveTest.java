@@ -27,6 +27,22 @@ class ActiveTest {
         assertThat(active.getCol()).isEqualTo(8);
     }
 
+    @Test
+    void shouldAddAndResetExternalVelocity() {
+        Active active = create();
+
+        active.addExternalVelocityX(5);
+        active.addExternalVelocityY(-3);
+
+        assertThat(active.getExternalVelocityX()).isEqualTo(5);
+        assertThat(active.getExternalVelocityY()).isEqualTo(-3);
+
+        active.resetExternalVelocity();
+
+        assertThat(active.getExternalVelocityX()).isEqualTo(0);
+        assertThat(active.getExternalVelocityY()).isEqualTo(0);
+    }
+
     private Active create() {
         return create(0, 0);
     }

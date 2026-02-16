@@ -24,4 +24,14 @@ public interface Movable {
     int getVelocityY();
 
     void setVelocityY(int velocityY);
+
+    int getExternalVelocityX();
+
+    void addExternalVelocityX(int velocityX);
+
+    int getExternalVelocityY();
+
+    void addExternalVelocityY(int velocityY);
+
+    void resetExternalVelocity();
 }

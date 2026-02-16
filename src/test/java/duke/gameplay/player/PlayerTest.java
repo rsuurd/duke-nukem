@@ -4,7 +4,6 @@ import duke.gameplay.Collidable;
 import duke.gameplay.Facing;
 import duke.gameplay.GameplayContext;
 import duke.gameplay.GameplayContextFixture;
-import duke.level.Flags;
 import duke.ui.KeyHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,7 +14,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static duke.gameplay.GameplayContextFixture.SOLID_TILE_FLAG;
-import static duke.gameplay.player.Player.*;
+import static duke.gameplay.player.Player.GRAVITY;
+import static duke.gameplay.player.Player.SPEED;
 import static duke.gameplay.player.PlayerHealth.INVULNERABILITY_FRAMES;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyBoolean;
@@ -42,7 +42,7 @@ class PlayerTest {
     @Mock
     private FallHandler fallHandler;
     @Mock
-    private ClingHandler clingHandler;
+    private GrapplingHooks grapplingHooks;
     @Mock
     private PullUpHandler pullUpHandler;
 
@@ -312,21 +312,12 @@ class PlayerTest {
     }
 
     @Test
-    void shouldDelegateToClingHandler() {
-        Player player = create(State.STANDING, Facing.LEFT);
-
-        player.update(context);
-
-        verify(clingHandler).update(context, input);
-    }
-
-    @Test
-    void shouldCheckIfShouldCling() {
+    void shouldUseGrapplingHooks() {
         Player player = create(State.JUMPING, Facing.LEFT);
 
-        player.onCollision(Direction.UP, Flags.CLINGABLE.bit());
+        player.postMovement(context);
 
-        verify(clingHandler).onBump(player, Flags.CLINGABLE.bit());
+        verify(grapplingHooks).update(context, input);
     }
 
     @Test
@@ -402,6 +393,6 @@ class PlayerTest {
     }
 
     private Player create(State state, Facing facing) {
-        return new Player(input, state, facing, weapon, health, inventory, movementHandler, jumpHandler, fallHandler, clingHandler, pullUpHandler, animator, feedback);
+        return new Player(input, state, facing, weapon, health, inventory, movementHandler, jumpHandler, fallHandler, grapplingHooks, pullUpHandler, animator, feedback);
     }
 }

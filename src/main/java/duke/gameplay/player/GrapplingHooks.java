@@ -6,28 +6,35 @@ import duke.level.Flags;
 import duke.level.Level;
 import duke.ui.KeyHandler;
 
-public class ClingHandler {
-    public void onBump(Player player, int flags) {
-        if (!player.getInventory().isEquippedWith(Inventory.Equipment.GRAPPLING_HOOKS)) return;
-        if (!Flags.CLINGABLE.isSet(flags)) return;
+public class GrapplingHooks {
+    private boolean ready;
 
-        player.cling();
+    public GrapplingHooks() {
+        ready = true;
     }
 
     public void update(WorldQuery query, KeyHandler.Input input) {
+        Player player = query.getPlayer();
+
+        if (!player.getInventory().isEquippedWith(Inventory.Equipment.GRAPPLING_HOOKS)) return;
+        ready |= player.isGrounded();
+
+        checkToCling(query);
+
         if (query.getPlayer().getState() != State.CLINGING) return;
 
         pullUpIfRequestedAndPossible(query, input);
         checkRelease(query, input);
     }
 
-    private void checkRelease(WorldQuery query, KeyHandler.Input input) {
+    private void checkToCling(WorldQuery query) {
         Player player = query.getPlayer();
-        int rowAbove = player.getRow() - 1;
-        int col = (player.getX() + ((player.getFacing() == Facing.RIGHT) ? (player.getWidth()) - 1 : 0)) / Level.TILE_SIZE;
+        if (!ready || player.isGrounded() || player.getState() == State.CLINGING) return;
 
-        if (input.down() || player.getHealth().isDamageTaken() || !Flags.CLINGABLE.isSet(query.getTileFlags(rowAbove, col))) {
-            player.releaseCling();
+        int row = (player.getY() - 1) / Level.TILE_SIZE;
+        if (Flags.CLINGABLE.isSet(query.getTileFlags(row, player.getCol()))) {
+            player.cling();
+            ready = false;
         }
     }
 
@@ -54,6 +61,17 @@ public class ClingHandler {
         }
 
         return true;
+    }
+
+    private void checkRelease(WorldQuery query, KeyHandler.Input input) {
+        Player player = query.getPlayer();
+        int rowAbove = player.getRow() - 1;
+        int col = (player.getX() + ((player.getFacing() == Facing.RIGHT) ? (player.getWidth()) - 1 : 0)) / Level.TILE_SIZE;
+
+        if (input.down() || player.getHealth().isDamageTaken() || !Flags.CLINGABLE.isSet(query.getTileFlags(rowAbove, col))) {
+            player.releaseCling();
+            ready = false;
+        }
     }
 
     private static final int PULL_UP_OFFSET = 3;
