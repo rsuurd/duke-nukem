@@ -3,27 +3,26 @@ package duke.state;
 import duke.GameSystems;
 
 public class StateManager {
-    private GameSystems context;
     private GameState state;
 
-    public StateManager(GameSystems context, GameState state) {
-        this.context = context;
+    public StateManager() {
+        this(null);
+    }
+
+    StateManager(GameState state) {
+        this.state = state;
+    }
+
+    public void set(GameState state, GameSystems systems) {
+        if (this.state != null) {
+            this.state.stop(systems);
+        }
 
         this.state = state;
-        this.state.start(context);
+        this.state.start(systems);
     }
 
-    public void set(GameState state) {
-        this.state.stop(context);
-        this.state = state;
-        this.state.start(context);
-    }
-
-    public void update() {
-        state.update(context);
-    }
-
-    public void render() {
-        state.render(context);
+    public GameState get() {
+        return state;
     }
 }

@@ -5,14 +5,23 @@ import duke.Renderer;
 import duke.dialog.Dialog;
 import duke.gfx.Sprite;
 
-public class MainMenu implements GameState {
+public class TitleScreen implements GameState {
     private Sprite background;
 
     @Override
     public void start(GameSystems systems) {
-        systems.getDialogManager().open(DIALOG);
-
         background = systems.getAssets().getImage("DN");
+        systems.getPalette().fadeIn();
+    }
+
+    @Override
+    public void update(GameSystems systems) {
+        if (systems.getKeyHandler().isAnyKeyPressed() && !systems.getDialogManager().hasDialog()) {
+            systems.getDialogManager().open(DIALOG);
+        }
+
+        systems.getDialogManager().update(systems);
+        // TODO if no input for a while, go to credits/demo mode
     }
 
     @Override

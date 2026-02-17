@@ -29,16 +29,47 @@ class EgaPaletteTest {
     @Test
     void shouldFadeOut() {
         egaPalette.fadeOut();
+        egaPalette.update();
 
-        assertThat(egaPalette.getColorModel().getRGB(15)).isEqualTo(0xFFAAAAAA);
+        assertThat(egaPalette.getColorModel().getRGB(15)).isEqualTo(0xFF000000);
     }
 
     @Test
     void shouldFadeIn() {
-        egaPalette.blackout();
+        egaPalette.fadeIn();
+        egaPalette.update();
+
+        assertThat(egaPalette.getColorModel().getRGB(1)).isEqualTo(0xFF0000AA);
+    }
+
+    @Test
+    void shouldIndicateFadedOut() {
+        egaPalette.fadeOut();
+
+        egaPalette.update();
+        assertThat(egaPalette.isFadedOut()).isFalse();
+        egaPalette.update();
+        assertThat(egaPalette.isFadedOut()).isFalse();
+        egaPalette.update();
+        assertThat(egaPalette.isFadedOut()).isFalse();
+        egaPalette.update();
+        assertThat(egaPalette.isFadedOut()).isTrue();
+    }
+
+    @Test
+    void shouldIndicateFadedIn() {
         egaPalette.fadeIn();
 
-        assertThat(egaPalette.getColorModel().getRGB(15)).isEqualTo(0xFFAAAAAA);
+        egaPalette.update();
+        assertThat(egaPalette.isFadedIn()).isFalse();
+        egaPalette.update();
+        assertThat(egaPalette.isFadedIn()).isFalse();
+        egaPalette.update();
+        assertThat(egaPalette.isFadedIn()).isFalse();
+        egaPalette.update();
+        assertThat(egaPalette.isFadedIn()).isTrue();
+
+        assertThat(egaPalette.isFadedIn()).isTrue();
     }
 
     @Test
@@ -66,7 +97,7 @@ class EgaPaletteTest {
         AtomicBoolean changed = new AtomicBoolean(false);
         egaPalette.addListener(() -> changed.set(true));
         operation.run();
-
+        egaPalette.update();
         assertThat(changed.get()).isTrue();
     }
 }

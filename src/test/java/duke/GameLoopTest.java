@@ -7,7 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class GameLoopTest {
@@ -21,6 +21,7 @@ class GameLoopTest {
     @BeforeEach
     void create() {
         systems = GameSystemsFixture.create();
+        when(manager.get()).thenReturn(mock());
 
         gameLoop = new GameLoop(systems, manager);
     }
@@ -29,7 +30,8 @@ class GameLoopTest {
     void shouldUpdate() {
         gameLoop.tick();
 
-        verify(manager).update();
+        verify(manager.get()).update(systems);
+        verify(systems.getPalette()).update();
     }
 
     @Test
@@ -37,7 +39,7 @@ class GameLoopTest {
         gameLoop.tick();
 
         verify(systems.getRenderer()).clear();
-        verify(manager).render();
+        verify(manager.get()).render(systems);
         verify(systems.getRenderer()).flip();
     }
 }

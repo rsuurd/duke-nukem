@@ -9,13 +9,13 @@ public class GameLoop {
     private static final long TIME_STEP = Duration.ofSeconds(1).toNanos() / UPDATES_PER_SECOND;
 
     private GameSystems systems;
-    private StateManager manager;
+    private StateManager state;
 
     private long nextUpdate;
 
-    public GameLoop(GameSystems systems, StateManager manager) {
+    public GameLoop(GameSystems systems, StateManager state) {
         this.systems = systems;
-        this.manager = manager;
+        this.state = state;
 
         nextUpdate = now();
     }
@@ -41,12 +41,16 @@ public class GameLoop {
     }
 
     private void update() {
-        manager.update();
+        state.get().update(systems);
+        systems.getPalette().update();
+
+        // dialogs here?
     }
 
     private void render() {
         systems.getRenderer().clear();
-        manager.render();
+        state.get().render(systems);
+        // dialogs here?
         systems.getRenderer().flip();
     }
 

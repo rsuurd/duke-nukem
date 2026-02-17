@@ -82,19 +82,19 @@ public class DialogManager {
     }
 
     public void close() {
-        dialogs.pop();
+        dialogs.clear();
     }
 
     public boolean hasDialog() {
         return !dialogs.isEmpty();
     }
 
-    public void update(GameSystems context) {
+    public void update(GameSystems systems) {
         if (dialogs.isEmpty()) return;
 
         Dialog dialog = dialogs.peek();
 
-        if (dialog.closeOnEnter() && context.getKeyHandler().isPressed(VK_ENTER)) {
+        if (dialog.closeOnEnter() && systems.getKeyHandler().isPressed(VK_ENTER)) {
             close();
         }
     }

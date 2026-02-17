@@ -9,6 +9,8 @@ import duke.resources.ResourceLoader;
 import duke.sfx.PcSpeaker;
 import duke.sfx.SoundManager;
 import duke.state.GameplayState;
+import duke.state.Introduction;
+import duke.state.Prologue;
 import duke.state.StateManager;
 import duke.ui.CanvasRenderer;
 import duke.ui.DukeNukemFrame;
@@ -59,17 +61,19 @@ public class DukeNukem {
         PcSpeaker pcSpeaker = new PcSpeaker();
         SoundManager sounds = new SoundManager(assets, pcSpeaker);
         pcSpeaker.init();
+        StateManager stateManager = new StateManager();
         DialogManager dialogManager = new DialogManager(assets, new Font(assets));
 
+
         CanvasRenderer renderer = new CanvasRenderer(palette);
-        GameSystems systems = new GameSystems(assets, renderer, palette, keyHandler, sounds, dialogManager);
         DukeNukemFrame frame = new DukeNukemFrame(renderer, keyHandler);
+        GameSystems systems = new GameSystems(assets, renderer, palette, keyHandler, sounds, stateManager, dialogManager);
         GameplayState state = new GameplayState(systems, new Cheats(gameParameters.asp()));
 //        GameState state = new MainMenu();
-        StateManager manager = new StateManager(systems, state);
-        GameLoop gameLoop = new GameLoop(systems, manager);
-
+        GameLoop gameLoop = new GameLoop(systems, stateManager);
         DukeNukem dukeNukem = new DukeNukem(gameLoop);
+
+        systems.requestState(new Introduction());
         dukeNukem.start();
 
         frame.addWindowListener(new WindowAdapter() {

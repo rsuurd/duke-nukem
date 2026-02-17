@@ -11,7 +11,7 @@ import duke.level.LevelManager;
 import duke.resources.AssetManager;
 import duke.ui.KeyHandler;
 
-// TODO refactor for testing
+// TODO refactor for testing, should have just a noargs constructor and construct everything on start like the other states
 public class GameplayState implements GameState {
     private LevelManager levelManager;
     private LevelRenderer levelRenderer;
