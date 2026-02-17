@@ -74,10 +74,8 @@ public class DrProtonBehavior implements EnemyBehavior {
     }
 
     private boolean canSeePlayer(Player player, Enemy enemy) {
-
         int horizontalDistance = Math.abs((enemy.getX() + enemy.getWidth() / 2) - (player.getX() + player.getWidth() / 2));
         int verticalDistance = Math.abs((enemy.getY() + enemy.getHeight() / 2) - (player.getY() + player.getHeight() / 2));
-        System.err.println("Can see playa? " + (horizontalDistance < SHOOTING_RANGE && verticalDistance < SHOOTING_RANGE));
 
         return horizontalDistance < SHOOTING_RANGE && verticalDistance < SHOOTING_RANGE;
     }

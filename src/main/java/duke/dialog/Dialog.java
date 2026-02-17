@@ -19,11 +19,11 @@ public record Dialog(String message, int x, int y, int rows, int cols, boolean s
     }
 
     public static Dialog notes(String message) {
-        return new Dialog(message, TILE_SIZE, TILE_SIZE, 4,  COLS, true);
+        return new Dialog(message, TILE_SIZE, TILE_SIZE, 4, COLS, true);
     }
 
     public static Dialog hint(String hint) {
-        return new Dialog(hint, TILE_SIZE, 3 * TILE_SIZE, 3,  COLS, true);
+        return new Dialog(hint, TILE_SIZE, 3 * TILE_SIZE, 3, COLS, true);
     }
 
     private static int calculateRowsNeeded(String message) {

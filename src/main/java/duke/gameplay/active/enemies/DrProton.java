@@ -1,6 +1,7 @@
 package duke.gameplay.active.enemies;
 
 import duke.Renderer;
+import duke.dialog.Dialog;
 import duke.gameplay.Facing;
 import duke.gameplay.GameplayContext;
 import duke.gameplay.Health;
@@ -20,6 +21,7 @@ public class DrProton extends Enemy implements Physics, Renderable, Wakeable {
     private Animation animation;
 
     private boolean shoot;
+    private boolean escaping;
 
     public DrProton(int x, int y) {
         this(x, y, Facing.RIGHT, new DrProtonBehavior(), new Health(HEALTH));
@@ -40,7 +42,16 @@ public class DrProton extends Enemy implements Physics, Renderable, Wakeable {
 
     @Override
     public void update(GameplayContext context) {
-        super.update(context);
+        if (escaping) {
+            if (getY() <= 0) {
+                // TODO implement EndingCinematic. This is a placeholder dialog.
+                context.getDialogManager().open(
+                        new Dialog("        The End\n\n Show ending cinematic.", TILE_SIZE, 3 * TILE_SIZE, 3, 13, false)
+                );
+            }
+        } else {
+            super.update(context);
+        }
 
         animation.tick();
 
@@ -65,8 +76,17 @@ public class DrProton extends Enemy implements Physics, Renderable, Wakeable {
 
     @Override
     protected void onDestroyed(GameplayContext context) {
-        // For episode 3 he crashes down, but we just support episode 1 (and 2: same behavior) for now.
-        // context.getActiveManager().spawn(new DrProtonEscapeSequence(getX(), getY()));
+        // For episode 3 he crashes down. Episodes 1 & 2 he escapes by flying up
+        escaping = true;
+        setVelocityX(0);
+        setVelocityY(-TILE_SIZE);
+        context.getSoundManager().play(Sfx.BAD_GUY_GO_UP);
+        context.getViewportManager().setTarget(this);
+    }
+
+    @Override
+    public boolean isDestroyed() {
+        return false;
     }
 
     @Override

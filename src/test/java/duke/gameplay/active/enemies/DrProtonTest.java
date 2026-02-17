@@ -12,9 +12,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static duke.level.Level.TILE_SIZE;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 @ExtendWith(MockitoExtension.class)
 class DrProtonTest {
@@ -31,7 +34,6 @@ class DrProtonTest {
     @BeforeEach
     void create() {
         boss = new DrProton(0, 0, Facing.RIGHT, behavior, health);
-
         context = GameplayContextFixture.create();
     }
 
@@ -50,6 +52,27 @@ class DrProtonTest {
 
         verify(context.getActiveManager()).spawn(isA(EnemyFire.class));
         verify(context.getSoundManager()).play(Sfx.ENEMY_SHOT);
+    }
+
+    @Test
+    void shouldEscapeWhenDefeated() {
+        boss.onDestroyed(context);
+
+        assertThat(boss.isDestroyed()).isFalse();
+        assertThat(boss.getVelocityX()).isEqualTo(0);
+        assertThat(boss.getVelocityY()).isEqualTo(-TILE_SIZE);
+        verify(context.getSoundManager()).play(Sfx.BAD_GUY_GO_UP);
+        verify(context.getViewportManager()).setTarget(boss);
+    }
+
+    @Test
+    void shouldCutToEndingWhenEscaped() {
+        boss.onDestroyed(context); // trigger escape
+
+        boss.update(context);
+
+        verify(context.getDialogManager()).open(any());
+        verifyNoInteractions(behavior);
     }
 
     @Test
