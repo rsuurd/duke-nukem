@@ -1,17 +1,17 @@
 package duke.state;
 
-import duke.GameContext;
+import duke.GameSystems;
 
 public interface GameState {
-    default void start(GameContext context) {
+    default void start(GameSystems systems) {
     }
 
-    default void update(GameContext context) {
+    default void update(GameSystems systems) {
     }
 
-    default void render(GameContext context) {
+    default void render(GameSystems systems) {
     }
 
-    default void stop(GameContext context) {
+    default void stop(GameSystems systems) {
     }
 }

@@ -8,13 +8,13 @@ public class GameLoop {
     private static final int UPDATES_PER_SECOND = 16;
     private static final long TIME_STEP = Duration.ofSeconds(1).toNanos() / UPDATES_PER_SECOND;
 
-    private GameContext context;
+    private GameSystems systems;
     private StateManager manager;
 
     private long nextUpdate;
 
-    public GameLoop(GameContext context, StateManager manager) {
-        this.context = context;
+    public GameLoop(GameSystems systems, StateManager manager) {
+        this.systems = systems;
         this.manager = manager;
 
         nextUpdate = now();
@@ -45,9 +45,9 @@ public class GameLoop {
     }
 
     private void render() {
-        context.getRenderer().clear();
+        systems.getRenderer().clear();
         manager.render();
-        context.getRenderer().flip();
+        systems.getRenderer().flip();
     }
 
     private long calculateNext(long now, long lastUpdate) {

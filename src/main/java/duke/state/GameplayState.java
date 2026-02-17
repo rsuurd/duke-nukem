@@ -1,6 +1,6 @@
 package duke.state;
 
-import duke.GameContext;
+import duke.GameSystems;
 import duke.Renderer;
 import duke.dialog.Hints;
 import duke.gameplay.*;
@@ -23,8 +23,8 @@ public class GameplayState implements GameState {
     private Cheats cheats;
 
     // TODO fix construction
-    public GameplayState(GameContext gameContext, Cheats cheats) {
-        AssetManager assets = gameContext.getAssets();
+    public GameplayState(GameSystems systems, Cheats cheats) {
+        AssetManager assets = systems.getAssets();
 
         levelManager = new LevelManager(assets);
         levelRenderer = new LevelRenderer(assets, null);
@@ -34,12 +34,12 @@ public class GameplayState implements GameState {
         spriteRenderer = new SpriteRenderer(assets);
         collision = new Collision();
 
-        context = createGameplayContext(gameContext);
+        context = createGameplayContext(systems);
 
         this.cheats = cheats;
     }
 
-    private GameplayContext createGameplayContext(GameContext gameContext) {
+    private GameplayContext createGameplayContext(GameSystems systems) {
         BoltManager boltManager = new BoltManager(viewport, spriteRenderer);
         ActiveManager activeManager = new ActiveManager(viewport, collision, spriteRenderer);
         ScoreManager scoreManager = new ScoreManager(activeManager);
@@ -47,7 +47,7 @@ public class GameplayState implements GameState {
         Player player = new Player();
         ViewportManager viewportManager = new ViewportManager(player, true);
 
-        return new GameplayContext(player, null, boltManager, activeManager, gameContext.getSoundManager(), scoreManager, bonusTracker, gameContext.getDialogManager(), new Hints(), viewportManager);
+        return new GameplayContext(player, null, boltManager, activeManager, systems.getSoundManager(), scoreManager, bonusTracker, systems.getDialogManager(), new Hints(), viewportManager);
     }
 
     GameplayState(LevelManager levelManager, LevelRenderer levelRenderer, Viewport viewport, Hud hud, SpriteRenderer spriteRenderer, Collision collision, GameplayContext context, Cheats cheats) {
@@ -62,7 +62,7 @@ public class GameplayState implements GameState {
     }
 
     @Override
-    public void start(GameContext gameContext) {
+    public void start(GameSystems systems) {
 //        Level level = levelManager.warpTo(19);
         Level level = levelManager.getNextLevel();
         switchLevel(level, context);
@@ -75,13 +75,13 @@ public class GameplayState implements GameState {
     }
 
     @Override
-    public void update(GameContext gameContext) {
-        if (gameContext.getDialogManager().hasDialog()) {
-            gameContext.getDialogManager().update(gameContext);
+    public void update(GameSystems systems) {
+        if (systems.getDialogManager().hasDialog()) {
+            systems.getDialogManager().update(systems);
             return;
         }
 
-        updatePlayer(gameContext.getKeyHandler().getInput());
+        updatePlayer(systems.getKeyHandler().getInput());
 
         if (context.getViewportManager().pollSnapToCenter()) {
             viewport.center(context.getViewportManager().getTarget());
@@ -96,7 +96,7 @@ public class GameplayState implements GameState {
             switchLevel(levelManager.getNextLevel(), context);
         }
 
-        cheats.processInput(gameContext.getKeyHandler(), context);
+        cheats.processInput(systems.getKeyHandler(), context);
     }
 
     private void updatePlayer(KeyHandler.Input input) {
@@ -109,8 +109,8 @@ public class GameplayState implements GameState {
     }
 
     @Override
-    public void render(GameContext gameContext) {
-        Renderer renderer = gameContext.getRenderer();
+    public void render(GameSystems systems) {
+        Renderer renderer = systems.getRenderer();
         levelRenderer.render(renderer, viewport);
         context.getActiveManager().render(renderer, Layer.BACKGROUND);
         drawPlayer(renderer);
@@ -122,8 +122,8 @@ public class GameplayState implements GameState {
         context.getDialogManager().render(renderer);
     }
 
-    private String getDebugString(GameplayContext gameContext) {
-        Player player = gameContext.getPlayer();
+    private String getDebugString(GameplayContext context) {
+        Player player = context.getPlayer();
         return """
                 position: %d, %d
                 velocity: %d, %d

@@ -11,7 +11,7 @@ import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class GameLoopTest {
-    private GameContext context;
+    private GameSystems systems;
 
     @Mock
     private StateManager manager;
@@ -20,9 +20,9 @@ class GameLoopTest {
 
     @BeforeEach
     void create() {
-        context = GameContextFixture.create();
+        systems = GameSystemsFixture.create();
 
-        gameLoop = new GameLoop(context, manager);
+        gameLoop = new GameLoop(systems, manager);
     }
 
     @Test
@@ -36,8 +36,8 @@ class GameLoopTest {
     void shouldRender() {
         gameLoop.tick();
 
-        verify(context.getRenderer()).clear();
+        verify(systems.getRenderer()).clear();
         verify(manager).render();
-        verify(context.getRenderer()).flip();
+        verify(systems.getRenderer()).flip();
     }
 }

@@ -62,12 +62,12 @@ public class DukeNukem {
         DialogManager dialogManager = new DialogManager(assets, new Font(assets));
 
         CanvasRenderer renderer = new CanvasRenderer(palette);
-        GameContext context = new GameContext(assets, renderer, palette, keyHandler, sounds, dialogManager);
+        GameSystems systems = new GameSystems(assets, renderer, palette, keyHandler, sounds, dialogManager);
         DukeNukemFrame frame = new DukeNukemFrame(renderer, keyHandler);
-        GameplayState state = new GameplayState(context, new Cheats(gameParameters.asp()));
+        GameplayState state = new GameplayState(systems, new Cheats(gameParameters.asp()));
 //        GameState state = new MainMenu();
-        StateManager manager = new StateManager(context, state);
-        GameLoop gameLoop = new GameLoop(context, manager);
+        StateManager manager = new StateManager(systems, state);
+        GameLoop gameLoop = new GameLoop(systems, manager);
 
         DukeNukem dukeNukem = new DukeNukem(gameLoop);
         dukeNukem.start();

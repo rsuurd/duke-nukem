@@ -1,7 +1,7 @@
 package duke.dialog;
 
-import duke.GameContext;
-import duke.GameContextFixture;
+import duke.GameSystems;
+import duke.GameSystemsFixture;
 import duke.Renderer;
 import duke.gfx.Font;
 import duke.gfx.Sprite;
@@ -63,12 +63,12 @@ class DialogManagerTest {
 
     @Test
     void shouldCloseDialogWithCursorWithEnter() {
-        GameContext gameContext = GameContextFixture.create();
+        GameSystems systems = GameSystemsFixture.create();
 
         dialogManager.open(new Dialog("Press ENTER:", 0, 0, 2, 13, true, true));
-        when(gameContext.getKeyHandler().isPressed(VK_ENTER)).thenReturn(true);
+        when(systems.getKeyHandler().isPressed(VK_ENTER)).thenReturn(true);
 
-        dialogManager.update(gameContext);
+        dialogManager.update(systems);
 
         assertThat(dialogManager.hasDialog()).isFalse();
     }

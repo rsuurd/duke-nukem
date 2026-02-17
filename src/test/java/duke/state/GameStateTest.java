@@ -1,7 +1,7 @@
 package duke.state;
 
-import duke.GameContext;
-import duke.GameContextFixture;
+import duke.GameSystems;
+import duke.GameSystemsFixture;
 import org.junit.jupiter.api.Test;
 
 class GameStateTest {
@@ -10,11 +10,11 @@ class GameStateTest {
         GameState state = new GameState() {
         };
 
-        GameContext context = GameContextFixture.create();
+        GameSystems systems = GameSystemsFixture.create();
 
-        state.start(context);
-        state.update(context);
-        state.render(context);
-        state.stop(context);
+        state.start(systems);
+        state.update(systems);
+        state.render(systems);
+        state.stop(systems);
     }
 }

@@ -1,6 +1,6 @@
 package duke.state;
 
-import duke.GameContext;
+import duke.GameSystems;
 import duke.Renderer;
 import duke.dialog.Dialog;
 import duke.gfx.Sprite;
@@ -9,19 +9,19 @@ public class MainMenu implements GameState {
     private Sprite background;
 
     @Override
-    public void start(GameContext context) {
-        context.getDialogManager().open(DIALOG);
+    public void start(GameSystems systems) {
+        systems.getDialogManager().open(DIALOG);
 
-        background = context.getAssets().getImage("DN");
+        background = systems.getAssets().getImage("DN");
     }
 
     @Override
-    public void render(GameContext context) {
-        Renderer renderer = context.getRenderer();
+    public void render(GameSystems systems) {
+        Renderer renderer = systems.getRenderer();
 
         renderer.draw(background, 0, 0);
 
-        context.getDialogManager().render(context.getRenderer());
+        systems.getDialogManager().render(systems.getRenderer());
     }
 
     private static final Dialog DIALOG = new Dialog("""

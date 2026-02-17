@@ -1,7 +1,7 @@
 package duke.state;
 
-import duke.GameContext;
-import duke.GameContextFixture;
+import duke.GameSystems;
+import duke.GameSystemsFixture;
 import duke.gfx.Sprite;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,11 +10,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 class CreditsTest {
-    private GameContext context;
+    private GameSystems systems;
 
     @BeforeEach
     void createContext() {
-        context = GameContextFixture.create();
+        systems = GameSystemsFixture.create();
     }
 
     @Test
@@ -22,12 +22,12 @@ class CreditsTest {
         Credits credits = new Credits();
 
         Sprite image = mock();
-        when(context.getAssets().getImage(any())).thenReturn(image);
+        when(systems.getAssets().getImage(any())).thenReturn(image);
 
-        credits.start(context);
-        credits.render(context);
+        credits.start(systems);
+        credits.render(systems);
 
-        verify(context.getAssets()).getImage("CREDITS");
-        verify(context.getRenderer()).draw(image, 0, 0);
+        verify(systems.getAssets()).getImage("CREDITS");
+        verify(systems.getRenderer()).draw(image, 0, 0);
     }
 }

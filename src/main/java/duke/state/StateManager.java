@@ -1,12 +1,12 @@
 package duke.state;
 
-import duke.GameContext;
+import duke.GameSystems;
 
 public class StateManager {
-    private GameContext context;
+    private GameSystems context;
     private GameState state;
 
-    public StateManager(GameContext context, GameState state) {
+    public StateManager(GameSystems context, GameState state) {
         this.context = context;
 
         this.state = state;

@@ -1,7 +1,7 @@
 package duke.state;
 
-import duke.GameContext;
-import duke.GameContextFixture;
+import duke.GameSystems;
+import duke.GameSystemsFixture;
 import org.junit.jupiter.api.Test;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -13,12 +13,12 @@ class MainMenuTest {
 
     @Test
     void shouldRender() {
-        GameContext context = GameContextFixture.create();
+        GameSystems systems = GameSystemsFixture.create();
 
-        mainMenu.start(context);
-        mainMenu.render(context);
+        mainMenu.start(systems);
+        mainMenu.render(systems);
 
-        verify(context.getAssets()).getImage("DN");
-        verify(context.getRenderer()).draw(any(), eq(0), eq(0));
+        verify(systems.getAssets()).getImage("DN");
+        verify(systems.getRenderer()).draw(any(), eq(0), eq(0));
     }
 }

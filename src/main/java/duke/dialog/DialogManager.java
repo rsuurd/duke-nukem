@@ -1,6 +1,6 @@
 package duke.dialog;
 
-import duke.GameContext;
+import duke.GameSystems;
 import duke.Renderer;
 import duke.gfx.Font;
 import duke.gfx.Sprite;
@@ -89,7 +89,7 @@ public class DialogManager {
         return !dialogs.isEmpty();
     }
 
-    public void update(GameContext context) {
+    public void update(GameSystems context) {
         if (dialogs.isEmpty()) return;
 
         Dialog dialog = dialogs.peek();

@@ -6,7 +6,7 @@ import duke.resources.AssetManager;
 import duke.sfx.SoundManager;
 import duke.ui.KeyHandler;
 
-public class GameContext {
+public class GameSystems {
     private AssetManager assets;
     private Renderer renderer;
     private EgaPalette palette; // maybe combine renderer/palette in Gfx abstraction
@@ -14,7 +14,7 @@ public class GameContext {
     private SoundManager soundManager;
     private DialogManager dialogManager;
 
-    public GameContext(AssetManager assets, Renderer renderer, EgaPalette palette, KeyHandler keyHandler, SoundManager soundManager, DialogManager dialogManager) {
+    public GameSystems(AssetManager assets, Renderer renderer, EgaPalette palette, KeyHandler keyHandler, SoundManager soundManager, DialogManager dialogManager) {
         this.assets = assets;
         this.renderer = renderer;
         this.palette = palette;

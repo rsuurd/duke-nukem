@@ -1,6 +1,6 @@
 package duke.state;
 
-import duke.GameContext;
+import duke.GameSystems;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,7 +16,7 @@ class StateManagerTest {
     private GameState current;
 
     @Mock
-    private GameContext context;
+    private GameSystems context;
 
     @InjectMocks
     private StateManager stateManager;
