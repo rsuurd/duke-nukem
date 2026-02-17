@@ -42,7 +42,7 @@ public class LevelManager {
             new LevelDescriptor(2, 0, "On the next level you'll\nneed to find a special\naccess card that looks\nlike a computer board."),
             new LevelDescriptor(4, 7),
             new LevelDescriptor(2, 0, "If you find the boots on\nthe next level you'll be\nable to jump higher!\nSAVE your game now."),
-            new LevelDescriptor(5, 5, "I see you're still\ntrying Duke. Never mind,\nmy robot drones will\nsoon be the end of you!"),
+            new LevelDescriptor(5, 3, 5, "I see you're still\ntrying Duke. Never mind,\nmy robot drones will\nsoon be the end of you!"),
             new LevelDescriptor(2, 0, "The next level is very\ntough--but there's also\na secret shortcut!\nDon't forget to SAVE."),
             new LevelDescriptor(6, 0, "Hmmm... I see you've\nsurvived my Maze of\nMadness. I might have\nunderestimated you."),
             new LevelDescriptor(2, 0, "You are doing quite well\nso far...Let's see if\nyou can keep it up. Also\nremember to SAVE."),
@@ -54,7 +54,6 @@ public class LevelManager {
             new LevelDescriptor(2, 0, "Secret Bonus Hint:\nCollect the letters\nD, U, K, E in order to\nearn bonus number five."),
             new LevelDescriptor(10, 5, "Duke, join me now and\nlive, or continue this\nfoolishness and I'll\nsquash you myself!"),
             new LevelDescriptor(2, 0, "You are about to enter\nthe secret Bubble City\nfortress of Dr. Proton.\nThere's no turning back!"),
-            // TODO level 11 switches to backdrop 11 for the boss escape, 0 for the rest of the level.
-            new LevelDescriptor(11, 0, "I'm coming down to crush\nyou, Duke. It's just\nyou and me now.")
+            new LevelDescriptor(11, 0, 11, "I'm coming down to crush\nyou, Duke. It's just\nyou and me now.")
     );
 }

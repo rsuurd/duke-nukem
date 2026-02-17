@@ -23,23 +23,41 @@ public class LevelRenderer {
     }
 
     public void render(Renderer renderer, Viewport viewport) {
-        drawBackdrop(renderer); // TODO optional
+        drawBackdrop(renderer, viewport);
         drawTiles(renderer, viewport);
 
         flasher = (flasher + 1) % 4;
     }
 
-    private void drawBackdrop(Renderer renderer) {
-        Sprite background = assets.getBackdrop(level.getDescriptor().backdrop());
+    private void drawBackdrop(Renderer renderer, Viewport viewport) {
+        Sprite background = assets.getBackdrop(determineVisibleBackdrop(viewport));
+
         renderer.draw(background, TILE_SIZE, TILE_SIZE);
+    }
+
+    private int determineVisibleBackdrop(Viewport viewport) {
+        int gridX = viewport.getX() / TILE_SIZE;
+        int gridY = viewport.getY() / TILE_SIZE;
+
+        for (int row = gridY; row < (gridY + ROWS); row++) {
+            for (int col = gridX; col < (gridX + COLUMNS); col++) {
+                int tileId = level.getTile(row, col);
+
+                if (tileId == SECONDARY_BACKDROP_TILE_ID) {
+                    return level.getDescriptor().secondaryBackdrop();
+                }
+            }
+        }
+
+        return level.getDescriptor().backdrop();
     }
 
     private void drawTiles(Renderer renderer, Viewport viewport) {
         int gridX = viewport.getX() / TILE_SIZE;
         int gridY = viewport.getY() / TILE_SIZE;
 
-        for (int row = gridY; row < (gridY + 11); row++) {
-            for (int col = gridX; col < (gridX + 14); col++) {
+        for (int row = gridY; row < (gridY + ROWS); row++) {
+            for (int col = gridX; col < (gridX + COLUMNS); col++) {
                 int tileId = level.getTile(row, col);
 
                 Sprite sprite = resolve(assets, tileId);
@@ -67,4 +85,9 @@ public class LevelRenderer {
 
         return assets.getTiles().get(spriteIndex);
     }
+
+    private static final int ROWS = 11;
+    private static final int COLUMNS = 14;
+
+    static final int SECONDARY_BACKDROP_TILE_ID = 0x20;
 }

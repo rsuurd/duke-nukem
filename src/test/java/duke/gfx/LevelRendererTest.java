@@ -2,6 +2,7 @@ package duke.gfx;
 
 import duke.Renderer;
 import duke.level.Level;
+import duke.level.LevelDescriptor;
 import duke.resources.AssetManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
+import static duke.gfx.LevelRenderer.SECONDARY_BACKDROP_TILE_ID;
 import static duke.level.Level.TILE_SIZE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -37,16 +39,29 @@ class LevelRendererTest {
 
     @BeforeEach
     void setup() {
-        when(level.getDescriptor()).thenReturn(mock());
+        when(level.getDescriptor()).thenReturn(new LevelDescriptor(1, 0, 2, null));
     }
 
     @Test
     void shouldDrawBackdrop() {
         Sprite backdrop = new Sprite(0, 0);
-        when(assets.getBackdrop(level.getDescriptor().backdrop())).thenReturn(backdrop);
+        when(assets.getBackdrop(anyInt())).thenReturn(backdrop);
 
         levelRenderer.render(renderer, viewport);
 
+        verify(assets).getBackdrop(0);
+        verify(renderer).draw(backdrop, TILE_SIZE, TILE_SIZE);
+    }
+
+    @Test
+    void shouldDrawSecondaryBackdropWhenTileIsVisible() {
+        Sprite backdrop = new Sprite(0, 0);
+        when(level.getTile(anyInt(), anyInt())).thenReturn(SECONDARY_BACKDROP_TILE_ID);
+        when(assets.getBackdrop(anyInt())).thenReturn(backdrop);
+
+        levelRenderer.render(renderer, viewport);
+
+        verify(assets).getBackdrop(2);
         verify(renderer).draw(backdrop, TILE_SIZE, TILE_SIZE);
     }
 

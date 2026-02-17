@@ -44,7 +44,7 @@ class GameplayContextTest {
     void shouldSwitchLevel() {
         when(context.getPlayer().getHealth()).thenReturn(mock());
         Level newLevel = mock();
-        when(newLevel.getDescriptor()).thenReturn(new LevelDescriptor(1, 0, null));
+        when(newLevel.getDescriptor()).thenReturn(new LevelDescriptor(1, 0));
         when(newLevel.getActives()).thenReturn(List.of(mock(Active.class)));
 
         context.switchLevel(newLevel);
@@ -64,7 +64,7 @@ class GameplayContextTest {
     void shouldRewardBonusInHallways() {
         when(context.getPlayer().getHealth()).thenReturn(mock());
         Level hallway = mock();
-        when(hallway.getDescriptor()).thenReturn(new LevelDescriptor(2, 0, null));
+        when(hallway.getDescriptor()).thenReturn(new LevelDescriptor(2, 0));
         when(hallway.getActives()).thenReturn(List.of(mock(Active.class)));
 
         context.switchLevel(hallway);

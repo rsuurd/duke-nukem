@@ -56,7 +56,7 @@ class GameplayStateTest {
 
         Level level = mock();
         when(levelManager.getNextLevel()).thenReturn(level);
-        when(level.getDescriptor()).thenReturn(new LevelDescriptor(1, 0, null));
+        when(level.getDescriptor()).thenReturn(new LevelDescriptor(1, 0));
         when(player.getHealth()).thenReturn(mock());
         when(gameplayContext.getViewportManager().getTarget()).thenReturn(player);
 
@@ -73,7 +73,7 @@ class GameplayStateTest {
         Player player = gameplayContext.getPlayer();
 
         Level next = mock();
-        when(next.getDescriptor()).thenReturn(new LevelDescriptor(2, 0, null));
+        when(next.getDescriptor()).thenReturn(new LevelDescriptor(2, 0));
         when(gameplayContext.getLevel().isCompleted()).thenReturn(true);
         when(levelManager.getNextLevel()).thenReturn(next);
         when(player.getHealth()).thenReturn(mock());
