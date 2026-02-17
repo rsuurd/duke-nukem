@@ -5,6 +5,8 @@ import duke.Renderer;
 import duke.dialog.Dialog;
 import duke.gfx.Sprite;
 
+import static java.awt.event.KeyEvent.VK_S;
+
 public class TitleScreen implements GameState {
     private Sprite background;
 
@@ -18,10 +20,26 @@ public class TitleScreen implements GameState {
     public void update(GameSystems systems) {
         if (systems.getKeyHandler().isAnyKeyPressed() && !systems.getDialogManager().hasDialog()) {
             systems.getDialogManager().open(DIALOG);
+        } else {
+            // state transition requested, but only execute once faded out
+            if (next != null) {
+                if (systems.getPalette().isFadedOut()) {
+                    systems.requestState(next);
+                }
+            } else {
+                switch (systems.getKeyHandler().getPressedKey()) {
+                    case VK_S -> fadeToState(systems, new Prologue());
+                    // other keystrokes
+                }
+            }
         }
+    }
 
-        systems.getDialogManager().update(systems);
-        // TODO if no input for a while, go to credits/demo mode
+    private GameState next;
+
+    private void fadeToState(GameSystems systems, GameState state) {
+        next = state;
+        systems.getPalette().fadeOut();
     }
 
     @Override
