@@ -6,14 +6,17 @@ import duke.dialog.Dialog;
 import duke.gfx.Sprite;
 
 public class MainMenu implements GameState {
+    private Sprite background;
+
     @Override
     public void start(GameContext context) {
         context.getDialogManager().open(DIALOG);
+
+        background = context.getAssets().getImage("DN");
     }
 
     @Override
     public void render(GameContext context) {
-        Sprite background = context.getAssets().getImage("DN");
         Renderer renderer = context.getRenderer();
 
         renderer.draw(background, 0, 0);
@@ -21,7 +24,8 @@ public class MainMenu implements GameState {
         context.getDialogManager().render(context.getRenderer());
     }
 
-    private static final Dialog DIALOG = Dialog.create("""
+    private static final Dialog DIALOG = new Dialog("""
+            
                  DUKE MAIN MENU
                  --------------
             
@@ -36,5 +40,5 @@ public class MainMenu implements GameState {
               T)itle screen
               C)redits
               Q)uit to DOS
-            """, false);
+            """, 56, 32, 9, 13, false, false);
 }

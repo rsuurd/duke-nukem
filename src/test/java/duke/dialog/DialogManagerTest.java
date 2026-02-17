@@ -52,7 +52,7 @@ class DialogManagerTest {
 
     @Test
     void shouldOpenDialog() {
-        dialogManager.open(Dialog.create("Hello, World!", true));
+        dialogManager.open(new Dialog("Hello, World!", 0, 0, 2, 13, true, true));
 
         assertThat(dialogManager.hasDialog()).isTrue();
 
@@ -65,7 +65,7 @@ class DialogManagerTest {
     void shouldCloseDialogWithCursorWithEnter() {
         GameContext gameContext = GameContextFixture.create();
 
-        dialogManager.open(Dialog.create("Press ENTER:", true));
+        dialogManager.open(new Dialog("Press ENTER:", 0, 0, 2, 13, true, true));
         when(gameContext.getKeyHandler().isPressed(VK_ENTER)).thenReturn(true);
 
         dialogManager.update(gameContext);
@@ -75,7 +75,7 @@ class DialogManagerTest {
 
     @Test
     void shouldCloseDialog() {
-        dialogManager.open(Dialog.create("Hello, World!", true));
+        dialogManager.open(new Dialog("Press ENTER:", 0, 0, 2, 13, true, true));
 
         assertThat(dialogManager.hasDialog()).isTrue();
 

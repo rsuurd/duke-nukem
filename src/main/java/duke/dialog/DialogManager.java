@@ -72,8 +72,6 @@ public class DialogManager {
     private void renderCursor(Renderer renderer, int x, int y, int rows, int cols) {
         int cursorY = y + (rows - 1) * TILE_SIZE;
 
-        font.drawText(renderer, PRESS_ENTER, x + 48, cursorY);
-
         renderer.draw(assets.getObjects().get(85 + tick), x + (cols - 1) * TILE_SIZE, cursorY);
 
         tick = (tick + 1) % 4;
@@ -96,7 +94,7 @@ public class DialogManager {
 
         Dialog dialog = dialogs.peek();
 
-        if (dialog.showCursor() && context.getKeyHandler().isPressed(VK_ENTER)) {
+        if (dialog.closeOnEnter() && context.getKeyHandler().isPressed(VK_ENTER)) {
             close();
         }
     }
@@ -111,5 +109,5 @@ public class DialogManager {
     private static final int TOP_BORDER = 24;
     private static final int BOTTOM_BORDER = 25;
 
-    private static final String PRESS_ENTER = "Press ENTER:";
+
 }

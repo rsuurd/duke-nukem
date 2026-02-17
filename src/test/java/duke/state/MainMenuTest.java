@@ -15,6 +15,7 @@ class MainMenuTest {
     void shouldRender() {
         GameContext context = GameContextFixture.create();
 
+        mainMenu.start(context);
         mainMenu.render(context);
 
         verify(context.getAssets()).getImage("DN");
