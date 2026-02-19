@@ -23,7 +23,7 @@ public class Introduction implements GameState {
     public void update(GameSystems systems) {
         EgaPalette palette = systems.getPalette();
 
-        if (systems.getPalette().isFadedOut()) {
+        if (systems.getPalette().isFadedBack()) {
             if (dialogs.hasNext()) {
                 showDialog(systems, dialogs.next());
             } else {

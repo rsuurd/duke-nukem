@@ -23,7 +23,7 @@ public class TitleScreen implements GameState {
         } else {
             // state transition requested, but only execute once faded out
             if (next != null) {
-                if (systems.getPalette().isFadedOut()) {
+                if (systems.getPalette().isFadedBack()) {
                     systems.requestState(next);
                 }
             } else {

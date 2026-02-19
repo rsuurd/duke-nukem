@@ -5,6 +5,7 @@ import duke.dialog.Dialog;
 import duke.gameplay.Cheats;
 import duke.gfx.EgaPalette;
 import duke.gfx.Sprite;
+import duke.sfx.Sfx;
 
 import java.util.List;
 
@@ -29,18 +30,18 @@ public class Prologue implements GameState {
     public void update(GameSystems systems) {
         EgaPalette palette = systems.getPalette();
 
-        if (palette.isFadedOut()) {
+        if (palette.isFadedBack()) {
             systems.getDialogManager().close();
-            palette.fadeIn();
 
             if (hasNextChapter()) {
+                palette.fadeIn();
                 dialog = STORY.get(chapter++);
-            } else {
-                // TODO move later to palette.isFadedWhite() to trigger state change
-                systems.requestState(new GameplayState(systems, new Cheats(true)));
-
-                return;
             }
+        } else if (palette.isFadedWhite()) {
+            systems.getSoundManager().play(Sfx.START_GAME);
+            systems.getDialogManager().close();
+            systems.requestState(new GameplayState(systems, new Cheats(true)));
+            palette.fadeFromWhite();
         }
 
         if (palette.isFadedIn() && !systems.getDialogManager().hasDialog()) {
@@ -48,7 +49,11 @@ public class Prologue implements GameState {
         }
 
         if (systems.getKeyHandler().isAnyKeyPressed()) {
-            palette.fadeOut();
+            if (hasNextChapter()) {
+                palette.fadeOut();
+            } else {
+                palette.fadeToWhite();
+            }
         }
     }
 

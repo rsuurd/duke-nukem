@@ -34,12 +34,28 @@ public class EgaPalette {
         mode = Mode.FADE_TO_BLACK;
     }
 
+    public void fadeToWhite() {
+        if (brightness > 0) {
+            blackout();
+        }
+
+        mode = Mode.FADE_TO_WHITE;
+    }
+
+    public void fadeFromWhite() {
+        if (brightness < MAX_BRIGHTNESS) {
+            reset();
+        }
+
+        mode = Mode.FADE_FROM_WHITE;
+    }
+
     public void update() {
         switch (mode) {
             case NONE -> {
             }
-            case FADE_FROM_BLACK -> increaseBrightness();
-            case FADE_TO_BLACK -> decreaseBrightness();
+            case FADE_FROM_BLACK, FADE_TO_WHITE -> increaseBrightness();
+            case FADE_TO_BLACK, FADE_FROM_WHITE -> decreaseBrightness();
         }
     }
 
@@ -68,12 +84,25 @@ public class EgaPalette {
         rebuildColorModel();
     }
 
-    public boolean isFadedIn() {
-        return brightness == MAX_BRIGHTNESS;
+    public boolean isFadedBack() {
+        return switch (mode) {
+            case NONE, FADE_TO_BLACK, FADE_FROM_BLACK -> brightness == 0;
+            default -> false;
+        };
     }
 
-    public boolean isFadedOut() {
-        return brightness == 0;
+    public boolean isFadedWhite() {
+        return switch (mode) {
+            case FADE_TO_WHITE, FADE_FROM_WHITE -> brightness == MAX_BRIGHTNESS;
+            default -> false;
+        };
+    }
+
+    public boolean isFadedIn() {
+        return switch (mode) {
+            case NONE, FADE_FROM_BLACK, FADE_TO_BLACK -> brightness == MAX_BRIGHTNESS;
+            case FADE_FROM_WHITE, FADE_TO_WHITE -> brightness == 0;
+        };
     }
 
     private void rebuildColorModel() {
@@ -82,11 +111,8 @@ public class EgaPalette {
         byte[] g = new byte[size];
         byte[] b = new byte[size];
 
-        int visibleColors = (COLORS.length / MAX_BRIGHTNESS) * brightness;
-
         for (int i = 0; i < size; i++) {
-            // TODO support fading to white as well
-            int color = (i < visibleColors) ? COLORS[i & 0xFF] : BLACK;
+            int color = getColor(i);
 
             r[i] = (byte) ((color >> 16) & 0xFF);
             g[i] = (byte) ((color >> 8) & 0xFF);
@@ -95,6 +121,15 @@ public class EgaPalette {
 
         colorModel = new IndexColorModel(8, size, r, g, b);
         listeners.forEach(PaletteChangedListener::onPaletteChanged);
+    }
+
+    private int getColor(int index) {
+        int fadedColors = (COLORS.length / MAX_BRIGHTNESS) * brightness;
+
+        return switch (mode) {
+            case NONE, FADE_TO_BLACK, FADE_FROM_BLACK -> index < fadedColors ? COLORS[index & 0xFF] : BLACK;
+            case FADE_TO_WHITE, FADE_FROM_WHITE -> index >= fadedColors ? COLORS[index & 0xFF] : WHITE;
+        };
     }
 
     public IndexColorModel getColorModel() {
@@ -132,7 +167,9 @@ public class EgaPalette {
     enum Mode {
         NONE,
         FADE_FROM_BLACK,
-        FADE_TO_BLACK
+        FADE_TO_BLACK,
+        FADE_FROM_WHITE,
+        FADE_TO_WHITE
     }
 
     public interface PaletteChangedListener {

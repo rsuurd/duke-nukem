@@ -43,22 +43,52 @@ class EgaPaletteTest {
     }
 
     @Test
-    void shouldIndicateFadedOut() {
+    void shouldIndicatedFadedBlack() {
         egaPalette.fadeOut();
 
         egaPalette.update();
-        assertThat(egaPalette.isFadedOut()).isFalse();
+        assertThat(egaPalette.isFadedBack()).isFalse();
         egaPalette.update();
-        assertThat(egaPalette.isFadedOut()).isFalse();
+        assertThat(egaPalette.isFadedBack()).isFalse();
         egaPalette.update();
-        assertThat(egaPalette.isFadedOut()).isFalse();
+        assertThat(egaPalette.isFadedBack()).isFalse();
         egaPalette.update();
-        assertThat(egaPalette.isFadedOut()).isTrue();
+        assertThat(egaPalette.isFadedBack()).isTrue();
+    }
+
+    @Test
+    void shouldIndicatedFadedWhite() {
+        egaPalette.fadeToWhite();
+
+        egaPalette.update();
+        assertThat(egaPalette.isFadedWhite()).isFalse();
+        egaPalette.update();
+        assertThat(egaPalette.isFadedWhite()).isFalse();
+        egaPalette.update();
+        assertThat(egaPalette.isFadedWhite()).isFalse();
+        egaPalette.update();
+        assertThat(egaPalette.isFadedWhite()).isTrue();
     }
 
     @Test
     void shouldIndicateFadedIn() {
         egaPalette.fadeIn();
+
+        egaPalette.update();
+        assertThat(egaPalette.isFadedIn()).isFalse();
+        egaPalette.update();
+        assertThat(egaPalette.isFadedIn()).isFalse();
+        egaPalette.update();
+        assertThat(egaPalette.isFadedIn()).isFalse();
+        egaPalette.update();
+        assertThat(egaPalette.isFadedIn()).isTrue();
+
+        assertThat(egaPalette.isFadedIn()).isTrue();
+    }
+
+    @Test
+    void shouldIndicateFadedInFromWhite() {
+        egaPalette.fadeFromWhite();
 
         egaPalette.update();
         assertThat(egaPalette.isFadedIn()).isFalse();
