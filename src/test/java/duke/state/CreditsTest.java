@@ -14,7 +14,7 @@ class CreditsTest {
 
     @BeforeEach
     void createContext() {
-        systems = spy(GameSystemsFixture.create());
+        systems = GameSystemsFixture.create();
     }
 
     @Test
@@ -32,24 +32,13 @@ class CreditsTest {
     }
 
     @Test
-    void shouldFadeOutOnKeyPress() {
+    void shouldTransitionOnAnyKey() {
         Credits credits = new Credits();
 
         when(systems.getKeyHandler().consumeAny()).thenReturn(true);
 
         credits.update(systems);
 
-        verify(systems.getPalette()).fadeOut();
-    }
-
-    @Test
-    void shouldGoToTitleScreenAfterFadeOut() {
-        Credits credits = new Credits();
-
-        when(systems.getPalette().isFadedBack()).thenReturn(true);
-
-        credits.update(systems);
-
-        verify(systems).requestState(isA(TitleScreen.class));
+        verify(systems.getStateRequester()).requestState(isA(TitleScreen.class));
     }
 }

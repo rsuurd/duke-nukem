@@ -9,17 +9,12 @@ public class Credits implements GameState {
     @Override
     public void start(GameSystems systems) {
         image = systems.getAssets().getImage("CREDITS");
-        systems.getPalette().fadeIn();
     }
 
     @Override
     public void update(GameSystems systems) {
         if (systems.getKeyHandler().consumeAny()) {
-            systems.getPalette().fadeOut();
-        }
-
-        if (systems.getPalette().isFadedBack()) {
-            systems.requestState(new TitleScreen());
+            systems.getStateRequester().requestState(new TitleScreen());
         }
     }
 

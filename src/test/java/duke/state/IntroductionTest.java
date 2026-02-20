@@ -16,7 +16,7 @@ class IntroductionTest {
 
     @BeforeEach
     void createSystems() {
-        systems = spy(GameSystemsFixture.create());
+        systems = GameSystemsFixture.create();
         introduction = new Introduction();
         introduction.start(systems);
     }
@@ -68,6 +68,6 @@ class IntroductionTest {
         introduction.update(systems);
         introduction.update(systems);
 
-        verify(systems).requestState(isA(TitleScreen.class));
+        verify(systems.getStateRequester()).requestState(isA(TitleScreen.class));
     }
 }

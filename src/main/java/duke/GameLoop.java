@@ -41,6 +41,7 @@ public class GameLoop {
     }
 
     private void update() {
+        systems.getStateRequester().update(systems);
         state.get().update(systems);
         systems.getPalette().update();
     }

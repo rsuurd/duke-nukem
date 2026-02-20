@@ -2,18 +2,15 @@ package duke.menu;
 
 import duke.GameSystems;
 import duke.dialog.Dialog;
-import duke.state.*;
+import duke.state.Credits;
+import duke.state.Prologue;
 import duke.ui.KeyHandler;
 
 import static java.awt.event.KeyEvent.*;
 
 public class MainMenu implements Menu {
-    private StateTransitioner transitioner;
-
     @Override
     public void open(GameSystems systems) {
-        transitioner = new StateTransitioner(systems);
-
         systems.getDialogManager().open(DIALOG);
     }
 
@@ -22,7 +19,7 @@ public class MainMenu implements Menu {
         KeyHandler keys = systems.getKeyHandler();
 
         if (keys.consume(VK_S)) {
-            startNewGame();
+            startNewGame(systems);
         }
 
         if (keys.consume(VK_I)) {
@@ -38,18 +35,16 @@ public class MainMenu implements Menu {
         }
 
         if (keys.consume(VK_T)) {
-            showTitleScreen();
+            showTitleScreen(systems);
         }
 
         if (keys.consume(VK_C)) {
-            showCredits();
+            showCredits(systems);
         }
-
-        transitioner.update();
     }
 
-    private void startNewGame() {
-        transitioner.requestState(new Prologue());
+    private void startNewGame(GameSystems systems) {
+        systems.getStateRequester().requestState(new Prologue());
     }
 
     private void showInstructions(GameSystems systems) {
@@ -65,12 +60,12 @@ public class MainMenu implements Menu {
         systems.getMenuManager().open(new HighScores(), systems);
     }
 
-    private void showTitleScreen() {
-        transitioner.requestState(new TitleScreen());
+    private void showTitleScreen(GameSystems systems) {
+        systems.getStateRequester().requestState(new Prologue());
     }
 
-    private void showCredits() {
-        transitioner.requestState(new Credits());
+    private void showCredits(GameSystems systems) {
+        systems.getStateRequester().requestState(new Credits());
     }
 
     private static final Dialog DIALOG = new Dialog("""
@@ -90,29 +85,4 @@ public class MainMenu implements Menu {
               C)redits
               Q)uit to DOS
             """, 56, 32, 9, 13, false, false);
-
-    // TODO extract this to a component that supports fade to black and white -> perform an action -> fade to normal
-    private static class StateTransitioner implements StateRequester {
-        private GameSystems systems;
-        private GameState next;
-
-        public StateTransitioner(GameSystems systems) {
-            this.systems = systems;
-        }
-
-        @Override
-        public void requestState(GameState state) {
-            next = state;
-
-            systems.getPalette().fadeOut();
-        }
-
-        public void update() {
-            if (systems.getPalette().isFadedBack() && next != null) {
-                systems.getMenuManager().closeAll(systems);
-
-                systems.requestState(next);
-            }
-        }
-    }
 }

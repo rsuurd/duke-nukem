@@ -5,29 +5,27 @@ import duke.gfx.EgaPalette;
 import duke.menu.MenuManager;
 import duke.resources.AssetManager;
 import duke.sfx.SoundManager;
-import duke.state.GameState;
-import duke.state.StateManager;
 import duke.state.StateRequester;
 import duke.ui.KeyHandler;
 
-public class GameSystems implements StateRequester {
+public class GameSystems {
     private AssetManager assets;
     private Renderer renderer;
     private EgaPalette palette; // maybe combine renderer/palette in Gfx abstraction
     private KeyHandler keyHandler;
-    private SoundManager soundManager;
 
-    private StateManager stateManager;
+    private StateRequester stateRequester;
+    private SoundManager soundManager;
     private DialogManager dialogManager;
     private MenuManager menuManager;
 
-    public GameSystems(AssetManager assets, Renderer renderer, EgaPalette palette, KeyHandler keyHandler, SoundManager soundManager, StateManager stateManager, DialogManager dialogManager, MenuManager menuManager) {
+    public GameSystems(AssetManager assets, Renderer renderer, EgaPalette palette, KeyHandler keyHandler, StateRequester stateRequester, SoundManager soundManager, DialogManager dialogManager, MenuManager menuManager) {
         this.assets = assets;
         this.renderer = renderer;
         this.palette = palette;
         this.keyHandler = keyHandler;
+        this.stateRequester = stateRequester;
         this.soundManager = soundManager;
-        this.stateManager = stateManager;
         this.dialogManager = dialogManager;
         this.menuManager = menuManager;
     }
@@ -48,13 +46,12 @@ public class GameSystems implements StateRequester {
         return keyHandler;
     }
 
-    public SoundManager getSoundManager() {
-        return soundManager;
+    public StateRequester getStateRequester() {
+        return stateRequester;
     }
 
-    @Override
-    public void requestState(GameState state) {
-        stateManager.set(state, this);
+    public SoundManager getSoundManager() {
+        return soundManager;
     }
 
     public DialogManager getDialogManager() {

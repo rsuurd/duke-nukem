@@ -51,7 +51,8 @@ public class Introduction implements GameState {
 
     private void switchToTitleScreen(GameSystems systems) {
         systems.getDialogManager().close();
-        systems.requestState(new TitleScreen());
+
+        systems.getStateRequester().requestState(new TitleScreen());
     }
 
     @Override

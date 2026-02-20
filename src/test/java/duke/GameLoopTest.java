@@ -30,6 +30,7 @@ class GameLoopTest {
     void shouldUpdate() {
         gameLoop.tick();
 
+        verify(systems.getStateRequester()).update(systems);
         verify(manager.get()).update(systems);
         verify(systems.getPalette()).update();
     }

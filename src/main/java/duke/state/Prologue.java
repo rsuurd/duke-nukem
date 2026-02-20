@@ -5,7 +5,6 @@ import duke.dialog.Dialog;
 import duke.gameplay.Cheats;
 import duke.gfx.EgaPalette;
 import duke.gfx.Sprite;
-import duke.sfx.Sfx;
 
 import java.util.List;
 
@@ -37,11 +36,6 @@ public class Prologue implements GameState {
                 palette.fadeIn();
                 dialog = STORY.get(chapter++);
             }
-        } else if (palette.isFadedWhite()) {
-            systems.getSoundManager().play(Sfx.START_GAME);
-            systems.getDialogManager().close();
-            systems.requestState(new GameplayState(systems, new Cheats(true)));
-            palette.fadeFromWhite();
         }
 
         if (palette.isFadedIn() && !systems.getDialogManager().hasDialog()) {
@@ -52,7 +46,8 @@ public class Prologue implements GameState {
             if (hasNextChapter()) {
                 palette.fadeOut();
             } else {
-                palette.fadeToWhite();
+                systems.getDialogManager().close();
+                systems.getStateRequester().requestState(new GameplayState(systems, new Cheats(true)));
             }
         }
     }
