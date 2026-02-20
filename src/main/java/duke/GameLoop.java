@@ -43,14 +43,11 @@ public class GameLoop {
     private void update() {
         state.get().update(systems);
         systems.getPalette().update();
-
-        // dialogs here?
     }
 
     private void render() {
         systems.getRenderer().clear();
         state.get().render(systems);
-        // dialogs here?
         systems.getRenderer().flip();
     }
 

@@ -11,12 +11,14 @@ import duke.gfx.Viewport;
 import duke.level.Level;
 import duke.level.LevelDescriptor;
 import duke.level.LevelManager;
+import duke.menu.HelpMenu;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static java.awt.event.KeyEvent.VK_F1;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -157,5 +159,21 @@ class GameplayStateTest {
         state.update(systems);
 
         verify(cheats).processInput(systems.getKeyHandler(), gameplayContext);
+    }
+
+    @Test
+    void shouldUpdateMenuManager() {
+        state.update(systems);
+
+        verify(systems.getMenuManager()).update(systems);
+    }
+
+    @Test
+    void shouldOpenHelpMenu() {
+        when(systems.getKeyHandler().isPressed(VK_F1)).thenReturn(true);
+
+        state.update(systems);
+
+        verify(systems.getMenuManager()).open(isA(HelpMenu.class), same(systems));
     }
 }

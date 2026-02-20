@@ -2,6 +2,7 @@ package duke;
 
 import duke.dialog.DialogManager;
 import duke.gfx.EgaPalette;
+import duke.menu.MenuManager;
 import duke.resources.AssetManager;
 import duke.sfx.SoundManager;
 import duke.state.GameState;
@@ -18,8 +19,9 @@ public class GameSystems implements StateRequester {
 
     private StateManager stateManager;
     private DialogManager dialogManager;
+    private MenuManager menuManager;
 
-    public GameSystems(AssetManager assets, Renderer renderer, EgaPalette palette, KeyHandler keyHandler, SoundManager soundManager, StateManager stateManager, DialogManager dialogManager) {
+    public GameSystems(AssetManager assets, Renderer renderer, EgaPalette palette, KeyHandler keyHandler, SoundManager soundManager, StateManager stateManager, DialogManager dialogManager, MenuManager menuManager) {
         this.assets = assets;
         this.renderer = renderer;
         this.palette = palette;
@@ -27,6 +29,7 @@ public class GameSystems implements StateRequester {
         this.soundManager = soundManager;
         this.stateManager = stateManager;
         this.dialogManager = dialogManager;
+        this.menuManager = menuManager;
     }
 
     public AssetManager getAssets() {
@@ -56,5 +59,9 @@ public class GameSystems implements StateRequester {
 
     public DialogManager getDialogManager() {
         return dialogManager;
+    }
+
+    public MenuManager getMenuManager() {
+        return menuManager;
     }
 }

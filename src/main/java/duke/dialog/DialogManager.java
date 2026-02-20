@@ -6,9 +6,7 @@ import duke.gfx.Font;
 import duke.gfx.Sprite;
 import duke.resources.AssetManager;
 
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import static duke.level.Level.HALF_TILE_SIZE;
 import static duke.level.Level.TILE_SIZE;
@@ -26,19 +24,21 @@ public class DialogManager {
         this.font = font;
         this.tick = 0;
 
-        dialogs = new LinkedList<>();
+        dialogs = new ArrayDeque<>();
     }
 
     public void render(Renderer renderer) {
-        if (dialogs.isEmpty()) return;
+        Iterator<Dialog> iterator = dialogs.iterator();
 
-        Dialog dialog = dialogs.peek();
+        while (iterator.hasNext()) {
+            Dialog dialog = iterator.next();
 
-        renderBox(renderer, dialog.x(), dialog.y(), dialog.rows(), dialog.cols());
-        font.drawText(renderer, dialog.message(), dialog.x() + HALF_TILE_SIZE, dialog.y() + HALF_TILE_SIZE);
+            renderBox(renderer, dialog.x(), dialog.y(), dialog.rows(), dialog.cols());
+            font.drawText(renderer, dialog.message(), dialog.x() + HALF_TILE_SIZE, dialog.y() + HALF_TILE_SIZE);
 
-        if (dialog.showCursor()) {
-            renderCursor(renderer, dialog.x(), dialog.y(), dialog.rows(), dialog.cols());
+            if (dialog.showCursor() && !iterator.hasNext()) {
+                renderCursor(renderer, dialog.x(), dialog.y(), dialog.rows(), dialog.cols());
+            }
         }
     }
 
@@ -92,7 +92,7 @@ public class DialogManager {
     public void update(GameSystems systems) {
         if (dialogs.isEmpty()) return;
 
-        Dialog dialog = dialogs.peek();
+        Dialog dialog = dialogs.getLast();
 
         if (dialog.closeOnEnter() && systems.getKeyHandler().isPressed(VK_ENTER)) {
             close();
@@ -108,6 +108,4 @@ public class DialogManager {
     private static final int RIGHT_BORDER = 23;
     private static final int TOP_BORDER = 24;
     private static final int BOTTOM_BORDER = 25;
-
-
 }

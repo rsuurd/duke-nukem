@@ -8,8 +8,12 @@ import duke.gameplay.player.Player;
 import duke.gfx.*;
 import duke.level.Level;
 import duke.level.LevelManager;
+import duke.menu.HelpMenu;
+import duke.menu.MenuManager;
 import duke.resources.AssetManager;
 import duke.ui.KeyHandler;
+
+import static java.awt.event.KeyEvent.VK_F1;
 
 // TODO refactor for testing, should have just a noargs constructor and construct everything on start like the other states
 public class GameplayState implements GameState {
@@ -76,8 +80,11 @@ public class GameplayState implements GameState {
 
     @Override
     public void update(GameSystems systems) {
+        updateHelpMenu(systems);
+
         if (systems.getDialogManager().hasDialog()) {
             systems.getDialogManager().update(systems);
+
             return;
         }
 
@@ -97,6 +104,16 @@ public class GameplayState implements GameState {
         }
 
         cheats.processInput(systems.getKeyHandler(), context);
+    }
+
+    private void updateHelpMenu(GameSystems systems) {
+        MenuManager menuManager = systems.getMenuManager();
+
+        if (systems.getKeyHandler().isPressed(VK_F1)) {
+            menuManager.open(new HelpMenu(context), systems);
+        }
+
+        menuManager.update(systems);
     }
 
     private void updatePlayer(KeyHandler.Input input) {
