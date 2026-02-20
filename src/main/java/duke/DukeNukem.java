@@ -9,10 +9,7 @@ import duke.resources.AssetManager;
 import duke.resources.ResourceLoader;
 import duke.sfx.PcSpeaker;
 import duke.sfx.SoundManager;
-import duke.state.GameplayState;
-import duke.state.Introduction;
-import duke.state.Prologue;
-import duke.state.StateManager;
+import duke.state.*;
 import duke.ui.CanvasRenderer;
 import duke.ui.DukeNukemFrame;
 import duke.ui.KeyHandler;
@@ -72,8 +69,8 @@ public class DukeNukem {
         GameLoop gameLoop = new GameLoop(systems, stateManager);
         DukeNukem dukeNukem = new DukeNukem(gameLoop);
 
-        GameplayState state = new GameplayState(systems, new Cheats(gameParameters.asp()));
-        systems.requestState(state);
+//        GameplayState state = new GameplayState(systems, new Cheats(gameParameters.asp()));
+        systems.requestState(new TitleScreen());
         dukeNukem.start();
 
         frame.addWindowListener(new WindowAdapter() {

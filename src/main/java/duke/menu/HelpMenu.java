@@ -29,11 +29,14 @@ public class HelpMenu implements Menu {
         } else if (keys.consume(VK_I)) {
             open(new Instructions(), systems);
         } else if (keys.consume(VK_G)) {
-            open(new GameSetup(context), systems);
+            open(new GameSetup(), systems);
         } else if (keys.consume(VK_H)) {
             open(new HighScores(), systems);
         } else if (keys.consume(VK_F10)) {
-            open(new Restart(context), systems);
+            open(new Confirmation(TILE_SIZE, TILE_SIZE, """
+                Are you sure you want to
+                RESTART the level(Y/N)?
+                """, () -> System.err.println("Restarting level...")), systems);
         }
     }
 

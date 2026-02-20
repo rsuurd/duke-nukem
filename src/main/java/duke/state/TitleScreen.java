@@ -2,45 +2,46 @@ package duke.state;
 
 import duke.GameSystems;
 import duke.Renderer;
-import duke.dialog.Dialog;
 import duke.gfx.Sprite;
+import duke.menu.Confirmation;
+import duke.menu.MainMenu;
+import duke.menu.Menu;
+import duke.menu.MenuManager;
 import duke.ui.KeyHandler;
 
-import static java.awt.event.KeyEvent.VK_S;
+import static java.awt.event.KeyEvent.VK_ESCAPE;
+import static java.awt.event.KeyEvent.VK_Q;
 
 public class TitleScreen implements GameState {
     private Sprite background;
+    private Menu menu;
 
     @Override
     public void start(GameSystems systems) {
         background = systems.getAssets().getImage("DN");
+        menu = new MainMenu();
+
         systems.getPalette().fadeIn();
     }
 
     @Override
     public void update(GameSystems systems) {
         KeyHandler handler = systems.getKeyHandler();
-        if (handler.consumeAny() && !systems.getDialogManager().hasDialog()) {
-            systems.getDialogManager().open(DIALOG);
-        } else {
-            // state transition requested, but only execute once faded out
-            if (next != null) {
-                if (systems.getPalette().isFadedBack()) {
-                    systems.requestState(next);
-                }
-            } else {
-                if (handler.consume(VK_S)) {
-                    fadeToState(systems, new Prologue());
-                }
-            }
+        MenuManager menuManager = systems.getMenuManager();
+
+        menuManager.update(systems);
+
+        if (handler.consume(VK_ESCAPE) || handler.consume(VK_Q)) {
+            confirmQuit(systems);
+        }
+
+        if (!menuManager.isOpen() && handler.consumeAny()) {
+            menuManager.open(menu, systems);
         }
     }
 
-    private GameState next;
-
-    private void fadeToState(GameSystems systems, GameState state) {
-        next = state;
-        systems.getPalette().fadeOut();
+    private void confirmQuit(GameSystems systems) {
+        systems.getMenuManager().open(new Confirmation(56, 80, "Are you sure you want to\n         quit?", () -> System.exit(0)), systems);
     }
 
     @Override
@@ -51,22 +52,4 @@ public class TitleScreen implements GameState {
 
         systems.getDialogManager().render(systems.getRenderer());
     }
-
-    private static final Dialog DIALOG = new Dialog("""
-            
-                 DUKE MAIN MENU
-                 --------------
-            
-              S)tart a new game
-              R)estore an old game
-              I)nstructions
-              O)rdering information
-              G)ame setup
-              H)igh scores
-              P)review/Main Demo!
-              V)iew user demo
-              T)itle screen
-              C)redits
-              Q)uit to DOS
-            """, 56, 32, 9, 13, false, false);
 }

@@ -2,19 +2,12 @@ package duke.menu;
 
 import duke.GameSystems;
 import duke.dialog.Dialog;
-import duke.gameplay.GameplayContext;
 import duke.ui.KeyHandler;
 
 import static duke.level.Level.TILE_SIZE;
 import static java.awt.event.KeyEvent.*;
 
 public class GameSetup implements Menu {
-    private GameplayContext context;
-
-    public GameSetup(GameplayContext context) {
-        this.context = context;
-    }
-
     @Override
     public void open(GameSystems systems) {
         systems.getDialogManager().open(GAME_SETUP);

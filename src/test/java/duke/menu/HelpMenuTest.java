@@ -57,7 +57,7 @@ class HelpMenuTest {
                 Arguments.of(VK_I, Instructions.class),
                 Arguments.of(VK_G, GameSetup.class),
                 Arguments.of(VK_H, HighScores.class),
-                Arguments.of(VK_F10, Restart.class)
+                Arguments.of(VK_F10, Confirmation.class)
         );
     }
 }

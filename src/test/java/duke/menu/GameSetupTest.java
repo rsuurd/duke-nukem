@@ -15,15 +15,13 @@ import static org.mockito.Mockito.*;
 
 class GameSetupTest {
     private GameSystems systems;
-    private GameplayContext context;
     private GameSetup gameSetup;
 
     @BeforeEach
     void create() {
         systems = GameSystemsFixture.create();
-        context = GameplayContextFixture.create();
 
-        gameSetup = new GameSetup(context);
+        gameSetup = new GameSetup();
     }
 
     @Test
