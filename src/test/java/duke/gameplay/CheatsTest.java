@@ -23,9 +23,13 @@ class CheatsTest {
 
     private GameplayContext context;
 
+    private Cheats cheats;
+
     @BeforeEach
     void create() {
         context = GameplayContextFixture.create();
+
+        cheats = new Cheats(true);
     }
 
     @Test
@@ -45,8 +49,7 @@ class CheatsTest {
         when(context.getPlayer().getHealth()).thenReturn(health);
         when(context.getPlayer().getWeapon()).thenReturn(weapon);
         when(context.getPlayer().getInventory()).thenReturn(inventory);
-
-        Cheats cheats = createCheatsWithPressedKeys(GOD);
+        when(keyHandler.consumeAll(GOD)).thenReturn(true);
 
         cheats.processInput(keyHandler, context);
 
@@ -64,7 +67,8 @@ class CheatsTest {
 
     @Test
     void shouldCompleteLevel() {
-        Cheats cheats = createCheatsWithPressedKeys(GOW);
+        when(keyHandler.consumeAll(GOD)).thenReturn(false);
+        when(keyHandler.consumeAll(GOW)).thenReturn(true);
 
         cheats.processInput(keyHandler, context);
 
@@ -73,23 +77,12 @@ class CheatsTest {
 
     @Test
     void shouldNotDoubleActivate() {
-        Cheats cheats = createCheatsWithPressedKeys(GOW);
+        when(keyHandler.consumeAll(GOD)).thenReturn(false);
+        when(keyHandler.consumeAll(GOW)).thenReturn(true);
 
         cheats.processInput(keyHandler, context);
         cheats.processInput(keyHandler, context);
 
         verify(context.getLevel(), times(1)).complete();
-    }
-
-    private Cheats createCheatsWithPressedKeys(int[] keySequence) {
-        Cheats cheats = new Cheats(true);
-
-        when(keyHandler.isPressed(anyInt())).thenReturn(false);
-
-        for (int key : keySequence) {
-            when(keyHandler.isPressed(key)).thenReturn(true);
-        }
-
-        return cheats;
     }
 }

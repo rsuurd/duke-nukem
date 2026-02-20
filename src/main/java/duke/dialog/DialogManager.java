@@ -94,7 +94,7 @@ public class DialogManager {
 
         Dialog dialog = dialogs.getFirst();
 
-        if (dialog.closeOnEnter() && systems.getKeyHandler().isPressed(VK_ENTER)) {
+        if (dialog.closeOnEnter() && systems.getKeyHandler().consume(VK_ENTER)) {
             close();
         }
     }

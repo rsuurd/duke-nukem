@@ -44,7 +44,7 @@ class HelpMenuTest {
     void shouldOpenSelectedMenu(int key, Class<? extends Menu> menu) {
         helpMenu.open(systems);
 
-        when(systems.getKeyHandler().getPressedKey()).thenReturn(key);
+        when(systems.getKeyHandler().consume(key)).thenReturn(true);
 
         helpMenu.update(systems);
 

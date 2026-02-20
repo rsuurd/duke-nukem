@@ -3,9 +3,10 @@ package duke.menu;
 import duke.GameSystems;
 import duke.dialog.Dialog;
 import duke.gameplay.GameplayContext;
+import duke.ui.KeyHandler;
 
 import static duke.level.Level.TILE_SIZE;
-import static java.awt.event.KeyEvent.VK_ESCAPE;
+import static java.awt.event.KeyEvent.*;
 
 public class GameSetup implements Menu {
     private GameplayContext context;
@@ -21,12 +22,14 @@ public class GameSetup implements Menu {
 
     @Override
     public void update(GameSystems systems) {
-        switch (systems.getKeyHandler().getPressedKey()) {
-            case 'J' -> openJoystickMode(systems);
-//            case 'K' -> openKeyboardMode(systems);
-            case 'S' -> toggleSound(systems);
-            case 'H' -> toggleHints(systems);
-            case VK_ESCAPE -> systems.getMenuManager().closeAll(systems);
+        KeyHandler handler = systems.getKeyHandler();
+
+        if (handler.consume(VK_J)) {
+            openJoystickMode(systems);
+        } else if (handler.consume(VK_K)) {
+            // openKeyboardMode(systems);
+        } else if (handler.consumeAll(VK_ESCAPE)) {
+            systems.getMenuManager().closeAll(systems);
         }
     }
 
@@ -35,17 +38,6 @@ public class GameSetup implements Menu {
     }
 
     // TODO these can be triggered from outside the menu as well, so should probably just delegate to context
-    private void toggleSound(GameSystems systems) {
-        context.getSoundManager().toggle();
-
-        systems.getDialogManager().open(new Dialog("       Sound toggle\n\n     The sound is off.", TILE_SIZE, 3 * TILE_SIZE, 3, 13, true, false));
-    }
-
-    private void toggleHints(GameSystems systems) {
-        context.getHints().toggle();
-
-        systems.getDialogManager().open(new Dialog("Hint toggle\n\nHints are off.", TILE_SIZE, 3 * TILE_SIZE, 3, 13, true, false));
-    }
 
     private static final Dialog GAME_SETUP = new Dialog("""
             

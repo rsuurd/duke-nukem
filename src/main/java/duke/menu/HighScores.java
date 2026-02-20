@@ -18,7 +18,7 @@ public class HighScores implements Menu {
 
     @Override
     public void update(GameSystems systems) {
-        if (systems.getKeyHandler().isAnyKeyPressed()) {
+        if (systems.getKeyHandler().consumeAny()) {
             systems.getMenuManager().closeAll(systems);
         }
     }

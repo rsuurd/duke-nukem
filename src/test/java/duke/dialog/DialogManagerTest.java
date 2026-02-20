@@ -66,7 +66,7 @@ class DialogManagerTest {
         GameSystems systems = GameSystemsFixture.create();
 
         dialogManager.open(new Dialog("Press ENTER:", 0, 0, 2, 13, true, true));
-        when(systems.getKeyHandler().isPressed(VK_ENTER)).thenReturn(true);
+        when(systems.getKeyHandler().consume(VK_ENTER)).thenReturn(true);
 
         dialogManager.update(systems);
 

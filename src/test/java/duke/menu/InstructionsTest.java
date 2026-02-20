@@ -31,7 +31,7 @@ class InstructionsTest {
 
     @Test
     void shouldClose() {
-        when(systems.getKeyHandler().isAnyKeyPressed()).thenReturn(true);
+        when(systems.getKeyHandler().consumeAny()).thenReturn(true);
 
         instructions.update(systems);
 

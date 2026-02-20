@@ -28,9 +28,9 @@ public class Cheats {
     public void processInput(KeyHandler handler, GameplayContext context) {
         if (!enabled) return;
 
-        if (isPressed(handler, GOD)) {
+        if (handler.consumeAll(GOD)) {
             addAllItems(context);
-        } else if (isPressed(handler, GOW)) {
+        } else if (handler.consumeAll(GOW)) {
             warpToNextLevel(context);
         } else {
             reset();
@@ -63,16 +63,6 @@ public class Cheats {
         context.getLevel().complete();
 
         gowUsed = true;
-    }
-
-    private boolean isPressed(KeyHandler handler, int[] keySequence) {
-        for (int key : keySequence) {
-            if (!handler.isPressed(key)) {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     static final int[] GOD = {KeyEvent.VK_G, KeyEvent.VK_O, KeyEvent.VK_D};

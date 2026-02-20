@@ -29,11 +29,13 @@ class KeyHandlerTest {
     }
 
     @Test
-    void shouldClear() {
-        handler.keyPressed(create(KeyEvent.VK_SHIFT));
-        handler.clear();
+    void shouldConsumeKey() {
+        KeyEvent keyEvent = create(KeyEvent.VK_UP);
 
-        assertThat(handler.isAnyKeyPressed()).isFalse();
+        handler.keyPressed(keyEvent);
+
+        assertThat(handler.consume(KeyEvent.VK_UP)).isTrue();
+        assertThat(handler.consume(KeyEvent.VK_UP)).isFalse();
     }
 
     static Stream<Arguments> keys() {
@@ -43,8 +45,7 @@ class KeyHandlerTest {
                 Arguments.of(KeyEvent.VK_LEFT, (Function<KeyHandler, Boolean>) handler -> handler.getInput().left()),
                 Arguments.of(KeyEvent.VK_RIGHT, (Function<KeyHandler, Boolean>) handler -> handler.getInput().right()),
                 Arguments.of(KeyEvent.VK_ALT, (Function<KeyHandler, Boolean>) handler -> handler.getInput().fire()),
-                Arguments.of(KeyEvent.VK_CONTROL, (Function<KeyHandler, Boolean>) handler -> handler.getInput().jump()),
-                Arguments.of(KeyEvent.VK_SPACE, (Function<KeyHandler, Boolean>) KeyHandler::isAnyKeyPressed)
+                Arguments.of(KeyEvent.VK_CONTROL, (Function<KeyHandler, Boolean>) handler -> handler.getInput().jump())
         );
     }
 

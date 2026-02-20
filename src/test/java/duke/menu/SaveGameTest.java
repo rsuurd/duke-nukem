@@ -37,7 +37,7 @@ class SaveGameTest {
 
     @Test
     void shouldClose() {
-        when(systems.getKeyHandler().isAnyKeyPressed()).thenReturn(true);
+        when(systems.getKeyHandler().consumeAny()).thenReturn(true);
 
         saveGame.update(systems);
 

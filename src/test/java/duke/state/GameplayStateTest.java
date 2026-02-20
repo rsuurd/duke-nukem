@@ -2,6 +2,7 @@ package duke.state;
 
 import duke.GameSystems;
 import duke.GameSystemsFixture;
+import duke.dialog.Dialog;
 import duke.gameplay.*;
 import duke.gameplay.player.Player;
 import duke.gfx.Hud;
@@ -18,7 +19,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static java.awt.event.KeyEvent.VK_F1;
+import static java.awt.event.KeyEvent.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -37,7 +38,7 @@ class GameplayStateTest {
     private Collision collision;
 
     private GameSystems systems;
-    private GameplayContext gameplayContext;
+    private GameplayContext context;
 
     @Mock
     private Cheats cheats;
@@ -47,24 +48,24 @@ class GameplayStateTest {
     @BeforeEach
     void setUp() {
         systems = GameSystemsFixture.create();
-        gameplayContext = spy(GameplayContextFixture.create());
+        context = spy(GameplayContextFixture.create());
 
-        state = new GameplayState(levelManager, levelRenderer, viewport, hud, spriteRenderer, collision, gameplayContext, cheats);
+        state = new GameplayState(levelManager, levelRenderer, viewport, hud, spriteRenderer, collision, context, cheats);
     }
 
     @Test
     void shouldSwitchLevelOnStart() {
-        Player player = gameplayContext.getPlayer();
+        Player player = context.getPlayer();
 
         Level level = mock();
         when(levelManager.getNextLevel()).thenReturn(level);
         when(level.getDescriptor()).thenReturn(new LevelDescriptor(1, 0));
         when(player.getHealth()).thenReturn(mock());
-        when(gameplayContext.getViewportManager().getTarget()).thenReturn(player);
+        when(context.getViewportManager().getTarget()).thenReturn(player);
 
         state.start(systems);
 
-        verify(gameplayContext).switchLevel(level);
+        verify(context).switchLevel(level);
         verify(levelRenderer).setLevel(level);
         verify(viewport).center(player);
         verify(player.getHealth()).grantInvulnerability();
@@ -72,18 +73,18 @@ class GameplayStateTest {
 
     @Test
     void shouldSwitchLevelOnComplete() {
-        Player player = gameplayContext.getPlayer();
+        Player player = context.getPlayer();
 
         Level next = mock();
         when(next.getDescriptor()).thenReturn(new LevelDescriptor(2, 0));
-        when(gameplayContext.getLevel().isCompleted()).thenReturn(true);
+        when(context.getLevel().isCompleted()).thenReturn(true);
         when(levelManager.getNextLevel()).thenReturn(next);
         when(player.getHealth()).thenReturn(mock());
-        when(gameplayContext.getViewportManager().getTarget()).thenReturn(player);
+        when(context.getViewportManager().getTarget()).thenReturn(player);
 
         state.update(systems);
 
-        verify(gameplayContext).switchLevel(next);
+        verify(context).switchLevel(next);
         verify(levelRenderer).setLevel(next);
         verify(viewport).center(player);
         verify(player.getHealth()).grantInvulnerability();
@@ -93,17 +94,17 @@ class GameplayStateTest {
     void shouldUpdatePlayer() {
         state.update(systems);
 
-        Player player = gameplayContext.getPlayer();
+        Player player = context.getPlayer();
         verify(player).processInput(systems.getKeyHandler().getInput());
-        verify(player).update(gameplayContext);
-        verify(collision).resolve(player, gameplayContext);
-        verify(player).postMovement(gameplayContext);
+        verify(player).update(context);
+        verify(collision).resolve(player, context);
+        verify(player).postMovement(context);
     }
 
     @Test
     void shouldUpdateViewport() {
-        Player player = gameplayContext.getPlayer();
-        when(gameplayContext.getViewportManager().getTarget()).thenReturn(player);
+        Player player = context.getPlayer();
+        when(context.getViewportManager().getTarget()).thenReturn(player);
 
         state.update(systems);
 
@@ -112,9 +113,9 @@ class GameplayStateTest {
 
     @Test
     void shouldSnapViewportToCenter() {
-        Player player = gameplayContext.getPlayer();
-        when(gameplayContext.getViewportManager().pollSnapToCenter()).thenReturn(true);
-        when(gameplayContext.getViewportManager().getTarget()).thenReturn(player);
+        Player player = context.getPlayer();
+        when(context.getViewportManager().pollSnapToCenter()).thenReturn(true);
+        when(context.getViewportManager().getTarget()).thenReturn(player);
 
         state.update(systems);
 
@@ -125,21 +126,21 @@ class GameplayStateTest {
     void shouldUpdateActives() {
         state.update(systems);
 
-        verify(gameplayContext.getActiveManager()).update(gameplayContext);
+        verify(context.getActiveManager()).update(context);
     }
 
     @Test
     void shouldRender() {
-        when(gameplayContext.getScoreManager().getScore()).thenReturn(2430);
+        when(context.getScoreManager().getScore()).thenReturn(2430);
 
         state.render(systems);
 
-        Player player = gameplayContext.getPlayer();
+        Player player = context.getPlayer();
         verify(levelRenderer).render(systems.getRenderer(), viewport);
-        verify(gameplayContext.getActiveManager()).render(systems.getRenderer(), Layer.BACKGROUND);
+        verify(context.getActiveManager()).render(systems.getRenderer(), Layer.BACKGROUND);
         verify(spriteRenderer).render(systems.getRenderer(), player, player.getX(), player.getY());
-        verify(gameplayContext.getActiveManager()).render(systems.getRenderer(), Layer.FOREGROUND);
-        verify(gameplayContext.getActiveManager()).render(systems.getRenderer(), Layer.POST_PROCESS);
+        verify(context.getActiveManager()).render(systems.getRenderer(), Layer.FOREGROUND);
+        verify(context.getActiveManager()).render(systems.getRenderer(), Layer.POST_PROCESS);
         verify(hud).render(same(systems.getRenderer()), eq(2430), same(player), anyString());
     }
 
@@ -151,14 +152,14 @@ class GameplayStateTest {
 
         verify(systems.getDialogManager()).update(systems);
 
-        verifyNoInteractions(gameplayContext.getPlayer(), gameplayContext.getActiveManager(), gameplayContext.getBoltManager(), collision, viewport);
+        verifyNoInteractions(context.getPlayer(), context.getActiveManager(), context.getBoltManager(), collision, viewport);
     }
 
     @Test
     void shouldCheckForCheats() {
         state.update(systems);
 
-        verify(cheats).processInput(systems.getKeyHandler(), gameplayContext);
+        verify(cheats).processInput(systems.getKeyHandler(), context);
     }
 
     @Test
@@ -170,10 +171,33 @@ class GameplayStateTest {
 
     @Test
     void shouldOpenHelpMenu() {
-        when(systems.getKeyHandler().isPressed(VK_F1)).thenReturn(true);
+        when(systems.getKeyHandler().consume(VK_F1)).thenReturn(true);
 
         state.update(systems);
 
         verify(systems.getMenuManager()).open(isA(HelpMenu.class), same(systems));
+    }
+
+    @Test
+    void shouldToggleSound() {
+        when(systems.getKeyHandler().consume(VK_F1)).thenReturn(false);
+        when(systems.getKeyHandler().consume(VK_S)).thenReturn(true);
+
+        state.update(systems);
+
+        verify(context.getSoundManager()).toggle();
+        verify(systems.getDialogManager()).open(isA(Dialog.class));
+    }
+
+    @Test
+    void shouldToggleHints() {
+        when(systems.getKeyHandler().consume(VK_F1)).thenReturn(false);
+        when(systems.getKeyHandler().consume(VK_S)).thenReturn(false);
+        when(systems.getKeyHandler().consume(VK_H)).thenReturn(true);
+
+        state.update(systems);
+
+        verify(context.getHints()).toggle();
+        verify(systems.getDialogManager()).open(isA(Dialog.class));
     }
 }

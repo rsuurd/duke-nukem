@@ -36,7 +36,7 @@ class RestartTest {
 
     @Test
     void shouldConfirm() {
-        when(systems.getKeyHandler().isPressed(VK_Y)).thenReturn(true);
+        when(systems.getKeyHandler().consume(VK_Y)).thenReturn(true);
 
         restart.update(systems);
 
@@ -45,7 +45,7 @@ class RestartTest {
 
     @Test
     void shouldCloseOnAnyKey() {
-        when(systems.getKeyHandler().isAnyKeyPressed()).thenReturn(true);
+        when(systems.getKeyHandler().consumeAny()).thenReturn(true);
 
         restart.update(systems);
 

@@ -2,6 +2,7 @@ package duke.state;
 
 import duke.GameSystems;
 import duke.Renderer;
+import duke.dialog.Dialog;
 import duke.dialog.Hints;
 import duke.gameplay.*;
 import duke.gameplay.player.Player;
@@ -13,7 +14,8 @@ import duke.menu.MenuManager;
 import duke.resources.AssetManager;
 import duke.ui.KeyHandler;
 
-import static java.awt.event.KeyEvent.VK_F1;
+import static duke.level.Level.TILE_SIZE;
+import static java.awt.event.KeyEvent.*;
 
 // TODO refactor for testing, should have just a noargs constructor and construct everything on start like the other states
 public class GameplayState implements GameState {
@@ -80,7 +82,7 @@ public class GameplayState implements GameState {
 
     @Override
     public void update(GameSystems systems) {
-        updateHelpMenu(systems);
+        checkInput(systems);
 
         if (systems.getDialogManager().hasDialog()) {
             systems.getDialogManager().update(systems);
@@ -103,17 +105,42 @@ public class GameplayState implements GameState {
             switchLevel(levelManager.getNextLevel(), context);
         }
 
+    }
+
+    private void checkInput(GameSystems systems) {
+        updateHelpMenu(systems);
+        checkSoundToggle(systems);
+        checkHintsToggle(systems);
+        // speed buttons < >
         cheats.processInput(systems.getKeyHandler(), context);
     }
 
     private void updateHelpMenu(GameSystems systems) {
         MenuManager menuManager = systems.getMenuManager();
 
-        if (systems.getKeyHandler().isPressed(VK_F1)) {
+        if (systems.getKeyHandler().consume(VK_F1)) {
             menuManager.open(new HelpMenu(context), systems);
         }
 
         menuManager.update(systems);
+    }
+
+    private void checkSoundToggle(GameSystems systems) {
+        if (systems.getKeyHandler().consume(VK_S)) {
+            context.getSoundManager().toggle();
+            String status = context.getSoundManager().isEnabled() ? "on" : "off";
+
+            systems.getDialogManager().open(new Dialog("       Sound toggle\n\n     The sound is %s.".formatted(status), TILE_SIZE, 3 * TILE_SIZE, 3, 13, true, true));
+        }
+    }
+
+    private void checkHintsToggle(GameSystems systems) {
+        if (systems.getKeyHandler().consume(VK_H)) {
+            context.getHints().toggle();
+            String status = context.getHints().isEnabled() ? "on" : "off";
+
+            systems.getDialogManager().open(new Dialog("       Hint toggle\n\n       Hints are %s.".formatted(status), TILE_SIZE, 3 * TILE_SIZE, 3, 13, true, true));
+        }
     }
 
     private void updatePlayer(KeyHandler.Input input) {

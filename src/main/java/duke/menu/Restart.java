@@ -24,9 +24,9 @@ public class Restart implements Menu {
     public void update(GameSystems systems) {
         KeyHandler handler = systems.getKeyHandler();
 
-        if (handler.isPressed(VK_Y)) {
+        if (handler.consume(VK_Y)) {
             restart(systems);
-        } else if (handler.isAnyKeyPressed()) {
+        } else if (handler.consumeAny()) {
             close(systems);
         }
     }

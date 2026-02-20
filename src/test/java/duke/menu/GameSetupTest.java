@@ -8,7 +8,8 @@ import duke.gameplay.GameplayContextFixture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static java.awt.event.KeyEvent.*;
+import static java.awt.event.KeyEvent.VK_J;
+import static java.awt.event.KeyEvent.VK_K;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.*;
 
@@ -34,7 +35,7 @@ class GameSetupTest {
 
     @Test
     void shouldOpenJoystickMode() {
-        when(systems.getKeyHandler().getPressedKey()).thenReturn(VK_J);
+        when(systems.getKeyHandler().consume(VK_J)).thenReturn(true);
 
         gameSetup.update(systems);
 
@@ -43,30 +44,10 @@ class GameSetupTest {
 
     @Test
     void shouldOpenKeyboardMode() {
-        when(systems.getKeyHandler().getPressedKey()).thenReturn(VK_K);
+        when(systems.getKeyHandler().consume(VK_K)).thenReturn(true);
 
         gameSetup.update(systems);
 
         verify(systems.getDialogManager(), never()).open(isA(Dialog.class));
-    }
-
-    @Test
-    void shouldToggleSound() {
-        when(systems.getKeyHandler().getPressedKey()).thenReturn(VK_S);
-
-        gameSetup.update(systems);
-
-        verify(context.getSoundManager()).toggle();
-        verify(systems.getDialogManager()).open(isA(Dialog.class));
-    }
-
-    @Test
-    void shouldToggleHints() {
-        when(systems.getKeyHandler().getPressedKey()).thenReturn(VK_H);
-
-        gameSetup.update(systems);
-
-        verify(context.getHints()).toggle();
-        verify(systems.getDialogManager()).open(isA(Dialog.class));
     }
 }

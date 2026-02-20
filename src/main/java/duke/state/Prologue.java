@@ -48,7 +48,7 @@ public class Prologue implements GameState {
             systems.getDialogManager().open(dialog);
         }
 
-        if (systems.getKeyHandler().isAnyKeyPressed()) {
+        if (systems.getKeyHandler().consumeAny()) {
             if (hasNextChapter()) {
                 palette.fadeOut();
             } else {

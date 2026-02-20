@@ -4,6 +4,7 @@ import duke.GameSystems;
 import duke.Renderer;
 import duke.dialog.Dialog;
 import duke.gfx.Sprite;
+import duke.ui.KeyHandler;
 
 import static java.awt.event.KeyEvent.VK_S;
 
@@ -18,7 +19,8 @@ public class TitleScreen implements GameState {
 
     @Override
     public void update(GameSystems systems) {
-        if (systems.getKeyHandler().isAnyKeyPressed() && !systems.getDialogManager().hasDialog()) {
+        KeyHandler handler = systems.getKeyHandler();
+        if (handler.consumeAny() && !systems.getDialogManager().hasDialog()) {
             systems.getDialogManager().open(DIALOG);
         } else {
             // state transition requested, but only execute once faded out
@@ -27,9 +29,8 @@ public class TitleScreen implements GameState {
                     systems.requestState(next);
                 }
             } else {
-                switch (systems.getKeyHandler().getPressedKey()) {
-                    case VK_S -> fadeToState(systems, new Prologue());
-                    // other keystrokes
+                if (handler.consume(VK_S)) {
+                    fadeToState(systems, new Prologue());
                 }
             }
         }
