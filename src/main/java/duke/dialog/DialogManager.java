@@ -28,7 +28,7 @@ public class DialogManager {
     }
 
     public void render(Renderer renderer) {
-        Iterator<Dialog> iterator = dialogs.iterator();
+        Iterator<Dialog> iterator = dialogs.descendingIterator();
 
         while (iterator.hasNext()) {
             Dialog dialog = iterator.next();
@@ -92,7 +92,7 @@ public class DialogManager {
     public void update(GameSystems systems) {
         if (dialogs.isEmpty()) return;
 
-        Dialog dialog = dialogs.getLast();
+        Dialog dialog = dialogs.getFirst();
 
         if (dialog.closeOnEnter() && systems.getKeyHandler().isPressed(VK_ENTER)) {
             close();

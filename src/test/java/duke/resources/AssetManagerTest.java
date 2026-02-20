@@ -28,6 +28,9 @@ class AssetManagerTest {
     @Mock
     private SoundLoader soundLoader;
 
+    @Mock
+    private HighScoreLoader highScoreLoader;
+
     private AssetManager assetManager;
 
     @BeforeEach
@@ -35,6 +38,7 @@ class AssetManagerTest {
         when(resourceLoader.getSpriteLoader()).thenReturn(spriteLoader);
         when(resourceLoader.getLevelLoader()).thenReturn(levelLoader);
         when(resourceLoader.getSoundLoader()).thenReturn(soundLoader);
+        when(resourceLoader.getHighScoreLoader()).thenReturn(highScoreLoader);
 
         assetManager = new AssetManager(resourceLoader);
     }
@@ -113,5 +117,12 @@ class AssetManagerTest {
         assetManager.load();
 
         verify(soundLoader).readSounds();
+    }
+
+    @Test
+    void shouldLoadHighScores() {
+        assetManager.getHighScores();
+
+        verify(resourceLoader.getHighScoreLoader()).load();
     }
 }

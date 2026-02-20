@@ -28,6 +28,9 @@ class ResourceLoaderTest {
     @Mock
     private SoundLoader soundLoader;
 
+    @Mock
+    private HighScoreLoader highScoreLoader;
+
     private ResourceLoader createResourceLoader() {
         try {
             return createResourceLoader(Files.createTempDirectory("dn"));
@@ -37,7 +40,7 @@ class ResourceLoaderTest {
     }
 
     private ResourceLoader createResourceLoader(Path path) {
-        return new ResourceLoader(path, downloader, spriteLoader, levelLoader, soundLoader);
+        return new ResourceLoader(path, downloader, spriteLoader, levelLoader, soundLoader, highScoreLoader);
     }
 
     @Test
@@ -70,5 +73,10 @@ class ResourceLoaderTest {
     @Test
     void shouldReturnSoundLoader() {
         assertThat(createResourceLoader().getSoundLoader()).isSameAs(soundLoader);
+    }
+
+    @Test
+    void shouldReturnHighScoreLoader() {
+        assertThat(createResourceLoader().getHighScoreLoader()).isSameAs(highScoreLoader);
     }
 }
