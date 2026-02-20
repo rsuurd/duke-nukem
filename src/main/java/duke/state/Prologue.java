@@ -47,7 +47,7 @@ public class Prologue implements GameState {
                 palette.fadeOut();
             } else {
                 systems.getDialogManager().close();
-                systems.getStateRequester().requestState(new GameplayState(systems, new Cheats(true)));
+                systems.getStateRequester().requestState(new GameplayState(systems, new Cheats(true)), StateRequester.Transition.FADE_TO_WHITE);
             }
         }
     }

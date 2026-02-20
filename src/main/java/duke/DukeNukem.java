@@ -72,7 +72,6 @@ public class DukeNukem {
         GameLoop gameLoop = new GameLoop(systems, stateManager);
         DukeNukem dukeNukem = new DukeNukem(gameLoop);
         systems.getStateRequester().requestState(new TitleScreen(), StateRequester.Transition.NONE);
-//        GameplayState state = new GameplayState(systems, new Cheats(gameParameters.asp()));
         dukeNukem.start();
 
         frame.addWindowListener(new WindowAdapter() {

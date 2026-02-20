@@ -25,7 +25,8 @@ public class FadingStateRequester implements StateRequester {
         this.transition = transition;
 
         switch (transition) {
-            case FADE_OUT -> palette.fadeOut();
+            case FADE_TO_BLACK -> palette.fadeOut();
+            case FADE_TO_WHITE -> palette.fadeToWhite();
         }
     }
 
@@ -34,9 +35,9 @@ public class FadingStateRequester implements StateRequester {
 
         switch (transition) {
             case NONE -> setNextState(systems);
-            case FADE_OUT -> fadeOut(systems);
+            case FADE_TO_BLACK -> fadeToBlack(systems);
+            case FADE_TO_WHITE -> fadeToWhite(systems);
         }
-
     }
 
     private void setNextState(GameSystems systems) {
@@ -45,11 +46,23 @@ public class FadingStateRequester implements StateRequester {
         next = null;
     }
 
-    private void fadeOut(GameSystems systems) {
+    private void fadeToBlack(GameSystems systems) {
         if (palette.isFadedBack()) {
             manager.set(next, systems);
 
             palette.fadeIn();
+        }
+
+        if (palette.isFadedIn()) {
+            next = null;
+        }
+    }
+
+    private void fadeToWhite(GameSystems systems) {
+        if (palette.isFadedWhite()) {
+            manager.set(next, systems);
+
+            palette.fadeFromWhite();
         }
 
         if (palette.isFadedIn()) {
