@@ -8,9 +8,23 @@ import static duke.level.Level.TILE_SIZE;
 import static java.awt.event.KeyEvent.*;
 
 public class GameSetup implements Menu {
+    private int x;
+
+    public GameSetup(int x) {
+        this.x = x;
+    }
+
     @Override
     public void open(GameSystems systems) {
-        systems.getDialogManager().open(GAME_SETUP);
+        systems.getDialogManager().open(new Dialog("""
+
+                      GAME SETUP
+
+                    J)oystick mode
+                    K)eyboard mode
+                    S)ound toggle
+                    H)int toggle
+                """, x, 2 * TILE_SIZE, 5, 13, true, false));
     }
 
     @Override
@@ -20,32 +34,34 @@ public class GameSetup implements Menu {
         if (handler.consume(VK_J)) {
             openJoystickMode(systems);
         } else if (handler.consume(VK_K)) {
-            // openKeyboardMode(systems);
+            openKeyboardMode(systems);
         } else if (handler.consumeAll(VK_ESCAPE)) {
             systems.getMenuManager().closeAll(systems);
         }
     }
 
     private void openJoystickMode(GameSystems systems) {
-        systems.getDialogManager().open(JOYSTICK_MODE);
+        systems.getDialogManager().open(new Dialog("""
+                     Joystick mode
+
+                Sorry, joystick support
+                is not yet implemented.
+                """, x, 3 * TILE_SIZE, 4, 13, true, false));
     }
 
-    // TODO these can be triggered from outside the menu as well, so should probably just delegate to context
+    private void openKeyboardMode(GameSystems systems) {
+        systems.getDialogManager().open(new Dialog("""
+                     KEYBOARD MODE
 
-    private static final Dialog GAME_SETUP = new Dialog("""
-            
-                  GAME SETUP
-            
-                J)oystick mode
-                K)eyboard mode
-                S)ound toggle
-                H)int toggle
-            """, TILE_SIZE, 2 * TILE_SIZE, 5, 13, true, false);
+                  1.  Up     :
+                  2.  Down   :
+                  3.  Left   :
+                  4.  Right  :
+                  5.  Fire   :
+                  6.  Jump   :
 
-    private static final Dialog JOYSTICK_MODE = new Dialog("""
-                 Joystick mode
-            
-            Sorry, joystick support
-            is not yet implemented.
-            """, TILE_SIZE, 3 * TILE_SIZE, 4, 13, true, false);
+                Sorry, changing keys
+                is not yet implemented.
+                """, x, 3 * TILE_SIZE, 8, 13, true, false));
+    }
 }

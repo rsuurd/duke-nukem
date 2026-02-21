@@ -3,15 +3,14 @@ package duke.menu;
 import duke.GameSystems;
 import duke.GameSystemsFixture;
 import duke.dialog.Dialog;
-import duke.gameplay.GameplayContext;
-import duke.gameplay.GameplayContextFixture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static java.awt.event.KeyEvent.VK_J;
 import static java.awt.event.KeyEvent.VK_K;
 import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class GameSetupTest {
     private GameSystems systems;
@@ -21,7 +20,7 @@ class GameSetupTest {
     void create() {
         systems = GameSystemsFixture.create();
 
-        gameSetup = new GameSetup();
+        gameSetup = new GameSetup(0);
     }
 
     @Test
@@ -46,6 +45,6 @@ class GameSetupTest {
 
         gameSetup.update(systems);
 
-        verify(systems.getDialogManager(), never()).open(isA(Dialog.class));
+        verify(systems.getDialogManager()).open(isA(Dialog.class));
     }
 }

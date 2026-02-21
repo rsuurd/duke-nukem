@@ -22,7 +22,7 @@ class HighScoresTest {
 
     @BeforeEach
     void createInstructions() {
-        highScores = new HighScores();
+        highScores = new HighScores(0);
 
         systems = GameSystemsFixture.create();
     }

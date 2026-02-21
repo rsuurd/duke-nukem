@@ -4,6 +4,7 @@ import duke.GameSystems;
 import duke.dialog.Dialog;
 import duke.state.Credits;
 import duke.state.Prologue;
+import duke.state.TextPages;
 import duke.ui.KeyHandler;
 
 import static java.awt.event.KeyEvent.*;
@@ -22,8 +23,16 @@ public class MainMenu implements Menu {
             startNewGame(systems);
         }
 
+        if (keys.consume(VK_R)) {
+            restoreGame(systems);
+        }
+
         if (keys.consume(VK_I)) {
             showInstructions(systems);
+        }
+
+        if (keys.consume(VK_O)) {
+            showOrderingInformation(systems);
         }
 
         if (keys.consume(VK_G)) {
@@ -47,17 +56,24 @@ public class MainMenu implements Menu {
         systems.getStateRequester().requestState(new Prologue());
     }
 
+    private void restoreGame(GameSystems systems) {
+        systems.getMenuManager().open(new RestoreGame(), systems);
+    }
+
     private void showInstructions(GameSystems systems) {
-        // NOTE this shows "the story" instead
-        systems.getMenuManager().open(new Instructions(), systems);
+        systems.getStateRequester().requestState(new TextPages("instructions"));
+    }
+
+    private void showOrderingInformation(GameSystems systems) {
+        systems.getStateRequester().requestState(new TextPages("ordering-information"));
     }
 
     private void showGameSetup(GameSystems systems) {
-        systems.getMenuManager().open(new GameSetup(), systems);
+        systems.getMenuManager().open(new GameSetup(MAIN_MENU_X), systems);
     }
 
     private void showHighScores(GameSystems systems) {
-        systems.getMenuManager().open(new HighScores(), systems);
+        systems.getMenuManager().open(new HighScores(MAIN_MENU_X), systems);
     }
 
     private void showTitleScreen(GameSystems systems) {
@@ -67,6 +83,8 @@ public class MainMenu implements Menu {
     private void showCredits(GameSystems systems) {
         systems.getStateRequester().requestState(new Credits());
     }
+
+    static final int MAIN_MENU_X = 56;
 
     private static final Dialog DIALOG = new Dialog("""
             
@@ -84,5 +102,7 @@ public class MainMenu implements Menu {
               T)itle screen
               C)redits
               Q)uit to DOS
-            """, 56, 32, 9, 13, false, false);
+            """, MAIN_MENU_X, 32, 9, 13, false, false);
+
+
 }

@@ -29,9 +29,9 @@ public class HelpMenu implements Menu {
         } else if (keys.consume(VK_I)) {
             open(new Instructions(), systems);
         } else if (keys.consume(VK_G)) {
-            open(new GameSetup(), systems);
+            open(new GameSetup(TILE_SIZE), systems);
         } else if (keys.consume(VK_H)) {
-            open(new HighScores(), systems);
+            open(new HighScores(TILE_SIZE), systems);
         } else if (keys.consume(VK_F10)) {
             open(new Confirmation(TILE_SIZE, TILE_SIZE, """
                 Are you sure you want to

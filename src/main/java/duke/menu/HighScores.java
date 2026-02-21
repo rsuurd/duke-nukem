@@ -9,6 +9,12 @@ import java.util.List;
 import static duke.level.Level.TILE_SIZE;
 
 public class HighScores implements Menu {
+    private int x;
+
+    public HighScores(int x) {
+        this.x = x;
+    }
+
     @Override
     public void open(GameSystems systems) {
         List<HighScoreLoader.HighScore> highScores = systems.getAssets().getHighScores();
@@ -32,7 +38,7 @@ public class HighScores implements Menu {
             builder.append(String.format(" %d.  %-7d %s\n\n", i + 1, entry.score(), entry.name()));
         }
 
-        return new Dialog(builder.toString(), TILE_SIZE, TILE_SIZE, 10, 13, true, false);
+        return new Dialog(builder.toString(), x, TILE_SIZE, 10, 13, true, false);
     }
 
     private static final int MAX_HIGH_SCORES = 8;
