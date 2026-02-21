@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
@@ -45,7 +46,7 @@ class FadingStateRequesterTest {
 
         verify(palette).fadeOut();
 
-        when(palette.isFadedBack()).thenReturn(true);
+        when(palette.isFadedBlack()).thenReturn(true);
 
         requester.update(systems);
 
@@ -73,5 +74,14 @@ class FadingStateRequesterTest {
             requester.requestState(next);
             requester.requestState(next);
         }).isInstanceOf(IllegalStateException.class).hasMessage("Already requesting a state change");
+    }
+
+    @Test
+    void shouldIndicateWhenTransitioning() {
+        assertThat(requester.isTransitioning()).isFalse();
+
+        requester.requestState(next);
+
+        assertThat(requester.isTransitioning()).isTrue();
     }
 }

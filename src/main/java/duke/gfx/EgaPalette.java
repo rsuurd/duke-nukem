@@ -62,6 +62,8 @@ public class EgaPalette {
     private void increaseBrightness() {
         if (brightness < MAX_BRIGHTNESS) {
             brightness++;
+
+            // if (brightness == MAX_BRIGHTNESS) reset() else rebuild();
             rebuildColorModel();
         }
     }
@@ -69,6 +71,8 @@ public class EgaPalette {
     private void decreaseBrightness() {
         if (brightness > 0) {
             brightness--;
+
+            // brightness == 0 reset(); else rebuild();
             rebuildColorModel();
         }
     }
@@ -84,7 +88,7 @@ public class EgaPalette {
         rebuildColorModel();
     }
 
-    public boolean isFadedBack() {
+    public boolean isFadedBlack() {
         return switch (mode) {
             case NONE, FADE_TO_BLACK, FADE_FROM_BLACK -> brightness == 0;
             default -> false;

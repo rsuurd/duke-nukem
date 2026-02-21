@@ -3,68 +3,48 @@ package duke.state;
 import duke.GameSystems;
 import duke.dialog.Dialog;
 import duke.gameplay.Cheats;
-import duke.gfx.EgaPalette;
 import duke.gfx.Sprite;
+import duke.state.storyboard.Panel;
+import duke.state.storyboard.Storyboard;
+import duke.state.storyboard.StoryboardHandler;
 
 import java.util.List;
 
 public class Prologue implements GameState {
-    private int chapter;
+    private StoryboardHandler storyboardHandler;
 
-    private Sprite drProton;
-    private Sprite duke;
-    private Dialog dialog;
+    public Prologue() {
+    }
+
+    Prologue(StoryboardHandler storyboardHandler) {
+        this.storyboardHandler = storyboardHandler;
+    }
 
     @Override
     public void start(GameSystems systems) {
-        chapter = 0;
+        Storyboard storyboard = createStoryboard(systems);
+        GameplayState next = new GameplayState(systems, new Cheats(true));
 
-        drProton = systems.getAssets().getImage("BADGUY");
-        duke = systems.getAssets().getImage("DUKE");
-
-        systems.getPalette().blackout();
+        storyboardHandler = new StoryboardHandler(storyboard, next, StateRequester.Transition.FADE_TO_WHITE);
     }
 
     @Override
     public void update(GameSystems systems) {
-        EgaPalette palette = systems.getPalette();
-
-        if (palette.isFadedBack()) {
-            systems.getDialogManager().close();
-
-            if (hasNextChapter()) {
-                palette.fadeIn();
-                dialog = STORY.get(chapter++);
-            }
-        }
-
-        if (palette.isFadedIn() && !systems.getDialogManager().hasDialog()) {
-            systems.getDialogManager().open(dialog);
-        }
-
-        if (systems.getKeyHandler().consumeAny()) {
-            if (hasNextChapter()) {
-                palette.fadeOut();
-            } else {
-                systems.getDialogManager().close();
-                systems.getStateRequester().requestState(new GameplayState(systems, new Cheats(true)), StateRequester.Transition.FADE_TO_WHITE);
-            }
-        }
-    }
-
-    private boolean hasNextChapter() {
-        return chapter < STORY.size();
+        storyboardHandler.update(systems);
     }
 
     @Override
     public void render(GameSystems systems) {
-        // should probably get background from the story, but we just have 2 storyboards
-        systems.getRenderer().draw(chapter == 1 ? drProton : duke, 0, 0);
-        systems.getDialogManager().render(systems.getRenderer());
+        storyboardHandler.render(systems);
     }
 
-    private static final List<Dialog> STORY = List.of(
-            new Dialog("So you're the pitiful\nhero they sent to stop\nme.  I, Dr. Proton, will\nsoon rule the world!", 16, 144, 3, 13, true, false),
-            new Dialog("You're wrong, Proton\nbreath.  I'll be done\nwith you and still have\ntime to watch Oprah!", 112, 144, 3, 13, true, false)
-    );
+    private Storyboard createStoryboard(GameSystems systems) {
+        Sprite badGuy = systems.getAssets().getImage("BADGUY");
+        Sprite duke = systems.getAssets().getImage("DUKE");
+
+        return new Storyboard(List.of(
+                new Panel(badGuy, new Dialog("So you're the pitiful\nhero they sent to stop\nme.  I, Dr. Proton, will\nsoon rule the world!", 16, 144, 3, 13, true, false)),
+                new Panel(duke, new Dialog("You're wrong, Proton\nbreath.  I'll be done\nwith you and still have\ntime to watch Oprah!", 112, 144, 3, 13, true, false))
+        ));
+    }
 }

@@ -23,7 +23,7 @@ public class LevelManager {
     }
 
     public Level getNextLevel() {
-        if (!levelIterator.hasNext()) throw new DukeNukemException("No more levels to beat");
+        if (isLast()) throw new DukeNukemException("No more levels to beat");
 
         return assets.getLevel(levelIterator.next());
     }
@@ -32,6 +32,10 @@ public class LevelManager {
         levelIterator = levels.stream().skip(number - 1).iterator();
 
         return assets.getLevel(levelIterator.next());
+    }
+
+    public boolean isLast() {
+        return !levelIterator.hasNext();
     }
 
     // TODO move to properties file or EpisodeDescriptor later

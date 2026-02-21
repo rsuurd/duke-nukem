@@ -28,7 +28,7 @@ class IntroductionTest {
 
     @Test
     void shouldShowInitialDialog() {
-        when(systems.getPalette().isFadedBack()).thenReturn(true);
+        when(systems.getPalette().isFadedBlack()).thenReturn(true);
 
         introduction.update(systems);
 
@@ -38,7 +38,7 @@ class IntroductionTest {
 
     @Test
     void shouldFadeOutOnceCountDownReachesZero() {
-        when(systems.getPalette().isFadedBack()).thenReturn(true, false);
+        when(systems.getPalette().isFadedBlack()).thenReturn(true, false);
         when(systems.getPalette().isFadedIn()).thenReturn(true);
 
         for (int i = COUNTDOWN; i >= 0; i--) {
@@ -50,7 +50,7 @@ class IntroductionTest {
 
     @Test
     void shouldShowSecondDialog() {
-        when(systems.getPalette().isFadedBack()).thenReturn(true);
+        when(systems.getPalette().isFadedBlack()).thenReturn(true);
 
         introduction.update(systems);
         reset(systems.getDialogManager());
@@ -62,7 +62,7 @@ class IntroductionTest {
 
     @Test
     void shouldTransitionToTitleScreen() {
-        when(systems.getPalette().isFadedBack()).thenReturn(true);
+        when(systems.getPalette().isFadedBlack()).thenReturn(true);
 
         introduction.update(systems);
         introduction.update(systems);

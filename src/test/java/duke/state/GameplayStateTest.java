@@ -91,6 +91,27 @@ class GameplayStateTest {
     }
 
     @Test
+    void shouldTransitionToEndWhenLastLevelComplete() {
+        when(context.getLevel().isCompleted()).thenReturn(true);
+        when(levelManager.isLast()).thenReturn(true);
+
+        state.update(systems);
+
+        verify(systems.getStateRequester()).requestState(isA(End.class));
+    }
+
+    @Test
+    void shouldNotTransitionToEndWhenAlreadyTransitioning() {
+        when(context.getLevel().isCompleted()).thenReturn(true);
+        when(levelManager.isLast()).thenReturn(true);
+        when(systems.getStateRequester().isTransitioning()).thenReturn(true);
+
+        state.update(systems);
+
+        verify(systems.getStateRequester(), never()).requestState(isA(End.class));
+    }
+
+    @Test
     void shouldUpdatePlayer() {
         state.update(systems);
 

@@ -13,5 +13,6 @@ public interface GameState {
     }
 
     default void stop(GameSystems systems) {
+        systems.getMenuManager().closeAll(systems);
     }
 }

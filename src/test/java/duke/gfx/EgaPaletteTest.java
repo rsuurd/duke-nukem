@@ -47,13 +47,13 @@ class EgaPaletteTest {
         egaPalette.fadeOut();
 
         egaPalette.update();
-        assertThat(egaPalette.isFadedBack()).isFalse();
+        assertThat(egaPalette.isFadedBlack()).isFalse();
         egaPalette.update();
-        assertThat(egaPalette.isFadedBack()).isFalse();
+        assertThat(egaPalette.isFadedBlack()).isFalse();
         egaPalette.update();
-        assertThat(egaPalette.isFadedBack()).isFalse();
+        assertThat(egaPalette.isFadedBlack()).isFalse();
         egaPalette.update();
-        assertThat(egaPalette.isFadedBack()).isTrue();
+        assertThat(egaPalette.isFadedBlack()).isTrue();
     }
 
     @Test

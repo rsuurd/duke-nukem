@@ -16,8 +16,13 @@ public class FadingStateRequester implements StateRequester {
     }
 
     @Override
+    public boolean isTransitioning() {
+        return next != null;
+    }
+
+    @Override
     public void requestState(GameState state, Transition transition) {
-        if (next != null) {
+        if (isTransitioning()) {
             throw new IllegalStateException("Already requesting a state change");
         }
 
@@ -47,7 +52,7 @@ public class FadingStateRequester implements StateRequester {
     }
 
     private void fadeToBlack(GameSystems systems) {
-        if (palette.isFadedBack()) {
+        if (palette.isFadedBlack()) {
             manager.set(next, systems);
 
             palette.fadeIn();

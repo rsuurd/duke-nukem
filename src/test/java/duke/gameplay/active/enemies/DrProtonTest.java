@@ -14,7 +14,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static duke.level.Level.TILE_SIZE;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -66,12 +65,12 @@ class DrProtonTest {
     }
 
     @Test
-    void shouldCutToEndingWhenEscaped() {
-        boss.onDestroyed(context); // trigger escape
+    void shouldCompleteLevelWhenEscaped() {
+        boss.onDestroyed(context);
 
         boss.update(context);
 
-        verify(context.getDialogManager()).open(any());
+        verify(context.getLevel()).complete();
         verifyNoInteractions(behavior);
     }
 

@@ -11,6 +11,8 @@ public interface StateRequester {
 
     void update(GameSystems systems);
 
+    boolean isTransitioning();
+
     enum Transition {
         NONE,
         FADE_TO_BLACK,

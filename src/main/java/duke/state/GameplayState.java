@@ -101,10 +101,7 @@ public class GameplayState implements GameState {
         context.getBoltManager().update(context);
         context.getActiveManager().update(context);
 
-        if (context.getLevel().isCompleted()) {
-            switchLevel(levelManager.getNextLevel(), context);
-        }
-
+        checkLevelComplete(systems);
     }
 
     private void checkInput(GameSystems systems) {
@@ -150,6 +147,18 @@ public class GameplayState implements GameState {
         player.update(context);
         collision.resolve(player, context);
         player.postMovement(context);
+    }
+
+    private void checkLevelComplete(GameSystems systems) {
+        if (context.getLevel().isCompleted()) {
+            if (levelManager.isLast()) {
+                if (!systems.getStateRequester().isTransitioning()) {
+                    systems.getStateRequester().requestState(new End());
+                }
+            } else {
+                switchLevel(levelManager.getNextLevel(), context);
+            }
+        }
     }
 
     @Override

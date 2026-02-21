@@ -1,7 +1,6 @@
 package duke.gameplay.active.enemies;
 
 import duke.Renderer;
-import duke.dialog.Dialog;
 import duke.gameplay.Facing;
 import duke.gameplay.GameplayContext;
 import duke.gameplay.Health;
@@ -44,10 +43,7 @@ public class DrProton extends Enemy implements Physics, Renderable, Wakeable {
     public void update(GameplayContext context) {
         if (escaping) {
             if (getY() <= 0) {
-                // TODO implement EndingCinematic. This is a placeholder dialog.
-                context.getDialogManager().open(
-                        new Dialog("        The End\n\n Show ending cinematic.", TILE_SIZE, 3 * TILE_SIZE, 3, 13, false, false)
-                );
+                context.getLevel().complete();
             }
         } else {
             super.update(context);

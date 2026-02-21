@@ -6,6 +6,7 @@ import java.util.Arrays;
 
 import static java.awt.event.KeyEvent.*;
 
+// reword edge detection a bit better
 public class KeyHandler extends KeyAdapter {
     private boolean[] pressedKeys;
 
