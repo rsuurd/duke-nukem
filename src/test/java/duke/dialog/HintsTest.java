@@ -5,6 +5,8 @@ import duke.gameplay.GameplayContextFixture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Set;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -55,5 +57,22 @@ class HintsTest {
 
         hints.toggle();
         assertThat(hints.isEnabled()).isTrue();
+    }
+
+    @Test
+    void shouldIndicateHintAvailable() {
+        assertThat(hints.isHintAvailable(Hints.Hint.SODA)).isTrue();
+
+        hints.showHint(Hints.Hint.SODA, context);
+
+        assertThat(hints.isHintAvailable(Hints.Hint.SODA)).isFalse();
+    }
+    
+    @Test
+    void shouldSetAvailableHints() {
+        hints.setAvailableHints(Set.of(Hints.Hint.SODA));
+
+        assertThat(hints.isHintAvailable(Hints.Hint.SODA)).isTrue();
+        assertThat(hints.isHintAvailable(Hints.Hint.TURKEY)).isFalse();
     }
 }

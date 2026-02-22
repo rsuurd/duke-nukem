@@ -24,8 +24,12 @@ public class Weapon {
         return firepower;
     }
 
+    public void setFirepower(int firepower) {
+        this.firepower = Math.min(firepower, MAX_FIREPOWER);
+    }
+
     public void increaseFirepower() {
-        firepower = Math.min(firepower + 1, MAX_FIREPOWER);
+        setFirepower(firepower + 1);
     }
 
     public boolean isTriggered() {

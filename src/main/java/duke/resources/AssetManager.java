@@ -1,5 +1,6 @@
 package duke.resources;
 
+import duke.gameplay.SaveGame;
 import duke.gfx.Sprite;
 import duke.level.Level;
 import duke.level.LevelBuilder;
@@ -108,6 +109,14 @@ public class AssetManager {
 
     public List<HighScoreLoader.HighScore> getHighScores() {
         return resourceLoader.getHighScoreLoader().load();
+    }
+
+    public SaveGame loadGame(char slot) {
+        return resourceLoader.getSaveGameLoader().load(slot);
+    }
+
+    public void saveGame(SaveGame saveGame, char slot) {
+        resourceLoader.getSaveGameLoader().save(saveGame, slot);
     }
 
     private enum Category {

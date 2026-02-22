@@ -6,7 +6,10 @@ import duke.gfx.Font;
 import duke.gfx.Sprite;
 import duke.resources.AssetManager;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.Iterator;
+import java.util.List;
 
 import static duke.level.Level.HALF_TILE_SIZE;
 import static duke.level.Level.TILE_SIZE;

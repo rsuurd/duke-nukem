@@ -39,7 +39,7 @@ class LevelRendererTest {
 
     @BeforeEach
     void setup() {
-        when(level.getDescriptor()).thenReturn(new LevelDescriptor(1, 0, 2, null));
+        when(level.getDescriptor()).thenReturn(new LevelDescriptor(0, 1, 0, 2, null));
     }
 
     @Test

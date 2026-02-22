@@ -3,75 +3,97 @@ package duke.state;
 import duke.GameSystems;
 import duke.Renderer;
 import duke.dialog.Dialog;
-import duke.dialog.Hints;
 import duke.gameplay.*;
+import duke.gameplay.player.Inventory;
 import duke.gameplay.player.Player;
 import duke.gfx.*;
 import duke.level.Level;
 import duke.level.LevelManager;
 import duke.menu.HelpMenu;
 import duke.menu.MenuManager;
-import duke.resources.AssetManager;
 import duke.ui.KeyHandler;
 
 import static duke.level.Level.TILE_SIZE;
 import static java.awt.event.KeyEvent.*;
 
-// TODO refactor for testing, should have just a noargs constructor and construct everything on start like the other states
 public class GameplayState implements GameState {
+    private GameplayRuntimeFactory runtimeFactory;
+
+    private SaveGame saveGame;
+
     private LevelManager levelManager;
-    private LevelRenderer levelRenderer;
     private Viewport viewport;
-    private Hud hud;
-    private SpriteRenderer spriteRenderer;
     private Collision collision;
     private GameplayContext context;
+
+    private LevelRenderer levelRenderer;
+    private SpriteRenderer spriteRenderer;
+    private Hud hud;
+
     private Cheats cheats;
 
-    // TODO fix construction
-    public GameplayState(GameSystems systems, Cheats cheats) {
-        AssetManager assets = systems.getAssets();
-
-        levelManager = new LevelManager(assets);
-        levelRenderer = new LevelRenderer(assets, null);
-
-        viewport = new Viewport();
-        hud = new Hud(assets, new Font(assets));
-        spriteRenderer = new SpriteRenderer(assets);
-        collision = new Collision();
-
-        context = createGameplayContext(systems);
-
-        this.cheats = cheats;
+    public GameplayState() {
+        this(null);
     }
 
-    private GameplayContext createGameplayContext(GameSystems systems) {
-        BoltManager boltManager = new BoltManager(viewport, spriteRenderer);
-        ActiveManager activeManager = new ActiveManager(viewport, collision, spriteRenderer);
-        ScoreManager scoreManager = new ScoreManager(activeManager);
-        BonusTracker bonusTracker = new BonusTracker();
-        Player player = new Player();
-        ViewportManager viewportManager = new ViewportManager(player, true);
-
-        return new GameplayContext(player, null, boltManager, activeManager, systems.getSoundManager(), scoreManager, bonusTracker, systems.getDialogManager(), new Hints(), viewportManager);
+    public GameplayState(SaveGame saveGame) {
+        this(new GameplayRuntimeFactory(), saveGame);
     }
 
-    GameplayState(LevelManager levelManager, LevelRenderer levelRenderer, Viewport viewport, Hud hud, SpriteRenderer spriteRenderer, Collision collision, GameplayContext context, Cheats cheats) {
-        this.levelManager = levelManager;
-        this.levelRenderer = levelRenderer;
-        this.viewport = viewport;
-        this.hud = hud;
-        this.spriteRenderer = spriteRenderer;
-        this.collision = collision;
-        this.context = context;
-        this.cheats = cheats;
+    public GameplayState(GameplayRuntimeFactory factory, SaveGame saveGame) {
+        this.runtimeFactory = factory;
+
+        this.saveGame = saveGame;
     }
 
     @Override
     public void start(GameSystems systems) {
-//        Level level = levelManager.warpTo(19);
+        initializeRuntime(systems);
+
+        if (saveGame == null) {
+            startNewGame();
+        } else {
+            resumeGame();
+        }
+    }
+
+    private void initializeRuntime(GameSystems systems) {
+        GameplayRuntimeFactory.GameplayRuntime runtime = runtimeFactory.createRuntime(systems);
+
+        levelManager = runtime.levelManager();
+        viewport = runtime.viewport();
+        collision = runtime.collision();
+        context = runtime.context();
+
+        levelRenderer = new LevelRenderer(systems.getAssets(), null);
+        spriteRenderer = new SpriteRenderer(systems.getAssets());
+        hud = new Hud(systems.getAssets(), new Font(systems.getAssets()));
+
+        cheats = new Cheats(true); // systems.getParameters().asp();
+    }
+
+    private void startNewGame() {
         Level level = levelManager.getNextLevel();
         switchLevel(level, context);
+    }
+
+    private void resumeGame() {
+        Level level = levelManager.warpTo(saveGame.level());
+        switchLevel(level, context);
+
+        // saveGameHandler.restore(saveGame, context);
+        // TODO calculate cam / player positions instead of just relying on playerStartLocation
+        context.getPlayer().getHealth().setCurrent(saveGame.health());
+        context.getPlayer().getWeapon().setFirepower(saveGame.firepower());
+
+        for (Inventory.Equipment equipment : Inventory.Equipment.values()) {
+            if (saveGame.inventory().isEquippedWith(equipment)) {
+                context.getPlayer().getInventory().addEquipment(equipment);
+            }
+        }
+
+        context.getHints().setAvailableHints(saveGame.hints());
+        context.getScoreManager().score(saveGame.score());
     }
 
     private void switchLevel(Level level, GameplayContext context) {
@@ -105,6 +127,8 @@ public class GameplayState implements GameState {
     }
 
     private void checkInput(GameSystems systems) {
+        // check for ESC to quit
+
         updateHelpMenu(systems);
         checkSoundToggle(systems);
         checkHintsToggle(systems);

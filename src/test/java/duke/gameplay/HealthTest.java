@@ -55,4 +55,13 @@ class HealthTest {
 
         assertThat(health.isDead()).isTrue();
     }
+
+    @Test
+    void shouldSetCurrent() {
+        Health health = new Health(3);
+
+        health.setCurrent(2);
+
+        assertThat(health.getCurrent()).isEqualTo(2);
+    }
 }

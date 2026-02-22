@@ -5,6 +5,7 @@ import duke.resources.AssetManager;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -34,17 +35,19 @@ class LevelManagerTest {
     @Test
     void shouldWarpToLevel() {
         AssetManager assetManager = mock();
-        LevelDescriptor level2 = mock();
-        LevelManager manager = new LevelManager(assetManager, List.of(mock(), level2, mock()));
 
-        manager.warpTo(2);
+        List<LevelDescriptor> levels = IntStream.range(0, 3).mapToObj(id -> new LevelDescriptor(id, id, 0)).toList();
 
-        verify(assetManager).getLevel(level2);
+        LevelManager manager = new LevelManager(assetManager, levels);
+
+        manager.warpTo(1);
+
+        verify(assetManager).getLevel(levels.get(1));
     }
 
     @Test
     void shouldIndicateLastLevel() {
-        LevelManager manager = new LevelManager(mock(), List.of(new LevelDescriptor(1, 1)));
+        LevelManager manager = new LevelManager(mock(), List.of(new LevelDescriptor(0, 1, 1)));
 
         manager.getNextLevel();
 

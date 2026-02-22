@@ -17,6 +17,10 @@ public class Health {
         return current;
     }
 
+    public void setCurrent(int current) {
+        this.current = Math.min(current, max);
+    }
+
     public int getMax() {
         return max;
     }
@@ -30,6 +34,6 @@ public class Health {
     }
 
     public void increaseHealth(int amount) {
-        current = Math.min(current + amount, max);
+        setCurrent(getCurrent() + amount);
     }
 }

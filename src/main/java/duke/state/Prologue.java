@@ -2,7 +2,6 @@ package duke.state;
 
 import duke.GameSystems;
 import duke.dialog.Dialog;
-import duke.gameplay.Cheats;
 import duke.gfx.Sprite;
 import duke.state.storyboard.Panel;
 import duke.state.storyboard.Storyboard;
@@ -23,7 +22,7 @@ public class Prologue implements GameState {
     @Override
     public void start(GameSystems systems) {
         Storyboard storyboard = createStoryboard(systems);
-        GameplayState next = new GameplayState(systems, new Cheats(true));
+        GameplayState next = new GameplayState();
 
         storyboardHandler = new StoryboardHandler(storyboard, next, StateRequester.Transition.FADE_TO_WHITE);
     }

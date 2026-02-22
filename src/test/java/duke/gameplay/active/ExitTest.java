@@ -68,7 +68,7 @@ class ExitTest {
     @ParameterizedTest
     @MethodSource("descriptors")
     void shouldOpenOnInteractRequested(int level, Sfx expectedSfx) {
-        when(context.getLevel().getDescriptor()).thenReturn(new LevelDescriptor(level, 1));
+        when(context.getLevel().getDescriptor()).thenReturn(new LevelDescriptor(1, level, 1));
 
         exit = createExit(Exit.State.CLOSED);
 

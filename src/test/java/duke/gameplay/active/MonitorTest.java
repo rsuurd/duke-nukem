@@ -29,7 +29,7 @@ class MonitorTest {
 
     @Test
     void shouldBroadcastWhenReadyAndPlayerClose() {
-        when(context.getLevel().getDescriptor()).thenReturn(new LevelDescriptor(1, 0, "Hello, world!"));
+        when(context.getLevel().getDescriptor()).thenReturn(new LevelDescriptor(1, 1, 0, "Hello, world!"));
 
         Monitor monitor = new Monitor(0, 0);
 
@@ -68,7 +68,7 @@ class MonitorTest {
 
     @Test
     void shouldBroadcastWhenInteracting() {
-        when(context.getLevel().getDescriptor()).thenReturn(new LevelDescriptor(1, 0, "Hello, world!"));
+        when(context.getLevel().getDescriptor()).thenReturn(new LevelDescriptor(1, 1, 0, "Hello, world!"));
         Monitor monitor = new Monitor(0, 0);
 
         monitor.interactRequested(context);

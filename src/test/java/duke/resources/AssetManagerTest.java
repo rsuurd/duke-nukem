@@ -1,5 +1,6 @@
 package duke.resources;
 
+import duke.gameplay.SaveGame;
 import duke.gfx.Sprite;
 import duke.level.Level;
 import duke.level.LevelDescriptor;
@@ -31,6 +32,9 @@ class AssetManagerTest {
     @Mock
     private HighScoreLoader highScoreLoader;
 
+    @Mock
+    private SaveGameLoader saveGameLoader;
+
     private AssetManager assetManager;
 
     @BeforeEach
@@ -39,6 +43,8 @@ class AssetManagerTest {
         when(resourceLoader.getLevelLoader()).thenReturn(levelLoader);
         when(resourceLoader.getSoundLoader()).thenReturn(soundLoader);
         when(resourceLoader.getHighScoreLoader()).thenReturn(highScoreLoader);
+        when(resourceLoader.getHighScoreLoader()).thenReturn(highScoreLoader);
+        when(resourceLoader.getSaveGameLoader()).thenReturn(saveGameLoader);
 
         assetManager = new AssetManager(resourceLoader);
     }
@@ -123,6 +129,22 @@ class AssetManagerTest {
     void shouldLoadHighScores() {
         assetManager.getHighScores();
 
-        verify(resourceLoader.getHighScoreLoader()).load();
+        verify(highScoreLoader).load();
+    }
+
+    @Test
+    void shouldLoadGame() {
+        assetManager.loadGame('1');
+
+        verify(saveGameLoader).load('1');
+    }
+
+    @Test
+    void shouldSaveGame() {
+        SaveGame saveGame = mock();
+
+        assetManager.saveGame(saveGame, '1');
+
+        verify(saveGameLoader).save(saveGame, '1');
     }
 }

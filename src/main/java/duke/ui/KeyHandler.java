@@ -32,27 +32,29 @@ public class KeyHandler extends KeyAdapter {
         return new Input(pressedKeys[VK_UP], pressedKeys[VK_DOWN], pressedKeys[VK_LEFT], pressedKeys[VK_RIGHT], pressedKeys[VK_ALT], pressedKeys[VK_CONTROL]);
     }
 
-    public boolean consumeAny() {
-        boolean pressed = false;
-        int i = 0;
-
-        while (!pressed && i < pressedKeys.length) {
-            pressed = pressedKeys[i++];
-        }
-
-        if (pressed) {
-            Arrays.fill(pressedKeys, false);
-        }
-
-        return pressed;
-    }
-
     public boolean consume(int keyCode) {
         boolean pressed = pressedKeys[keyCode];
 
         pressedKeys[keyCode] = false;
 
         return pressed;
+    }
+
+    public int consume() {
+        for (int keyCode = 0; keyCode < pressedKeys.length; keyCode++) {
+            if (pressedKeys[keyCode]) {
+                pressedKeys[keyCode] = false;
+
+                //Arrays.fill(pressedKeys, false);
+                return keyCode;
+            }
+        }
+
+        return -1;
+    }
+
+    public boolean consumeAny() {
+        return consume() >= 0;
     }
 
     public boolean consumeAll(int... keyCodes) {

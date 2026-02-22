@@ -36,7 +36,7 @@ class NotesTest {
     void shouldShowNotes() {
         Notes notes = new Notes(0, 0);
 
-        when(context.getLevel().getDescriptor()).thenReturn(new LevelDescriptor(1, 1, "Top secret"));
+        when(context.getLevel().getDescriptor()).thenReturn(new LevelDescriptor(1, 1, 1, "Top secret"));
 
         notes.interactRequested(context);
 

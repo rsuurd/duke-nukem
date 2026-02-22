@@ -37,7 +37,6 @@ public class SpriteRenderer {
                         renderer.draw(sprite, screenX, screenY);
                     }
                 } catch (Exception e) {
-                    // spriteDescriptor.baseIndex() + (row * spriteDescriptor.cols()) + col;
                     System.err.format("Failed rendering base idx %d + (%d * %d) + %d\n", spriteDescriptor.baseIndex(), row, spriteDescriptor.cols(), col);
                 }
             }

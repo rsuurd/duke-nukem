@@ -1,9 +1,11 @@
 package duke.menu;
 
+import duke.DukeNukemException;
 import duke.GameSystems;
 import duke.dialog.Dialog;
+import duke.gameplay.SaveGame;
+import duke.state.GameplayState;
 import duke.state.TitleScreen;
-import duke.ui.KeyHandler;
 
 import static duke.menu.MainMenu.MAIN_MENU_X;
 
@@ -23,10 +25,10 @@ public class RestoreGame implements Menu {
     @Override
     public void update(GameSystems systems) {
         if (!error) {
-            int slot = getSelectedGameNumber(systems.getKeyHandler());
+            int keyCode = systems.getKeyHandler().consume();
 
-            if (slot > 0) {
-                restoreGame(slot, systems);
+            if (keyCode >= 0) {
+                restoreGame((char) keyCode, systems);
             }
         }
 
@@ -35,18 +37,14 @@ public class RestoreGame implements Menu {
         }
     }
 
-    private int getSelectedGameNumber(KeyHandler keyHandler) {
-        for (int i = 1; i <= 9; i++) {
-            if (keyHandler.consume(i + '0')) {
-                return i;
-            }
+    private void restoreGame(char slot, GameSystems systems) {
+        try {
+            SaveGame saveGame = systems.getAssets().loadGame(slot);
+
+            systems.getStateRequester().requestState(new GameplayState(saveGame));
+        } catch (DukeNukemException e) {
+            error = true;
+            systems.getDialogManager().open(new Dialog("    Game not found!!", MAIN_MENU_X, 32, 2, 13, false, false));
         }
-
-        return 0;
-    }
-
-    private void restoreGame(int slot, GameSystems systems) {
-        error = true;
-        systems.getDialogManager().open(new Dialog("    Game not found!!", MAIN_MENU_X, 32, 2, 13, false, false));
     }
 }

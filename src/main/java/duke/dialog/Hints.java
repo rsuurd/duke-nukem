@@ -25,6 +25,14 @@ public class Hints {
         return enabled;
     }
 
+    public boolean isHintAvailable(Hint hint) {
+        return hints.contains(hint);
+    }
+
+    public void setAvailableHints(Set<Hint> hints) {
+        this.hints = hints;
+    }
+
     public void showHint(Hint hint, GameplayContext context) {
         if (!enabled) return;
 
@@ -35,17 +43,16 @@ public class Hints {
     }
 
     public enum Hint {
-        NOTES(MESSAGE_TIP),
-        ELEVATOR(ELEVATOR_TIP),
-        EXIT(EXIT_TIP),
         LOCK(LOCK_TIP),
-        KEY(LOCK_TIP),
-        NUCLEAR_MOLECULE(NUCLEAR_MOLECULE_TIP),
+        NOTES(MESSAGE_TIP),
         SODA(SODA_TIP),
         TURKEY(TURKEY_TIP),
+        NUCLEAR_MOLECULE(NUCLEAR_MOLECULE_TIP),
+        EXIT(EXIT_TIP),
+        ELEVATOR(ELEVATOR_TIP),
         TRANSPORTER(TRANSPORTER_TIP),
-        ACCESS_CARD(ACCESS_CARD_TIP),
-        ROBOHAND(ROBOHAND_TIP);
+        ROBOHAND(ROBOHAND_TIP),
+        ACCESS_CARD(ACCESS_CARD_TIP);
 
         private String text;
 

@@ -88,6 +88,15 @@ class WeaponTest {
     }
 
     @Test
+    void shouldSetFirepower() {
+        Weapon weapon = new Weapon();
+
+        weapon.setFirepower(3);
+
+        assertThat(weapon.getFirepower()).isEqualTo(3);
+    }
+
+    @Test
     void shouldNotExceedMaxFirepower() {
         Weapon weapon = new Weapon(MAX_FIREPOWER, false, true);
 
