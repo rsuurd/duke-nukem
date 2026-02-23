@@ -22,7 +22,7 @@ public class Prologue implements GameState {
     @Override
     public void start(GameSystems systems) {
         Storyboard storyboard = createStoryboard(systems);
-        GameplayState next = new GameplayState();
+        GameState next = new GetReady();
 
         storyboardHandler = new StoryboardHandler(storyboard, next, StateRequester.Transition.FADE_TO_WHITE);
     }
