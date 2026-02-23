@@ -73,19 +73,17 @@ public class GameplayState implements GameState {
     }
 
     private void startNewGame() {
-        Level level = levelManager.getNextLevel();
-        switchLevel(level, context);
+        switchLevel(levelManager.getNextLevel());
     }
 
     private void resumeGame() {
-        Level level = levelManager.warpTo(saveGame.level());
-        switchLevel(level, context);
+        switchLevel(levelManager.warpTo(saveGame.level()));
 
-        // saveGameHandler.restore(saveGame, context);
         // TODO calculate cam / player positions instead of just relying on playerStartLocation
         context.getPlayer().getHealth().setCurrent(saveGame.health());
         context.getPlayer().getWeapon().setFirepower(saveGame.firepower());
 
+        // clear inventory? Right now it works because we swap between gamestates, but it might be good to be explicit.
         for (Inventory.Equipment equipment : Inventory.Equipment.values()) {
             if (saveGame.inventory().isEquippedWith(equipment)) {
                 context.getPlayer().getInventory().addEquipment(equipment);
@@ -93,13 +91,17 @@ public class GameplayState implements GameState {
         }
 
         context.getHints().setAvailableHints(saveGame.hints());
-        context.getScoreManager().score(saveGame.score());
+        context.getScoreManager().setScore(saveGame.score());
     }
 
-    private void switchLevel(Level level, GameplayContext context) {
+    private void switchLevel(Level level) {
         context.switchLevel(level);
         levelRenderer.setLevel(level);
         viewport.center(context.getViewportManager().getTarget());
+
+        if (level.getDescriptor().isHallway()) {
+            saveGame = new SaveGameFactory().create(context);
+        }
     }
 
     @Override
@@ -123,7 +125,7 @@ public class GameplayState implements GameState {
         context.getBoltManager().update(context);
         context.getActiveManager().update(context);
 
-        checkLevelComplete(systems);
+        checkLevelStatus(systems);
     }
 
     private void checkInput(GameSystems systems) {
@@ -173,14 +175,21 @@ public class GameplayState implements GameState {
         player.postMovement(context);
     }
 
-    private void checkLevelComplete(GameSystems systems) {
-        if (context.getLevel().isCompleted()) {
+    private void checkLevelStatus(GameSystems systems) {
+        Level level = context.getLevel();
+        StateRequester stateRequester = systems.getStateRequester();
+
+        if (level.isRestartRequested()) {
+            if (!stateRequester.isTransitioning()) {
+                stateRequester.requestState(new GetReady(saveGame), StateRequester.Transition.FADE_TO_WHITE);
+            }
+        } else if (level.isCompleted()) {
             if (levelManager.isLast()) {
-                if (!systems.getStateRequester().isTransitioning()) {
-                    systems.getStateRequester().requestState(new End());
+                if (!stateRequester.isTransitioning()) {
+                    stateRequester.requestState(new End());
                 }
             } else {
-                switchLevel(levelManager.getNextLevel(), context);
+                switchLevel(levelManager.getNextLevel());
             }
         }
     }

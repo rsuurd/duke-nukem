@@ -235,6 +235,17 @@ class GameplayStateTest {
     }
 
     @Test
+    void shouldRestartLevel() {
+        prepareStartedGameplayState();
+
+        when(context.getLevel().isRestartRequested()).thenReturn(true);
+
+        state.update(systems);
+
+        verify(systems.getStateRequester()).requestState(isA(GetReady.class), eq(StateRequester.Transition.FADE_TO_WHITE));
+    }
+
+    @Test
     void shouldTransitionToEndWhenLastLevelComplete() {
         prepareStartedGameplayState();
 

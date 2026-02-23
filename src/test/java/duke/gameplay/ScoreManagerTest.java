@@ -47,4 +47,13 @@ class ScoreManagerTest {
 
         verifyNoInteractions(activeManager);
     }
+
+    @Test
+    void shouldOverwriteScore() {
+        manager.score(100000);
+
+        manager.setScore(500);
+
+        assertThat(manager.getScore()).isEqualTo(500);
+    }
 }

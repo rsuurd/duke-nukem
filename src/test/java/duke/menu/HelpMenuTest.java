@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.ArgumentCaptor;
 
 import java.util.stream.Stream;
 
@@ -49,6 +50,22 @@ class HelpMenuTest {
         helpMenu.update(systems);
 
         verify(systems.getMenuManager()).open(isA(menu), eq(systems));
+    }
+
+    @Test
+    void shouldRestartLevelOnConfirmation() {
+        helpMenu.open(systems);
+
+        when(systems.getKeyHandler().consume(VK_F10)).thenReturn(true);
+        helpMenu.update(systems);
+
+        ArgumentCaptor<Confirmation> confirmation = ArgumentCaptor.forClass(Confirmation.class);
+        verify(systems.getMenuManager()).open(confirmation.capture(), eq(systems));
+
+        when(systems.getKeyHandler().consume(VK_Y)).thenReturn(true);
+        confirmation.getValue().update(systems);
+
+        verify(context.getLevel()).requestRestart();
     }
 
     static Stream<Arguments> menuOptions() {

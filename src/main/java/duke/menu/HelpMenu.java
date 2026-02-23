@@ -34,14 +34,18 @@ public class HelpMenu implements Menu {
             open(new HighScores(TILE_SIZE), systems);
         } else if (keys.consume(VK_F10)) {
             open(new Confirmation(TILE_SIZE, TILE_SIZE, """
-                Are you sure you want to
-                RESTART the level(Y/N)?
-                """, () -> System.err.println("Restarting level...")), systems);
+                    Are you sure you want to
+                    RESTART the level(Y/N)?
+                    """, this::restart), systems);
         }
     }
 
     private void open(Menu menu, GameSystems systems) {
         systems.getMenuManager().open(menu, systems);
+    }
+
+    private void restart() {
+        context.getLevel().requestRestart();
     }
 
     private static final Dialog HELP_DIALOG = new Dialog("""

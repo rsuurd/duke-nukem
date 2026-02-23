@@ -2,6 +2,7 @@ package duke.state;
 
 import duke.GameSystems;
 import duke.dialog.Dialog;
+import duke.gameplay.SaveGame;
 import duke.gfx.Font;
 import duke.gfx.Hud;
 import duke.sfx.Sfx;
@@ -9,9 +10,20 @@ import duke.sfx.Sfx;
 import static duke.level.Level.TILE_SIZE;
 
 public class GetReady implements GameState {
+    private SaveGame saveGame;
+
     private Hud hud;
 
+    // TODO optional
     private int countdown;
+
+    public GetReady() {
+        this(null);
+    }
+
+    public GetReady(SaveGame saveGame) {
+        this.saveGame = saveGame;
+    }
 
     @Override
     public void start(GameSystems systems) {
@@ -28,7 +40,7 @@ public class GetReady implements GameState {
     @Override
     public void update(GameSystems systems) {
         if (countdown-- <= 0) {
-            systems.getStateRequester().requestState(new GameplayState(), StateRequester.Transition.NONE);
+            systems.getStateRequester().requestState(new GameplayState(saveGame), StateRequester.Transition.NONE);
         }
     }
 
