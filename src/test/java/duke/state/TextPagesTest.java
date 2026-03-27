@@ -8,13 +8,17 @@ import org.junit.jupiter.api.Test;
 import static org.mockito.Mockito.*;
 
 class TextPagesTest {
+    private GameState next;
+
     private TextPages text;
 
     private GameSystems systems;
 
     @BeforeEach
     void create() {
-        text = new TextPages("text");
+        next = mock();
+
+        text = new TextPages("text", next);
 
         systems = GameSystemsFixture.create();
 
@@ -28,13 +32,13 @@ class TextPagesTest {
     }
 
     @Test
-    void shouldAdvancePageThenBackToTitle() {
+    void shouldAdvancePageThenTransitionToNext() {
         when(systems.getKeyHandler().consumeAny()).thenReturn(true);
 
         text.start(systems);
         text.update(systems);
         text.update(systems);
 
-        verify(systems.getStateRequester()).requestState(isA(TitleScreen.class));
+        verify(systems.getStateRequester()).requestState(next);
     }
 }

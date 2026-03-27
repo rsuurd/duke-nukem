@@ -7,12 +7,16 @@ import duke.gfx.Sprite;
 import java.util.List;
 
 public class End implements GameState {
+    private int score;
+
     private Sprite background;
 
     private int y;
     private int timer;
 
-    public End() {
+    public End(int score) {
+        this.score = score;
+
         y = DR_PROTON_Y;
     }
 
@@ -27,7 +31,7 @@ public class End implements GameState {
             askForInput(systems);
 
             if (systems.getKeyHandler().consumeAny()) {
-                systems.getStateRequester().requestState(new Epilogue());
+                systems.getStateRequester().requestState(new Epilogue(score));
             }
         } else {
             flyToTheMoon();
@@ -41,7 +45,7 @@ public class End implements GameState {
     }
 
     private boolean isFinished() {
-        return timer >= 140;
+        return timer >= DURATION;
     }
 
     private void flyToTheMoon() {
@@ -82,5 +86,6 @@ public class End implements GameState {
     private static final int DR_PROTON_Y = 128;
 
     static final int FLYING_UP_DURATION = 100;
+    static final int DURATION = 140;
     static final int ENTERING_ATMOSPHERE_DURATION = 4;
 }

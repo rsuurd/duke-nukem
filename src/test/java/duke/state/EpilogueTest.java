@@ -22,7 +22,7 @@ class EpilogueTest {
 
     @BeforeEach
     void create() {
-        epilogue = new Epilogue(storyboardHandler);
+        epilogue = new Epilogue(0, storyboardHandler);
 
         systems = GameSystemsFixture.create();
     }

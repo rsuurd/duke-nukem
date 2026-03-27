@@ -99,7 +99,7 @@ class GameplayStateTest {
         verify(context.getPlayer().getInventory(), never()).addEquipment(Inventory.Equipment.ROBOHAND);
         verify(context.getPlayer().getInventory(), never()).addEquipment(Inventory.Equipment.ACCESS_CARD);
         verify(context.getHints()).setAvailableHints(Set.of(Hints.Hint.ELEVATOR));
-        verify(context.getScoreManager()).score(200400);
+        verify(context.getScoreManager()).setScore(200400);
     }
 
     @Test
@@ -115,6 +115,7 @@ class GameplayStateTest {
     void shouldOpenHelpMenu() {
         prepareStartedGameplayState();
 
+        when(systems.getKeyHandler().consume(anyInt())).thenReturn(false);
         when(systems.getKeyHandler().consume(VK_F1)).thenReturn(true);
 
         state.update(systems);
@@ -126,7 +127,7 @@ class GameplayStateTest {
     void shouldToggleSound() {
         prepareStartedGameplayState();
 
-        when(systems.getKeyHandler().consume(VK_F1)).thenReturn(false);
+        when(systems.getKeyHandler().consume(anyInt())).thenReturn(false);
         when(systems.getKeyHandler().consume(VK_S)).thenReturn(true);
 
         state.update(systems);
@@ -139,8 +140,7 @@ class GameplayStateTest {
     void shouldToggleHints() {
         prepareStartedGameplayState();
 
-        when(systems.getKeyHandler().consume(VK_F1)).thenReturn(false);
-        when(systems.getKeyHandler().consume(VK_S)).thenReturn(false);
+        when(systems.getKeyHandler().consume(anyInt())).thenReturn(false);
         when(systems.getKeyHandler().consume(VK_H)).thenReturn(true);
 
         state.update(systems);
@@ -223,6 +223,7 @@ class GameplayStateTest {
         prepareStartedGameplayState();
 
         when(context.getPlayer().getHealth()).thenReturn(mock());
+        when(context.getPlayer().getWeapon()).thenReturn(mock());
         when(context.getLevel().isCompleted()).thenReturn(true);
 
         Level nextLevel = mock();

@@ -111,6 +111,10 @@ public class AssetManager {
         return resourceLoader.getHighScoreLoader().load();
     }
 
+    public void saveHighScores(List<HighScoreLoader.HighScore> highScores) {
+        resourceLoader.getHighScoreLoader().save(highScores);
+    }
+
     public SaveGame loadGame(char slot) {
         return resourceLoader.getSaveGameLoader().load(slot);
     }

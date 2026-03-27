@@ -8,6 +8,7 @@ import java.util.List;
 
 import static duke.level.Level.TILE_SIZE;
 
+// TODO maybe merge in GameOver state and rename that Highscores and just show the dialog
 public class HighScores implements Menu {
     private int x;
 

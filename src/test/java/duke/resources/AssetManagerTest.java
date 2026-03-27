@@ -133,6 +133,15 @@ class AssetManagerTest {
     }
 
     @Test
+    void shouldSaveHighScores() {
+        List<HighScoreLoader.HighScore> highScores = mock();
+
+        assetManager.saveHighScores(highScores);
+
+        verify(highScoreLoader).save(highScores);
+    }
+
+    @Test
     void shouldLoadGame() {
         assetManager.loadGame('1');
 

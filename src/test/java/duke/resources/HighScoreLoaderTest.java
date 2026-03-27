@@ -9,6 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -33,12 +34,34 @@ class HighScoreLoaderTest {
     }
 
     @Test
+    void shouldLoadDefaultHighScoresOnFailure() {
+        when(path.resolve(anyString())).thenReturn(Paths.get("missing"));
+
+        List<HighScoreLoader.HighScore> highScores = loader.load();
+
+        assertThat(highScores).isEqualTo(HighScoreLoader.DEFAULT_SCORES);
+    }
+
+    @Test
     void shouldNotExceedMaxInt() throws IOException {
         when(path.resolve(anyString())).thenReturn(createTemp("9999999999999DUKE"));
 
         List<HighScoreLoader.HighScore> highScores = loader.load();
 
         assertThat(highScores).containsExactly(new HighScoreLoader.HighScore("DUKE", Integer.MAX_VALUE));
+    }
+
+    @Test
+    void shouldSaveHighScores() throws IOException {
+        Path path = createTemp();
+        when(this.path.resolve(anyString())).thenReturn(path);
+
+        List<HighScoreLoader.HighScore> highScores = List.of(new HighScoreLoader.HighScore("TODD", 40000));
+
+        loader.save(highScores);
+
+        List<String> lines = Files.readAllLines(path);
+        assertThat(lines).containsExactly("40000TODD");
     }
 
     private Path createTemp(String... highScoreData) throws IOException {

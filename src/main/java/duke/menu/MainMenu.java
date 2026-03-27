@@ -5,11 +5,14 @@ import duke.dialog.Dialog;
 import duke.state.Credits;
 import duke.state.Prologue;
 import duke.state.TextPages;
+import duke.state.TitleScreen;
 import duke.ui.KeyHandler;
 
 import static java.awt.event.KeyEvent.*;
 
 public class MainMenu implements Menu {
+    private boolean closeOnAnyKey;
+
     @Override
     public void open(GameSystems systems) {
         systems.getDialogManager().open(DIALOG);
@@ -18,6 +21,10 @@ public class MainMenu implements Menu {
     @Override
     public void update(GameSystems systems) {
         KeyHandler keys = systems.getKeyHandler();
+
+        if (closeOnAnyKey && keys.consumeAny()) {
+            systems.getStateRequester().requestState(new TitleScreen());
+        }
 
         if (keys.consume(VK_S)) {
             startNewGame(systems);
@@ -43,6 +50,14 @@ public class MainMenu implements Menu {
             showHighScores(systems);
         }
 
+        if (keys.consume(VK_P) || keys.consume(VK_V)) {
+            closeOnAnyKey = true;
+            systems.getDialogManager().open(new Dialog("""
+                      Sorry, demos are not
+                        yet implemented.
+                    """, MAIN_MENU_X, 64, 2, 13, true, true));
+        }
+
         if (keys.consume(VK_T)) {
             showTitleScreen(systems);
         }
@@ -61,11 +76,11 @@ public class MainMenu implements Menu {
     }
 
     private void showInstructions(GameSystems systems) {
-        systems.getStateRequester().requestState(new TextPages("instructions"));
+        systems.getStateRequester().requestState(new TextPages("instructions", new TitleScreen()));
     }
 
     private void showOrderingInformation(GameSystems systems) {
-        systems.getStateRequester().requestState(new TextPages("ordering-information"));
+        systems.getStateRequester().requestState(new TextPages("ordering-information", new TitleScreen()));
     }
 
     private void showGameSetup(GameSystems systems) {
@@ -77,7 +92,7 @@ public class MainMenu implements Menu {
     }
 
     private void showTitleScreen(GameSystems systems) {
-        systems.getStateRequester().requestState(new Prologue());
+        systems.getStateRequester().requestState(new TitleScreen());
     }
 
     private void showCredits(GameSystems systems) {
@@ -103,6 +118,4 @@ public class MainMenu implements Menu {
               C)redits
               Q)uit to DOS
             """, MAIN_MENU_X, 32, 9, 13, false, false);
-
-
 }

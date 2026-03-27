@@ -11,21 +11,25 @@ import duke.state.storyboard.StoryboardHandler;
 import java.util.List;
 
 public class Epilogue implements GameState {
+    private int score;
+
     private StoryboardHandler storyboardHandler;
 
-    public Epilogue() {
+    public Epilogue(int score) {
+        this.score = score;
     }
 
-    Epilogue(StoryboardHandler storyboardHandler) {
+    Epilogue(int score, StoryboardHandler storyboardHandler) {
+        this(score);
+
         this.storyboardHandler = storyboardHandler;
     }
 
     @Override
     public void start(GameSystems systems) {
         Storyboard storyboard = createStoryboard(systems);
-        // next should be ordering information, then some GameOver state to input high scores, show highscores, go to title screen
 
-        storyboardHandler = new StoryboardHandler(storyboard, new TitleScreen(), StateRequester.Transition.FADE_TO_BLACK);
+        storyboardHandler = new StoryboardHandler(storyboard, new TextPages("ordering-information", new GameOver(score)), StateRequester.Transition.FADE_TO_BLACK);
     }
 
     @Override

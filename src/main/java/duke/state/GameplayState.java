@@ -9,6 +9,7 @@ import duke.gameplay.player.Player;
 import duke.gfx.*;
 import duke.level.Level;
 import duke.level.LevelManager;
+import duke.menu.Confirmation;
 import duke.menu.HelpMenu;
 import duke.menu.MenuManager;
 import duke.ui.KeyHandler;
@@ -129,13 +130,22 @@ public class GameplayState implements GameState {
     }
 
     private void checkInput(GameSystems systems) {
-        // check for ESC to quit
+        if (systems.getKeyHandler().consume(VK_ESCAPE) || systems.getKeyHandler().consume(VK_Q)) {
+            confirmQuit(systems);
+        }
 
         updateHelpMenu(systems);
         checkSoundToggle(systems);
         checkHintsToggle(systems);
         // speed buttons < >
         cheats.processInput(systems.getKeyHandler(), context);
+    }
+
+    private void confirmQuit(GameSystems systems) {
+        systems.getMenuManager().open(new Confirmation(TILE_SIZE, 80, "Are you sure you want to\n         quit?", () ->
+                // maybe play playerquit here instead of gameover state
+                systems.getStateRequester().requestState(new GameOver(context.getScoreManager().getScore()))
+        ), systems);
     }
 
     private void updateHelpMenu(GameSystems systems) {
@@ -186,7 +196,7 @@ public class GameplayState implements GameState {
         } else if (level.isCompleted()) {
             if (levelManager.isLast()) {
                 if (!stateRequester.isTransitioning()) {
-                    stateRequester.requestState(new End());
+                    stateRequester.requestState(new End(context.getScoreManager().getScore()));
                 }
             } else {
                 switchLevel(levelManager.getNextLevel());

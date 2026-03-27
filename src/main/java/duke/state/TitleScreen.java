@@ -16,6 +16,8 @@ public class TitleScreen implements GameState {
     private Sprite background;
     private Menu menu;
 
+    private boolean quitRequested;
+
     @Override
     public void start(GameSystems systems) {
         background = systems.getAssets().getImage("DN");
@@ -26,6 +28,12 @@ public class TitleScreen implements GameState {
 
     @Override
     public void update(GameSystems systems) {
+        if (quitRequested) {
+            fadeAndExit(systems);
+
+            return;
+        }
+
         KeyHandler handler = systems.getKeyHandler();
         MenuManager menuManager = systems.getMenuManager();
 
@@ -41,7 +49,17 @@ public class TitleScreen implements GameState {
     }
 
     private void confirmQuit(GameSystems systems) {
-        systems.getMenuManager().open(new Confirmation(56, 80, "Are you sure you want to\n         quit?", () -> System.exit(0)), systems);
+        systems.getMenuManager().open(new Confirmation(56, 80, "Are you sure you want to\n         quit?", () -> quitRequested = true), systems);
+    }
+
+    private void fadeAndExit(GameSystems systems) {
+        if (systems.getPalette().isFadedIn()) {
+            systems.getPalette().fadeOut();
+        }
+
+        if (systems.getPalette().isFadedBlack()) {
+            System.exit(0);
+        }
     }
 
     @Override

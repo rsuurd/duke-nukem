@@ -17,9 +17,9 @@ public class GameSetup implements Menu {
     @Override
     public void open(GameSystems systems) {
         systems.getDialogManager().open(new Dialog("""
-
+                
                       GAME SETUP
-
+                
                     J)oystick mode
                     K)eyboard mode
                     S)ound toggle
@@ -36,6 +36,8 @@ public class GameSetup implements Menu {
         } else if (handler.consume(VK_K)) {
             openKeyboardMode(systems);
         } else if (handler.consumeAll(VK_ESCAPE)) {
+            // TODO when on the title screen --> systems.getStateRequester().requestState(next);
+            // else
             systems.getMenuManager().closeAll(systems);
         }
     }
@@ -43,7 +45,7 @@ public class GameSetup implements Menu {
     private void openJoystickMode(GameSystems systems) {
         systems.getDialogManager().open(new Dialog("""
                      Joystick mode
-
+                
                 Sorry, joystick support
                 is not yet implemented.
                 """, x, 3 * TILE_SIZE, 4, 13, true, false));
@@ -52,14 +54,14 @@ public class GameSetup implements Menu {
     private void openKeyboardMode(GameSystems systems) {
         systems.getDialogManager().open(new Dialog("""
                      KEYBOARD MODE
-
+                
                   1.  Up     :
                   2.  Down   :
                   3.  Left   :
                   4.  Right  :
                   5.  Fire   :
                   6.  Jump   :
-
+                
                 Sorry, changing keys
                 is not yet implemented.
                 """, x, 3 * TILE_SIZE, 8, 13, true, false));

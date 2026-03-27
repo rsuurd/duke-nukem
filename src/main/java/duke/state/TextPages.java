@@ -12,6 +12,7 @@ import java.util.List;
 
 public class TextPages implements GameState {
     private String name;
+    private GameState next;
 
     private Font font;
 
@@ -23,8 +24,9 @@ public class TextPages implements GameState {
 
     private List<String> pages;
 
-    public TextPages(String name) {
+    public TextPages(String name, GameState next) {
         this.name = name;
+        this.next = next;
     }
 
     @Override
@@ -57,7 +59,7 @@ public class TextPages implements GameState {
             if (page < pages.size() - 1) {
                 page++;
             } else {
-                systems.getStateRequester().requestState(new TitleScreen());
+                systems.getStateRequester().requestState(next);
             }
         }
     }
