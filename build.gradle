@@ -30,11 +30,11 @@ tasks.register("run", JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
 }
 
-tasks.register("packageMacApp", Exec) {
+tasks.register("packageMac", Exec) {
     dependsOn 'build'
 
     commandLine 'jpackage',
-            '--type', 'app-image',
+            '--type', 'dmg',
             '--input', 'build/libs',
             '--dest', 'build/distributions',
             '--name', 'Duke Nukem',
