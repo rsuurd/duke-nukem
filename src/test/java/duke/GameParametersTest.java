@@ -29,6 +29,7 @@ class GameParametersTest {
     void shouldParseDefault() {
         GameParameters params = GameParameters.parse();
 
-        assertThat(params).isEqualTo(new GameParameters(Paths.get(".dn1"), false));
+        assertThat(params.path()).endsWith(Paths.get(".duke-nukem"));
+        assertThat(params.asp()).isFalse();
     }
 }

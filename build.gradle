@@ -1,6 +1,5 @@
 plugins {
     id 'java'
-    id 'application'
 }
 
 repositories {
@@ -26,12 +25,17 @@ jar {
     }
 }
 
+tasks.register("run", JavaExec) {
+    mainClass = 'duke.DukeNukem'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
 tasks.register("packageMacApp", Exec) {
-    dependsOn 'clean', 'installDist'
+    dependsOn 'build'
 
     commandLine 'jpackage',
             '--type', 'app-image',
-            '--input', 'build/install/duke-nukem/lib',
+            '--input', 'build/libs',
             '--dest', 'build/distributions',
             '--name', 'Duke Nukem',
             '--icon', 'src/main/resources/icon.icns',
