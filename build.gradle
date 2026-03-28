@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'application'
 }
 
 repositories {
@@ -23,4 +24,20 @@ jar {
     manifest {
         attributes["Main-Class"] = "duke.DukeNukem"
     }
+}
+
+tasks.register("packageMacApp", Exec) {
+    dependsOn 'clean', 'installDist'
+
+    commandLine 'jpackage',
+            '--type', 'app-image',
+            '--input', 'build/install/duke-nukem/lib',
+            '--dest', 'build/distributions',
+            '--name', 'Duke Nukem',
+            '--icon', 'src/main/resources/icon.icns',
+            '--main-class', 'duke.DukeNukem',
+            '--main-jar', 'duke-nukem.jar',
+            '--app-version', '1.0.0',
+            '--mac-package-identifier', 'nl.rsuurd.duke-nukem',
+            '--mac-package-name', 'Duke Nukem'
 }

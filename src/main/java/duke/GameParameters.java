@@ -12,18 +12,19 @@ public record GameParameters(Path path, boolean asp) {
     public static GameParameters parse(String... parameters) {
         List<String> parametersList = Arrays.stream(parameters).map(String::trim).toList();
 
-        Path path = parsePath(parametersList, () -> Paths.get(".dn1"));
+        Path path = parsePath(parametersList);
+
         boolean asp = parametersList.stream().anyMatch(ASP::equalsIgnoreCase);
 
         return new GameParameters(path, asp);
     }
 
-    private static Path parsePath(List<String> parametersList, Supplier<Path> defaultPath) {
+    private static Path parsePath(List<String> parametersList) {
         return Stream.of(PATH, PATH_SHORT)
                 .map(prefix -> parsePath(parametersList, prefix))
                 .filter(Objects::nonNull)
                 .findAny()
-                .orElseGet(defaultPath);
+                .orElseGet(DEFAULT_PATH);
     }
 
     private static Path parsePath(List<String> parametersList, String prefix) {
@@ -35,4 +36,21 @@ public record GameParameters(Path path, boolean asp) {
     private static final String ASP = "asp";
     private static final String PATH = "--path";
     private static final String PATH_SHORT = "-p";
+
+    private static final Supplier<Path> DEFAULT_PATH = () -> {
+        String os = System.getProperty("os.name").toLowerCase();
+        Path path = Paths.get(System.getProperty("user.home"));
+
+        if (os.contains("win")) {
+            String appData = System.getenv("APPDATA");
+
+            if (appData != null) {
+                path = Paths.get(appData);
+            }
+        } else if (os.contains("mac")) {
+            path = path.resolve("Library/Application Support");
+        }
+
+        return path.resolve(".duke-nukem");
+    };
 }
